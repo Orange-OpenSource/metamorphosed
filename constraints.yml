@@ -1,0 +1,47 @@
+# subject-class:
+#   relation:
+#      - object-class
+#      - _regex  (for literals)
+
+# constraints for subject - predicate - object
+subjects:
+  # name-instances must only have :opN predicates, which have quoted strings as objects (initial _ indicates that the predicated or object is a regex
+  name:
+    _:op\d:
+      - _".*"
+
+  # date-entity instances must only have :month, :day and :year predicates with integer values as objects
+  date-entity:
+    :month:
+      - _[01]\d?
+    :day:
+      - _[0-3]\d?
+    :year:
+      - _\d\d\d\d
+    :dayperiod:
+
+  # (Non AMR) a hotel instances can only have :lieu relation to an address instance or a :starts relation to a hotelclass instance
+  hotel:
+    :lieu :
+      - address
+    :stars:
+      - hotelclass
+
+  # an and instance dan only have :op1 and :op2 predicates with any object
+  and:
+    _:op\d:
+
+
+
+# constraints for predicates and objects, independent of the subject
+predicates:
+#  :location:
+#     - city
+#     - country
+  :wiki:
+     - _"Q\d+"
+
+  :quant:
+     - _\d+
+     - _\d\.\d+
+

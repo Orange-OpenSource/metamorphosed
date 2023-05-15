@@ -1,0 +1,624 @@
+/*
+ This library is under the 3-Clause BSD License
+
+ Copyright (c) 2022-2023,  Orange
+ All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+ 
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+ 
+    * Neither the name of Orange nor the
+      names of its contributors may be used to endorse or promote products
+      derived from this software without specific prior written permission.
+ 
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL ORANGE BE LIABLE FOR ANY
+ DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+ SPDX-License-Identifier: BSD-3-Clause
+ Software Name: MetAMoRphosED AMR-Editor
+ Author: Johannes Heinecke
+*/
+
+body {
+  /*margin-top: 280; */
+  /* header height + top offset */
+  height: 100%;
+
+  text-align: justify;
+  font-family: Urbanist, "Be Vietnam Pro", Syne, Poppins, Lato, Ubuntu, DejaVu Sans, Arial, Helvetica, Sans;
+  font-size: 105%;
+}
+
+tt {
+  font-family: Courier, FreeMono, Mono;
+}
+
+h1 {
+  color: #ff7900;
+}
+
+#version {
+  font-size: 60%;
+}
+
+h2 {
+  color: #8f8f8f;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+h3 {
+  color: #8f8f8f;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+h4 {
+  color: #8f8f8f;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+#filename {
+  font-style: italic;
+}
+
+.notready {
+  color: #ff7900;
+}
+
+textArea {
+  text-align: justify;
+  /*font-family: Sans, Arial, Helvetica;*/
+  width: 500px;
+  height: 180px;
+}
+
+.pnarea {
+  font-family: "DejaVu Sans Mono", FreeMono, Mono;
+}
+
+.mybutton { 
+  font-family: "Be Vietnam Pro", Urbanist, Syne, Poppins, Lato, Ubuntu, DejaVu Sans, Arial, Helvetica, Sans;
+} 
+
+
+.logo2 img { 
+   vertical-align: middle;
+   padding-right: 5px;
+ }
+
+td,
+th {
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+table {
+  border-collapse: inherit;
+}
+
+
+input {
+  font-family: inherit;
+}
+
+.triples,
+.triplerow,
+.triplecell {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+.boxhighlight {
+  fill: yellow;
+}
+
+#reifygroup, #gresultat {
+ display: flex;
+ flex-direction: row;
+ margin: 0px;
+ padding: 0px;
+}
+
+.reifyelem {
+ margin-right: 20px;
+}
+
+
+.penman {
+  border-radius: 10px;
+  border: solid 1px #d6d6d6;
+  margin: 10px 10px 10px 10px;
+  padding: 10px 10px 10px 10px;
+}
+
+.text {
+  border-radius: 10px;
+  border: solid 1px #d6d6d6;
+  margin: 10px 10px 10px 10px;
+  padding: 10px 10px 10px 10px;
+}
+
+.error {
+  border-radius: 10px;
+  border: solid 1px #ff7777;
+  margin: 10px 10px 10px 10px;
+  padding: 10px;
+  color: #aa0000;
+}
+
+.syntaxerror { 
+  color: white;
+  background-color: red;
+}
+
+.helptext {
+  border-radius: 10px;
+  border: solid 1px #1f471f;
+  margin: 10px 10px 10px 10px;
+  padding: 10px;
+  text-indent: -2em;
+  padding-left: 3em;
+}
+
+.code {
+  font-family: monospace;
+}
+
+.knopf {
+  border: solid 1px #888888;
+  background-color: #d6d6d6;
+  padding: 2px;
+  border-radius: 5px;
+}
+
+.svggraph {
+  /*display: flex;
+  flex-direction: column;
+  overflow-x: auto;*/
+  border-radius: 10px;
+  border: solid 1px #d6d6d6;
+  margin: 10px 10px 10px 10px;
+  padding: 10px;
+}
+
+.edgefield,
+.conceptfield,
+.literalfield,
+.textfield,
+.amrfield {
+  width: 12em;
+  vertical-align: middle;
+  border-radius: 5px;
+  border: solid 1px #959595;
+  padding-left: 3px;
+
+}
+
+.edgefield {
+  width: 8em;
+  background-color: #b5e8f7;
+}
+
+.reifrelations { 
+  background-color: #b5e8f7;
+  border-radius: 5px;
+  border: solid 1px #959595;
+ }
+
+.conceptfield {
+  background-color: #b8ebd6;
+}
+
+.literalfield {
+  width: 10em;
+  background-color: #ffe5cc;
+}
+
+
+.textfield,
+.amrfield {
+  width: 18em;
+  vertical-align: middle;
+  border-radius: 5px;
+  border: solid 1px #959595;
+  padding-left: 3px;
+
+}
+
+.varfield, .validvars {
+  width: 5em;
+  vertical-align: middle;
+  border-radius: 5px;
+  border: solid 1px #959595;
+  padding-left: 3px;
+  background-color: #ffe8f7;
+
+}
+
+.grouping {
+  border: 1px solid #d6d6d6;
+  vertical-align: top;
+  margin: 10px 10px 10px 10px;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.noborder {
+  border: 0px;
+}
+
+
+.editmode {
+  /*border: 1px solid #d6d6d6;
+  vertical-align: top;
+  margin: 10px 10px 10px 10px;
+  border-radius: 10px;
+  padding: 10px;*/
+  display: inline-block;
+}
+
+#commands {
+  display: flex;
+}
+
+.canceleditmode {
+  float: right;
+  font-family: 'Sans';
+  font-size: 120%;
+  background: rgb(255, 255, 255);
+  color: rgb(100, 100, 100);
+  border: 1px solid #d6d6d6;
+  border-radius: 50%;
+  top: 0;
+  right: 0;
+  margin-top: -25px;
+  margin-right: -20px;
+  /* transform: translate(50%, -50%); */
+}
+
+.toggleresult {
+  float: left;
+  font-family: 'Sans';
+  font-size: 120%;
+  background: rgb(255, 255, 255);
+  color: rgb(100, 100, 100);
+  border: 1px solid #d6d6d6;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  top: 0;
+  left: 0;
+  margin-top: -10px;
+}
+
+.searchbuttonpos {
+  margin-top: -20px;
+  margin-left: -20px;
+}
+
+.highlight {
+  color: #ff7900;
+}
+
+svg {
+  max-width: 1200pt;
+  height: auto;
+}
+
+.blocker {
+  /* redefine jquery-modal background */
+  background-color: rgba(200, 200, 200, 0.25)
+}
+
+dl.labels {
+  display: grid;
+  grid-template-columns: max-content auto;
+}
+
+dt.labels {
+  grid-column-start: 1;
+}
+
+dd.labels {
+  grid-column-start: 2;
+}
+
+dl.qqlabels {
+  width: 100%;
+  overflow: hidden;
+  /* background: #ffe; */
+  padding: 0;
+  margin: 0
+}
+
+dt.qqlabels {
+  float: left;
+  width: 30%;
+  /* adjust the width; make sure the total of both is 100% */
+  /* background: #cc0; */
+  padding: 0;
+  margin: 0
+}
+
+dd.qqlabels {
+  float: left;
+  width: 70%;
+  /* adjust the width; make sure the total of both is 100% */
+  /* background: #dd0; */
+  padding: 0;
+  margin: 0
+}
+
+table.framealiastable,
+th.framealiastable,
+td.framealiastable {
+  border: 1px solid #d6d6d6;
+  border-collapse: collapse;
+}
+
+
+
+.framemorpho {
+  font-style: italic;
+}
+
+.frameexample {
+  font-style: italic;
+}
+
+.framenote {
+  color: #085ebd;
+  font-size: smaller;
+}
+
+.argexample {
+  font-weight: bold;
+}
+
+.predname {
+  font-weight: bold;
+  font-style: normal;
+}
+
+
+
+.ARG0 {
+  background-color: #ff7900;
+}
+
+.ARG1 {
+  background-color: #9164cd;
+  color: white;
+}
+
+.ARG3 {
+  background-color: #ffb4e6;
+}
+
+.ARG4 {
+  background-color: #50be87;
+}
+
+.ARG2 {
+  background-color: #4bb4e6;
+}
+
+.ARG5 {
+  background-color: #ffdc00;
+}
+
+.ARG0text {
+  color: #ff7900;
+}
+
+.ARG1text {
+  color: #9164cd;
+}
+
+.ARG3text {
+  color: #ffb4e6;
+}
+
+.ARG4text {
+  color: #50be87;
+}
+
+.ARG2text {
+  color: #4bb4e6;
+}
+
+.ARG5text {
+  color: #ffdc00;
+}
+
+
+.manner {
+  background-color: #8f8f8f;
+}
+
+/*.charteYellowBright {  background-color: #fff6b6; }
+.charteVioletBright {  background-color: #d9c2f0; }
+.chartePinkBright {  background-color: #ffe8f7; }
+*/
+
+.beneficiary {
+  background-color: #d9c2f0;
+}
+
+.ord {
+  background-color: #d6d6d6;
+}
+
+.snt1 {
+  background-color: #b8ebd6;
+}
+
+.snt2 {
+  background-color: #b8ebd6;
+}
+
+.snt3 {
+  background-color: #b8ebd6;
+}
+
+.snt4 {
+  background-color: #b8ebd6;
+}
+
+.instance {
+  background-color: #ffe5cc;
+}
+
+.mod {
+  background-color: #ffb400;
+}
+
+.name {
+  background-color: #492191;
+  color: white
+}
+
+.location {
+  background-color: #ff8ad4;
+}
+
+.manner {
+  background-color: #0a6e31;
+}
+
+.time {
+  background-color: #085ebd;
+  color: white
+}
+
+.month {
+  background-color: #085ebd;
+  color: white
+}
+
+.day {
+  background-color: #085ebd;
+  color: white
+}
+
+.dayperiod {
+  background-color: #085ebd;
+  color: white
+}
+
+.op1 {
+  background-color: #595959;
+  color: white
+}
+
+.op2 {
+  background-color: #595959;
+  color: white
+}
+
+.op3 {
+  background-color: #595959;
+  color: white
+}
+
+.op4 {
+  background-color: #595959;
+  color: white
+}
+
+.value {
+  background-color: #595959;
+  color: white
+}
+
+
+.modal {
+  display: none;
+
+  /* height: 400px; */
+  /* margin: 0 auto; */
+  position: absolute;
+  z-index: 40001;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px #000;
+  /* margin-top: 30px; */
+  /* margin-left: 10%; */
+  padding: 0px;
+  /*animation-name: fadeIn_Modal;
+  animation-duration: 0.8s;*/
+}
+
+#conceptsetmodal {
+  max-width: 950px;
+  width: 560px;
+}
+
+#edgesetmodal {
+  max-width: 400px;
+  width: 320px;
+}
+
+#literalsetmodal {
+  max-width: 400px;
+  width: 330px;
+}
+
+#sentmodal {
+  top: 20%;
+  max-width: 90%;
+  width: 90%;
+}
+
+#sentencelist {
+  width: 100%;
+ }
+
+.cancelmodal {
+  float: right;
+  font-family: 'Sans';
+  font-size: 120%;
+  background: rgb(255, 255, 255);
+  color: rgb(100, 100, 100);
+  border: 1px solid #d6d6d6;
+  border-radius: 50%;
+  top: 0;
+  right: 0;
+  margin-top: -33px;
+  margin-right: -28px;
+  /*transform: translate(50%, -50%);*/
+}
+
+
+.ui-autocomplete.ui-widget {
+    /*font-family: sans; */
+    font-family:  Urbanist, "Be Vietnam Pro";
+    /*color: rgb(75,180,230);*/
+    color: rgb(8,94,189);
+    font-size: 90%;
+    margin-left: 1em;
+}
+
+.ui-autocomplete {
+  max-height: 200px;
+  overflow-y: auto;
+  /* prevent horizontal scrollbar */
+  overflow-x: hidden;
+}
+

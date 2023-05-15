@@ -1,0 +1,9 @@
+*~
+__pycache__
+amr-release-3.0-amrs-training-wiki.txt
+gui/lib/jquery*
+*.txt.2
+tmp
+propbank-frames
+amr3-training-all.txt
+
