@@ -21,8 +21,11 @@ python3 -m venv VENV
 source VENV/bin/activate
 pip install -r requirements.txt
 git clone https://github.com/propbank/propbank-frames
-pushd propbank-frames;  git checkout release-v3.4.0; popd
+pushd propbank-frames;  git checkout ad2bafa4c9c9c58cc1bc89; popd
 ```
+
+Note: For the PropBank frames, we need currently this intermediary version since the main and release-v3.4.1 branches 
+do not contain the definition of roles like `be-located-at-91`.
 
 also needed: 
 * graphviz (`sudo apt install graphviz`)
@@ -34,6 +37,7 @@ also needed:
 the latter three must be installed in `gui/lib` via the following commands
 
 ```
+mkdir -p gui/lib
 wget https://code.jquery.com/jquery-3.6.0.min.js -O gui/lib/jquery-3.6.0.min.js
 wget https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.2/jquery.modal.min.js -O gui/lib/jquery.modal-0.9.2.min.js
 wget https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.2/jquery.modal.min.css -O gui/lib/jquery.modal-0.9.2.min.css
