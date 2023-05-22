@@ -243,7 +243,7 @@ becomes this after reifying `:location`
   author = {Heinecke, Johannes},
   title = {{metAMoRphosED: a graphical editor for Abstract Meaning Representation}},
   year = {2023},
-  booktitle = {{19th Joint ACL – ISO Workshop on Interoperable Semantic Annotation}},
+  booktitle = {{19th Joint ACL - ISO Workshop on Interoperable Semantic Annotation}},
   address = {Nancy},
   url = {https://github.com/Orange-OpenSource/metamorphosed/}
 }
