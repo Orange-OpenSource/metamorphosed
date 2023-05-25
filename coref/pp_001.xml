@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE msamr SYSTEM "msamr.dtd">
+
+<document>
+  <sentences annotator="" docid="lpp_1943" end="" site="" sourcetype="" start="" threadid="">
+    <amr id="lpp_1943.1" order="1" post="p1" speaker="unk" su="1"/>
+    <amr id="lpp_1943.2" order="2" post="p1" speaker="unk" su="2"/>
+    <amr id="lpp_1943.3" order="3" post="p1" speaker="unk" su="3"/>
+    <amr id="lpp_1943.4" order="4" post="p1" speaker="unk" su="4"/>
+    <amr id="lpp_1943.5" order="5" post="p1" speaker="unk" su="5"/>
+    <amr id="lpp_1943.6" order="6" post="p1" speaker="unk" su="6"/>
+    <amr id="lpp_1943.7" order="7" post="p1" speaker="unk" su="7"/>
+    <amr id="lpp_1943.8" order="8" post="p1" speaker="unk" su="8"/>
+    <amr id="lpp_1943.9" order="9" post="p1" speaker="unk" su="9"/>
+    <amr id="lpp_1943.10" order="10" post="p1" speaker="unk" su="10"/>
+    <amr id="lpp_1943.11" order="11" post="p1" speaker="unk" su="11"/>
+    <amr id="lpp_1943.12" order="12" post="p1" speaker="unk" su="12"/>
+    <amr id="lpp_1943.13" order="13" post="p1" speaker="unk" su="13"/>
+    <amr id="lpp_1943.14" order="14" post="p1" speaker="unk" su="14"/>
+    <amr id="lpp_1943.15" order="15" post="p1" speaker="unk" su="15"/>
+    <amr id="lpp_1943.16" order="16" post="p1" speaker="unk" su="16"/>
+    <amr id="lpp_1943.17" order="17" post="p1" speaker="unk" su="17"/>
+    <amr id="lpp_1943.18" order="18" post="p1" speaker="unk" su="18"/>
+    <amr id="lpp_1943.19" order="19" post="p1" speaker="unk" su="19"/>
+  </sentences>
+  <relations>
+    <identity>
+      <identchain relationid="rel-0">
+        <mention concept="i" id="lpp_1943.2" variable="i"/>
+        <mention concept="i" id="lpp_1943.7" variable="i"/>
+        <mention concept="i" id="lpp_1943.8" variable="i"/>
+        <mention concept="i" id="lpp_1943.9" variable="i"/>
+        <mention concept="i" id="lpp_1943.10" variable="i2"/>
+        <mention concept="i" id="lpp_1943.13" variable="i"/>
+        <mention concept="i" id="lpp_1943.15" variable="i"/>
+        <mention concept="i" id="lpp_1943.17" variable="i"/>
+        <mention concept="i" id="lpp_1943.18" variable="i"/>
+        <mention concept="i" id="lpp_1943.19" variable="i"/>
+      </identchain>
+      <identchain relationid="rel-1">
+        <mention concept="picture" id="lpp_1943.2" variable="p"/>
+        <mention concept="it" id="lpp_1943.3" variable="i"/>
+        <mention concept="picture" id="lpp_1943.4" variable="p"/>
+      </identchain>
+      <identchain relationid="rel-2">
+        <mention concept="book" id="lpp_1943.2" variable="b2"/>
+        <mention concept="book" id="lpp_1943.5" variable="b2"/>
+      </identchain>
+      <identchain relationid="rel-3">
+        <mention concept="boa" id="lpp_1943.3" variable="b2"/>
+        <mention concept="boa" id="lpp_1943.5" variable="b"/>
+        <mention concept="they" id="lpp_1943.6" variable="t"/>
+      </identchain>
+      <identchain relationid="rel-4">
+        <mention concept="picture" id="lpp_1943.9" variable="p"/>
+        <mention concept="it" id="lpp_1943.10" variable="i"/>
+        <mention concept="masterpiece" id="lpp_1943.10" variable="m"/>
+        <mention concept="it" id="lpp_1943.14" variable="i"/>
+        <mention concept="picture" id="lpp_1943.19" variable="p"/>
+        <mention concept="picture" id="lpp_1943.8" variable="p2"/>
+        <mention concept="picture" id="lpp_1943.10" variable="p"/>
+        <mention concept="picture" id="lpp_1943.13" variable="p2"/>
+      </identchain>
+      <identchain relationid="rel-5">
+        <mention concept="grown-up" id="lpp_1943.10" variable="g"/>
+        <mention concept="they" id="lpp_1943.11" variable="t"/>
+        <mention concept="they" id="lpp_1943.16" variable="t"/>
+        <mention concept="grown-up" id="lpp_1943.15" variable="g"/>
+        <mention concept="grown-up" id="lpp_1943.17" variable="g"/>
+      </identchain>
+      <identchain relationid="rel-6">
+        <mention concept="picture" id="lpp_1943.15" variable="p2"/>
+        <mention concept="picture" id="lpp_1943.17" variable="p"/>
+        <mention concept="picture" id="lpp_1943.19" variable="p2"/>
+      </identchain>
+      <identchain relationid="rel-7">
+        <mention concept="boa" id="lpp_1943.14" variable="b2"/>
+        <mention concept="boa" id="lpp_1943.15" variable="b2"/>
+      </identchain>
+    </identity>
+    <singletons/>
+    
+      
+    <bridging/>
+    
+   
+  </relations>
+</document>
+

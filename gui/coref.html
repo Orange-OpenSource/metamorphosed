@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>metAMoRphosED AMR Coreference Editor</title>
+
+
+    <link rel="shortcut icon" type="image/x-icon" href="./img/orange.ico">
+
+    <script src="./lib/jquery-3.6.0.min.js" type="text/javascript"></script>
+    <script src="./lib/jquery.modal-0.9.2.min.js"></script>
+
+
+    <script src="./coref.js" type="text/javascript"></script>
+
+
+    <link rel="stylesheet" href="./lib/jquery.modal-0.9.2.min.css" />
+    <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@500&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="./coref.css" />
+</head>
+
+<body>
+    <img  style="vertical-align:middle" src="img/metamorphosed+transparent.png" width="500px"> <span class="subtitle">for AMR Coreferences</span>
+    <p/>
+    <!--h1 id="mainheader">Abstract Meaning Representation - Editor <span id="version"></span></h1-->
+
+
+    <button class="walk mybutton" id="first">|&lt; first</button>
+    <button class="walk mybutton" id="preceding">&lt;&lt; preceding</button>
+    <button class="mybutton" id="lire">load sentence</button>
+    <input type="text" id="sentnum" pattern="[1-9][0-9]*" size="4" value="1">
+    <button class="walk mybutton" id="next">next &gt;&gt;</button>
+    <button class="walk mybutton" id="last">last &gt|</button>
+    <button class="mybutton" id="toggledirection">display direction</button>
+    <input type="text" id="firstamr" pattern="[1-9][0-9]*" 
+           title="show only sentences from this number onwards"
+           placeholder="show from onwards" size="4" value="">
+    <input type="text" id="windowsize" pattern="[1-9][0-9]*" 
+           title="show only this many sentences"
+           placeholder="number of sentences shown" size="4" value="">
+    <input type="text" id="scaling" pattern="[1-9].[0-9]" 
+           title="change AMR graph size"
+           placeholder="graph size" size="4" value="">
+    <button class="history mybutton" id="undo" disabled>undo</button>
+    <button class="history mybutton" id="redo" disabled>redo</button>
+    filename: <span id="filename"></span> (<span id="numsent"></span> files) <button class="save mybutton"
+        id="save">&#x1F4BE; save file</button>
+    &nbsp;&nbsp;<button class="mybutton" id="togglehelp">toggle help</button>
+
+    <!--div class="editmode" id="commands">
+        <div class="grouping" id="editing">
+            <h3>Add corefs</h3>
+            <table>
+                <tr>
+                    <td>A)</td> <td>add a new instance for concept:</td>
+                    <td><input class="conceptfield" placeholder="concept" title="concept to be instantiated" type="text"
+                            id="concept" value="">
+                        <button class="addbutton mybutton" id="addconcept">add</button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>B)</td> <td>add new relation between instances: </td>
+                    <td>
+                        <select class="validvars" name="varb1" id="startvar"></select>
+                        <input class="edgefield" placeholder="relation"
+                            title="name of the relation to be inserted (like :quant or :polarity)" type="text"
+                            id="edgelabel" value="">
+                        
+                        <select class="validvars" name="varb2" id="endvar"></select>
+                        <button class="addbutton mybutton" id="addedge">add</button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>C)</td> <td>set a new top:</td>
+                    <td>
+                        <select class="validvars" name="varc1" id="topnode"></select>
+                        <button class="addbutton mybutton" id="settop">set</button>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td>D)</td> <td>add new relation and literal:</td>
+                    <td>
+                        <select class="validvars" name="vard1" id="literalof"></select>
+                        <input class="edgefield" placeholder="relation" title="name of the relation to be inserted"
+                            type="text" id="relationforliteral" value="">
+                        <input class="literalfield" placeholder="literal (without quotes)"
+                            title="literal (without quotes)" type="text" id="newliteral" value="">
+                        <button class="addbutton mybutton" id="addliteral">add</button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>E)</td> <td>add new <span class="code">:name</span>-relation for instance: </td>
+                    <td>
+                        <select class="validvars" name="vare1" id="nameof"></select>
+                        <input class="literalfield" placeholder="name (without quotes)"
+                            title="new name to be inserted together with an instance of name" type="text" id="name"
+                            value="">
+                        <button class="addbutton mybutton" id="addname">add</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3"><button class="cleanbutton mybutton" id="cleanfields">clean all</button></td </tr>
+            </table>
+        </div-->
+
+
+    </div>
+
+    <div class="editmode grouping" id="modcomment" style="display:none">
+        <button class="canceleditmode" id="cancelcom">&times;</button>
+        <h3>Modify comment</h3>
+        <textarea class="pnarea" title="modify comments" type="text" id="modifiedcomment" value=""></textarea>
+        <br />
+        <button class="addbutton mybutton" id="modifycomment">update</button>
+        <br />
+    </div>
+
+    <p />
+    <div id="helptext" class="helptext" style="display:none">
+        <h2>Help</h2>
+
+        <h2>About</h2>
+        <span class="logo2"><img src="img/metamorphosed+.png" width="16%"></span>
+        version <span id="version2"></span> (API version: <span id="apiversion"></span>)<br/>
+        Author: Johannes Heinecke.
+        Copyright © 2023 by Orange. This software is published under the <a target="_blank" href="https://opensource.org/licenses/BSD-3-Clause">3-Clause BSD License</a>.
+
+        <h2>This instance</h2>
+        Started on <span class="code" id="hostname"></span>
+        <br><span class="code">cd</span> <span class="code" id="dir"></span>
+        <br><span class="code" id="cmdl"></span>
+    </div>
+    <p />
+
+
+    <div class="editmode grouping" id="modcomment" style="display:none">
+        <button class="canceleditmode" id="cancelcom">&times;</button>
+        <h3>Modify comment</h3>
+        <textarea class="pnarea" title="modify comments" type="text" id="modifiedcomment" value=""></textarea>
+        <br />
+        <button class="addbutton mybutton" id="modifycomment">update</button>
+        <br />
+    </div>
+
+
+    <div id="resultat"></div>
+
+</body>
+
+</html>
