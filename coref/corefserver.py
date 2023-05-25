@@ -51,11 +51,12 @@ import gitinterface
 APIVERSION=1.0
 
 class CorefServer:
-    def __init__(self, port, xmlfiles, amrfiles, author=None):
+    def __init__(self, port, xmlfiles, amrfiles, author=None, do_git=True):
         self.port = port
         self.author = author
         self.editor = corefeditor.CorefEditor(xmlfiles, amrfiles)
         self.modifiedfiles = set()
+        self.do_git = do_git
         mydir = os.path.abspath(os.path.dirname(__file__))
         app = Flask(__name__,
                     static_url_path='',
@@ -230,11 +231,11 @@ class CorefServer:
         for sg in self.modifiedfiles:
             fn = sg.xmlfile
             repo, saveok, gitok = gitinterface.save(fn, version, sg.xml,
-                                                    warnings, messages)
+                                                    warnings, messages, self.do_git)
             if gitok:
                 atleastonegitok = True
 
-        if atleastonegitok:
+        if atleastonegitok and self.do_git:
             rtc = repo.git.commit("-m", "metamorphosed coref editor: %s files saved" % (len(self.modifiedfiles)), author=self.author)
             print("commited %s" % (fn), rtc)
 
@@ -381,6 +382,7 @@ if __name__ == "__main__":
     parser.add_argument("--xml", "-x", nargs="+", help="AMR file to edit")
     parser.add_argument("--amrfiles", "-a", nargs="+", help="AMR files which contain the indicated files")
     parser.add_argument("--author", default=None, help="author (for git), use format 'Name <mail@example.com>', if absent current user+mail is used")
+    parser.add_argument("--nogit", dest="git", default=True, action="store_false", help='no git add/commit, even if file is git controlled')
 
     #parser.add_argument("--pbframes", "-P", default=None, help="Propbank frameset documentation (directory with xml files)")
     #parser.add_argument("--constraints", "-C", default=None, help="constraints for subjects and predicates (yaml file)")
@@ -392,6 +394,6 @@ if __name__ == "__main__":
     else:
         args = parser.parse_args()
 
-        aes = CorefServer(args.port, args.xml, args.amrfiles, author=args.author)
+        aes = CorefServer(args.port, args.xml, args.amrfiles, author=args.author, do_git=args.git)
         aes.start()
 
