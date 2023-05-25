@@ -36,8 +36,8 @@ import git
 
 
 def save(fn, version, writefunc, #contents,
-         warnings, messages):
-    # returns tuple: (OK, git true)
+         warnings, messages, do_add=True):
+    # returns tuple: (repo, saveok, gitok)
     gitok = False
     repo = None
     absfn = os.path.abspath(fn)
@@ -73,6 +73,8 @@ def save(fn, version, writefunc, #contents,
     ofp.close()
 
     if gitok:
+        if not do_add:
+            return repo, 1, False
         #rtc = repo.git.status()
         try:
             #rtc = repo.git.diff(os.path.basename(fn))
@@ -84,15 +86,15 @@ def save(fn, version, writefunc, #contents,
                 atleastonegitok = True
                 #rtc = repo.git.commit("-m", "metamorphosed coref editor: %s of '%s' saved" % (", ".join(modified), fn), author=self.author)
                 #print("commited %s" % (fn), rtc)
-                return repo, 0, True
+                return repo, 1, True
             else:
                 print("nothing to add for %s" % (fn), rtc)
-                return repo, 0, False
+                return repo, 1, False
         except Exception as e:
             print("COMMIT Error <%s> <%s> <%s>" % (e, fn, rtc))
             warnings.append("commit error <%s> <%s> <%s>" % (e, fn, rtc))
             return repo, 1, False
-    return repo, 0, False
+    return repo, 1, False
 
 
 

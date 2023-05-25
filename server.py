@@ -63,13 +63,14 @@ import gitinterface
 APIVERSION="1.3.0"
 
 class AMR_Edit_Server:
-    def __init__(self, port, filename, pbframes, rels, concepts, constraints, readonly, author=None, reifications=None):
+    def __init__(self, port, filename, pbframes, rels, concepts, constraints, readonly, author=None, reifications=None, do_git=True):
         self.port =port
         self.filename= filename
         self.amrdoc = amrdoc.AMRdoc(filename)
         self.aps = {} # parsed and possibly modified PENMAN AMRs
         self.author = author
         self.reificator = None
+        self.do_git = do_git
         if reifications:
             self.reificator = reification.getInstance(reifications)
 
@@ -650,9 +651,9 @@ class AMR_Edit_Server:
         repo, saveok, gitok = gitinterface.save(fn, version,
                                                 self.writedoc,
                                                 #sg.xml(),
-                                                warnings, messages)
+                                                warnings, messages, do_add = self.do_git)
 
-        if gitok:
+        if gitok and self.do_git:
             #rtc = repo.git.status()
             try:
                 #rtc = repo.git.diff(os.path.basename(fn))
@@ -743,6 +744,7 @@ if __name__ == "__main__":
     parser.add_argument("--constraints", "-c", default=None, help="constraints for subjects and predicates (yaml file)")
     parser.add_argument("--readonly", "--ro", default=False, action="store_true", help='browse corpus only')
     parser.add_argument("--reifications", "-X", default=None, help="table for (de)reification")
+    parser.add_argument("--nogit", dest="git", default=True, action="store_false", help='no git add/commit, even if file is git controlled')
 
     if len(sys.argv) < 2:
         parser.print_help()
@@ -753,5 +755,6 @@ if __name__ == "__main__":
                               args.relations, args.concepts,
                               args.constraints, args.readonly,
                               author=args.author,
-                              reifications=args.reifications)
+                              reifications=args.reifications,
+                              do_git=args.git)
         aes.start()
