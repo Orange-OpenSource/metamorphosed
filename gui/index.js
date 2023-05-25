@@ -290,6 +290,7 @@ var litid = "";
 var litedge = "";
 
 var lastclickededge = null;
+var lastclickednode = null;
 
 function info(event) {
 	//console.log("EEEE", event);
@@ -310,7 +311,7 @@ function info(event) {
 			// we take the last clicked edge and connect to the now clicked instance
 			$(".editmode").hide();
 			$("#commands").show();
-			console.log("RRR", lastclickededge);
+			//console.log("RRR", lastclickededge);
 			var edgestart = lastclickededge.split("#")[1];
 			var edgeend = lastclickededge.split("#")[2];
 			var edgename = lastclickededge.split("#")[3];
@@ -322,11 +323,22 @@ function info(event) {
 			}
 			lastclickededge = null;
 			runcommand(params);
+		} else if (lastclickednode != null) {
+		    	var params = {
+				"start": lastclickednode,
+				"end": modconceptvar,
+				"label": "todo"
+			}
+			lastclickednode = null;
+			runcommand(params);
+			$("#conceptsetmodal").hide();
 		} else {
 			// we modify an instance/class node
 			$(".modal").hide();
 			//$("#modconcept").show();
 			const conceptname = event.target.parentNode.id.split(" ")[2];
+			lastclickednode = modconceptvar;
+
 			$("#modifiedconcept").val(conceptname);
 			$("#conceptinstance").empty();
 			$("#conceptinstance").append(modconceptvar);
