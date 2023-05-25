@@ -1,5 +1,7 @@
 # Coreference annotation
 
+Version 1.0 (see [CHANGES.md](CHANGES.md))
+
 The `corefserver.py` is a tool to annotate coreferences across AMR graphs corresponding to a list of consecuting sentences.
 It uses the same annotation format as the multi-sentences of  AMR 3.0 (see below).
 
