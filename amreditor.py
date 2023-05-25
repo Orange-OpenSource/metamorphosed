@@ -33,8 +33,10 @@
 # Software Name: MetAMoRphosED AMR-Editor
 # Author: Johannes Heinecke
 
+# version 2.5.0 as of 25th May 2023
 
-# processes editing of penman, NOT the comments and metadata!
+VERSION="2.5.0"
+
 
 import penman
 import readline
@@ -42,13 +44,9 @@ import re
 
 from  graphviz import Digraph
 
-#import amr2dot
-#import Graph
 import graph
-#import reification
 from reification import getInstance
 
-VERSION="2.4.0"
 
 # terminology
 # instance  a / ...
