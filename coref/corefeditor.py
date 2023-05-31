@@ -159,7 +159,11 @@ class IdentChain:
         print("ZZZ",newcid, self.prefix, self.cid)
         if newcid:
             # when writing the XML file, we need rel-0 to rel-n without missing number
-            ic.attrib["relationid"] = "rel-%s" % newcid
+            if not self.prefix:
+                pref = "rel-"
+            else:
+                pref = self.prefix
+            ic.attrib["relationid"] = "%s%s" % (pref,newcid)
         else:
             ic.attrib["relationid"] = self.prefix + str(self.cid)
         for mention in self.mentions:
@@ -181,7 +185,9 @@ class SentenceGroup:
         #self.chaines = collections.OrderedDict() # id: Chain
         self.chaines = []
 
-        self.other = [] # for the time being singletions and bridging
+        self.singletons = []
+        
+        self.other = [] # for the time being singletons and bridging
         self.comment = None
         tree = ET.parse(self.xmlfile)
         self.svgs = {} # sentpos: last svg graph # needed to know whether or not we have to call dot
@@ -217,7 +223,11 @@ class SentenceGroup:
                             ic = IdentChain(identchain.attrib["relationid"], identchain)
                             #self.chaines[ic.cid] = ic
                             self.chaines.append(ic)
-                            
+                    elif rel.tag == "singletons":
+                        for identchain in rel:
+                            ic = IdentChain(identchain.attrib["relationid"], identchain)
+                            #self.chaines[ic.cid] = ic
+                            self.singletons.append(ic)
                     else:
                         self.other.append(rel)
 
@@ -437,8 +447,15 @@ class SentenceGroup:
         relations = ET.SubElement(doc, "relations")
 
         identity = ET.SubElement(relations, "identity")
+        last = 0
         for i, identchain in enumerate(sorted(self.chaines, key=lambda x: x.cid)):
-            identchain.xml(identity, i)
+            #identchain.xml(identity, i)
+            identchain.xml(identity)
+            last = i
+        singletons = ET.SubElement(relations, "singletons")
+        for i, identchain in enumerate(sorted(self.singletons, key=lambda x: x.cid), last+1):
+            #identchain.xml(singletons, i)
+            identchain.xml(singletons)
 
         for o in self.other:
             relations.append(o)
