@@ -158,6 +158,7 @@ class AMRProcessor:
         amr = ONESPACE.sub(" ", amr)
         #amr = amr.replace("\n", "")
         amrs = amr.replace(") (", ")\n(").split("\n")
+        self.varletters = {}
         try:
             usedvariables = set()
             defined_instances = set()
@@ -168,6 +169,8 @@ class AMRProcessor:
                 self.top = None
 
                 for branch in tree.nodes():
+                    #print("==used", usedvariables)
+                    #print("==vars", self.varletters)
                     s = branch[0]
                     if not self.top:
                         self.top = s
@@ -189,19 +192,22 @@ class AMRProcessor:
                                 self.varletters[s[0]].add(s)
                         if not isinstance(o, str):
                             o = o[0]
-                        #print("TR", s,p,o)
+
                         if o in usedvariables:
                             o = "%s_new%d" % (o, i)
-
+                        #print("TR", s,p,o)
                         if p == ":instance":
                             # duplicated "v :instance concept" create errors in penman.encode(triples)
                             if s in defined_instances:
                                 continue
                             defined_instances.add(s)
                         self.triples.append((s,p,o))
-                usedvariables.update(self.varletters.keys())
 
-            #print(self.triples)
+                #usedvariables.update(self.varletters.keys())
+                for varnames in self.varletters.values():
+                    usedvariables.update(varnames)
+
+
         except penman.exceptions.DecodeError as e:
             self.lastpm = amr
             self.valid = False
