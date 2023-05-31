@@ -473,6 +473,22 @@ function formatAMR(data) {
 		   }
 	       });
 
+	if (data.bridgingtable) {
+	    $('#resultat').append('<div class="svggraph" id="bridgingdiv">');
+	    $("#bridgingdiv").append('<h2>Bridging');
+	    $("#bridgingdiv").append('<dl id="bridging_dl">');
+	    $.each(data.bridgingtable,
+		   function (cid, obj) {
+		       //$("#chains").append('<li id="chain_' + cid + '">' + cid + ":");
+		       $("#bridging_dl").append('<dt id="bridging_dt_' + cid + '"> rel-' + cid);
+		       $("#bridging_dl").append('<dd id="bridging_dd_' + cid + '">');
+		       for (var i = 0; i < obj.length; ++i) {
+			   $('#bridging_dd_' + cid).append(" " + obj[i]);
+		       }
+		   });
+	    
+	}
+
 	//if ('#innersvggraph_' + currentsentnum in visible_divselectors && visible_divselectors['#innersvggraph_' + currentsentnum] == false) {
 	//	ToggleDiv('#innersvggraph_' + currentsentnum, "#togglesvggraph");
 	//}

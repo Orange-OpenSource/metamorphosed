@@ -595,22 +595,77 @@ class SentenceGroup:
         for cid,chain in enumerate(self.chaines):
             table[cid] = []
             bgcolor,fgcolor = a2.chainid2col(cid)
-            for mention in chain.mentions:
+            for mention in sorted(chain.mentions, key=lambda x: x.sid) :
                 sentpos = self.sid2sentpos[mention.sid]
                 wiki = ""
                 if mention.text:
                     wiki = " (%s)" % mention.text
-                table[cid].append('<span class="chain" data="G_%s_%s" style="background-color:%s;color:%s"><b>%s</b> %s / %s%s</span>' % (sentpos, mention.variable,
+                table[cid].append('<span class="chain" data="G_%s_%s" style="background-color:%s;color:%s"><b>%s</b>: %s / %s%s</span>' % (sentpos, mention.variable,
                                                                                                                                           bgcolor, fgcolor,
                                                                                                                                           sentpos+1, mention.variable, mention.concept, wiki))
             for ir in chain.implicitroles:
                 sentpos = self.sid2sentpos[ir.sid]
                 # TODO add class="chain" and data="I %s_%s" % sentpos,cid for implicits: but we do not have a variable only the cid
                 #      this needs a change in addtochain() to take cid from I_... and not var from G_...
-                table[cid].append('<span class="chain" style="background-color:%s;color:%s"><b>%s</b> i%s / implicit</span>' % (bgcolor, fgcolor,
-                                                                                                                       sentpos+1, ir.parentvariable))
+                table[cid].append('<span class="chain" style="background-color:%s;color:%s"><b>%s</b>: <i>i%s / implicit</i></span>' % (bgcolor, fgcolor,
+                                                                                                                                sentpos+1, ir.parentvariable))
         #print(table)
-        return a2.multidot(self.svgs, showfrom, shownumber), table
+
+        # get the sentecence number and varaible of singletons to display them in the bridging section
+        singletons = {} # bid: sentenceid, variable
+        for ic in self.singletons:
+            bid = ic.cid
+            prefix = ic.prefix
+            if ic.mentions:
+                m = ic.mentions[0]
+                sentpos = self.sid2sentpos[m.sid]
+                singletons["%s%s" % (prefix,bid)] = (m.sid, sentpos, m.variable, m.concept, None)
+            elif ic.implicitroles:
+                ir = ic.implicitroles[0]
+                sentpos = self.sid2sentpos[ir.sid]
+                singletons["%s%s" % (prefix,bid)] = (ir.sid, sentpos, ir.parentvariable, ir.parentconcept, ir.argument)
+
+        def getchainfromtable(relid, table, singletons):
+            if relid in singletons:
+                msid, sentpos, mvar, mconc, narg = singletons[relid]
+                return "%s: %s / %s" % (sentpos, mvar, mconc)
+
+            elems = relid.split("-")
+            if len(elems) != 2:
+                return relid
+            try:
+                cid = int(elems[1])
+                return " ".join(table[cid])
+            except:
+                return relid
+        
+        bridgingtable = {}
+        for bridge in self.bridging:
+            bridgingtable[bridge.bid] = []
+            if isinstance(bridge, Setmember):
+                supersetid = bridge.superset
+                #if supersetid in singletons:
+                #    msid, sentpos, mvar, mconc, narg = singletons[supersetid]
+                #    superset = "%s: %s / %s" % (sentpos, mvar, mconc)
+                #else:
+                superset = getchainfromtable(supersetid, table, singletons)
+                bridgingtable[bridge.bid].append('<span class="chain"><b>Superset: %s</b></span><br>members: ' % (superset))
+
+                for m in bridge.members:
+                    bridgingtable[bridge.bid].append(getchainfromtable(m, table, singletons))
+            else:
+                wholeid = bridge.wholeid
+                #if wholeid in singletons:
+                #    msid, sentpos, mvar, mconc, narg = singletons[wholeid]
+                #    superset = "%s: %s / %s" % (sentpos, mvar, mconc)
+                #else:
+                whole = getchainfromtable(wholeid, table, singletons)
+                bridgingtable[bridge.bid].append('<span class="chain"><b>Whole: %s</b></span><br>parts: ' % (whole))
+                for m in bridge.partids:
+                    bridgingtable[bridge.bid].append(getchainfromtable(m, table, singletons))
+        
+        
+        return a2.multidot(self.svgs, showfrom, shownumber), table, bridgingtable
 
 
 

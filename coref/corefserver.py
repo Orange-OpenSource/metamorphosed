@@ -204,10 +204,11 @@ class CorefServer:
         #print("NNN", showfrom, shownumber)
         key = list(self.editor.sentencegroups.keys())[num-1]
         sg = self.editor.sentencegroups[key]
-        svgs, chaintable = sg.multiformat("svg", showfrom, shownumber, scaling)
+        svgs, chaintable, bridgingtable = sg.multiformat("svg", showfrom, shownumber, scaling)
         dico = { #"svg": sg.format(),
             "svgdict": svgs,
             "chaintable": chaintable,
+            "bridgingtable": bridgingtable,
             "comment": sg.comment,
             "warnings": warnings, "messages": messages,
             "filename": sg.xmlfile,
