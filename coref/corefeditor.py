@@ -101,6 +101,67 @@ class ImplicitRole:
         ir.attrib["parentconcept"] = self.parentconcept
         ir.attrib["parentvariable"] = self.parentvariable
 
+CID = re.compile("([A-Za-z]+-)([0-9]+)")
+
+class Partwhole:
+    def __init__(self, bid, xmlparent):
+        mo = CID.match(bid)
+        if mo:
+            self.prefix = mo.group(1)  # rel ou singleton
+            self.bid = int(mo.group(2))
+        else:
+            self.bid = bid
+            self.prefix = ""
+
+        self.wholeid =None
+        self.partids = []
+        for x in xmlparent:
+            if x.tag == "whole":
+                if self.wholeid:
+                    print("ERROR: more than 'whole' tag in partwhole %s" % pid, file=sys.stderr)
+                self.wholeid = x.attrib["id"]
+            elif x.tag == "part":
+                self.partids.append(x.attrib["id"])
+
+    def xml(self, parent):
+        m = ET.SubElement(parent, "partwhole")
+        m.attrib["relationid"] = "%s%s" % (self.prefix,self.bid)
+        if self.wholeid:
+            w = ET.SubElement(m, "whole")
+            w.attrib["id"] = self.wholeid
+        for p in self.partids:
+            w = ET.SubElement(m, "part")
+            w.attrib["id"] = p
+            
+class Setmember:
+    def __init__(self, bid, xmlparent):
+        mo = CID.match(bid)
+        if mo:
+            self.prefix = mo.group(1)  # rel ou singleton
+            self.bid = int(mo.group(2))
+        else:
+            self.bid = bid
+            self.prefix = ""
+
+        self.superset =None
+        self.members = []
+        for x in xmlparent:
+            if x.tag == "superset":
+                if self.superset:
+                    print("ERROR: more than 'superset' tag in setmember %s" % pid, file=sys.stderr)
+                self.superset = x.attrib["id"]
+            elif x.tag == "member":
+                self.members.append(x.attrib["id"])
+
+    def xml(self, parent):
+        m = ET.SubElement(parent, "setmember")
+        m.attrib["relationid"] = "%s%s" % (self.prefix,self.bid)
+        if self.superset:
+            w = ET.SubElement(m, "superset")
+            w.attrib["id"] = self.superset
+        for p in self.members:
+            w = ET.SubElement(m, "member")
+            w.attrib["id"] = p
 
 
 class Mention:
@@ -123,7 +184,6 @@ class Mention:
         return m
 
 
-CID = re.compile("([A-Za-z]+-)([0-9]+)")
 
 class IdentChain:
     def __init__(self, cid, xmlparent=None):
@@ -156,7 +216,7 @@ class IdentChain:
 
     def xml(self, parent, newcid=None):
         ic = ET.SubElement(parent, "identchain")
-        print("ZZZ",newcid, self.prefix, self.cid)
+        #print("ZZZ",newcid, self.prefix, self.cid)
         if newcid:
             # when writing the XML file, we need rel-0 to rel-n without missing number
             if not self.prefix:
@@ -186,8 +246,9 @@ class SentenceGroup:
         self.chaines = []
 
         self.singletons = []
+        self.bridging = []
         
-        self.other = [] # for the time being singletons and bridging
+        #self.other = [] # for the time being singletons and bridging
         self.comment = None
         tree = ET.parse(self.xmlfile)
         self.svgs = {} # sentpos: last svg graph # needed to know whether or not we have to call dot
@@ -228,8 +289,19 @@ class SentenceGroup:
                             ic = IdentChain(identchain.attrib["relationid"], identchain)
                             #self.chaines[ic.cid] = ic
                             self.singletons.append(ic)
+                    elif rel.tag == "bridging":
+                        for br in rel:
+                            if br.tag == "partwhole":
+                                pp = Partwhole(br.attrib["relationid"], br)
+                                self.bridging.append(pp)
+                            elif br.tag == "setmember":
+                                pp = Setmember(br.attrib["relationid"], br)
+                                self.bridging.append(pp)
+                            else:
+                                print("Error: invalid tag '%s'" % br.tag, file=sys.stderr)
                     else:
-                        self.other.append(rel)
+                        print("Error: invalid tag '%s'" % rel.tag, file=sys.stderr)
+                        #self.other.append(rel)
 
         for sp, sid in enumerate(self.sids):
             self.sid2sentpos[sid] = sp
@@ -420,17 +492,22 @@ class SentenceGroup:
         for ch in self.chaines: #.values():
             res.append(str(ch))
 
-        for o in self.other:
-            #print("ww", type(o), dir(o))
-            #print("zz", ET.tostring(o).decode("UTF-8"))
+        for o in self.singletons:
             res.append(ET.tostring(o).decode("UTF-8"))
+        for o in self.bridging:
+            res.append(ET.tostring(o).decode("UTF-8"))
+        #for o in self.other:
+        #    #print("ww", type(o), dir(o))
+        #    #print("zz", ET.tostring(o).decode("UTF-8"))
+        #    res.append(ET.tostring(o).decode("UTF-8"))
         return "\n\t".join(res)
 
     def xml(self, ofp=None):
-        # recreate XML
+        # recreate XML for output
         doc = ET.Element("document")
-        comment = ET.SubElement(doc, "comment")
+        
         if self.comment:
+            comment = ET.SubElement(doc, "comment")
             comment.text = self.comment
         sentences = ET.SubElement(doc, "sentences")
         sentences.attrib["annotator"] = self.annotator
@@ -457,8 +534,14 @@ class SentenceGroup:
             #identchain.xml(singletons, i)
             identchain.xml(singletons)
 
-        for o in self.other:
-            relations.append(o)
+        bridging = ET.SubElement(relations, "bridging")
+        for i, br in enumerate(sorted(self.bridging, key=lambda x: x.bid), last+1):
+            #identchain.xml(singletons, i)
+            br.xml(bridging)
+
+
+        #for o in self.other:
+        #    relations.append(o)
 
 
         #print(ET.tostring(doc).decode("UTF-8"))
