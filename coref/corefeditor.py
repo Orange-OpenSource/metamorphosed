@@ -45,6 +45,7 @@ import os
 import json
 import collections
 import xml.etree.ElementTree as ET
+import re
 from xml.dom import minidom
 
 import pathlib
@@ -121,9 +122,18 @@ class Mention:
             m.text = self.text
         return m
 
+
+CID = re.compile("([A-Za-z]+-)([0-9]+)")
+
 class IdentChain:
     def __init__(self, cid, xmlparent=None):
-        self.cid = cid
+        mo = CID.match(cid)
+        if mo:
+            self.prefix = mo.group(1)  # rel ou singleton
+            self.cid = int(mo.group(2))
+        else:
+            self.cid = cid
+            self.prefix = ""
         self.mentions = []
         self.implicitroles = []
         if xmlparent:
@@ -137,7 +147,7 @@ class IdentChain:
                     self.implicitroles.append(ir)
 
     def __repr__(self):
-        res = ["identchain %s" % self.cid]
+        res = ["identchain %s%s" % (self.prefix,self.cid)]
         for m in self.mentions:
             res.append(str(m))
         for m in self.implicitroles:
@@ -146,12 +156,12 @@ class IdentChain:
 
     def xml(self, parent, newcid=None):
         ic = ET.SubElement(parent, "identchain")
-        print("ZZZ",newcid, self.cid)
+        print("ZZZ",newcid, self.prefix, self.cid)
         if newcid:
             # when writing the XML file, we need rel-0 to rel-n without missing number
             ic.attrib["relationid"] = "rel-%s" % newcid
         else:
-            ic.attrib["relationid"] = self.cid
+            ic.attrib["relationid"] = self.prefix + str(self.cid)
         for mention in self.mentions:
             mention.xml(ic)
         for implicitrole in self.implicitroles:
@@ -382,7 +392,8 @@ class SentenceGroup:
         for chain in self.chaines:
             cids.append(chain.cid)
         
-        while "rel-%d" % cid in cids:
+        #while "rel-%d" % cid in cids:
+        while cid in cids:
             cid += 1
             continue
         cid = "rel-%d" % cid
