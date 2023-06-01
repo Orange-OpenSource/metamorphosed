@@ -114,20 +114,20 @@ orangebright = collections.OrderedDict({
     })
 
 # we need many colours since long texts have many coref chains
+random.seed(2023) # we use random shuffle to put the colour in a random order, but the same random order every time ...
 manyothercols = {}
-#for a in [20,35,50,67]:
-#    for b in [100,125,150,180]:
-#        for c in [200,220,240,255]:
+
 for a in [20,60,100,140]:
     for b in [75, 115, 155, 195]:
         for c in [130,170,210,250]:
-
             z = [a,b,c]
             random.shuffle(z)
             col = "#%02x%02x%02x" % tuple(z)
             
             #print(col, "black" if sum(z)/3 > 128 else "white")
             manyothercols[col] = col
+
+
 
 orangebright.update(orangedark)
 orangebright.update(orangecols)
@@ -393,7 +393,9 @@ class AMRs2dot:
                                "fontname": font,
                                "fontcolor": fontcol,
                                "fillcolor": fillcol}
-                    sgraph.node(oo, label="i%s/implicit\nrel-%d" % (pv, cid), shape="diamond",
+                    sgraph.node(oo, #label="i%s/implicit\nrel-%d" % (pv, cid),
+                                label="i%s rel-%d" % (pv, cid),
+                                shape="diamond",
             #                    #id="node %s %s %s" % (s,o,chainnum),
                                 **kwargs2
                             )
