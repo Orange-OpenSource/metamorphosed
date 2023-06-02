@@ -134,7 +134,7 @@ To start the server, run
 
 Once the editor is started, point your navigator to `http://localhost:4567`
 
-![Reified relation ](../doc/coref-main.png)
+![Reified relation ](doc/coref-main.png)
 
 Each graph is displayed with coreferential instances marked (in same calour and the coreference chain id (`rel-1`)).
 
@@ -146,5 +146,5 @@ To create new coreference chain, click on two instances one after the other.
 If you scroll the screen further down, you'll find a complete list of all
 coreference chains, followed by bridging groups (the latter cannot yet be modified)
 
-![Reified relation ](../doc/coref-lists.png)
+![Reified relation ](doc/coref-lists.png)
 
