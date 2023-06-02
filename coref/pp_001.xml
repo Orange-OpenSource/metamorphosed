@@ -77,8 +77,22 @@
         <mention concept="boa" id="lpp_1943.15" variable="b2"/>
       </identchain>
     </identity>
-    <singletons/>
-    <bridging/>
+    <singletons>
+         <identchain relationid="singleton-8">
+            <mention concept="boa" id="lpp_1943.2" variable="b2"/>
+         </identchain>
+    </singletons>
+    <bridging>
+         <setmember relationid="rel-9">
+             <superset id="rel-3"/>
+             <member id="singleton-8"/>
+         </setmember>
+         <setmember relationid="rel-10">
+             <superset id="rel-3"/>
+             <member id="rel-7"/>
+         </setmember>
+
+    </bridging>
   </relations>
 </document>
 
