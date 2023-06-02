@@ -218,7 +218,7 @@ If the edited file is very large, filters can be applied to shorten the list (wh
 
 ![Sentence list](doc/sentencelist.png)
 
-# Reification
+## Reification
 
 If the option `--reificiations` is used, a reifiable relation can be reified (and reversed, if the corresponding concept has no aditional relations. The following graph
 
@@ -229,9 +229,12 @@ becomes this after reifying `:location`
 ![Reified relation ](doc/reified.png)
 
 
+# AMR Coreference editor
+
+see [coref/README.md](coref/README.md)
 
 
-## License 
+# License
 
 * This software is under the [3-Clause BSD License](LICENSE)
 

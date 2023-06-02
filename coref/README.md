@@ -123,8 +123,28 @@ Needs AMR data like
 To start the server, run 
 
 ```
-<install-path>/amr-editor/coref/corefserver.py 
-	--xml <listof xml files>
-	--amrfiles <list of amr files containig the sentences referenced in the xml files>
+<install-path>/amr-editor/coref/corefserver.py \
+	--xml <listof xml files> \
+	--amrfiles <list of amr files containing the sentences referenced in the xml files> \
+        [--port 4567]
 ```
+
+
+## Editing
+
+Once the editor is started, point your navigator to `http://localhost:4567`
+
+![Reified relation ](../doc/coref-main.png)
+
+Each graph is displayed with coreferential instances marked (in same calour and the coreference chain id (`rel-1`)).
+
+In order to add an instance to an existing coreference chain, just click on an instance of the chain and then on the instance which you want to add to the chain. To take an instance out of (any) chain, click twice on it. If a chain contains only a single instances, it is deleted automatically
+
+To create new coreference chain, click on two instances one after the other.
+
+
+If you scroll the screen further down, you'll find a complete list of all
+coreference chains, followed by bridging groups (the latter cannot yet be modified)
+
+![Reified relation ](../doc/coref-lists.png)
 
