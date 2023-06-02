@@ -594,25 +594,31 @@ class SentenceGroup:
         
         table = {} # relid: [sentpos var/concept], .... (TODO suboptimal creating HTML code here ....)
         for cid,chain in enumerate(self.chaines):
-            table[cid] = []
             bgcolor,fgcolor = a2.chainid2col(cid)
-            #for mention in sorted(chain.mentions, key=lambda x: x.sid): # this sorts the sentence ids alphabetically, not in chronological order
+            temp_table = []
+
             for mention in chain.mentions: 
                 sentpos = self.sid2sentpos[mention.sid]
+
                 wiki = ""
                 if mention.text:
                     wiki = " «%s»" % mention.text
-                table[cid].append('<span class="chain" data="G_%s_%s" style="background-color:%s;color:%s"><b>%s</b>: %s / %s%s</span>' % \
+
+                temp_table.append((sentpos, '<span class="chain" data="G_%s_%s" style="background-color:%s;color:%s"><b>%s</b>: %s / %s%s</span>' % \
                                   (sentpos, mention.variable,
                                    bgcolor, fgcolor,
-                                   sentpos+1, mention.variable, mention.concept, wiki))
+                                   sentpos+1, mention.variable, mention.concept, wiki)))
             for ir in chain.implicitroles:
                 sentpos = self.sid2sentpos[ir.sid]
                 # TODO add class="chain" and data="I %s_%s" % sentpos,cid for implicits: but we do not have a variable only the cid
                 #      this needs a change in addtochain() to take cid from I_... and not var from G_...
-                table[cid].append('<span class="chain" style="background-color:%s;color:%s"><b>%s</b>: <i>i%s / implicit</i></span>' % \
+                temp_table.append((sentpos, '<span class="chain" style="background-color:%s;color:%s"><b>%s</b>: <i>i%s / implicit</i></span>' % \
                                   (bgcolor, fgcolor,
-                                   sentpos+1, ir.parentvariable))
+                                   sentpos+1, ir.parentvariable)))
+            temp_table.sort()
+            table[cid] = [b for a,b in temp_table]
+
+            
         #for x in table:
         #    print(x, table[x])
 
@@ -633,7 +639,7 @@ class SentenceGroup:
         def getchainfromtable(relid, table, singletons):
             if relid in singletons:
                 msid, sentpos, mvar, mconc, narg = singletons[relid]
-                return "%s: %s / %s" % (sentpos, mvar, mconc)
+                return '<span class="chain" style="background-color:#E8E8E8;">%s: %s / %s</span>' % (sentpos, mvar, mconc)
 
             elems = relid.split("-")
             if len(elems) != 2:

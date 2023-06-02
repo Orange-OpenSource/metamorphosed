@@ -448,7 +448,7 @@ function formatAMR(data) {
 		       svgmod = svg.replace(/<svg /, '<svg onmousedown="info(event);" ');
 		       // does not scale the width
 		       //svgmod = svgmod.replace("scale(1 1)", 'scale(0.75 0.75)');
-		       sentnum = sgroup;
+		       sentnum = sgroup+1;
 		       $('#gresultat').append('<div class="svggraph" id="svggraph_' + sgroup + '">');
 		       $('#svggraph_' + sgroup).append('<div class="sentenceid">' + sentnum + ": " + sid);
 		       //$('#svggraph_' + sgroup).append('<div class="sentencetext">«' + obj.text + "»");
