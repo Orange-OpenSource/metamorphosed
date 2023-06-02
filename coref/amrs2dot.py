@@ -144,8 +144,8 @@ orangebright.update(orangecols)
 orangebright.update(manyothercols)
 
 orangebrightkeys = list(orangebright.keys())
-for i,c in enumerate(orangebrightkeys):
-    print(i, c, orangebright[c])
+#for i,c in enumerate(orangebrightkeys):
+#    print(i, c, orangebright[c])
 
 SVGDIMS = re.compile('(width|height)="(\d+)')
 
