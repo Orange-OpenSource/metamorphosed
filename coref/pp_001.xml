@@ -47,7 +47,6 @@
         <mention concept="book" id="lpp_1943.5" variable="b2"/>
       </identchain>
       <identchain relationid="rel-3">
-        <mention concept="boa" id="lpp_1943.3" variable="b2"/>
         <mention concept="boa" id="lpp_1943.5" variable="b"/>
         <mention concept="they" id="lpp_1943.6" variable="t"/>
       </identchain>
@@ -79,11 +78,7 @@
       </identchain>
     </identity>
     <singletons/>
-    
-      
     <bridging/>
-    
-   
   </relations>
 </document>
 
