@@ -37,10 +37,10 @@
     <button class="mybutton" id="toggledirection">display direction</button>
     <input type="text" id="firstamr" pattern="[1-9][0-9]*" 
            title="show only sentences from this number onwards"
-           placeholder="show from onwards" size="4" value="">
+           placeholder="show from onwards" size="8" value="">
     <input type="text" id="windowsize" pattern="[1-9][0-9]*" 
            title="show only this many sentences"
-           placeholder="number of sentences shown" size="4" value="">
+           placeholder="number of sentences shown" size="8" value="">
     <input type="text" id="scaling" pattern="[1-9].[0-9]" 
            title="change AMR graph size"
            placeholder="graph size" size="4" value="">
@@ -125,15 +125,32 @@
 
     <p />
     <div id="helptext" class="helptext" style="display:none">
-        <h2>Help</h2>
+        <h2 class="help">Help</h2>
 
-        <h2>About</h2>
+        Once a file is loaded, the user interface shows all existing coreference chains. Earch chain has an identifier and a unique colour.
+        implicite mentions (which are not shown explicitly mentioned in the AMR graph) are shown in a diamond shaped node.
+
+        In order to add a new instance to an existing chain, click on a chain member (either in any graph or in the chain lists (below) and then click
+        on the instance to be added. To remove an instance from a chain, click twice on the instance in question.
+
+        <p>
+        If a text contains many sentence, i.e. many AMR graphs, it is possible to restrict the graphs actually shown by setting a starting graph in 
+        the <span class="code">show from number</span> field and a number of graphs shown in the <span class="code">number of sentences</span> field.
+
+        <p>
+        Below the AMR graphs, two lists are shown
+        <ul>
+        <li>Coreference chains: a complete list of all coreference chaines including their instances. Each instance is shown as <i>sentence number: instance variable / concept</i> and if present the content of the <span class="code">:wiki</span> relation.
+        <li>Briding: a list of bridings defined in the XML file. Currently the bridgings cannot be modified using MetAMoRphosED.
+        </ul>
+
+        <h2 class="help">About</h2>
         <span class="logo2"><img src="img/metamorphosed+.png" width="16%"></span>
-        version <span id="version2"></span> (API version: <span id="apiversion"></span>)<br/>
+        version <span id="version2"></span> (API version: <span id="apiversion"></span>)<br/><br/>
         Author: Johannes Heinecke.
         Copyright © 2023 by Orange. This software is published under the <a target="_blank" href="https://opensource.org/licenses/BSD-3-Clause">3-Clause BSD License</a>.
 
-        <h2>This instance</h2>
+        <h2 class="help">This instance</h2>
         Started on <span class="code" id="hostname"></span>
         <br><span class="code">cd</span> <span class="code" id="dir"></span>
         <br><span class="code" id="cmdl"></span>

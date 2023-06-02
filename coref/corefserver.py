@@ -48,7 +48,7 @@ parent = pathlib.Path(os.path.abspath(__file__)).parent.parent
 sys.path.append(str(parent))
 import gitinterface
 
-APIVERSION=1.0
+APIVERSION=1.1
 
 class CorefServer:
     def __init__(self, port, xmlfiles, amrfiles, author=None, do_git=True):
@@ -213,6 +213,7 @@ class CorefServer:
             "warnings": warnings, "messages": messages,
             "filename": sg.xmlfile,
             "numsent": len(self.editor.sentencegroups),
+            "showfrom": showfrom,
             "num": num,
                  #"comments": "\n".join(cursentence.comments),
                  #"sentid": cursentence.id,

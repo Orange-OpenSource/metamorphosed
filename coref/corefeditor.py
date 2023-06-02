@@ -33,8 +33,9 @@
 # Software Name: MetAMoRphosED AMR-Editor
 # Author: Johannes Heinecke
 
-# version 1.1 as of 25th May 2023
-VERSION="1.1"
+# version 1.2 as of 2nd June 2023
+
+VERSION="1.2"
 
 
 # read .xml and if present .json file (if absent, AMRfiles must be given) and display a block of sentences with coreferences (from XML)
@@ -595,21 +596,25 @@ class SentenceGroup:
         for cid,chain in enumerate(self.chaines):
             table[cid] = []
             bgcolor,fgcolor = a2.chainid2col(cid)
-            for mention in sorted(chain.mentions, key=lambda x: x.sid) :
+            #for mention in sorted(chain.mentions, key=lambda x: x.sid): # this sorts the sentence ids alphabetically, not in chronological order
+            for mention in chain.mentions: 
                 sentpos = self.sid2sentpos[mention.sid]
                 wiki = ""
                 if mention.text:
-                    wiki = " (%s)" % mention.text
-                table[cid].append('<span class="chain" data="G_%s_%s" style="background-color:%s;color:%s"><b>%s</b>: %s / %s%s</span>' % (sentpos, mention.variable,
-                                                                                                                                          bgcolor, fgcolor,
-                                                                                                                                          sentpos+1, mention.variable, mention.concept, wiki))
+                    wiki = " «%s»" % mention.text
+                table[cid].append('<span class="chain" data="G_%s_%s" style="background-color:%s;color:%s"><b>%s</b>: %s / %s%s</span>' % \
+                                  (sentpos, mention.variable,
+                                   bgcolor, fgcolor,
+                                   sentpos+1, mention.variable, mention.concept, wiki))
             for ir in chain.implicitroles:
                 sentpos = self.sid2sentpos[ir.sid]
                 # TODO add class="chain" and data="I %s_%s" % sentpos,cid for implicits: but we do not have a variable only the cid
                 #      this needs a change in addtochain() to take cid from I_... and not var from G_...
-                table[cid].append('<span class="chain" style="background-color:%s;color:%s"><b>%s</b>: <i>i%s / implicit</i></span>' % (bgcolor, fgcolor,
-                                                                                                                                sentpos+1, ir.parentvariable))
-        #print(table)
+                table[cid].append('<span class="chain" style="background-color:%s;color:%s"><b>%s</b>: <i>i%s / implicit</i></span>' % \
+                                  (bgcolor, fgcolor,
+                                   sentpos+1, ir.parentvariable))
+        #for x in table:
+        #    print(x, table[x])
 
         # get the sentecence number and varaible of singletons to display them in the bridging section
         singletons = {} # bid: sentenceid, variable
@@ -619,11 +624,11 @@ class SentenceGroup:
             if ic.mentions:
                 m = ic.mentions[0]
                 sentpos = self.sid2sentpos[m.sid]
-                singletons["%s%s" % (prefix,bid)] = (m.sid, sentpos, m.variable, m.concept, None)
+                singletons["%s%s" % (prefix,bid)] = (m.sid, sentpos+1, m.variable, m.concept, None)
             elif ic.implicitroles:
                 ir = ic.implicitroles[0]
                 sentpos = self.sid2sentpos[ir.sid]
-                singletons["%s%s" % (prefix,bid)] = (ir.sid, sentpos, ir.parentvariable, ir.parentconcept, ir.argument)
+                singletons["%s%s" % (prefix,bid)] = (ir.sid, sentpos+1, ir.parentvariable, ir.parentconcept, ir.argument)
 
         def getchainfromtable(relid, table, singletons):
             if relid in singletons:
@@ -649,10 +654,11 @@ class SentenceGroup:
                 #    superset = "%s: %s / %s" % (sentpos, mvar, mconc)
                 #else:
                 superset = getchainfromtable(supersetid, table, singletons)
-                bridgingtable[bridge.bid].append('<span class="chain"><b>Superset: %s</b></span><br>members: ' % (superset))
+                bridgingtable[bridge.bid].append('<span class="bridgingtype">Superset: %s</span><br>members: ' % (superset))
 
                 for m in bridge.members:
                     bridgingtable[bridge.bid].append(getchainfromtable(m, table, singletons))
+
             else:
                 wholeid = bridge.wholeid
                 #if wholeid in singletons:
@@ -660,7 +666,7 @@ class SentenceGroup:
                 #    superset = "%s: %s / %s" % (sentpos, mvar, mconc)
                 #else:
                 whole = getchainfromtable(wholeid, table, singletons)
-                bridgingtable[bridge.bid].append('<span class="chain"><b>Whole: %s</b></span><br>parts: ' % (whole))
+                bridgingtable[bridge.bid].append('<span class="bridgingtype">Whole: %s</span><br>parts: ' % (whole))
                 for m in bridge.partids:
                     bridgingtable[bridge.bid].append(getchainfromtable(m, table, singletons))
         

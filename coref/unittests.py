@@ -32,7 +32,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Software Name: MetAMoRphosED AMR-Editor for coreferences
 # Author: Johannes Heinecke
-
+# version 1.2 as of 2nd June 2023
 
 import sys
 import pytest
@@ -83,19 +83,25 @@ def test_request_example(client):
     #print("res", response.data, file=sys.stderr)
     assert b"<!DOCTYPE html>\n<html>\n\n<head>" in response.data
 
+
+
 def test_read(client):
     response = client.get("/read", query_string = {"num": 1})
     res = json.loads(response.data)
     #print("res", res, file=sys.stderr)
     assert len(res["svgdict"]) == 19
     assert "lpp_1943.6" in res["svgdict"]
-    #assert '<h2>have-org-role</h2>\n<h3>have-org-role.91:' in res["framedoc"]
     assert res['filename'] == 'pp_001.xml'
-    #assert res['warning'] == ['more than one relation label « :op2 » start at instance « n2 »', 'incoherent :opNN numbering for instance « n »: 4, 2, 3', 'incoherent :opNN numbering for instance « n2 »: 2, 2']
 
     assert len(res["chaintable"]) == 8
     assert len(res["chaintable"]["0"]) == 10
-    assert res["chaintable"]["0"][0] == "<span class=\"chain\" data=\"G_1_i\" style=\"background-color:#fff6b6;color:black\"><b>2</b> i / i</span>"
+    #for x in res["chaintable"]:
+    #    print(x, file=sys.stderr)
+    #    for y in res["chaintable"][x]:
+    #        print("   ", y, file=sys.stderr)
+    assert res["chaintable"]["0"][0] == "<span class=\"chain\" data=\"G_1_i\" style=\"background-color:#fff6b6;color:black\"><b>2</b>: i / i</span>"
+
+
 
 def test_read_window(client):
     response = client.get("/read", query_string = {"num": 1,
@@ -117,7 +123,7 @@ def test_add_new_chain(client):
                                                          "to": "G_3_t2"})
     res = json.loads(response.data)
     assert len(res["chaintable"]) == 9
-    assert res["chaintable"]["8"][0] == "<span class=\"chain\" data=\"G_2_a\" style=\"background-color:#ff8ad4;color:black\"><b>3</b> a / animal</span>"
+    assert res["chaintable"]["8"][0] == "<span class=\"chain\" data=\"G_2_a\" style=\"background-color:#ff8ad4;color:black\"><b>3</b>: a / animal</span>"
 
 def test_delete_chain(client):
     response = client.get("/addtochain", query_string = {"num": 0,

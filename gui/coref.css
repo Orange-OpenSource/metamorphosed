@@ -34,7 +34,7 @@
 */
 
 body {
-  /*margin-top: 280; */
+  /*margin-top: 280px; */
   /* header height + top offset */
   height: 100%;
 
@@ -191,8 +191,11 @@ input {
   border: solid 1px #1f471f;
   margin: 10px 10px 10px 10px;
   padding: 10px;
-  text-indent: -2em;
   padding-left: 3em;
+}
+
+h2.help { 
+  text-indent: -1.5em;
 }
 
 .code {
@@ -631,6 +634,12 @@ td.framealiastable {
 }
 
 .chain {
-  margin-right: .7em;
+  margin-right: .3em;
+  margin-bottom: .3em;
+  padding: .3em;
+  line-height: 2em;;
  }
 
+.bridgingtype { 
+  font-weight: bold;
+}

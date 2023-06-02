@@ -394,6 +394,7 @@ function formatAMR(data) {
 	
 	// container for penman and svg, either on top of one anothoer or next to each ther
 	$("#resultat").append('<div id="gresultat">');
+	console.log(data);
 	//$("#gresultat").append('<div id="g1resultat">');
 	//$("#gresultat").append('<div id="g2resultat">');
 
@@ -438,7 +439,7 @@ function formatAMR(data) {
 	    $('#svggraph_' + currentsentnum).append('<div id="innersvggraph_' + currentsentnum + '">');
 	    $('#innersvggraph_' + currentsentnum).append(data.svg.replace(/<svg /, '<svg onmousedown="info(event);" '));
 	} else {
-	    var sgroup = 0;
+	    var sgroup = data.showfrom;
 	    $.each(data.svgdict,
 		   function (sid, obj) {
 		       //console.log("EEE", sid, obj);
@@ -447,7 +448,7 @@ function formatAMR(data) {
 		       svgmod = svg.replace(/<svg /, '<svg onmousedown="info(event);" ');
 		       // does not scale the width
 		       //svgmod = svgmod.replace("scale(1 1)", 'scale(0.75 0.75)');
-		       sentnum = sgroup+1
+		       sentnum = sgroup;
 		       $('#gresultat').append('<div class="svggraph" id="svggraph_' + sgroup + '">');
 		       $('#svggraph_' + sgroup).append('<div class="sentenceid">' + sentnum + ": " + sid);
 		       //$('#svggraph_' + sgroup).append('<div class="sentencetext">«' + obj.text + "»");
