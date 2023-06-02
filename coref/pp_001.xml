@@ -49,6 +49,7 @@
       <identchain relationid="rel-3">
         <mention concept="boa" id="lpp_1943.5" variable="b"/>
         <mention concept="they" id="lpp_1943.6" variable="t"/>
+        <mention concept="boa" id="lpp_1943.17" variable="b2"/>
       </identchain>
       <identchain relationid="rel-4">
         <mention concept="picture" id="lpp_1943.9" variable="p"/>
@@ -76,22 +77,25 @@
         <mention concept="boa" id="lpp_1943.14" variable="b2"/>
         <mention concept="boa" id="lpp_1943.15" variable="b2"/>
       </identchain>
+      <identchain relationid="rel-8">
+        <mention concept="age-01" id="lpp_1943.2" variable="a"/>
+        <mention concept="age-01" id="lpp_1943.18" variable="a"/>
+      </identchain>
     </identity>
     <singletons>
-         <identchain relationid="singleton-8">
-            <mention concept="boa" id="lpp_1943.2" variable="b2"/>
-         </identchain>
+      <identchain relationid="singleton-8">
+        <mention concept="boa" id="lpp_1943.2" variable="b2"/>
+      </identchain>
     </singletons>
     <bridging>
-         <setmember relationid="rel-9">
-             <superset id="rel-3"/>
-             <member id="singleton-8"/>
-         </setmember>
-         <setmember relationid="rel-10">
-             <superset id="rel-3"/>
-             <member id="rel-7"/>
-         </setmember>
-
+      <setmember relationid="rel-9">
+        <superset id="rel-3"/>
+        <member id="singleton-8"/>
+      </setmember>
+      <setmember relationid="rel-10">
+        <superset id="rel-3"/>
+        <member id="rel-7"/>
+      </setmember>
     </bridging>
   </relations>
 </document>

@@ -93,12 +93,11 @@ def test_read(client):
     assert "lpp_1943.6" in res["svgdict"]
     assert res['filename'] == 'pp_001.xml'
 
-    assert len(res["chaintable"]) == 8
+    assert len(res["chaintable"]) == 9
     assert len(res["chaintable"]["0"]) == 10
     assert res["chaintable"]["0"][0] == "<span class=\"chain\" data=\"G_1_i\" style=\"background-color:#fff6b6;color:black\"><b>2</b>: i / i</span>"
 
-    assert res["bridgingtable"]["9"][0] == '<span class="bridgingtype">Superset: <span class="chain" data="G_4_b" style="background-color:#ffeccc;color:black"><b>5</b>: b / boa</span> <span class="chain" data="G_5_t" style="background-color:#ffeccc;color:black"><b>6</b>: t / they</span></span><br>members: '
-
+    assert res["bridgingtable"]["10"][0] == '<span class="bridgingtype">Superset: <span class="chain" data="G_4_b" style="background-color:#ffeccc;color:black"><b>5</b>: b / boa</span> <span class="chain" data="G_5_t" style="background-color:#ffeccc;color:black"><b>6</b>: t / they</span> <span class="chain" data="G_16_b2" style="background-color:#ffeccc;color:black"><b>17</b>: b2 / boa</span></span><br>members: '
 
 def test_read_window(client):
     response = client.get("/read", query_string = {"num": 1,
@@ -119,8 +118,8 @@ def test_add_new_chain(client):
                                                          "from": "G_2_a",
                                                          "to": "G_3_t2"})
     res = json.loads(response.data)
-    assert len(res["chaintable"]) == 9
-    assert res["chaintable"]["8"][0] == "<span class=\"chain\" data=\"G_2_a\" style=\"background-color:#ff8ad4;color:black\"><b>3</b>: a / animal</span>"
+    assert len(res["chaintable"]) == 10
+    assert res["chaintable"]["9"][0] == "<span class=\"chain\" data=\"G_2_a\" style=\"background-color:#ff7900;color:black\"><b>3</b>: a / animal</span>"
 
 def test_delete_chain(client):
     response = client.get("/addtochain", query_string = {"num": 0,
@@ -129,7 +128,7 @@ def test_delete_chain(client):
                                                          "from": "G_2_a",
                                                          "to": "G_2_a"})
     res = json.loads(response.data)
-    assert len(res["chaintable"]) == 8
+    assert len(res["chaintable"]) == 9
 
 def test_add_to_chain(client):
     response = client.get("/addtochain", query_string = {"num": 0,
@@ -138,7 +137,7 @@ def test_add_to_chain(client):
                                                          "from": "G_14_p2",
                                                          "to": "G_2_a"})
     res = json.loads(response.data)
-    assert len(res["chaintable"]) == 8
+    assert len(res["chaintable"]) == 9
     assert len(res["chaintable"]["6"]) == 4
     #assert res["chaintable"]["8"][0] == "<span class=\"chain\" data=\"G_2_a\" style=\"background-color:#ff8ad4;color:black\"><b>3</b> a / animal</span>"
 
@@ -150,5 +149,5 @@ def test_remove_from_chain(client):
                                                          "from": "G_2_a",
                                                          "to": "G_2_a"})
     res = json.loads(response.data)
-    assert len(res["chaintable"]) == 8
+    assert len(res["chaintable"]) == 9
     assert len(res["chaintable"]["6"]) == 3
