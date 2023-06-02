@@ -95,12 +95,9 @@ def test_read(client):
 
     assert len(res["chaintable"]) == 8
     assert len(res["chaintable"]["0"]) == 10
-    #for x in res["chaintable"]:
-    #    print(x, file=sys.stderr)
-    #    for y in res["chaintable"][x]:
-    #        print("   ", y, file=sys.stderr)
     assert res["chaintable"]["0"][0] == "<span class=\"chain\" data=\"G_1_i\" style=\"background-color:#fff6b6;color:black\"><b>2</b>: i / i</span>"
 
+    assert res["bridgingtable"]["9"][0] == '<span class="bridgingtype">Superset: <span class="chain" data="G_4_b" style="background-color:#ffeccc;color:black"><b>5</b>: b / boa</span> <span class="chain" data="G_5_t" style="background-color:#ffeccc;color:black"><b>6</b>: t / they</span></span><br>members: '
 
 
 def test_read_window(client):
