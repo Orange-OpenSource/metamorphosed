@@ -147,7 +147,7 @@ orangebrightkeys = list(orangebright.keys())
 #for i,c in enumerate(orangebrightkeys):
 #    print(i, c, orangebright[c])
 
-SVGDIMS = re.compile('(width|height)="(\d+)')
+SVGDIMS = re.compile('(width|height)="(\\d+)')
 
 class AMRs2dot:
     def __init__(self, amrs, corefs, implicitroles, scaling=1):
