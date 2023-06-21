@@ -126,6 +126,7 @@ input {
 
 .boxhighlight {
   fill: yellow;
+  stroke: red;
 }
 
 #reifygroup, #gresultat {

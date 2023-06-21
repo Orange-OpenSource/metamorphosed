@@ -1,5 +1,8 @@
 # Changes
 
+## Version 1.3
+* unselect clicked node if clicking not on a node
+
 ## Version 1.2
 * layout improved
 * keep sentence in chronological order (in chainlists)

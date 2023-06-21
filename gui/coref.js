@@ -181,6 +181,7 @@ function unhighlight() {
 //const wdq = new RegExp('.*(Q[0-9]+).*');
 
 var lastclickedinst = null;
+var lastclickedobj = null;
 //var lastchain = null;
 
 /** clickin on a node in the graph */
@@ -214,6 +215,7 @@ function info(event) {
 			    "to": clickedinst,
 			}
 			lastclickedinst = null;
+			lastclickedobj = null;
 			//if (lastchain != "none")
 			runcommand(params, "addtochain");
 		} else {
@@ -223,6 +225,8 @@ function info(event) {
 		        // i.e. info on which sentence, which instance, which chain
 		        var nodelabelfields = event.target.parentNode.id.split(" ");
 			event.target.parentNode.setAttribute("class", "boxhighlight");
+			lastclickedobj = event.target.parentNode;
+			//console.log("EEEE", event.target.parentNode.getAttribute("class"));
 			//const conceptname = nodelabelfields[2]; //event.target.parentNode.id.split(" ")[2];
 			lastclickedinst = nodelabelfields[1];
 			//lastchain = nodelabelfields[3].split("_")[1];
@@ -240,6 +244,14 @@ function info(event) {
 			});			
 			*/
 		}
+	} else {
+	    // even if a node is selected, unselect it
+	    if (lastclickedobj != null) {
+		lastclickedobj.removeAttribute("class");
+		lastclickedobj = null;
+		lastclickedinst = null;
+	    }
+	    
 	}
 }
 

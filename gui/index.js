@@ -291,6 +291,7 @@ var litedge = "";
 
 var lastclickededge = null;
 var lastclickednode = null;
+var lastclickedElement = null;
 
 function info(event) {
 	//console.log("EEEE", event);
@@ -352,7 +353,8 @@ function info(event) {
 			$("#conceptsetmodal").css("left", event.pageX + "px");
 			$("#conceptsetmodal").show();
 			$("#conceptsetmodal").draggable();
-
+			event.target.parentNode.setAttribute("class", "boxhighlight");
+			lastclickedElement = event.target.parentNode
 			$("#cancelmc").click(function(){
 				//$("#conceptsetmodal").fadeOut();
 				$("#conceptsetmodal").hide();
@@ -362,6 +364,13 @@ function info(event) {
 		
 
 	} else if (event.target.parentNode.id.startsWith("edge#")) {
+	    if (lastclickedElement != null) {
+		lastclickedElement.removeAttribute("class");
+		lastclickednode = null;
+		lastclickededge = null;
+		$(".modal").hide();
+	    }
+
 		// we modify an edge
 		$(".modal").hide();
 		//$("#modedge").show();
@@ -427,6 +436,15 @@ function info(event) {
 		$("#cancelml").click(function(){
 			$("#literalsetmodal").hide();
 		});	
+	} else {
+	    // even if a node is selected, unselect it
+	    if (lastclickedElement != null) {
+		lastclickedElement.removeAttribute("class");
+		lastclickednode = null;
+		lastclickededge = null;
+		$(".modal").hide();
+	    }
+
 	}
 }
 
@@ -470,9 +488,13 @@ function runcommand(params) {
 var currentsentnum = 0;
 
 function formatAMR(data) {
-        sentenceloaded = true;
-	currentsentnum = $("#sentnum").val();
-	if (data.warning) {
+    lastclickededge = null;
+    lastclickednode = null;
+    lastclickedElement = null;
+
+    sentenceloaded = true;
+    currentsentnum = $("#sentnum").val();
+    if (data.warning) {
 		// display warnings
 		$("#resultat").append('<div class="error" id="errordiv">');
 		$("#errordiv").append('<ul id="error">');

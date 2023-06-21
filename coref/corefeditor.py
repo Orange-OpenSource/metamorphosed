@@ -33,9 +33,9 @@
 # Software Name: MetAMoRphosED AMR-Editor
 # Author: Johannes Heinecke
 
-# version 1.2 as of 2nd June 2023
+# version 1.3 as of 21st June 2023
 
-VERSION="1.2"
+VERSION="1.3"
 
 
 # read .xml and if present .json file (if absent, AMRfiles must be given) and display a block of sentences with coreferences (from XML)
@@ -661,9 +661,11 @@ class SentenceGroup:
                 #else:
                 superset = getchainfromtable(supersetid, table, singletons)
                 bridgingtable[bridge.bid].append('<span class="bridgingtype">Superset: %s</span><br>members: ' % (superset))
+                #bridgingtable[bridge.bid].append('<table><tr><td><span class="bridgingtype">Superset:</span></td> <td>%s</td></tr> <tr><td>members:</td> <td>' % (superset))
 
                 for m in bridge.members:
                     bridgingtable[bridge.bid].append(getchainfromtable(m, table, singletons))
+                #bridgingtable[bridge.bid].append("</td></tr></table>")
 
             else:
                 wholeid = bridge.wholeid
