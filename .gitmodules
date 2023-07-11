@@ -1,0 +1,3 @@
+[submodule "propbank-frames"]
+	path = propbank-frames
+	url = https://github.com/propbank/propbank-frames

@@ -22,7 +22,7 @@ apt install graphviz
 python3 -m venv VENV
 source VENV/bin/activate
 pip install -r requirements.txt
-git clone https://github.com/propbank/propbank-frames
+git submodule update --init
 pushd propbank-frames;  git checkout ad2bafa4c9c9c58cc1bc89; popd
 ```
 
