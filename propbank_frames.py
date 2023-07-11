@@ -197,6 +197,11 @@ class PropBankFrames:
             if p == ":instance":
                 elems = o.rsplit("-", 1)
                 if len(elems) > 1 and len(elems[1]) <= 3:
+                    # take doc of concept-nn
+                    if elems[0] in self.lemmas:
+                        doclist.append("%s" % self.lemmas[elems[0]])
+                elif len(elems) == 1:
+                    # try other concepts if there is a verb
                     if elems[0] in self.lemmas:
                         doclist.append("%s" % self.lemmas[elems[0]])
         return sorted(doclist)

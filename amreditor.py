@@ -33,9 +33,9 @@
 # Software Name: MetAMoRphosED AMR-Editor
 # Author: Johannes Heinecke
 
-# version 2.5.1 as of 21st June 2023
+# version 2.5.2 as of 11thJuly 2023
 
-VERSION="2.5.1"
+VERSION="2.5.2"
 
 
 import penman
