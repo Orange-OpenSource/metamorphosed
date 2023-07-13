@@ -64,7 +64,7 @@ APIVERSION="1.3.0"
 
 class AMR_Edit_Server:
     def __init__(self, port, filename, pbframes, rels, concepts, constraints, readonly, author=None, reifications=None, do_git=True):
-        self.port =port
+        self.port = port
         self.filename= filename
         self.amrdoc = amrdoc.AMRdoc(filename)
         self.aps = {} # parsed and possibly modified PENMAN AMRs
@@ -74,7 +74,11 @@ class AMR_Edit_Server:
         if reifications:
             self.reificator = reification.getInstance(reifications)
 
-
+        self.fileversion = "2"
+        if not gitinterface.is_git_controlled(filename):
+            bak_filename = filename + "." + self.fileversion
+            if os.path.exists(bak_filename):
+                raise Exception("Edited file <%s> not under git version control. Backup file <%s> exists already.\nPlease rename Backup file first" % (filename, bak_filename))
 
         # initial version of PM
         self.initstates = []
@@ -594,8 +598,7 @@ class AMR_Edit_Server:
 
     def save(self):
         print("saving", self.filename)
-        version = "2"
-        self.savefile(self.filename, version)
+        self.savefile(self.filename, self.fileversion)
         #print("saved as %s.%s" % (self.filename, version))
 
 
@@ -744,17 +747,19 @@ if __name__ == "__main__":
     parser.add_argument("--constraints", "-c", default=None, help="constraints for subjects and predicates (yaml file)")
     parser.add_argument("--readonly", "--ro", default=False, action="store_true", help='browse corpus only')
     parser.add_argument("--reifications", "-X", default=None, help="table for (de)reification")
-    parser.add_argument("--nogit", dest="git", default=True, action="store_false", help='no git add/commit, even if file is git controlled')
+    parser.add_argument("--nogit", dest="git", default=True, action="store_false", help='no git add/commit, even if file is git controlled (does nevertheless overwrite existing file)')
 
     if len(sys.argv) < 2:
         parser.print_help()
     else:
         args = parser.parse_args()
-
-        aes = AMR_Edit_Server(args.port, args.file, args.pbframes,
-                              args.relations, args.concepts,
-                              args.constraints, args.readonly,
-                              author=args.author,
-                              reifications=args.reifications,
-                              do_git=args.git)
-        aes.start()
+        try:
+            aes = AMR_Edit_Server(args.port, args.file, args.pbframes,
+                                  args.relations, args.concepts,
+                                  args.constraints, args.readonly,
+                                  author=args.author,
+                                  reifications=args.reifications,
+                                  do_git=args.git)
+            aes.start()
+        except Exception as e:
+            print(e)

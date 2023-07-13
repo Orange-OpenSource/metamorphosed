@@ -33,9 +33,9 @@
 # Software Name: MetAMoRphosED AMR-Editor
 # Author: Johannes Heinecke
 
-# version 2.5.1 as of 21st June 2023
+# version 2.5.2 as of 13th July 2023
 
-VERSION="2.5.1"
+VERSION="2.5.2"
 
 
 import penman
@@ -134,9 +134,9 @@ class AMRProcessor:
             print(pm, file=ofp)
 
         else:
-            print("AAA", self.lastpm)
-            print("BBB", self.triples)
-            print("CCC", self.top)
+            #print("AAA", self.lastpm)
+            #print("BBB", self.triples)
+            #print("CCC", self.top)
             pm = penman.encode(penman.Graph(self.triples, top=self.top))
             print(pm, file=ofp)
         print(file=ofp)

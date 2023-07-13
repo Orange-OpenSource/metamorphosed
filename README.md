@@ -11,7 +11,7 @@ by LDC (https://catalog.ldc.upenn.edu/LDC2020T02)
 
 _metAMmoRphosED_ runs as a local Web server, an internet browser must be used to navigate through the sentences and modifiy them. If the edited file is under git version control, every modification is automatically commited to the local repository.
 
-Version 2.5.0 (see [CHANGES.md](CHANGES.md))
+Version 2.5.2 (see [CHANGES.md](CHANGES.md))
 
 ## installation
 
@@ -184,7 +184,8 @@ After a sentence an empty line must follow. If you start annotating new sentence
 Once the server is up and running click on one of the navigation buttons to load a sentence (`first`, `preceding`, `next`, `last`)
 or enter a sentence number and lick `read sentence`. The sentence is shown in PENMAN format and in a graphical visualisation.
 
-If the file being edited is under git control, it will be saved under the same name followed by git add/git commit. Else it is saved using an additional `.2` file suffix
+If the file being edited is under git control, it will be saved under the same name followed by git add/git commit. Else it is saved using an additional `.2` file suffix. If the edited file is not git controlled and if the file with suffix `.2` exists already, the server exits with an error message.
+In this case rename the `.2` file and edit the renamed file.
 
 The graph can be extended/modified by the functions in the `Add concept/edges/names` field:
 fill in the fields and hit the add button

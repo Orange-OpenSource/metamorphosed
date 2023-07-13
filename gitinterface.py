@@ -35,6 +35,29 @@ import os
 import git
 
 
+def is_git_controlled(fn):
+    gitok = False
+    repo = None
+    absfn = os.path.abspath(fn)
+    try:
+        #print("check git for <%s>" % fn)
+        repo = git.Repo(os.path.dirname(fn), search_parent_directories=True)
+        #print("ZZZZ", fn, repo.untracked_files, repo.working_tree_dir)
+        
+        for utf in repo.untracked_files:
+            absutf = os.path.join(repo.working_tree_dir, utf)
+            #print(absfn, absutf)
+            if absfn == absutf:
+                raise FileNotGitControlled("%s not controlled by git" % fn)
+        gitok = True
+
+        # file versioned under git, we overwrite the input file
+        #print("git conrolled", fn)
+
+    except (git.exc.InvalidGitRepositoryError, FileNotGitControlled) as e:
+        print("no git repo", e)
+    return gitok
+
 def save(fn, version, writefunc, #contents,
          warnings, messages, do_add=True):
     # returns tuple: (repo, saveok, gitok)
