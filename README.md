@@ -11,7 +11,7 @@ by LDC (https://catalog.ldc.upenn.edu/LDC2020T02)
 
 _metAMmoRphosED_ runs as a local Web server, an internet browser must be used to navigate through the sentences and modifiy them. If the edited file is under git version control, every modification is automatically commited to the local repository.
 
-Version 2.5.2 (see [CHANGES.md](CHANGES.md))
+Version 2.5.3 (see [CHANGES.md](CHANGES.md))
 
 ## installation
 

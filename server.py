@@ -762,4 +762,4 @@ if __name__ == "__main__":
                                   do_git=args.git)
             aes.start()
         except Exception as e:
-            print(e)
+            print(e, file=sys.stderr)

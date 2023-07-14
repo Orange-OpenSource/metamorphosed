@@ -1,5 +1,8 @@
 # Changes
 
+## Version 2.5.3
+* git control check improved
+
 ## Version 2.5.2
 * editing of files not git controlled: Error if the backup file (file + .2) exists already
 

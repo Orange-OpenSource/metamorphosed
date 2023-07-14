@@ -57,6 +57,19 @@ class CorefServer:
         self.editor = corefeditor.CorefEditor(xmlfiles, amrfiles)
         self.modifiedfiles = set()
         self.do_git = do_git
+
+        self.fileversion = "2"
+        ko = []
+        ko2 = []
+        for xfn in xmlfiles:
+            if not gitinterface.is_git_controlled(xfn):
+                bak_filename = xfn + "." + self.fileversion
+                if os.path.exists(bak_filename):
+                    ko.append(xfn)
+                    ko2.append(bak_filename)
+        if ko:
+            raise Exception("Edited file(s) <%s> not under git version control. Backup file(s) <%s> exists already.\nPlease rename Backup file first" % (", ".join(ko), ", ".join(ko2)))
+
         mydir = os.path.abspath(os.path.dirname(__file__))
         app = Flask(__name__,
                     static_url_path='',
@@ -178,8 +191,7 @@ class CorefServer:
             #key = list(self.editor.sentencegroups.keys())[sentgroupnum-1]
             #sg = self.editor.sentencegroups[key]
             #print("saving", sentgroupnum, sg.xmlfile)
-            version = "2"
-            messages, warnings = self.savefiles(version)
+            messages, warnings = self.savefiles(self.fileversion)
 
             return self.prepare_newpage(sentgroupnum, showfrom, shownumber, scaling, warnings, messages)
 
@@ -225,7 +237,7 @@ class CorefServer:
         
         return Response("%s\n" % json.dumps(dico), 200, mimetype="application/json")
 
-    def savefiles(self, sgs, version="2"):
+    def savefiles(self, version):
         atleastonegitok = False
         modified = []
         messages = []
@@ -313,8 +325,7 @@ class CorefServer:
 
     def start(self):
         self.app.run(host="0.0.0.0", port=self.port) #, threaded=False, processes=4)
-        version = "2"
-        self.savefiles(self.modifiedfiles, version)
+        self.savefiles(self.fileversion)
 
 
 
@@ -396,6 +407,9 @@ if __name__ == "__main__":
     else:
         args = parser.parse_args()
 
-        aes = CorefServer(args.port, args.xml, args.amrfiles, author=args.author, do_git=args.git)
-        aes.start()
+        try:
+            aes = CorefServer(args.port, args.xml, args.amrfiles, author=args.author, do_git=args.git)
+            aes.start()
+        except Exception as e:
+            print(e, file=sys.stderr)
 

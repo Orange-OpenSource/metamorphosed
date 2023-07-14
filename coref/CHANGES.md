@@ -1,5 +1,9 @@
 # Changes
 
+## Version 1.4
+* git control check improved
+* editing of files not git controlled: Error if the backup file (file + .2) exists already
+
 ## Version 1.3
 * unselect clicked node if clicking not on a node
 

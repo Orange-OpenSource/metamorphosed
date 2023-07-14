@@ -35,12 +35,13 @@ import os
 import git
 
 
-def is_git_controlled(fn):
+def is_git_controlled(fn, verbose=False):
     gitok = False
     repo = None
     absfn = os.path.abspath(fn)
     try:
-        #print("check git for <%s>" % fn)
+        if verbose:
+            print("check git for <%s>" % fn)
         repo = git.Repo(os.path.dirname(fn), search_parent_directories=True)
         #print("ZZZZ", fn, repo.untracked_files, repo.working_tree_dir)
         
@@ -52,49 +53,39 @@ def is_git_controlled(fn):
         gitok = True
 
         # file versioned under git, we overwrite the input file
-        #print("git conrolled", fn)
+        if verbose:
+            print("git conrolled", fn)
 
     except (git.exc.InvalidGitRepositoryError, FileNotGitControlled) as e:
-        print("no git repo", e)
-    return gitok
+        if verbose:
+            print("no git controlled", e)
+        pass
+    if not verbose:
+        return gitok
+    else:
+        return gitok, absfn, repo
 
 def save(fn, version, writefunc, #contents,
          warnings, messages, do_add=True):
     # returns tuple: (repo, saveok, gitok)
-    gitok = False
-    repo = None
-    absfn = os.path.abspath(fn)
-    try:
-        print("check git for <%s>" % fn)
-        repo = git.Repo(os.path.dirname(fn), search_parent_directories=True)
-        #print("ZZZZ", fn, repo.untracked_files, repo.working_tree_dir)
-        
-        for utf in repo.untracked_files:
-            absutf = os.path.join(repo.working_tree_dir, utf)
-            #print(absfn, absutf)
-            if absfn == absutf:
-                raise FileNotGitControlled("%s not controlled by git" % fn)
-        gitok = True
-
+    gitok, absfn, repo = is_git_controlled(fn, verbose=True)
+    ofp = None
+    if gitok:
         # file versioned under git, we overwrite the input file
         print("writing orig")
         ofp = open(fn, "w")
-    except (git.exc.InvalidGitRepositoryError, FileNotGitControlled) as e:
-        print("no git repo", e)
-        # file not versioned, we write a new file
+    else:
         try:
             ofp = open(fn + "." + version, "w")
+
         except Exception as e:
             print("cannot write %s" % fn, e)
             warnings.append("cannot write %s: %s. File not saved" % (fn, e))
-            return repo, 0, False
-
-    #print(contents, file=ofp)
+            return repo, 0, gitok
     writefunc(ofp)
     print("%s written (git: %s)" % (ofp.name, gitok))
     messages.append("%s written (git: %s)" % (ofp.name, gitok))
     ofp.close()
-
     if gitok:
         if not do_add:
             return repo, 1, False
@@ -118,6 +109,69 @@ def save(fn, version, writefunc, #contents,
             warnings.append("commit error <%s> <%s> <%s>" % (e, fn, rtc))
             return repo, 1, False
     return repo, 1, False
+
+
+
+#def oosave(fn, version, writefunc, #contents,
+#         warnings, messages, do_add=True):
+#    # returns tuple: (repo, saveok, gitok)
+#    gitok = False
+#    repo = None
+#    absfn = os.path.abspath(fn)
+#    try:
+#        print("check git for <%s>" % fn)
+#        repo = git.Repo(os.path.dirname(fn), search_parent_directories=True)
+#        #print("ZZZZ", fn, repo.untracked_files, repo.working_tree_dir)
+#        
+#        for utf in repo.untracked_files:
+#            absutf = os.path.join(repo.working_tree_dir, utf)
+#            #print(absfn, absutf)
+#            if absfn == absutf:
+#                raise FileNotGitControlled("%s not controlled by git" % fn)
+#        gitok = True
+#
+#        # file versioned under git, we overwrite the input file
+#        print("writing orig")
+#        ofp = open(fn, "w")
+#    except (git.exc.InvalidGitRepositoryError, FileNotGitControlled) as e:
+#        print("no git repo", e)
+#        # file not versioned, we write a new file
+#        try:
+#            ofp = open(fn + "." + version, "w")
+#        except Exception as e:
+#            print("cannot write %s" % fn, e)
+#            warnings.append("cannot write %s: %s. File not saved" % (fn, e))
+#            return repo, 0, False
+#
+#    #print(contents, file=ofp)
+#    writefunc(ofp)
+#    print("%s written (git: %s)" % (ofp.name, gitok))
+#    messages.append("%s written (git: %s)" % (ofp.name, gitok))
+#    ofp.close()
+#
+#    if gitok:
+#        if not do_add:
+#            return repo, 1, False
+#        #rtc = repo.git.status()
+#        try:
+#            #rtc = repo.git.diff(os.path.basename(fn))
+#            rtc = repo.git.diff(absfn)
+#            #print("RTC", rtc)
+#            if rtc:
+#                rtc = repo.git.add(absfn)
+#                #rtc = repo.git.add(fn)
+#                atleastonegitok = True
+#                #rtc = repo.git.commit("-m", "metamorphosed coref editor: %s of '%s' saved" % (", ".join(modified), fn), author=self.author)
+#                #print("commited %s" % (fn), rtc)
+#                return repo, 1, True
+#            else:
+#                print("nothing to add for %s" % (fn), rtc)
+#                return repo, 1, False
+#        except Exception as e:
+#            print("COMMIT Error <%s> <%s> <%s>" % (e, fn, rtc))
+#            warnings.append("commit error <%s> <%s> <%s>" % (e, fn, rtc))
+#            return repo, 1, False
+#    return repo, 1, False
 
 
 

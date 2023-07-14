@@ -33,9 +33,9 @@
 # Software Name: MetAMoRphosED AMR-Editor
 # Author: Johannes Heinecke
 
-# version 1.3 as of 21st June 2023
+# version 1.4 as of 14th July 2023
 
-VERSION="1.3"
+VERSION="1.4"
 
 
 # read .xml and if present .json file (if absent, AMRfiles must be given) and display a block of sentences with coreferences (from XML)
