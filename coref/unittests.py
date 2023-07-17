@@ -38,6 +38,9 @@ import sys
 import pytest
 import json
 import time
+import tempfile
+import shutil
+import git
 
 from corefserver import CorefServer
 
@@ -72,9 +75,47 @@ def app():
     # clean up / reset resources here
 
 
+
+# start server just for one test without any validating stuff to test git 
+@pytest.fixture()
+def app_git():
+    datadir = tempfile.TemporaryDirectory()
+    print("===============================temp test directory", datadir)
+    shutil.copyfile("pp_001.xml", datadir.name + "/pp_001.xml")
+    shutil.copyfile("pp.amr.txt", datadir.name + "/pp.amr.txt")
+    repo = git.Repo.init(datadir.name)
+    repo.git.add(datadir.name + "/pp_001.xml")
+    repo.git.add(datadir.name + "/pp.amr.txt")
+    repo.git.commit("-m", "initial")
+
+    aes = CorefServer(4569,
+                      [datadir.name + "/pp_001.xml"],
+                      [datadir.name + "/pp.amr.txt"],
+                      )
+    app = aes.app
+
+    # other setup can go here
+
+    yield app, repo
+
+    # clean up / reset resources here
+
+
+
+
+
 @pytest.fixture()
 def client(app):
     return app.test_client()
+
+
+@pytest.fixture()
+def client_git(app_git):
+    app, repo = app_git
+    #return app_git.test_client()
+    return app.test_client(), repo
+
+
 
 
 
@@ -151,3 +192,46 @@ def test_remove_from_chain(client):
     res = json.loads(response.data)
     assert len(res["chaintable"]) == 9
     assert len(res["chaintable"]["6"]) == 3
+
+
+
+# test whether server stops if backup file exists
+def test_nogit_back_exists():
+    datadir = tempfile.TemporaryDirectory()
+    print("temporary test directory", datadir)
+    shutil.copyfile("pp_001.xml", datadir.name + "/pp_001.xml")
+    shutil.copyfile("pp_001.xml", datadir.name + "/pp_001.xml.2")
+    shutil.copyfile("pp_001.xml", datadir.name + "/pp_002.xml")
+    shutil.copyfile("pp_001.xml", datadir.name + "/pp_002.xml.2")
+    shutil.copyfile("pp.amr.txt", datadir.name + "/pp.amr.txt")
+
+    
+    # should crahs here, since we are in no-git mode and the backup file is already there
+    try:
+        aes = CorefServer(4569,
+                          [datadir.name + "/pp_001.xml", datadir.name + "/pp_002.xml"],
+                          [datadir.name + "/pp.amr.txt"],
+                          )
+
+    except Exception as e:
+        assert str(e) == "Edited file(s) <%s/pp_001.xml, %s/pp_002.xml> not under git version control. Backup file(s) <%s/pp_001.xml.2, %s/pp_002.xml.2> exists already.\nPlease rename Backup file first" % (datadir.name, datadir.name, datadir.name, datadir.name)
+
+
+
+# test git add/commit
+def test_edit_addinstance_git(client_git):
+    client, repo = client_git
+
+    response = client.get("/addtochain", query_string = {"num": 0,
+                                                         "showfrom": 3,
+                                                         "shownumber": 2,
+                                                         "from": "G_14_p2",
+                                                         "to": "G_2_a"})
+    res = json.loads(response.data)
+    assert len(res["chaintable"]) == 9
+    assert len(res["chaintable"]["6"]) == 4
+
+    response = client.get("/save", query_string = {"num": 0})
+    #res = json.loads(response.data)
+    print(res)
+    assert "commit: metamorphosed coref editor: 1 files saved" in repo.head.log()[-1].message

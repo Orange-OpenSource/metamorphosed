@@ -37,6 +37,9 @@ import sys
 import pytest
 import json
 import time
+import tempfile
+import shutil
+import git
 
 from server import AMR_Edit_Server
 
@@ -88,6 +91,7 @@ def app_once():
                           "testamr.txt",
                           "propbank-frames/frames/",
                           "relations.txt",
+                          "concepts.txt",
                           "constraints.yml",
                           False # readonly
                           )
@@ -101,6 +105,32 @@ def app_once():
 
 
 
+# start server just for one test without any validating stuff to test git 
+@pytest.fixture()
+def app_git():
+    datadir = tempfile.TemporaryDirectory()
+    print("===============================temp test directory", datadir)
+    shutil.copyfile("testamr.txt", datadir.name + "/testamr.txt")
+    repo = git.Repo.init(datadir.name)
+    repo.git.add(datadir.name + "/testamr.txt")
+    repo.git.commit("-m", "initial")
+
+    aes = AMR_Edit_Server(4568,
+                          datadir.name + "/testamr.txt",
+                          None,
+                          None,
+                          None,
+                          None,
+                          False
+                          )
+    app = aes.app
+
+    # other setup can go here
+
+    yield app, repo
+
+    # clean up / reset resources here
+
 
 @pytest.fixture()
 def client(app):
@@ -110,6 +140,13 @@ def client(app):
 @pytest.fixture()
 def client_once(app_once):
     return app_once.test_client()
+
+
+@pytest.fixture()
+def client_git(app_git):
+    app, repo = app_git
+    #return app_git.test_client()
+    return app.test_client(), repo
 
 
 
@@ -510,3 +547,35 @@ def test_reify_dereify_missing_ARG(client):
         ]
 
 
+# test whether server stops if backup file exists
+def test_nogit_back_exists():
+    datadir = tempfile.TemporaryDirectory()
+    print("temporary test directory", datadir)
+    shutil.copyfile("testamr.txt", datadir.name + "/testamr.txt")
+    shutil.copyfile("testamr.txt", datadir.name + "/testamr.txt.2")
+
+    
+    # should crahs here, since we are in no-git mode and the backup file is already there
+    try:
+        aes = AMR_Edit_Server(4568,
+                              datadir.name + "/testamr.txt",
+                              None,
+                              None,
+                              None,
+                              None,
+                              False
+                              )
+    except Exception as e:
+        assert str(e) == "Edited file <%s/testamr.txt> not under git version control. Backup file <%s/testamr.txt.2> exists already.\nPlease rename Backup file first" % (datadir.name, datadir.name)
+
+
+
+# test git add/commit
+def test_edit_addinstance_git(client_git):
+    client, repo = client_git
+    response = client.get("/read", query_string = {"num": 6})
+    response = client.get("/edit", query_string = {"num": 6, "addconcept": "rise-01"})
+    response = client.get("/save", query_string = {"num": 6})
+    #res = json.loads(response.data)
+    #print(res)
+    assert "commit: metamorphosed AMR editor: 6 of " in repo.head.log()[-1].message
