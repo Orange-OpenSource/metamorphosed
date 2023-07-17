@@ -40,6 +40,8 @@ import time
 import tempfile
 import shutil
 import git
+import glob
+import os
 
 from server import AMR_Edit_Server
 
@@ -59,7 +61,7 @@ def app():
     #app.config.update({
     #    "TESTING": True,
     #})
-    #print("zzzzzzzzzzzzzzzzzzzz")
+
     aes = AMR_Edit_Server(4568,
                           "testamr.txt",
                           "propbank-frames/frames/",
@@ -86,7 +88,7 @@ def app_once():
     #app.config.update({
     #    "TESTING": True,
     #})
-    #print("zzzzzzzzzzzzzzzzzzzz")
+
     aes = AMR_Edit_Server(4568,
                           "testamr.txt",
                           "propbank-frames/frames/",
@@ -109,7 +111,7 @@ def app_once():
 @pytest.fixture()
 def app_git():
     datadir = tempfile.TemporaryDirectory()
-    print("===============================temp test directory", datadir)
+    print("temporary test directory", datadir)
     shutil.copyfile("testamr.txt", datadir.name + "/testamr.txt")
     repo = git.Repo.init(datadir.name)
     repo.git.add(datadir.name + "/testamr.txt")
@@ -188,7 +190,7 @@ def test_edit_first(client):
     #response = client.get("/read", query_string = {"num": })
     response = client.get("/next", query_string = {"num": 8, "direction": "first"})
     res = json.loads(response.data)
-    print("res", json.dumps(res, indent=2))
+    #print("res", json.dumps(res, indent=2))
     assert "(m / multi-sentence\n   :snt1 (b / bear-02\n            :ARG1 (p / person\n" in res["penman"]
 
 def test_edit_last(client):
@@ -203,14 +205,14 @@ def test_edit_next(client):
     #response = client.get("/read", query_string = {"num": })
     response = client.get("/next", query_string = {"num": 8, "direction": "next"})
     res = json.loads(response.data)
-    print("res", json.dumps(res, indent=2))
+    #print("res", json.dumps(res, indent=2))
     assert res["num"] == 9
 
 def test_edit_prec(client):
     #response = client.get("/read", query_string = {"num": })
     response = client.get("/next", query_string = {"num": 8, "direction": "preceding"})
     res = json.loads(response.data)
-    print("res", json.dumps(res, indent=2))
+    #print("res", json.dumps(res, indent=2))
     assert res["num"] == 7
 
 
@@ -219,7 +221,7 @@ def test_edit_prec1(client):
     #response = client.get("/read", query_string = {"num": 4})
     response = client.get("/next", query_string = {"num": 1, "direction": "preceding"})
     res = json.loads(response.data)
-    print("res", json.dumps(res, indent=2))
+    #print("res", json.dumps(res, indent=2))
     assert res["num"] == 1
 
 
@@ -251,7 +253,7 @@ def test_edit_addedge_with_concepts(client):
     response = client.get("/edit", query_string = {"num": 17, "start": "//go-02", "label": "ARG4", "end": "/work-01" })
     response = client.get("/edit", query_string = {"num": 17, "start": "w", "label": "ARG0", "end": "//man" })
     res = json.loads(response.data)
-    print("res", json.dumps(res, indent=2))
+    #print("res", json.dumps(res, indent=2))
     assert res["warning"] == None
     assert res["penman"] == "(g / go-02\n   :ARG0 (m / man)\n   :ARG4 (w / work-01\n            :ARG0 m))"
     #assert 1 == 2
@@ -310,14 +312,14 @@ def test_edit_deledge2(client):
     response = client.get("/read", query_string = {"num": 20})
     response = client.get("/edit", query_string = {"num": 20, "deledge_start": "m","deledge_end": "a", "deledge": ":snt1"})
     res = json.loads(response.data)
-    print("res", json.dumps(res, indent=2))
+    #print("res", json.dumps(res, indent=2))
     assert res["penman"] == "(a / and\n   :op1 (g / guess-01\n           :ARG0 (i / i)\n           :ARG1 (o / overload-01\n                    :ARG1 (c / capacity\n                             :mod (c2 / carry-01)\n                             :poss (t2 / tower\n                                       :part-of (s / station\n                                                   :mod (b / base))))\n                    :degree (t / total)))\n   :op2 (g2 / get-through-12\n            :polarity -\n            :ARG0 i\n            :degree (a2 / at-all)))\n\n(m / multi-sentence\n   :snt2 (c3 / contrast-01\n             :ARG1 (p / possible-01\n                      :ARG1 (f / find-01\n                               :ARG0 (i3 / i)\n                               :ARG1 (s2 / signal))\n                      :mod (o2 / only))\n             :ARG2 (c4 / chance-02\n                       :polarity -\n                       :ARG1 (c5 / connect-01\n                                 :ARG0 i3\n                                 :ARG2 (i2 / internet)))))"
 
 def test_edit_delinstance(client):
     response = client.get("/read", query_string = {"num": 1})
     response = client.get("/edit", query_string = {"num": 1, "delinstance": "p"})
     res = json.loads(response.data)
-    print("res", json.dumps(res, indent=2))
+    #print("res", json.dumps(res, indent=2))
     assert res["penman"] == "(m / multi-sentence\n   :snt1 (b / bear-02\n            :location (c / city\n                         :name (n2 / name\n                                   :op1 \"London\")\n                         :wiki \"Q84\"))\n   :snt2 (l / live-01\n            :location c\n            :mod (s / still)))\n\n(n / name\n   :op1 \"Naomie\"\n   :op2 \"Harris\")"
 
 def test_edit_settop(client):
@@ -337,7 +339,7 @@ def test_edit_settop2(client):
     response = client.get("/read", query_string = {"num": 10})
     response = client.get("/edit", query_string = {"num": 10, "newtop": "xx"})
     res = json.loads(response.data)
-    print("res", json.dumps(res, indent=2))
+    #print("res", json.dumps(res, indent=2))
     assert res["penman"] == "(p / person\n   :ARG0-of (t / teach-01\n               :ARG1 (h / history)))"
     assert res["warning"] == [ "invalid instance variable xx"]
 
@@ -362,7 +364,7 @@ def test_edit_modliteral(client):
     response = client.get("/read", query_string = {"num": 21})
     response = client.get("/edit", query_string = {"num": 21, "literalid": "c","literaledge": ":wiki", "newliteral": "Q64AA"})
     res = json.loads(response.data)
-    print("res", json.dumps(res, indent=2))
+    #print("res", json.dumps(res, indent=2))
     assert res["penman"] == '(h / have-org-role-91\n   :ARG0 (c / city\n            :name (n / name\n                     :op1 "Berlin")\n            :wiki "Q64AA")\n   :ARG1 (c2 / country\n             :name (n2 / name\n                       :op1 "Germany"))\n   :ARG2 (c3 / capital))'
 
     #'(h / have-org-role-91\n   :ARG0 (c / city\n            :name (n / name\n                     :op1 "Cardiff")\n            :wiki "Q10690")\n   :ARG1 (c2 / country\n             :name (n2 / name\n                       :op1 "Wales")\n             :wiki "Q2AA")\n   :ARG2 (c3 / capital))'
@@ -386,13 +388,13 @@ def test_edit_addliteral(client):
 def test_read_nointeger(client):
     response = client.get("/read", query_string = {"num": "anystring"})
     res = json.loads(response.data)
-    print("res", res)
+    #print("res", res)
     assert res["error"] == "Parameter 'num' must be an integer."
 
 def test_read_num_too_big(client):
     response = client.get("/read", query_string={"num": 100})
     res = json.loads(response.data)
-    print("res", res)
+    #print("res", res)
     assert res["error"] == "invalid sentence number: must be between 1 and 23\n"
 
 def test_search_text(client):
@@ -411,7 +413,7 @@ def test_search_id(client):
     #response = client.get("/read", query_string = {"num": 4})
     response = client.get("/search", query_string = {"num": 4, "what": "findidnext", "regex": "incorrect" })
     res = json.loads(response.data)
-    print("res", res)
+    #print("res", res)
     assert res["num"] == 8
 
     response = client.get("/search", query_string = {"num": 8, "what": "findidprec", "regex": "empty" })
@@ -434,7 +436,7 @@ def test_get_invalid_triple(client):
 def test_get_disconnected_amr(client):
     response = client.get("/read", query_string = {"num": 12})
     res = json.loads(response.data)
-    print("res", json.dumps(res, indent=2))
+    #print("res", json.dumps(res, indent=2))
     #assert res["num"] == 6
     assert res['warning'] == [ "the graph is disconnected (invalid)" ]
 
@@ -447,7 +449,7 @@ def test_edit_amr_undo_redo(client):
 
     response = client.get("/edit", query_string = {"num": 6, "modpenman": "(r / rise-01  :location (e / east))"})
     res = json.loads(response.data)
-    print("res", json.dumps(res, indent=2))
+    #print("res", json.dumps(res, indent=2))
     assert "(r / rise-01\n   :location (e / east))" == res["penman"]
 
     response = client.get("/edit", query_string = {"num": 6, "addconcept": "sun"})
@@ -466,7 +468,7 @@ def test_edit_comment(client):
     response = client.get("/read", query_string = {"num": 6})
     response = client.get("/edit", query_string = {"num": 6, "modcomment": "adding a comment\n\nwith an empty line in between\n\n"})
     res = json.loads(response.data)
-    print("res", json.dumps(res, indent=2))
+    #print("res", json.dumps(res, indent=2))
     assert res["warning"] == None
     assert res["comments"] == "adding a comment\nwith an empty line in between"
     #assert 1 == 2
@@ -505,7 +507,7 @@ def test_dereify(client):
     response = client.get("/read", query_string = {"num": 3})
     response = client.get("/edit", query_string = {"num": 3, "dereify": ":location <>  be-located-at-91"})
     res = json.loads(response.data)
-    print("res2", json.dumps(res["penman"], indent=2))
+    #print("res2", json.dumps(res["penman"], indent=2))
     assert res["penman"] == '(k / kill-01\n   :ARG0 (c / cat)\n   :ARG1 (m / mouse)\n   :location (k2 / kitchen)\n   :time (d / date-entity\n            :dayperiod (n / night)))'
 
 
@@ -517,7 +519,7 @@ def test_reify_dereify_additional_edge(client):
     response = client.get("/edit", query_string = {"num": 3, "start": "zzz0", "label": "manner", "end": "//fast" })
     response = client.get("/edit", query_string = {"num": 3, "dereify": ":location <>  be-located-at-91"})
     res = json.loads(response.data)
-    print("res", json.dumps(res, indent=2))
+    #print("res", json.dumps(res, indent=2))
 
 
     assert res["penman"] == '(k / kill-01\n   :ARG0 (c / cat)\n   :ARG1 (m / mouse)\n   :ARG1-of (zzz0 / be-located-at-91\n                  :ARG2 (k2 / kitchen)\n                  :manner (f / fast))\n   :time (d / date-entity\n            :dayperiod (n / night)))'
@@ -546,6 +548,9 @@ def test_reify_dereify_missing_ARG(client):
         "invalid relation ':koARG2'"
         ]
 
+def ls(dn):
+    for x in glob.glob(dn + "/*"):
+        print("%-50s\t%7d" % (x, os.path.getsize(x)))
 
 # test whether server stops if backup file exists
 def test_nogit_back_exists():
@@ -554,6 +559,7 @@ def test_nogit_back_exists():
     shutil.copyfile("testamr.txt", datadir.name + "/testamr.txt")
     shutil.copyfile("testamr.txt", datadir.name + "/testamr.txt.2")
 
+    ls(datadir.name)
     
     # should crahs here, since we are in no-git mode and the backup file is already there
     try:
@@ -576,6 +582,9 @@ def test_edit_addinstance_git(client_git):
     response = client.get("/read", query_string = {"num": 6})
     response = client.get("/edit", query_string = {"num": 6, "addconcept": "rise-01"})
     response = client.get("/save", query_string = {"num": 6})
+
+    ls(repo.working_dir)
+
     #res = json.loads(response.data)
     #print(res)
     assert "commit: metamorphosed AMR editor: 6 of " in repo.head.log()[-1].message

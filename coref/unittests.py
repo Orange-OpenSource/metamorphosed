@@ -41,6 +41,8 @@ import time
 import tempfile
 import shutil
 import git
+import glob
+import os
 
 from corefserver import CorefServer
 
@@ -80,7 +82,7 @@ def app():
 @pytest.fixture()
 def app_git():
     datadir = tempfile.TemporaryDirectory()
-    print("===============================temp test directory", datadir)
+    print("temporary test directory", datadir)
     shutil.copyfile("pp_001.xml", datadir.name + "/pp_001.xml")
     shutil.copyfile("pp.amr.txt", datadir.name + "/pp.amr.txt")
     repo = git.Repo.init(datadir.name)
@@ -194,6 +196,11 @@ def test_remove_from_chain(client):
     assert len(res["chaintable"]["6"]) == 3
 
 
+def ls(dn):
+    for x in glob.glob(dn + "/*"):
+        print("%-50s\t%7d" % (x, os.path.getsize(x)))
+
+
 
 # test whether server stops if backup file exists
 def test_nogit_back_exists():
@@ -205,6 +212,7 @@ def test_nogit_back_exists():
     shutil.copyfile("pp_001.xml", datadir.name + "/pp_002.xml.2")
     shutil.copyfile("pp.amr.txt", datadir.name + "/pp.amr.txt")
 
+    ls(datadir.name)
     
     # should crahs here, since we are in no-git mode and the backup file is already there
     try:
@@ -227,11 +235,14 @@ def test_edit_addinstance_git(client_git):
                                                          "shownumber": 2,
                                                          "from": "G_14_p2",
                                                          "to": "G_2_a"})
+    ls(repo.working_dir)
     res = json.loads(response.data)
     assert len(res["chaintable"]) == 9
     assert len(res["chaintable"]["6"]) == 4
 
     response = client.get("/save", query_string = {"num": 0})
     #res = json.loads(response.data)
-    print(res)
+    #print(res)
+    for m in repo.head.log():
+        print(m)
     assert "commit: metamorphosed coref editor: 1 files saved" in repo.head.log()[-1].message

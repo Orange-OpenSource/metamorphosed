@@ -1,5 +1,8 @@
 # Changes
 
+## Version 2.5.4
+* new tests: git add/commit existing backup file
+
 ## Version 2.5.3
 * git control check improved
 

@@ -1,5 +1,8 @@
 # Changes
 
+## Version 1.5
+* new tests: git add/commit existing backup file
+
 ## Version 1.4
 * git control check improved
 * editing of files not git controlled: Error if the backup file (file + .2) exists already
