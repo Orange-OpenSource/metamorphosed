@@ -164,7 +164,7 @@ class AMRsentence:
 #        return False
 
 class AMRdoc:
-    def __init__(self, fn):
+    def __init__(self, fn, verbose=True):
         self.sentences = []
         self.ids = {} # id: sentence
 
@@ -233,7 +233,8 @@ class AMRdoc:
             asent.comments = comments
             self.sentences.append(asent)
             self.ids[sentid] = asent
-        print("%d sentences read from %s" % (len(self.sentences), fn), file=sys.stderr)
+        if verbose:
+            print("%d sentences read from %s" % (len(self.sentences), fn), file=sys.stderr)
 
     def tsv(self):
         # output all AMR graphs as triple list

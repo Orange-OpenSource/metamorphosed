@@ -15,6 +15,7 @@ Version 2.5.4 (see [CHANGES.md](CHANGES.md))
 
 ## installation
 
+### Linux 
 python 3.8
 
 ```
@@ -26,11 +27,21 @@ git submodule update --init
 pushd propbank-frames;  git checkout ad2bafa4c9c9c58cc1bc89; popd
 ```
 
+### Mac
+```
+brew install graphviz
+python3 -m venv VENV
+source VENV/bin/activate
+pip install -r requirements.txt
+git submodule update --init
+pushd propbank-frames;  git checkout ad2bafa4c9c9c58cc1bc89; popd
+```
+
 Note: For the PropBank frames, we need currently this intermediary version since the main and release-v3.4.1 branches 
 do not contain the definition of roles like `be-located-at-91`.
 
 also needed: 
-* graphviz (`sudo apt install graphviz`)
+* graphviz (see above `sudo apt install graphviz`)
 * https://code.jquery.com/jquery-3.6.0.min.js
 * https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.2/jquery.modal.min.js
 * https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.2/jquery.modal.min.css
