@@ -16,7 +16,7 @@ Version 2.5.4 (see [CHANGES.md](CHANGES.md))
 ## installation
 
 ### Linux 
-python 3.8
+python 3.10
 
 ```
 apt install graphviz
