@@ -473,6 +473,15 @@ def test_edit_comment(client):
     assert res["comments"] == "adding a comment\nwith an empty line in between"
     #assert 1 == 2
 
+def test_delete_comment(client):
+    response = client.get("/read", query_string = {"num": 15})
+    response = client.get("/edit", query_string = {"num": 15, "modcomment": ""})
+    res = json.loads(response.data)
+    #print("res", json.dumps(res, indent=2))
+    assert res["warning"] == None
+    assert res["comments"] == ""
+    #assert 1 == 2
+
 def test_read_date_aftermod(client):
     #response = client.get("/read", query_string = {"num": 1})
     #res = json.loads(response.data)

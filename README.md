@@ -11,7 +11,7 @@ by LDC (https://catalog.ldc.upenn.edu/LDC2020T02)
 
 _metAMmoRphosED_ runs as a local Web server, an internet browser must be used to navigate through the sentences and modifiy them. If the edited file is under git version control, every modification is automatically commited to the local repository.
 
-Version 2.5.4 (see [CHANGES.md](CHANGES.md))
+Version 2.5.5 (see [CHANGES.md](CHANGES.md))
 
 ## installation
 
@@ -79,8 +79,8 @@ pytest unittests.py -vv [-k testname] [-s]
 	[--relations <relations.txt>]
 	[--concepts <concepts.txt>]
 	[--pbframes <propbank-frames-dir>]
-	[--constraintes <constraints.yml>]
-        [--reifications <reification-able.txt]
+	[--constraints <constraints.yml>]
+        [--reifications <reification-table.txt]
         [--readonly]
         [--author 'Name <mail@example.com>']
 ```

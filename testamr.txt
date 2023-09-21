@@ -148,6 +148,7 @@
 
 # ::id sentence 15 OK
 # ::snt For more information, click <a href="http://www.hollywoodbowl.com">here</a>.
+# here we have a comment
 (c / click-01 :mode imperative
       :ARG0 (y / you)
       :location (h / here

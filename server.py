@@ -290,7 +290,7 @@ class AMR_Edit_Server:
                     self.aps[sentnum] = newap
                     ap = newap
                     ap.modified = True # set rather by ap.-functions ??
-            elif modcomment:
+            elif modcomment != None:
                 # comments are not processed in AMRProcessor
                 cursentence.modcomment(modcomment)
             elif newtop:
@@ -624,7 +624,7 @@ class AMR_Edit_Server:
         value=request.values[paramName].strip()
         #print("nnnn", paramType, value)
         if paramType == "string":
-            if len(value) == 0:
+            if len(value) == 0 and not isOptional:
                 raise ServerException("Parameter '%s' must not be empty." % paramName)
             else:
                 return str(value)

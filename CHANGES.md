@@ -1,5 +1,10 @@
 # Changes
 
+## Version 2.5.5
+* corrected bug when deleting comments
+* new test: deleting comments
+* typos in README
+
 ## Version 2.5.4
 * new tests: git add/commit existing backup file
 
