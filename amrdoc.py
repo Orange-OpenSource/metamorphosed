@@ -168,7 +168,12 @@ class AMRdoc:
         self.sentences = []
         self.ids = {} # id: sentence
 
-        ifp = open(fn)
+        if isinstance(fn, str):
+            ifp = open(fn)
+        else:
+            # here fn is a opened file or sys.stdin etc
+            ifp = fn
+
         amrblock = []
         sentid = None
         idrest = None # after the id in the ::id line
