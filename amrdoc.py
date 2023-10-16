@@ -334,7 +334,7 @@ def relations_between_concepts(ads, depth = 2):
             for oc in sorted(concepts[c][r]):
                 print("     %s\t%s" % (oc, concepts[c][r][oc]))
 
-def stats(ads):
+def stats(ads, conceptlist):
     triples = []
     sentences = 0
     for ad in ads:
@@ -401,6 +401,13 @@ def stats(ads):
     #    print(k,v)
 
 
+    if conceptlist:
+        for c in verbs:
+            print("%s\t%d" % (c, verbs[c]))
+        for c in others:
+            print("%s\t%d" % (c, others[c]))
+        return
+
     ofp = open("verbalconcepts-list.txt", "w")
     for c in verbs:
         print("%s\t%d" % (c, verbs[c]), file=ofp)
@@ -452,6 +459,8 @@ if __name__ == "__main__":
     parser.add_argument("--pbframes", "-P", default=None, help="Propbank frameset documentation (directory with xml files)")
     parser.add_argument("--constraints", "-C", default=None, help="constraints for subjects and predicates (yaml file)")
     parser.add_argument("--stats", "-s", default=False, action="store_true", help='calculate stats and create graphs')
+    parser.add_argument("--conceptlist", default=False, action="store_true", help="calculate stats and output only a list of concepts")
+
     
     parser.add_argument("--concepts", "-c", default=0, type=int, help='show links between concepts (1, 2, 3)')
     parser.add_argument("--validate", "-v", default=False, action="store_true", help='validate sentences (needs at least one of --rels, --pbframes, --constraints)')
@@ -488,7 +497,7 @@ if __name__ == "__main__":
             #ad.tsv()
             #ad.oneline()
         if args.stats:
-            stats(ads)
+            stats(ads, args.conceptlist)
         if args.concepts > 0:
             relations_between_concepts(ads, depth=args.concepts)
 
