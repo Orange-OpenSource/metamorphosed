@@ -519,6 +519,33 @@ def test_edit_deledge_notexist(client):
     assert res["penman"] == '(k / murder-01\n   :ARG0 (a / amr-unknown)\n   :ARG1 (p / person\n            :name (n / name\n                     :op1 "JFK")\n            :wiki "Q9696"))'
 
 
+def test_bad_api_usage(client):
+    response = client.get("/reads", query_string = {"num": 11})
+    #res = json.loads(response.data)
+    #print("ZZZZZ",response.status_code, "zzzzz")
+    assert response.status_code == 404
+
+    response = client.get("/read", query_string = {"numx": 11})
+    assert response.status_code == 400
+    res = json.loads(response.text)
+    assert res == {"error":"missing mandatory parameter 'num'"}
+
+    response = client.get("/edit", query_string = {"num": 3, "reifyxx": ":location <>  be-located-at-91"})
+    assert response.status_code == 400
+    res = json.loads(response.text)
+    assert res == {"error":"invalid parameter 'reifyxx'"}
+
+    response = client.get("/search", query_string = {"num": 4, "what": "findcommentprec" })
+    assert response.status_code == 400
+    res = json.loads(response.text)
+    assert res == {"error":"missing mandatory parameter 'regex'"}
+
+
+    response = client.get("/search", query_string = {"num": 0, "what": "findanyerror", "regex": "s[aeiou]cond" })
+    assert response.status_code == 400
+    res = json.loads(response.text)
+    assert res == {"error": "invalid search parameter 'findanyerror'"}
+
 def test_reify(client):
     response = client.get("/read", query_string = {"num": 3})
     response = client.get("/edit", query_string = {"num": 3, "reify": ":location <>  be-located-at-91"})

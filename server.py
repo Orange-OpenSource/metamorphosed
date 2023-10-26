@@ -181,7 +181,7 @@ class AMR_Edit_Server:
             modedge_start = self.checkParameter(request, 'modedge_start' , 'string', isOptional=True, defaultValue=None)
             modedge_end = self.checkParameter(request, 'modedge_end' , 'string', isOptional=True, defaultValue=None)
             newedge = self.checkParameter(request, 'newedge' , 'string', isOptional=True, defaultValue=None)
-            moveedge_newstart = self.checkParameter(request, 'modedge_newstart' , 'string', isOptional=True, defaultValue=None)
+            modedge_newstart = self.checkParameter(request, 'modedge_newstart' , 'string', isOptional=True, defaultValue=None)
 
             deledge_start = self.checkParameter(request, 'deledge_start' , 'string', isOptional=True, defaultValue=None)
             deledge_end = self.checkParameter(request, 'deledge_end' , 'string', isOptional=True, defaultValue=None)
@@ -202,23 +202,25 @@ class AMR_Edit_Server:
             dereify = self.checkParameter(request, 'dereify' , 'string', isOptional=True, defaultValue=None)
 
 
+            validparams = ["num", "cmd",
+                           "addconcept",
+                           "addname", "nameof",
+                           "start", "label", "end",
+                           "modconcept", "newconcept",
+                           "modedge_start", "modedge_end", "newedge", "modedge_newstart",
+                           "delinstance",
+                           "deledge_start", "deledge_end", "deledge",
+                           "literalid", "literaledge", "newliteral", "delliteral",
+                           "literalof", "relationforliteral", "newliteral",
+                           "modpenman",
+                           "modcomment",
+                           "reify", "dereify",
+                           "newtop"]
+            self.findinvalidparameters(request, validparams)
 
             print("COMMAND:", end=" ")
-            for v in ["cmd",
-                      "addconcept",
-                      "addname", "nameof",
-                      "start", "label", "end",
-                      "modconcept", "newconcept",
-                      "modedge_start", "modedge_end", "newedge", "moveedge_newstart",
-                      "delinstance",
-                      "deledge_start", "deledge_end", "deledge",
-                      "literalid", "literaledge", "newliteral", "delliteral",
-                      "literalof", "relationforliteral", "newliteral",
-                      "modpenman",
-                      "modcomment",
-                      "reify", "dereify",
-                      "newtop"]:
-                if eval(v) != None:
+            for v in validparams:
+                if v != "num" and eval(v) != None:
                     print('%s: "%s"' % (v, eval(v)), end=" ")
             print()
 
@@ -263,8 +265,8 @@ class AMR_Edit_Server:
             elif modconcept and newconcept:
                 ap.modconcept(modconcept, newconcept)
             elif modedge_start and modedge_end and newedge:
-                if moveedge_newstart:
-                    rtc = ap.moveedge(modedge_start, modedge_end, newedge, moveedge_newstart)
+                if modedge_newstart:
+                    rtc = ap.moveedge(modedge_start, modedge_end, newedge, modedge_newstart)
                 else:
                     ap.modedge(modedge_start, modedge_end, newedge)
             elif delinstance:
@@ -304,6 +306,9 @@ class AMR_Edit_Server:
                 ap.reify(reify)
             elif dereify:
                 rtc = ap.dereify(dereify)
+            else:
+                # TODO error !
+                pass
             pm,svg = ap.show()
 
             framedoc = None
@@ -397,6 +402,8 @@ class AMR_Edit_Server:
                     if oka:
                         sentnum = x
                         break
+            else:
+                raise ServerException("invalid search parameter '%s'" % what)
             #print("OKA",oka)
             #print("OKT",okt)
             return prepare_newpage(sentnum, okt, oka)
@@ -615,14 +622,18 @@ class AMR_Edit_Server:
         #print("saved as %s.%s" % (self.filename, version))
 
 
+    def findinvalidparameters(self, request, validlist):
+        for k,v in request.values.items():
+            #print("kkk", k,v)
+            if k not in validlist:
+                raise ServerException("invalid parameter '%s'" % k)
+
 
     def checkParameter(self, request, paramName, paramType, isOptional=False, defaultValue=None):
         # needed for curl -F txt=@file.txt
         if paramName in request.files:
             bstr = request.files[paramName].read()
             return bstr.decode("UTF-8")
-
-
 
         #for k,v in request.values.items():
         #    print("kkk", k,v)
