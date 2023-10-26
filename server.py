@@ -201,6 +201,13 @@ class AMR_Edit_Server:
             reify = self.checkParameter(request, 'reify' , 'string', isOptional=True, defaultValue=None)
             dereify = self.checkParameter(request, 'dereify' , 'string', isOptional=True, defaultValue=None)
 
+            if sentnum < 1 or sentnum > len(self.amrdoc.sentences):
+                # creates an http status code 400
+                raise ServerException("invalid sentence number: must be between 1 and %d" % len(self.amrdoc.sentences))
+                #dico = {"error": "invalid sentence number: must be between 1 and %d\n" % len(self.amrdoc.sentences)}
+                #return Response("%s\n" % json.dumps(dico),
+                #                400, mimetype="application/json")
+
 
             validparams = ["num", "cmd",
                            "addconcept",
@@ -307,8 +314,9 @@ class AMR_Edit_Server:
             elif dereify:
                 rtc = ap.dereify(dereify)
             else:
-                # TODO error !
-                pass
+                # creates an http status code 400
+                raise ServerException("No edit valid operation given")
+
             pm,svg = ap.show()
 
             framedoc = None
@@ -484,7 +492,7 @@ class AMR_Edit_Server:
             sentnum = self.checkParameter(request, 'num' , 'integer', isOptional=False, defaultValue=None)
             #sentnum = int(sentnum)
             if sentnum < 1 or sentnum > len(self.amrdoc.sentences):
-                dico = {"error": "invalid sentence number: must be between 1 and %d\n" % len(self.amrdoc.sentences)}
+                dico = {"error": "invalid sentence number: must be between 1 and %d" % len(self.amrdoc.sentences)}
                 return Response("%s\n" % json.dumps(dico),
                                 400, mimetype="application/json")
 

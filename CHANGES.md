@@ -1,5 +1,9 @@
 # Changes
 
+## Version 2.6.0
+* search in comments
+* new tests
+
 ## Version 2.5.5
 * corrected bug when deleting comments
 * new test: deleting comments

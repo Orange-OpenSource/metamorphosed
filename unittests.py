@@ -395,7 +395,7 @@ def test_read_num_too_big(client):
     response = client.get("/read", query_string={"num": 100})
     res = json.loads(response.data)
     #print("res", res)
-    assert res["error"] == "invalid sentence number: must be between 1 and 23\n"
+    assert res["error"] == "invalid sentence number: must be between 1 and 23"
 
 def test_search_text(client):
     #response = client.get("/read", query_string = {"num": 4})
@@ -530,10 +530,25 @@ def test_bad_api_usage(client):
     res = json.loads(response.text)
     assert res == {"error":"missing mandatory parameter 'num'"}
 
+    response = client.get("/read", query_string = {"num": 0})
+    assert response.status_code == 400
+    res = json.loads(response.text)
+    assert res == {'error': 'invalid sentence number: must be between 1 and 23'}
+
     response = client.get("/edit", query_string = {"num": 3, "reifyxx": ":location <>  be-located-at-91"})
     assert response.status_code == 400
     res = json.loads(response.text)
     assert res == {"error":"invalid parameter 'reifyxx'"}
+
+    response = client.get("/edit", query_string = {"num": 333, "reify": ":location <>  be-located-at-91"})
+    assert response.status_code == 400
+    res = json.loads(response.text)
+    assert res == {'error': 'invalid sentence number: must be between 1 and 23'}
+
+    response = client.get("/edit", query_string = {"num": 3, })
+    assert response.status_code == 400
+    res = json.loads(response.text)
+    assert res == {'error': 'No edit valid operation given'}
 
     response = client.get("/search", query_string = {"num": 4, "what": "findcommentprec" })
     assert response.status_code == 400
