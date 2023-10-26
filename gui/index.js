@@ -1146,6 +1146,11 @@ $(document).ready(function () {
 				"what": this.id,
 				"regex": $("#amrsearch").val()
 			}
+		} else if (this.id == "findcommentnext" || this.id == "findcommentprec") {
+			params = {
+				"what": this.id,
+				"regex": $("#commentsearch").val()
+			}
 		} else {
 			return;
 		}

@@ -19,6 +19,7 @@
 
 # ::id sentence 2
 # ::snt The cat killed the mouse
+# this is the second sentence in this file (needed to test searching for comments)
 (k / kill-01
     :ARG0 (c / cat)
     :ARG1 (m / mouse))

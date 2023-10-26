@@ -75,7 +75,7 @@ class AMR_Edit_Server:
             self.reificator = reification.getInstance(reifications)
 
         self.fileversion = "2"
-        if not gitinterface.is_git_controlled(filename):
+        if not readonly and not gitinterface.is_git_controlled(filename):
             bak_filename = filename + "." + self.fileversion
             if os.path.exists(bak_filename):
                 raise Exception("Edited file <%s> not under git version control. Backup file <%s> exists already.\nPlease rename Backup file first" % (filename, bak_filename))
@@ -358,6 +358,12 @@ class AMR_Edit_Server:
                     if ok:
                         sentnum = x+1
                         break
+            elif what == "findcommentnext":
+                for x in range(sentnum+1, len(self.amrdoc.sentences)):
+                    okc = list(self.amrdoc.sentences[x].findcomment(regex))
+                    if okc:
+                        sentnum = x+1
+                        break
             elif what == "findamrnext":
                 for x in range(sentnum+1, len(self.amrdoc.sentences)+1):
                     #oka = list(self.amrdoc.sentences[x].findamr(regex))
@@ -377,6 +383,13 @@ class AMR_Edit_Server:
                     if ok:
                         sentnum = x+1
                         break
+            elif what == "findcommentprec":
+                for x in range(sentnum-2, -1, -1):
+                    ok = self.amrdoc.sentences[x].findcomment(regex)
+                    if ok:
+                        sentnum = x+1
+                        break
+
             elif what == "findamrprec":
                 for x in range(sentnum-1, 0, -1):
                     oka = list(self.aps[x].findamr(regex))

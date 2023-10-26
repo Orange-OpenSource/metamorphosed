@@ -147,6 +147,15 @@ class AMRsentence:
                 return rtc
         return [] #False
 
+    def findcomment(self, regex):
+        if self.comments:
+            for c in self.comments:
+                rtc = re.finditer(regex, c, re.IGNORECASE)
+                if rtc:
+                    # print(rtc)
+                    return rtc
+        return [] #False
+
     def findid(self, regex):
         if self.id:
             rtc = re.search(regex, self.id, re.IGNORECASE)

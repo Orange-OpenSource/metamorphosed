@@ -421,6 +421,20 @@ def test_search_id(client):
     #print("res", res)
     assert res["num"] == 6
 
+def test_search_text(client):
+    #response = client.get("/read", query_string = {"num": 4})
+    response = client.get("/search", query_string = {"num": 1, "what": "findcommentnext", "regex": "h.re" })
+    res = json.loads(response.data)
+    #print("res", res)
+    assert res["num"] == 15
+
+    response = client.get("/search", query_string = {"num": 4, "what": "findcommentprec", "regex": "s[aeiou]cond" })
+    res = json.loads(response.data)
+    #print("res", res)
+    assert res["num"] == 2
+
+
+
 def test_get_invalid_amr(client):
     response = client.get("/read", query_string = {"num": 13})
     res = json.loads(response.data)
