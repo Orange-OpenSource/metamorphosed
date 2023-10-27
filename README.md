@@ -26,7 +26,7 @@ pip install -r requirements.txt
 git submodule update --init
 pushd propbank-frames;
   git checkout ad2bafa4c9c9c58cc1bc89;
-  wget https://raw.githubusercontent.com/propbank/propbank-frames/development/frames/AMR-UMR-91-rolesets.xml
+  wget https://raw.githubusercontent.com/propbank/propbank-frames/main/frames/AMR-UMR-91-rolesets.xml
 popd
 ```
 
