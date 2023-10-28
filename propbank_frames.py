@@ -48,7 +48,7 @@ class Lemma:
 
     def __str__(self):
         template = '<h2>%s</h2>\n' % self.lemma
-        #print("ZZZZ", self.lemma)
+        print("LLLLL", self.lemma, self.rolesets)
         for r in self.rolesets:
             template += "%s\n" % r
         #template += ""
@@ -104,7 +104,7 @@ class PropBankFrames:
         #return
 
         i=0
-        for i,fn in enumerate(glob.glob("%s/*.xml" % dirname)):
+        for i,fn in enumerate(sorted(glob.glob("%s/*.xml" % dirname))):
             #print(fn)
             self.parsefile(fn)
             #break
@@ -119,7 +119,7 @@ class PropBankFrames:
         tree = ET.parse(fn)
         for predicate in tree.getroot():
             if predicate.tag == "predicate":
-                #print(predicate.attrib)
+                #print("PRED", predicate.attrib)
                 lemma = Lemma(predicate.attrib["lemma"].replace("_", "-"))
                 self.lemmas[lemma.lemma] = lemma
                 #print("LLLL", lemma)
