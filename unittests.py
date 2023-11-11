@@ -199,7 +199,7 @@ def test_edit_last(client):
     res = json.loads(response.data)
     #print("res", json.dumps(res, indent=2))
     assert "(h / have-org-role-91\n   :ARG0 (p / person\n            :name (n / name\n                     :op1 \"Joe\"\n" in res["penman"]
-    assert res["num"] == 23
+    assert res["num"] == 24
 
 
 def test_edit_next(client):
@@ -234,6 +234,9 @@ def test_edit_addinstance(client):
     assert res["warning"] is None
     assert res["penman"] == "(r / rise-01)"
     #assert 1 == 2
+
+    # needed for coverage test (count variables)
+    response = client.get("/edit", query_string={"num": 8, "addconcept": "cry-01"})
 
 
 def test_edit_addinstance_wrong_roleset(client):
@@ -281,6 +284,7 @@ def test_edit_modedge_wrong_edge(client):
     response = client.get("/read", query_string={"num": 18})
     response = client.get("/edit", query_string={"num": 18, "modedge_start": "o", "modedge_end": "r", "newedge": ":ARG111"})
     res = json.loads(response.data)
+
     #print("res", json.dumps(res, indent=2))
     assert res["warning"] == ["invalid relation ':ARG111'",
                               "invalid concept 'cinema'",
@@ -351,10 +355,18 @@ def test_edit_settop2(client):
 
 def test_edit_move_relation_start(client):
     response = client.get("/read", query_string={"num": 5})
-    response = client.get("/edit", query_string={"num": 5, "modedge_start": "c2", "modedge_end": "n2", "modedge_newstart": "h", "newedge": "nod_used"})
+    response = client.get("/edit", query_string={"num": 5, "modedge_start": "c2", "modedge_end": "n2", "modedge_newstart": "h", "newedge": "not_used"})
     res = json.loads(response.data)
     #print("res", json.dumps(res, indent=2))
-    assert res["penman"] == '(h / have-org-role-91\n   :ARG0 (c / city\n            :name (n / name\n                     :op1 "Cardiff")\n            :wiki "Q10690")\n   :ARG1 (c2 / country\n             :wiki "Q25")\n   :ARG2 (c3 / capital)\n   :nod_used (n2 / name\n                 :op1 "Wales"))'
+    assert res["penman"] == '(h / have-org-role-91\n   :ARG0 (c / city\n            :name (n / name\n                     :op1 "Cardiff")\n            :wiki "Q10690")\n   :ARG1 (c2 / country\n             :wiki "Q25")\n   :ARG2 (c3 / capital)\n   :not_used (n2 / name\n                 :op1 "Wales"))'
+
+
+def test_edit_move_relation_wrong_start(client):
+    response = client.get("/edit", query_string={"num": 5, "modedge_start": "c2", "modedge_end": "n2", "modedge_newstart": "hhh", "newedge": "also_not_used"})
+    res = json.loads(response.data)
+    print("res", json.dumps(res["warning"], indent=2))
+    assert res["warning"] == ["new source instance « hhh » does not exist",
+                              "invalid relation ':not_used'"]
 
 
 def test_edit_delliteral(client):
@@ -405,7 +417,17 @@ def test_read_num_too_big(client):
     response = client.get("/read", query_string={"num": 100})
     res = json.loads(response.data)
     #print("res", res)
-    assert res["error"] == "invalid sentence number: must be between 1 and 23"
+    assert res["error"] == "invalid sentence number: must be between 1 and 24"
+
+
+def test_duplicate_edge(client):
+    response = client.get("/edit", query_string={"num": 23, "start": "k", "label": "ARG0", "end": "a"})
+    response = client.get("/edit", query_string={"num": 23, "start": "a", "label": "ARG0", "end": "k"})
+    res = json.loads(response.data)
+    #print("res", res["warning"])
+    assert res["warning"] == ['more than one relation between « k » and « a » (inverted) (:ARG0)',
+                              'more than one relation label « :ARG0 » start at instance « k »',
+                              'more than one relation between « a » and « k » (:ARG0)']
 
 
 def test_search_text(client):
@@ -432,6 +454,24 @@ def test_search_id(client):
     res = json.loads(response.data)
     #print("res", res)
     assert res["num"] == 6
+
+
+def test_search_amr(client):
+    #response = client.get("/read", query_string={"num": 4})
+    response = client.get("/search", query_string={"num": 4, "what": "findamrnext", "regex": "p / pay-01"})
+    res = json.loads(response.data)
+    #print("res", res)
+    assert res["num"] == 12
+
+    response = client.get("/search", query_string={"num": 12, "what": "findamrprec", "regex": "Harris"})
+    res = json.loads(response.data)
+    #print("res", res)
+    assert res["num"] == 1
+
+    response = client.get("/search", query_string={"num": 12, "what": "findamrprec", "regex": ":not_there"})
+    res = json.loads(response.data)
+    #print("res", res)
+    assert res["num"] == 12
 
 
 def test_search_comment(client):
@@ -552,7 +592,7 @@ def test_bad_api_usage(client):
     response = client.get("/read", query_string={"num": 0})
     assert response.status_code == 400
     res = json.loads(response.text)
-    assert res == {'error': 'invalid sentence number: must be between 1 and 23'}
+    assert res == {'error': 'invalid sentence number: must be between 1 and 24'}
 
     response = client.get("/edit", query_string={"num": 3, "reifyxx": ":location <>  be-located-at-91"})
     assert response.status_code == 400
@@ -562,7 +602,7 @@ def test_bad_api_usage(client):
     response = client.get("/edit", query_string={"num": 333, "reify": ":location <>  be-located-at-91"})
     assert response.status_code == 400
     res = json.loads(response.text)
-    assert res == {'error': 'invalid sentence number: must be between 1 and 23'}
+    assert res == {'error': 'invalid sentence number: must be between 1 and 24'}
 
     response = client.get("/edit", query_string={"num": 3})
     assert response.status_code == 400
@@ -702,7 +742,7 @@ def test_amrdoc():
     #ads.append(ad)
     tsv = ad.tsv()
     #print(len(tsv))
-    assert len(tsv) == 21
+    assert len(tsv) == 22
 
     # oo = ad.oneline()
     #    if args.stats:
@@ -714,3 +754,50 @@ def test_amrdoc():
     output = amrdoc.relations_between_concepts([ad], depth=3)
     assert len(output) == 289
     # other setup can go here
+
+    cl = ad.sentences[0].getconceptlist()
+    assert sorted(cl) == sorted({'m': 'multi-sentence', 'b': 'bear-02', 'p': 'person', 'n': 'name', 'c': 'city', 'n2': 'name', 'l': 'live-01', 's': 'still'})
+
+    wl = ad.sentences[0].getwikilink("a")
+    assert wl is None
+    wl = ad.sentences[0].getwikilink("p")
+    assert wl == "Q156586"
+
+    sl = ad.getsentencelist()
+    assert sl == [('sentence 1', 'Naomie Harris was born in London. Naomie Harris still lives in London.'),
+                  ('test', 'The cat killed the mouse'),
+                  ('sentence 3', 'The cat killed the mouse in the kitchen during the night'),
+                  ('sentence 4', 'the little dog barks at the big dog'),
+                  ('sentence 5', 'Cardiff is the Welsh capital'),
+                  ('sentence 7', '100 children bought 100 apples for their school for 100 Euros'),
+                  ('sentence 8 (incorrect)', '50 children bought 100 apples for their school for 100 Euros'),
+                  ('sentence 9 (incorrect)', 'Barack Hussein Obama was the 44th president of the United States'),
+                  ('sentence 10', 'history teacher'),
+                  ('sentence 11', 'Who murdered JFK?'),
+                  ('sentence 12 disconnected', 'The man who repaired the bike did not want to be paid'),
+                  ('sentence 13 bad format', 'The man who repaired the bike did not want to be paid'),
+                  ('sentence 14 OK', 'The man who repaired the bike did not want to be paid'),
+                  ('sentence 15 OK', 'For more information, click <a href="http://www.hollywoodbowl.com">here</a>.'),
+                  ('sentence 16 OK', 'Wednesday, February 29, 2012, at 4:30pm PST'),
+                  ('sentence 18', 'I did not know that the restaurant is not open'),
+                  ('sentence 19', None),
+                  ('sentence 20', "I guessed the carrying capacity of the base station towers was totally overloaded, and I couldn't get through at all. I was only able to find a signal, not a chance of connecting to the Internet."),
+                  ('sentence 21', 'Berlin is the German capital'),
+                  ('sentence 22', 'London is larger than Dublin'),
+                  ('sentence 23', 'Who assassinated JFK?'),
+                  ('sentence last (must be last)', 'Is Joe Biden the US president?')]
+
+
+def test_amreditor():
+    import amreditor
+    import io
+    aa = amreditor.AMRProcessor()
+    #for l in tr:
+    #    aa.process(l)
+    aa.readpenman("(c / cat)")
+    aa.process("mouse")
+    aa.show()
+    s = io.StringIO()
+    aa.write(ofp=s)
+    print("<%s>" % s.getvalue())
+    assert s.getvalue() == "(mmmm / multigraph\n      :snt1 (c / cat)\n      :snt2 (m / mouse))\n\n"

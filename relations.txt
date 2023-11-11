@@ -1,3 +1,4 @@
+# standard AMR 3.0 relations
 :accompanier
 :accompanier-of
 :age

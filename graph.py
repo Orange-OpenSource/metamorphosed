@@ -37,49 +37,49 @@
 # from a potentially disconnected graph
 
 
-class CheckGraph1:
-    def __init__(self, triples):
-        subgraphs = []
-
-        join = 0
-        for s, p, o in sorted(triples):
-            #print("\ntriple", s, o)
-            if not subgraphs:
-                subgraphs.append(set([s, o]))
-            else:
-                found = False
-                for sg in subgraphs:
-                    if s in sg or o in sg:
-                        sg.add(s)
-                        sg.add(o)
-                        found = True
-                        break
-                if not found:
-                    subgraphs.append(set([s, o]))
-
-                #print("BBB", subgraphs)
-                if len(subgraphs) > 1:
-                    todelete = []
-                    i = 0
-                    while i < len(subgraphs) - 1:
-                        j = i + 1
-                        while j < len(subgraphs):
-                            #print("iii", i,j, len(subgraphs))
-                            join += 1
-                            print("join??", join, subgraphs[i], subgraphs[j])
-                            if subgraphs[i].intersection(subgraphs[j]):
-                                print("yes")
-                                subgraphs[i].update(subgraphs[j])
-                                todelete.append(subgraphs[j])
-                                j += 1
-                            j += 1
-                        i += 1
-                    #print("delete:", todelete)
-                    for s in todelete:
-                        subgraphs.remove(s)
-                    #print(subgraphs)
-                    for x in subgraphs:
-                        print(sorted(x))
+#class CheckGraph1:
+#    def __init__(self, triples):
+#        subgraphs = []
+#
+#        join = 0
+#        for s, p, o in sorted(triples):
+#            #print("\ntriple", s, o)
+#            if not subgraphs:
+#                subgraphs.append(set([s, o]))
+#            else:
+#                found = False
+#                for sg in subgraphs:
+#                    if s in sg or o in sg:
+#                        sg.add(s)
+#                        sg.add(o)
+#                        found = True
+#                        break
+#                if not found:
+#                    subgraphs.append(set([s, o]))
+#
+#                #print("BBB", subgraphs)
+#                if len(subgraphs) > 1:
+#                    todelete = []
+#                    i = 0
+#                    while i < len(subgraphs) - 1:
+#                        j = i + 1
+#                        while j < len(subgraphs):
+#                            #print("iii", i,j, len(subgraphs))
+#                            join += 1
+#                            print("join??", join, subgraphs[i], subgraphs[j])
+#                            if subgraphs[i].intersection(subgraphs[j]):
+#                                print("yes")
+#                                subgraphs[i].update(subgraphs[j])
+#                                todelete.append(subgraphs[j])
+#                                j += 1
+#                            j += 1
+#                        i += 1
+#                    #print("delete:", todelete)
+#                    for s in todelete:
+#                        subgraphs.remove(s)
+#                    #print(subgraphs)
+#                    for x in subgraphs:
+#                        print(sorted(x))
 
 
 def findsubgraphs(triples):

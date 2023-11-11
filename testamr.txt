@@ -56,8 +56,7 @@
 
 # ::id sentence 6 (empty)
 # ::snt the sun rises in the East and sets in the West
-# ::save-date Sat Nov 11, 2023 20:05 
-(r / rise-01)
+()
 
 # ::id sentence 7
 # ::snt 100 children bought 100 apples for their school for 100 Euros
@@ -82,7 +81,7 @@
         :quant 100)
     :ARG3 (s / school
         :quant 100
-        :beneficiary (c2 / child))
+        :beneficiary (c1 / child))
     :ARG4 (m / monetary-quantity
         :quant 100
         :unit (e / euro)))
@@ -253,6 +252,15 @@
         :name (n2 / name
             :op1 "Dublin")
         :wiki "Q1761"))
+
+# ::id sentence 23
+# ::snt Who assassinated JFK?
+(k / murder-01
+    :ARG0 (a / amr-unknown)
+    :ARG1 (p / person
+        :name (n / name
+            :op1 "JFK")
+        :wiki "Q9696"))
 
 # ::id sentence last (must be last)
 # ::snt Is Joe Biden the US president?

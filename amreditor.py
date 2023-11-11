@@ -594,4 +594,5 @@ if __name__ == "__main__":
     line = input(">> ")
     while line:
         aa.process(line)
+        aa.show()
         line = input(">> ")
