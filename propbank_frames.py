@@ -48,7 +48,7 @@ class Lemma:
 
     def __str__(self):
         template = '<h2>%s</h2>\n' % self.lemma
-        print("LLLLL", self.lemma, self.rolesets)
+        #print("LLLLL", self.lemma, self.rolesets)
         for r in self.rolesets:
             template += "%s\n" % r
         #template += ""
@@ -213,6 +213,7 @@ class PropBankFrames:
         if not self.rolesets:
             # no data to check has been loaded
             return []
+
         for s, p, o in triples:
             if p == ":instance":
                 elems = o.rsplit("-", 1)

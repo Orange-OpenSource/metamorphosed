@@ -1,0 +1,263 @@
+# used to test the coverage of python
+# ::id sentence 1 ::date 2023-03-23T13:56:55 ::annotator JH
+# ::snt Naomie Harris was born in London. Naomie Harris still lives in London.
+# ::save-date Mon Sep 06, 1976
+(m / multi-sentence
+    :snt1 (b / bear-02
+        :ARG1 (p / person
+            :name (n / name
+                :op1 "Naomie"
+                :op2 "Harris")
+            :wiki "Q156586")
+        :location (c / city
+            :name (n2 / name
+                :op1 "London")
+            :wiki "Q84"))
+    :snt2 (l / live-01
+        :ARG0 p
+        :location c
+        :mod (s / still)))
+
+# ::id sentence 2
+# ::snt The cat killed the mouse
+# this is the second sentence in this file (needed to test searching for comments)
+(k / kill-01
+    :ARG0 (c / cat)
+    :ARG1 (m / mouse))
+
+# ::id sentence 3
+# ::snt The cat killed the mouse in the kitchen during the night
+(k / kill-01
+    :ARG0 (c / cat)
+    :ARG1 (m / mouse)
+    :location (k2 / kitchen)
+    :time (d / date-entity
+        :dayperiod (n / night)))
+
+# ::id sentence 4
+# ::snt the little dog barks at the big dog
+(b / bark-01
+    :ARG0 (d / dog
+        :mod (l / little))
+    :ARG2 (d2 / dog
+        :mod (b2 / big)))
+
+# ::id sentence 5
+# ::snt Cardiff is the Welsh capital
+(h / have-org-role-91
+    :ARG0 (c / city
+        :name (n / name
+            :op1 "Cardiff")
+        :wiki "Q10690")
+    :ARG1 (c2 / country
+        :name (n2 / name
+            :op1 "Wales")
+        :wiki "Q25")
+    :ARG2 (c3 / capital))
+
+# ::id sentence 7
+# ::snt 100 children bought 100 apples for their school for 100 Euros
+(b / buy-01
+    :ARG0 (c / child
+        :quant 100
+        :poss s)
+    :ARG1 (a / apple
+        :quant 100)
+    :ARG4 (s / school
+        :quant 100)
+    :ARG3 (m / monetary-quantity
+        :quant 100
+        :unit (e / euro)))
+
+# ::id sentence 8 (incorrect)
+# ::snt 50 children bought 100 apples for their school for 100 Euros
+(b / buy-01
+    :ARG0 (c / child
+        :quant 50)
+    :ARG1 (a / apple
+        :quant 100)
+    :ARG3 (s / school
+        :quant 100
+        :beneficiary (c2 / child))
+    :ARG4 (m / monetary-quantity
+        :quant 100
+        :unit (e / euro)))
+
+# ::id sentence 9 (incorrect)
+# ::snt Barack Hussein Obama was the 44th president of the United States
+(h / have-org-role-91
+    :ARG0 (p / person
+        :name (n / name
+            :op4 "Barack"
+            :op2 "Hussein"
+            :op3 "Obama"))
+    :ARG1 (c / country
+        :name (n2 / name
+            :op2 "United"
+            :op2 "States"))
+    :ARG2 (p2 / president
+        :ord (o / ordinal-entity
+            :value 44)))
+
+# ::id sentence 10
+# ::snt history teacher
+(p / person
+    :ARG0-of (t / teach-01
+        :ARG1 (h / history)))
+
+# ::id sentence 11
+# ::snt Who murdered JFK?
+(k / murder-01
+    :ARG0 (a / amr-unknown)
+    :ARG1 (p / person
+        :name (n / name
+            :op1 "JFK")
+        :wiki "Q9696"))
+
+# ::id sentence 12 disconnected
+# ::snt The man who repaired the bike did not want to be paid
+(r / repair-01
+   :ARG1 (b / bike))
+(zzz / want-01
+   :polarity -
+   :ARG0 (r / man)
+   :ARG1 (p / pay-01
+            :ARG2 r))
+
+# ::id sentence 13 bad format
+# ::snt The man who repaired the bike did not want to be paid
+(aaa / want-11
+    :polarity -
+    :ARG0 (m / man
+       :ARG10-of (r / repair-01
+            :ARG1 (b / bike)))
+    :ARG1 (p / pay-01
+        :ARG2 m))
+
+# ::id sentence 14 OK
+# ::snt The man who repaired the bike did not want to be paid
+(bbb / want-01
+    :polarity -
+    :ARG0 (m / man
+        :ARG0-of (r / repair-01
+            :ARG1 (b / bike)))
+    :ARG1 (p / pay-01
+        :ARG2 m))
+
+# ::id sentence 15 OK
+# ::snt For more information, click <a href="http://www.hollywoodbowl.com">here</a>.
+# here we have a comment
+(c / click-01 :mode imperative
+      :ARG0 (y / you)
+      :location (h / here
+            :ARG1-of (h2 / hyperlink-91
+                  :ARG3 (u / url-entity :value "http://www.hollywoodbowl.com")))
+      :purpose (i / information
+            :mod (m / more)))
+
+# ::id sentence 16 OK
+# ::snt Wednesday, February 29, 2012, at 4:30pm PST
+(d / date-entity :month 2 :day 29 :year 2012 :time "16:30" :timezone "PST"
+      :weekday (w / wednesday))
+
+# ::id sentence 18
+# ::snt I did not know that the restaurant is not open
+(k / know-01
+    :ARG0 (i / ii)
+    :polarity -
+    :ARG1 (o / open-09
+        :ARG1 (r / restaurant)
+        :polarity -))
+
+# ::id sentence 19
+(a / and
+    :op1 (b / bear-02
+        :ARG1 (p / person
+            :name (n / name
+                :op1 "Naomie"
+                :op2 "Harris")
+            :wiki "Q156586")
+        :location (c / city
+            :name (n2 / name
+                :op1 "London")
+            :wiki "Q84"))
+    :op2 (l / live-01
+        :ARG0 p
+        :location c
+        :mod (s / still))
+    :snt1 (a2 / age-01
+        :ARG1 p
+        :ARG2 (t / temporal-quantity
+            :quant 46
+            :unit (y / year))))
+
+# ::id sentence 20 ::origid bolt12_10489_6271.6 ::date 2012-12-09T19:10:52 ::annotator SDL-AMR-09 ::preferred
+# ::snt I guessed the carrying capacity of the base station towers was totally overloaded, and I couldn't get through at all. I was only able to find a signal, not a chance of connecting to the Internet.
+# ::save-date Wed Jul 29, 2015 ::file bolt12_10489_6271_6.txt
+(m / multi-sentence
+      :snt1 (a / and
+            :op1 (g / guess-01
+                  :ARG0 (i / i)
+                  :ARG1 (o / overload-01
+                        :ARG1 (c / capacity
+                              :mod (c2 / carry-01)
+                              :poss (t2 / tower
+                                    :part-of (s / station
+                                          :mod (b / base))))
+                        :degree (t / total)))
+            :op2 (g2 / get-through-12 :polarity -
+                  :ARG0 i
+                  :degree (a2 / at-all)))
+      :snt2 (c3 / contrast-01
+            :ARG1 (p / possible-01
+                  :ARG1 (f / find-01
+                        :ARG0 (i3 / i)
+                        :ARG1 (s2 / signal))
+                  :mod (o2 / only))
+            :ARG2 (c4 / chance-02 :polarity -
+                  :ARG1 (c5 / connect-01
+                        :ARG0 i3
+                        :ARG2 (i2 / internet)))))
+
+# ::id sentence 21
+# ::snt Berlin is the German capital
+(h / have-org-role-91
+    :ARG0 (c / city
+        :name (n / name
+            :op1 "Berlin")
+        :wiki "Q64")
+    :ARG1 (c2 / country
+        :name (n2 / name
+            :op1 "Germany")
+        :wiki "Q183")
+    :ARG2 (c3 / capital))
+
+# ::id sentence 22
+# ::snt London is larger than Dublin
+(h / have-degree-91
+    :ARG1 (c / city
+        :name (n / name
+            :op1 "London")
+        :wiki "Q84")
+    :ARG2 (l / large)
+    :ARG3 (m / more)
+    :ARG4 (c2 / city
+        :name (n2 / name
+            :op1 "Dublin")
+        :wiki "Q1761"))
+
+# ::id sentence last (must be last)
+# ::snt Is Joe Biden the US president?
+(h / have-org-role-91
+    :ARG0 (p / person
+        :name (n / name
+            :op1 "Joe"
+            :op2 "Biden")
+        :wiki "Q6279")
+    :ARG1 (c / country
+        :name (n2 / name
+            :op1 "US")
+        :wiki "Q30")
+    :ARG2 (p2 / president)
+    :polarity (a / amr-unknown))
+

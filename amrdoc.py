@@ -264,11 +264,15 @@ class AMRdoc:
             sent.oneline()
 
     def validate(self, validators):
+        msgs = []
         for sent in self.sentences:
             for v in validators:
                 ee = v.validate(sent.tsv())
-                for e in ee:
-                    print(e)
+                if ee:
+                    msgs += ee
+                #for e in ee:
+                #    print("ZZZ", e)
+        return msgs
 
     def getsentencelist(self):
         sents = []
