@@ -157,7 +157,7 @@
 
 # ::id sentence 16 OK
 # ::snt Wednesday, February 29, 2012, at 4:30pm PST
-(d / date-entity :month 2 :day 29 :year 2012 :time "16:30" :timezone "PST"
+(d / date-entity :month 02 :day 29 :year 2012 :time "16:30" :timezone "PST"
       :weekday (w / wednesday))
 
 # ::id sentence 18

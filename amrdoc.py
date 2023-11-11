@@ -80,12 +80,13 @@ class AMRsentence:
             print(self.amr, file=ofp)
             print(file=ofp)
 
-    def tsv(self, meta=False, ofp=sys.stdout):
-        if meta:
-            if self.id:
-                print("# ::id %s" % self.id, file=ofp)
-            if self.text:
-                print("# ::snt %s" % self.text, file=ofp)
+    def tsv(self, #meta=False, ofp=sys.stdout
+            ):
+        #if meta:
+        #    if self.id:
+        #        print("# ::id %s" % self.id, file=ofp)
+        #    if self.text:
+        #        print("# ::snt %s" % self.text, file=ofp)
         try:
             g = penman.decode(self.amr)
             # for s,p,o in g.triples:
@@ -95,20 +96,20 @@ class AMRsentence:
             print("ERROR: %s" % e, file=sys.stderr)
             return []
 
-    def oneline(self, meta=False, ofp=sys.stdout):
-        if meta:
-            if self.id:
-                if self.idrest:
-                    print("# ::id %s ::%s" % (self.id, " ::".join(self.idrest)), file=ofp)
-                else:
-                    print("# ::id %s" % self.id, file=ofp)
-            if self.text:
-                print("# ::snt %s" % self.text, file=ofp)
-            for c in self.comments:
-                print("#", c, file=ofp)
-
-        res = ONESPACE.sub(" ", self.amr)
-        print(res)
+#    def oneline(self, meta=False, ofp=sys.stdout):
+#        if meta:
+#            if self.id:
+#                if self.idrest:
+#                    print("# ::id %s ::%s" % (self.id, " ::".join(self.idrest)), file=ofp)
+#                else:
+#                    print("# ::id %s" % self.id, file=ofp)
+#            if self.text:
+#                print("# ::snt %s" % self.text, file=ofp)
+#            for c in self.comments:
+#                print("#", c, file=ofp)
+#
+#        res = ONESPACE.sub(" ", self.amr)
+#        print(res)
 
     def getconceptlist(self):
         variables = {} # var concept
@@ -250,18 +251,17 @@ class AMRdoc:
 
     def tsv(self):
         # output all AMR graphs as triple list
-        for sent in self.sentences:
-            sent.tsv()
+        return [sent.tsv() for sent in self.sentences]
 
-    def oneline(self):
-        # out put all AMR graphs in PENMAN on a single line
-        for sent in self.sentences:
-            sent.oneline()
+#    def oneline(self):
+#        # out put all AMR graphs in PENMAN on a single line
+#        for sent in self.sentences:
+#            sent.oneline()
 
-    def stats(self):
-        # out put all AMR graphs in PENMAN on a single line
-        for sent in self.sentences:
-            sent.oneline()
+#    def stats(self):
+#        # out put all AMR graphs in PENMAN on a single line
+#        for sent in self.sentences:
+#            sent.oneline()
 
     def validate(self, validators):
         msgs = []
@@ -296,6 +296,7 @@ class AMRdoc:
 
 # output concepts and frequency of relations to other concepts/literals
 def relations_between_concepts(ads, depth=2):
+    output = []
     concepts = {} # {concept: {relation: {concept: freq}}}
     for ad in ads:
         for sent in ad.sentences:
@@ -339,16 +340,23 @@ def relations_between_concepts(ads, depth=2):
                         objectconcepts[oclass] = 1
     for c in sorted(concepts):
         if depth == 1:
-            print(c, concepts[c], sep="\t")
+            #print(c, concepts[c], sep="\t")
+            output.append("%s\t%s" % (c, concepts[c]))
             continue
-        print(c)
+        #print(c)
+        output.append(c)
         for r in sorted(concepts[c]):
             if depth == 2:
-                print("   %s\t%s" % (r, concepts[c][r]))
+                #print("   %s\t%s" % (r, concepts[c][r]))
+                output.append("   %s\t%s" % (r, concepts[c][r]))
                 continue
-            print("   ", r)
+            #print("   ", r)
+            output.append("   " + r)
             for oc in sorted(concepts[c][r]):
-                print("     %s\t%s" % (oc, concepts[c][r][oc]))
+                #print("     %s\t%s" % (oc, concepts[c][r][oc]))
+                output.append("     %s\t%s" % (oc, concepts[c][r][oc]))
+
+    return output
 
 
 def stats(ads, conceptlist):
@@ -509,4 +517,5 @@ if __name__ == "__main__":
         if args.stats:
             stats(ads, args.conceptlist)
         if args.concepts > 0:
-            relations_between_concepts(ads, depth=args.concepts)
+            for x in relations_between_concepts(ads, depth=args.concepts):
+                print(x)

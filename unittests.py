@@ -132,39 +132,6 @@ def app_git():
 
     # clean up / reset resources here
 
-@pytest.fixture(scope="session")
-def app_amrdoc():
-    #app = create_app()
-    #app.config.update({
-    #    "TESTING": True,
-    #})
-
-    import AMR_relations
-    import propbank_frames
-    import relations_constraints
-
-    validators = []
-    validators.append(AMR_relations.Relations("relations.txt"))
-    validators.append(propbank_frames.PropBankFrames("propbank-frames/frames/"))
-    #validators.append(relations_constraints.Constraints(args.constraints))
-
-    ad = AMRdoc("coverageamr.txt")
-    ad.validate(validators)
-
-    #ads.append(ad)
-    #ad.tsv()
-    #ad.oneline()
-    #    if args.stats:
-    #        stats(ads, args.conceptlist)
-    #    if args.concepts > 0:
-    #        relations_between_concepts(ads, depth=args.concepts)
-
-    # other setup can go here
-
-    yield app
-
-
-
 
 @pytest.fixture()
 def client(app):
@@ -707,7 +674,6 @@ def test_edit_addinstance_git(client_git):
     assert "commit: metamorphosed AMR editor: 6 of " in repo.head.log()[-1].message
 
 
-
 def test_amrdoc():
     #app = create_app()
     #app.config.update({
@@ -722,22 +688,29 @@ def test_amrdoc():
     validators = []
     validators.append(AMR_relations.Relations("relations.txt"))
     validators.append(propbank_frames.PropBankFrames("propbank-frames/frames/"))
-    #validators.append(relations_constraints.Constraints(args.constraints))
+    validators.append(relations_constraints.Constraints("constraints.yml"))
 
     ad = amrdoc.AMRdoc("coverageamr.txt")
     msgs = ad.validate(validators)
     assert msgs == ["invalid relation ':ARG10'",
                     '«want-11» is not a defined propbank roleset',
-                    'invalid argument «:ARG10» for concept «repair-01»']
+                    'invalid argument «:ARG10» for concept «repair-01»',
+                    'instance «d» of «date-entity» has an invalid relation «:time»',
+                    'instance «a» of «and» has an invalid relation «:snt1»'
+                    ]
 
     #ads.append(ad)
-    #ad.tsv()
-    #ad.oneline()
+    tsv = ad.tsv()
+    #print(len(tsv))
+    assert len(tsv) == 21
+
+    # oo = ad.oneline()
     #    if args.stats:
     #        stats(ads, args.conceptlist)
-    #    if args.concepts > 0:
-    #        relations_between_concepts(ads, depth=args.concepts)
-
+    output = amrdoc.relations_between_concepts([ad], depth=1)
+    assert len(output) == 45
+    output = amrdoc.relations_between_concepts([ad], depth=2)
+    assert len(output) == 152
+    output = amrdoc.relations_between_concepts([ad], depth=3)
+    assert len(output) == 289
     # other setup can go here
-
-
