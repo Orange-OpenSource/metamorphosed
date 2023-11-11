@@ -34,8 +34,9 @@
 # Author: Johannes Heinecke
 
 
-import yaml
 import re
+
+import yaml
 
 # Format
 # subjects:
@@ -228,8 +229,9 @@ class Constraints:
 
 
 if __name__ == "__main__":
-    import sys
     import readline
+    import sys
+
     import penman
     cc = Constraints(sys.argv[1])
     cc.show()

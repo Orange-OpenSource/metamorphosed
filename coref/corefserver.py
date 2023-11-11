@@ -34,15 +34,16 @@
 # Author: Johannes Heinecke
 
 
-import sys
 import json
 import os
+import pathlib
 import re
 import socket
-from flask import Flask, request, Response, render_template, jsonify
+import sys
 
 import corefeditor
-import pathlib
+from flask import Flask, Response, jsonify, render_template, request
+
 import gitinterface
 
 parent = pathlib.Path(os.path.abspath(__file__)).parent.parent

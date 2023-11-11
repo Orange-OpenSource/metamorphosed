@@ -35,8 +35,8 @@
 
 
 # read and store an AMR file
-import sys
 import re
+import sys
 
 import penman
 

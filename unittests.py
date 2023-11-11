@@ -33,18 +33,18 @@
 # Author: Johannes Heinecke
 
 
-import sys
-import pytest
-import json
-import time
-import tempfile
-import shutil
-import git
 import glob
+import json
 import os
+import shutil
+import sys
+import tempfile
+import time
+
+import git
+import pytest
 
 from server import AMR_Edit_Server
-
 
 # run (pytest-6.2.3)
 #   pytest unittests.py -vv -s
@@ -53,6 +53,7 @@ from server import AMR_Edit_Server
 
 # see: https://flask.palletsprojects.com/en/2.1.x/testing/
 #      https://stackoverflow.com/questions/17801300/how-to-run-a-method-before-all-tests-in-all-classes
+
 
 # launched only once
 @pytest.fixture(scope="session")

@@ -38,23 +38,23 @@
 # read .xml and if present .json file (if absent, AMRfiles must be given) and display a block of sentences with coreferences (from XML)
 # allow adding new coreferences and deleting incorrect ones
 
-import sys
-import os
 import collections
-import xml.etree.ElementTree as ET
+import os
+import pathlib
 import re
+import sys
+import xml.etree.ElementTree as ET
 from xml.dom import minidom
 
-import pathlib
+import amrs2dot
+
 
 VERSION = "1.5"
 
 # hurts E402. TODO change somehow
 parent = pathlib.Path(os.path.abspath(__file__)).parent.parent
 sys.path.append(str(parent))
-
 import amrdoc
-import amrs2dot
 
 
 # TODO:

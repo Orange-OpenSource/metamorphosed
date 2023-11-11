@@ -34,10 +34,10 @@
 # Author: Johannes Heinecke
 
 # version 2.6.0 as of 25th October 2023
-import penman
-import readline
 import re
+import readline
 
+import penman
 from graphviz import Digraph
 
 import graph

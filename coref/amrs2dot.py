@@ -37,11 +37,13 @@
 
 import collections
 import colorsys
-import graphviz
 import logging
-import penman
 import random
 import re
+
+import graphviz
+import penman
+
 # import readline
 # import sys
 

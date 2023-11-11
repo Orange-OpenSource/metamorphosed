@@ -34,12 +34,13 @@
 # Author: Johannes Heinecke
 
 
-import os
-import sys
 import collections
+import os
 import pathlib
+import sys
 
 import penman
+
 import amrdoc
 
 parent = pathlib.Path(os.path.abspath(__file__)).parent.parent

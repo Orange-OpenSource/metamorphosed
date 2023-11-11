@@ -34,16 +34,15 @@
 # Author: Johannes Heinecke
 # version 1.2 as of 2nd June 2023
 
-import pytest
-import json
-import tempfile
-import shutil
-import git
 import glob
+import json
 import os
+import shutil
+import tempfile
 
+import git
+import pytest
 from corefserver import CorefServer
-
 
 # run (pytest-6.2.3)
 #   pytest unittests.py -vv -s
@@ -52,6 +51,7 @@ from corefserver import CorefServer
 
 # see: https://flask.palletsprojects.com/en/2.1.x/testing/
 #      https://stackoverflow.com/questions/17801300/how-to-run-a-method-before-all-tests-in-all-classes
+
 
 # launched only once
 @pytest.fixture(scope="session")

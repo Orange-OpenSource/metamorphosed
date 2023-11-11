@@ -32,6 +32,7 @@
 # Author: Johannes Heinecke
 
 import os
+
 import git
 
 

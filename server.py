@@ -34,22 +34,22 @@
 # Author: Johannes Heinecke
 
 
-import sys
+import json
 import os
 import re
-import json
-import time
 import socket
+import sys
+import time
 
-from flask import Flask, request, Response, render_template, jsonify
+from flask import Flask, Response, jsonify, render_template, request
 
-import amreditor
-import amrdoc
 import AMR_relations
-import propbank_frames
-import relations_constraints
-import reification
+import amrdoc
+import amreditor
 import gitinterface
+import propbank_frames
+import reification
+import relations_constraints
 
 # TODO
 # detect errors

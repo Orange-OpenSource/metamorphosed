@@ -41,9 +41,10 @@
 #               :ARG1 (b / boy)))                 :ARG0 (a / arrive-01
 #                                                         :ARG1 (b / boy))))
 
-import sys
 import io
 import re
+import sys
+
 import penman
 
 
