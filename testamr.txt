@@ -56,7 +56,8 @@
 
 # ::id sentence 6 (empty)
 # ::snt the sun rises in the East and sets in the West
-()
+# ::save-date Sat Nov 11, 2023 20:05 
+(r / rise-01)
 
 # ::id sentence 7
 # ::snt 100 children bought 100 apples for their school for 100 Euros
