@@ -45,12 +45,14 @@ import pytest
 from corefserver import CorefServer
 
 # run (pytest-6.2.3)
-#   pytest unittests.py -vv -s
+#   pytest coref/unittests.py -vv -s
 #  -s shows print statements in test
 #  -k test_edit_modliteral (filters tests which do not match argument)
 
 # see: https://flask.palletsprojects.com/en/2.1.x/testing/
 #      https://stackoverflow.com/questions/17801300/how-to-run-a-method-before-all-tests-in-all-classes
+
+PATH = "coref"
 
 
 # launched only once
@@ -62,8 +64,8 @@ def app():
     #})
     #print("zzzzzzzzzzzzzzzzzzzz")
     aes = CorefServer(4569,
-                      ["pp_001.xml"],
-                      ["pp.amr.txt"],
+                      [PATH + "/pp_001.xml"],
+                      [PATH + "/pp.amr.txt"],
                       )
     app = aes.app
 
@@ -78,8 +80,8 @@ def app():
 def app_git():
     datadir = tempfile.TemporaryDirectory()
     print("temporary test directory", datadir)
-    shutil.copyfile("pp_001.xml", datadir.name + "/pp_001.xml")
-    shutil.copyfile("pp.amr.txt", datadir.name + "/pp.amr.txt")
+    shutil.copyfile(PATH + "/pp_001.xml", datadir.name + "/pp_001.xml")
+    shutil.copyfile(PATH + "/pp.amr.txt", datadir.name + "/pp.amr.txt")
     repo = git.Repo.init(datadir.name)
     repo.git.add(datadir.name + "/pp_001.xml")
     repo.git.add(datadir.name + "/pp.amr.txt")
@@ -121,7 +123,7 @@ def test_read(client):
     #print("res", res, file=sys.stderr)
     assert len(res["svgdict"]) == 19
     assert "lpp_1943.6" in res["svgdict"]
-    assert res['filename'] == 'pp_001.xml'
+    assert res['filename'] == PATH + '/pp_001.xml'
 
     assert len(res["chaintable"]) == 9
     assert len(res["chaintable"]["0"]) == 10
@@ -195,11 +197,11 @@ def ls(dn):
 def test_nogit_back_exists():
     datadir = tempfile.TemporaryDirectory()
     print("temporary test directory", datadir)
-    shutil.copyfile("pp_001.xml", datadir.name + "/pp_001.xml")
-    shutil.copyfile("pp_001.xml", datadir.name + "/pp_001.xml.2")
-    shutil.copyfile("pp_001.xml", datadir.name + "/pp_002.xml")
-    shutil.copyfile("pp_001.xml", datadir.name + "/pp_002.xml.2")
-    shutil.copyfile("pp.amr.txt", datadir.name + "/pp.amr.txt")
+    shutil.copyfile(PATH + "/pp_001.xml", datadir.name + "/pp_001.xml")
+    shutil.copyfile(PATH + "/pp_001.xml", datadir.name + "/pp_001.xml.2")
+    shutil.copyfile(PATH + "/pp_001.xml", datadir.name + "/pp_002.xml")
+    shutil.copyfile(PATH + "/pp_001.xml", datadir.name + "/pp_002.xml.2")
+    shutil.copyfile(PATH + "/pp.amr.txt", datadir.name + "/pp.amr.txt")
 
     ls(datadir.name)
 

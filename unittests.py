@@ -156,6 +156,46 @@ def test_request_example(client):
     assert b"<!DOCTYPE html>\n<html>\n\n<head>" in response.data
 
 
+def test_info(client):
+    response = client.get("/version")
+    res = json.loads(response.data)
+    #print("res", res, file=sys.stderr)
+    assert res == {'name': 'AMR Editor', 'version': '2.6.0', 'apiversion': '1.3.0'}
+
+    response = client.get("/info")
+    res = json.loads(response.data)
+    #print("res", res)
+    assert res['reifications'] == [':accompanier ↔ accompany-01',
+                                   ':age ↔ age-01',
+                                   ':cause ↔ cause-01',
+                                   ':beneficiary ↔ benefit-01',
+                                   ':concession ↔ have-concession-91',
+                                   ':condition ↔ have-condition-91',
+                                   ':degree ↔ have-degree-92',
+                                   ':destination ↔ be-destined-for-91',
+                                   ':duration ↔ last-01',
+                                   ':example ↔ exemplify-01',
+                                   ':extent ↔ have-extent-91',
+                                   ':frequency ↔ have-frequency-91',
+                                   ':instrument ↔ have-instrument-91',
+                                   ':li ↔ have-li-91',
+                                   ':location ↔ be-located-at-91',
+                                   ':manner ↔ have-manner-91',
+                                   ':mod ↔ have-mod-91',
+                                   ':ord ↔ have-ord-91',
+                                   ':part ↔ have-part-91',
+                                   ':polarity ↔ have-polarity-91',
+                                   ':poss ↔ own-01',
+                                   ':purpose ↔ have-purpose-91',
+                                   ':quant ↔ have-quant-91',
+                                   ':source ↔ be-from-91',
+                                   ':subevent ↔ have-subevent-91',
+                                   ':time ↔ be-temporally-at-91',
+                                   ':topic ↔ concern-02',
+                                   ':value ↔ have-value-91',
+                                   ':subset ↔ include-91']
+
+
 def test_read(client):
     response = client.get("/read", query_string={"num": 9})
     res = json.loads(response.data)
