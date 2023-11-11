@@ -9,15 +9,15 @@
 # modification, are permitted provided that the following conditions are met:
 #    * Redistributions of source code must retain the above copyright
 #      notice, this list of conditions and the following disclaimer.
-# 
+#
 #    * Redistributions in binary form must reproduce the above copyright
 #      notice, this list of conditions and the following disclaimer in the
 #      documentation and/or other materials provided with the distribution.
-# 
+#
 #    * Neither the name of Orange nor the
 #      names of its contributors may be used to endorse or promote products
 #      derived from this software without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 # ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 # WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -33,15 +33,15 @@
 # Software Name: MetAMoRphosED AMR-Editor
 # Author: Johannes Heinecke
 
- 
+
 # read and store an AMR file
 import sys
 import re
-import time
 
 import penman
 
 ONESPACE = re.compile("[ \n\t]+")
+
 
 class AMRsentence:
     def __init__(self, penmanstr):
@@ -60,7 +60,6 @@ class AMRsentence:
             c = c.strip()
             if c:
                 self.comments.append(c)
-
 
     def write(self, ofp, onlyheader=False):
         if self.id:
@@ -111,12 +110,11 @@ class AMRsentence:
         res = ONESPACE.sub(" ", self.amr)
         print(res)
 
-
     def getconceptlist(self):
         variables = {} # var concept
         try:
             g = penman.decode(self.amr)
-            for s,p,o in g.instances():
+            for s, p, o in g.instances():
                 variables[s] = o
         except Exception as e:
             print("ERROR in getting instances", e, __file__)
@@ -128,15 +126,14 @@ class AMRsentence:
         try:
             g = penman.decode(self.amr)
             #print("aaa", inst)
-            for s,p,o in g.attributes():
-                #print("bbb", s,p,o)
+            for s, p, o in g.attributes():
+                #print("bbb", s, p, o)
                 if s == inst and p == ":wiki":
                     return o.replace('"', '')
         except Exception as e:
             print("ERROR in getting wiki link", e, __file__)
 
         return None
-        
 
     def findtext(self, regex):
         if self.text:
@@ -171,6 +168,7 @@ class AMRsentence:
 #                #print(rtc)
 #                return rtc
 #        return False
+
 
 class AMRdoc:
     def __init__(self, fn, verbose=True):
@@ -273,7 +271,7 @@ class AMRdoc:
                     print(e)
 
     def getsentencelist(self):
-        sents= []
+        sents = []
         for sent in self.sentences:
             sents.append((sent.id, sent.text))
         return sents
@@ -293,15 +291,15 @@ class AMRdoc:
 
 
 # output concepts and frequency of relations to other concepts/literals
-def relations_between_concepts(ads, depth = 2):
+def relations_between_concepts(ads, depth=2):
     concepts = {} # {concept: {relation: {concept: freq}}}
     for ad in ads:
         for sent in ad.sentences:
             instances = {} # inst: concept
-            for s,p,o in sent.tsv():
+            for s, p, o in sent.tsv():
                 if p == ":instance":
                     instances[s] = o
-            for s,p,o in sent.tsv():
+            for s, p, o in sent.tsv():
                 if p != ":instance":
                     sclass = instances[s]
                     oclass = instances.get(o, "lit:" + o)
@@ -348,17 +346,18 @@ def relations_between_concepts(ads, depth = 2):
             for oc in sorted(concepts[c][r]):
                 print("     %s\t%s" % (oc, concepts[c][r][oc]))
 
+
 def stats(ads, conceptlist):
     triples = []
     sentences = 0
     for ad in ads:
-        sentences +=  len(ad.sentences)
+        sentences += len(ad.sentences)
         for sent in ad.sentences:
             triples += sent.tsv()
         #print("DDD", len(triples))
     relations = {} # rel: freq
     concepts = {} # cpt: freq
-    for s,p,o in triples:
+    for s, p, o in triples:
         if p == ":instance":
             if o in concepts:
                 concepts[o] += 1
@@ -375,28 +374,26 @@ def stats(ads, conceptlist):
                 relations[p] = 1
     print("# sentences:", sentences)
 
-
     def mean_med(dico):
-        mean = sum(dico.values())/len(dico)
+        mean = sum(dico.values()) / len(dico)
         v = sorted(list(dico.values()))
         #if len(dico) % 2 == 0:
-        med = v[int(len(dico)/2)]
+        med = v[int(len(dico) / 2)]
         #return mean,med
         return "mean: %.2f median: %d" % (mean, med), mean, med
 
-
     #relations= {"a": 1,"b": 2,"c": 10,"d": 7,"e": 30 }
-    meanmed,meanr,medr = mean_med(relations)
+    meanmed, meanr, medr = mean_med(relations)
     print("# relations: %d %s" % (len(relations), meanmed))
     #for k,v in sorted(relations.items(), key=lambda x: x[1]):
     #    print(k,v)
 
     mverbs = re.compile("-[0-9][0-9]$")
-    meanmed,mean,med = mean_med(concepts)
+    meanmed, mean, med = mean_med(concepts)
     #for k,v in concepts.items():
     #    print(k,v)
     print("# concepts:", len(concepts), meanmed)
-    ctverbs = 0
+    # ctverbs = 0
     verbs = {} # concept: freq
     others = {}
     for c in concepts:
@@ -404,16 +401,15 @@ def stats(ads, conceptlist):
             verbs[c] = concepts[c]
         else:
             others[c] = concepts[c]
-    meanmed,meanv,medv = mean_med(verbs)
+    meanmed, meanv, medv = mean_med(verbs)
     print("  # verbs: ", len(verbs), meanmed)
     #for k,v in sorted(verbs.items(), key=lambda x: x[1]):
     #    print(k,v)
 
-    meanmed,meano,medo = mean_med(others)
+    meanmed, meano, medo = mean_med(others)
     print("  # others:", len(others), meanmed)
     #for k,v in sorted(others.items(), key=lambda x: x[1]):
     #    print(k,v)
-
 
     if conceptlist:
         for c in verbs:
@@ -435,7 +431,6 @@ def stats(ads, conceptlist):
         print("%s\t%d" % (c, relations[c]), file=ofp)
     ofp.close()
 
-
     print("plotting graph...")
     import matplotlib.pyplot as plt
 
@@ -444,9 +439,9 @@ def stats(ads, conceptlist):
         plt.rcParams["font.family"] = "Lato"
         plt.rcParams["figure.figsize"] = [6.4, 2] # default 6.4, 4.8
         plt.bar(range(len(dico)), sorted(dico.values(), reverse=True),
-            color="#ff7900")
+                color="#ff7900")
         plt.ylabel("frequency")
-        
+
         #plt.hist(sorted(dico.values(), reverse=True), bins=100, density=True)
         if logscale:
             plt.yscale('log')
@@ -459,9 +454,10 @@ def stats(ads, conceptlist):
         plt.savefig(fn, format="pdf", bbox_inches='tight')
         plt.clf()
 
-    graph(relations, "rels.pdf", meanr,medr)
-    graph(verbs, "verbalconcepts.pdf", meanv,medv)
-    graph(others, "nonverbalconcepts.pdf",meano,medo)
+    graph(relations, "rels.pdf", meanr, medr)
+    graph(verbs, "verbalconcepts.pdf", meanv, medv)
+    graph(others, "nonverbalconcepts.pdf", meano, medo)
+
 
 if __name__ == "__main__":
     import argparse
@@ -474,12 +470,9 @@ if __name__ == "__main__":
     parser.add_argument("--constraints", "-C", default=None, help="constraints for subjects and predicates (yaml file)")
     parser.add_argument("--stats", "-s", default=False, action="store_true", help='calculate stats and create graphs')
     parser.add_argument("--conceptlist", default=False, action="store_true", help="calculate stats and output only a list of concepts")
-
-    
     parser.add_argument("--concepts", "-c", default=0, type=int, help='show links between concepts (1, 2, 3)')
     parser.add_argument("--validate", "-v", default=False, action="store_true", help='validate sentences (needs at least one of --rels, --pbframes, --constraints)')
 
-    
     if len(sys.argv) < 2:
         parser.print_help()
     else:
@@ -506,7 +499,6 @@ if __name__ == "__main__":
             ad = AMRdoc(fn)
             ad.validate(validators)
 
-
             ads.append(ad)
             #ad.tsv()
             #ad.oneline()
@@ -514,4 +506,3 @@ if __name__ == "__main__":
             stats(ads, args.conceptlist)
         if args.concepts > 0:
             relations_between_concepts(ads, depth=args.concepts)
-

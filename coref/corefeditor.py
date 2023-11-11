@@ -9,15 +9,15 @@
 # modification, are permitted provided that the following conditions are met:
 #    * Redistributions of source code must retain the above copyright
 #      notice, this list of conditions and the following disclaimer.
-# 
+#
 #    * Redistributions in binary form must reproduce the above copyright
 #      notice, this list of conditions and the following disclaimer in the
 #      documentation and/or other materials provided with the distribution.
-# 
+#
 #    * Neither the name of Orange nor the
 #      names of its contributors may be used to endorse or promote products
 #      derived from this software without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 # ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 # WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -35,31 +35,31 @@
 
 # version 1.5 as of 17th July 2023
 
-VERSION="1.5"
-
-
 # read .xml and if present .json file (if absent, AMRfiles must be given) and display a block of sentences with coreferences (from XML)
 # allow adding new coreferences and deleting incorrect ones
 
 import sys
 import os
-import json
 import collections
 import xml.etree.ElementTree as ET
 import re
 from xml.dom import minidom
 
 import pathlib
+
+VERSION = "1.5"
+
+# hurts E402. TODO change somehow
 parent = pathlib.Path(os.path.abspath(__file__)).parent.parent
 sys.path.append(str(parent))
+
 import amrdoc
-
 import amrs2dot
-
 
 
 # TODO:
 #   annotate aucomatically all instances of an given context which have the same :wiki relation
+
 
 class Sentence:
     def __init__(self, sid, order, post, speaker, su):
@@ -90,7 +90,6 @@ class ImplicitRole:
         self.parentconcept = parentconcept
         self.parentvariable = parentvariable
 
-
     def __repr__(self):
         return '<implicitrole argument="%s" id="%s" parentconcept="%s" parentvariable="%s"/>' % \
                (self.argument, self.sid, self.parentconcept, self.parentvariable)
@@ -102,7 +101,9 @@ class ImplicitRole:
         ir.attrib["parentconcept"] = self.parentconcept
         ir.attrib["parentvariable"] = self.parentvariable
 
+
 CID = re.compile("([A-Za-z]+-)([0-9]+)")
+
 
 class Partwhole:
     def __init__(self, bid, xmlparent):
@@ -114,26 +115,27 @@ class Partwhole:
             self.bid = bid
             self.prefix = ""
 
-        self.wholeid =None
+        self.wholeid = None
         self.partids = []
         for x in xmlparent:
             if x.tag == "whole":
                 if self.wholeid:
-                    print("ERROR: more than 'whole' tag in partwhole %s" % pid, file=sys.stderr)
+                    print("ERROR: more than 'whole' tag in partwhole %s" % bid, file=sys.stderr)
                 self.wholeid = x.attrib["id"]
             elif x.tag == "part":
                 self.partids.append(x.attrib["id"])
 
     def xml(self, parent):
         m = ET.SubElement(parent, "partwhole")
-        m.attrib["relationid"] = "%s%s" % (self.prefix,self.bid)
+        m.attrib["relationid"] = "%s%s" % (self.prefix, self.bid)
         if self.wholeid:
             w = ET.SubElement(m, "whole")
             w.attrib["id"] = self.wholeid
         for p in self.partids:
             w = ET.SubElement(m, "part")
             w.attrib["id"] = p
-            
+
+
 class Setmember:
     def __init__(self, bid, xmlparent):
         mo = CID.match(bid)
@@ -144,19 +146,19 @@ class Setmember:
             self.bid = bid
             self.prefix = ""
 
-        self.superset =None
+        self.superset = None
         self.members = []
         for x in xmlparent:
             if x.tag == "superset":
                 if self.superset:
-                    print("ERROR: more than 'superset' tag in setmember %s" % pid, file=sys.stderr)
+                    print("ERROR: more than 'superset' tag in setmember %s" % bid, file=sys.stderr)
                 self.superset = x.attrib["id"]
             elif x.tag == "member":
                 self.members.append(x.attrib["id"])
 
     def xml(self, parent):
         m = ET.SubElement(parent, "setmember")
-        m.attrib["relationid"] = "%s%s" % (self.prefix,self.bid)
+        m.attrib["relationid"] = "%s%s" % (self.prefix, self.bid)
         if self.superset:
             w = ET.SubElement(m, "superset")
             w.attrib["id"] = self.superset
@@ -185,7 +187,6 @@ class Mention:
         return m
 
 
-
 class IdentChain:
     def __init__(self, cid, xmlparent=None):
         mo = CID.match(cid)
@@ -208,7 +209,7 @@ class IdentChain:
                     self.implicitroles.append(ir)
 
     def __repr__(self):
-        res = ["identchain %s%s" % (self.prefix,self.cid)]
+        res = ["identchain %s%s" % (self.prefix, self.cid)]
         for m in self.mentions:
             res.append(str(m))
         for m in self.implicitroles:
@@ -224,7 +225,7 @@ class IdentChain:
                 pref = "rel-"
             else:
                 pref = self.prefix
-            ic.attrib["relationid"] = "%s%s" % (pref,newcid)
+            ic.attrib["relationid"] = "%s%s" % (pref, newcid)
         else:
             ic.attrib["relationid"] = self.prefix + str(self.cid)
         for mention in self.mentions:
@@ -234,6 +235,7 @@ class IdentChain:
 
         return ic
 
+
 # contains a XML file
 class SentenceGroup:
     def __init__(self, xmlfile, allamrsentences):
@@ -242,13 +244,13 @@ class SentenceGroup:
         self.sids = collections.OrderedDict() # id: Sentence (contains also PENMAN)
         self.sid2sentpos = {} # sid: position of sentence in group (starts with 0)
         self.sentpos2sid = {}
-        
+
         #self.chaines = collections.OrderedDict() # id: Chain
         self.chaines = []
 
         self.singletons = []
         self.bridging = []
-        
+
         #self.other = [] # for the time being singletons and bridging
         self.comment = None
         tree = ET.parse(self.xmlfile)
@@ -309,7 +311,6 @@ class SentenceGroup:
             self.sentpos2sid[sp] = sid
         #self.addtexttomention()
 
-
 #    def addtexttomention(self):
 #        # add :wiki relation text to Mention if absent (only needed to complete XML files without, created with earlier versions of corefeditor
 #        modified = False
@@ -324,16 +325,15 @@ class SentenceGroup:
 #                        modified = True
 #        return modified
 
-
     def getchains(self):
         # return a list of coref chains
         sentpos = {} # sentid: pos in sids
         implicitroles = {} # sentpos: [chainid, parentvar, ARG]
-        for pos,sid in enumerate(self.sids):
+        for pos, sid in enumerate(self.sids):
             sentpos[sid] = pos
         res = []
         #for cid in self.chaines:
-        for cid,chain in enumerate(self.chaines):
+        for cid, chain in enumerate(self.chaines):
             #print("CID", cid)
             newchain = [] # sentpos: var
             #ic = self.chaines[cid]
@@ -345,13 +345,12 @@ class SentenceGroup:
             for ir in chain.implicitroles:
                 pos = sentpos[ir.sid]
                 #print("wwchain", pos, ir)
-                if not pos in implicitroles:
+                if pos not in implicitroles:
                     implicitroles[pos] = []
                 implicitroles[pos].append((cid, ir.parentvariable, ir.argument))
             #if len(newchain) > 1:
             res.append(newchain)
         return res, implicitroles
-
 
     def addtochain(self, instancefrom, instanceto):
         # we detect the corefchain of instancefrom
@@ -374,7 +373,7 @@ class SentenceGroup:
         to_chain = -1
         to_mention = None
 
-        for i,chain in enumerate(self.chaines):
+        for i, chain in enumerate(self.chaines):
             #print("CHAIN", i, "length", len(chain.mentions))
             for mention in chain.mentions:
                 #print(" MENTION", mention)
@@ -433,7 +432,7 @@ class SentenceGroup:
                 wiki = amrsentfrom.getwikilink(from_var)
                 m1 = Mention(concept, self.sentpos2sid[from_sentpos], from_var, wiki)
                 #print("BBB", concept, wiki)
-                
+
                 amrsentto = self.sids[self.sentpos2sid[to_sentpos]].AMRsentence
                 concept = amrsentto.getconceptlist().get(to_var, "_unspec_")
                 wiki = amrsentto.getwikilink(to_var)
@@ -447,10 +446,9 @@ class SentenceGroup:
                 if to_sentpos in self.svgs:
                     del self.svgs[to_sentpos]
 
-
         #print("\nAFTER OP")
         newchains = []
-        for i,chain in enumerate(self.chaines):
+        for i, chain in enumerate(self.chaines):
             if (len(chain.mentions) + len(chain.implicitroles)) < 2:
                 # delete chain with only a single mention
                 sentpos = self.sid2sentpos[chain.mentions[0].sid]
@@ -474,7 +472,7 @@ class SentenceGroup:
         cids = []
         for chain in self.chaines:
             cids.append(chain.cid)
-        
+
         #while "rel-%d" % cid in cids:
         while cid in cids:
             cid += 1
@@ -483,7 +481,6 @@ class SentenceGroup:
         ic = IdentChain(cid, xmlparent=None)
         self.chaines.append(ic)
         return ic
-    
 
     def __repr__(self):
         res = [self.docid]
@@ -506,7 +503,7 @@ class SentenceGroup:
     def xml(self, ofp=None):
         # recreate XML for output
         doc = ET.Element("document")
-        
+
         if self.comment:
             comment = ET.SubElement(doc, "comment")
             comment.text = self.comment
@@ -531,19 +528,17 @@ class SentenceGroup:
             identchain.xml(identity)
             last = i
         singletons = ET.SubElement(relations, "singletons")
-        for i, identchain in enumerate(sorted(self.singletons, key=lambda x: x.cid), last+1):
+        for i, identchain in enumerate(sorted(self.singletons, key=lambda x: x.cid), last + 1):
             #identchain.xml(singletons, i)
             identchain.xml(singletons)
 
         bridging = ET.SubElement(relations, "bridging")
-        for i, br in enumerate(sorted(self.bridging, key=lambda x: x.bid), last+1):
+        for i, br in enumerate(sorted(self.bridging, key=lambda x: x.bid), last + 1):
             #identchain.xml(singletons, i)
             br.xml(bridging)
 
-
         #for o in self.other:
         #    relations.append(o)
-
 
         #print(ET.tostring(doc).decode("UTF-8"))
         raw = ET.tostring(doc, encoding="utf-8")
@@ -555,7 +550,7 @@ class SentenceGroup:
             print(xmlstring, file=ofp)
         else:
             return xmlstring
-        
+
 #    def format(self, format="svg"):
 #        # returns an SVG graph of all sentences
 #        penmans = []
@@ -583,7 +578,7 @@ class SentenceGroup:
         #print("CHAINS", chains)
         #print("IRs   ", implicitroles)
         #implicitroles = self.getimplicittroles()
-        
+
         if scaling != self.scaling:
             # new scaling, all SVGs must be recalculated
             self.svgs = {}
@@ -591,34 +586,35 @@ class SentenceGroup:
         a2 = amrs2dot.AMRs2dot(penmans, chains, implicitroles, scaling)
         # put mentions and irs in a table to be displayed as
         # relid: sentpos: var/concept, ....
-        
+
         table = {} # relid: [sentpos var/concept], .... (TODO suboptimal creating HTML code here ....)
-        for cid,chain in enumerate(self.chaines):
-            bgcolor,fgcolor = a2.chainid2col(cid)
+        for cid, chain in enumerate(self.chaines):
+            bgcolor, fgcolor = a2.chainid2col(cid)
             temp_table = []
 
-            for mention in chain.mentions: 
+            for mention in chain.mentions:
                 sentpos = self.sid2sentpos[mention.sid]
 
                 wiki = ""
                 if mention.text:
                     wiki = " «%s»" % mention.text
 
-                temp_table.append((sentpos, '<span class="chain" data="G_%s_%s" style="background-color:%s;color:%s"><b>%s</b>: %s / %s%s</span>' % \
+                temp_table.append((sentpos, '<span class="chain" data="G_%s_%s" style="background-color:%s;color:%s"><b>%s</b>: %s / %s%s</span>' %
                                   (sentpos, mention.variable,
                                    bgcolor, fgcolor,
-                                   sentpos+1, mention.variable, mention.concept, wiki)))
+                                   sentpos + 1, mention.variable, mention.concept, wiki)))
             for ir in chain.implicitroles:
                 sentpos = self.sid2sentpos[ir.sid]
-                # TODO add class="chain" and data="I %s_%s" % sentpos,cid for implicits: but we do not have a variable only the cid
-                #      this needs a change in addtochain() to take cid from I_... and not var from G_...
-                temp_table.append((sentpos, '<span class="chain" style="background-color:%s;color:%s"><b>%s</b>: <i>i%s / implicit</i></span>' % \
+                # TODO add class="chain" and data="I %s_%s" % sentpos,cid
+                # for implicits: but we do not have a variable only the cid
+                # this needs a change in addtochain() to take cid
+                # from I_... and not var from G_...
+                temp_table.append((sentpos, '<span class="chain" style="background-color:%s;color:%s"><b>%s</b>: <i>i%s / implicit</i></span>' %
                                   (bgcolor, fgcolor,
-                                   sentpos+1, ir.parentvariable)))
+                                   sentpos + 1, ir.parentvariable)))
             temp_table.sort()
-            table[cid] = [b for a,b in temp_table]
+            table[cid] = [b for a, b in temp_table]
 
-            
         #for x in table:
         #    print(x, table[x])
 
@@ -630,11 +626,11 @@ class SentenceGroup:
             if ic.mentions:
                 m = ic.mentions[0]
                 sentpos = self.sid2sentpos[m.sid]
-                singletons["%s%s" % (prefix,bid)] = (m.sid, sentpos+1, m.variable, m.concept, None)
+                singletons["%s%s" % (prefix, bid)] = (m.sid, sentpos + 1, m.variable, m.concept, None)
             elif ic.implicitroles:
                 ir = ic.implicitroles[0]
                 sentpos = self.sid2sentpos[ir.sid]
-                singletons["%s%s" % (prefix,bid)] = (ir.sid, sentpos+1, ir.parentvariable, ir.parentconcept, ir.argument)
+                singletons["%s%s" % (prefix, bid)] = (ir.sid, sentpos + 1, ir.parentvariable, ir.parentconcept, ir.argument)
 
         def getchainfromtable(relid, table, singletons):
             if relid in singletons:
@@ -647,9 +643,9 @@ class SentenceGroup:
             try:
                 cid = int(elems[1])
                 return " ".join(table[cid])
-            except:
+            except Exception:
                 return relid
-        
+
         bridgingtable = {}
         for bridge in self.bridging:
             bridgingtable[bridge.bid] = []
@@ -661,7 +657,6 @@ class SentenceGroup:
                 #else:
                 superset = getchainfromtable(supersetid, table, singletons)
                 bridgingtable[bridge.bid].append('<span class="bridgingtype">Superset: %s</span><br>members: ' % (superset))
-                #bridgingtable[bridge.bid].append('<table><tr><td><span class="bridgingtype">Superset:</span></td> <td>%s</td></tr> <tr><td>members:</td> <td>' % (superset))
 
                 for m in bridge.members:
                     bridgingtable[bridge.bid].append(getchainfromtable(m, table, singletons))
@@ -677,10 +672,8 @@ class SentenceGroup:
                 bridgingtable[bridge.bid].append('<span class="bridgingtype">Whole: %s</span><br>parts: ' % (whole))
                 for m in bridge.partids:
                     bridgingtable[bridge.bid].append(getchainfromtable(m, table, singletons))
-        
-        
-        return a2.multidot(self.svgs, showfrom, shownumber), table, bridgingtable
 
+        return a2.multidot(self.svgs, showfrom, shownumber), table, bridgingtable
 
 
 class CorefEditor:
@@ -715,7 +708,6 @@ class CorefEditor:
         for xmlfile in xmlfiles:
             sg = SentenceGroup(xmlfile, self.sids)
             self.sentencegroups[xmlfile] = sg
-
 
 
 if __name__ == "__main__":

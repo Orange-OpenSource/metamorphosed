@@ -44,7 +44,7 @@ def is_git_controlled(fn, verbose=False):
             print("check git for <%s>" % fn)
         repo = git.Repo(os.path.dirname(fn), search_parent_directories=True)
         #print("ZZZZ", fn, repo.untracked_files, repo.working_tree_dir)
-        
+
         for utf in repo.untracked_files:
             absutf = os.path.join(repo.working_tree_dir, utf)
             #print(absfn, absutf)
@@ -64,6 +64,7 @@ def is_git_controlled(fn, verbose=False):
         return gitok
     else:
         return gitok, absfn, repo
+
 
 def save(fn, version, writefunc, #contents,
          warnings, messages, do_add=True):
@@ -97,7 +98,7 @@ def save(fn, version, writefunc, #contents,
             if rtc:
                 rtc = repo.git.add(absfn)
                 #rtc = repo.git.add(fn)
-                atleastonegitok = True
+                #atleastonegitok = True
                 #rtc = repo.git.commit("-m", "metamorphosed coref editor: %s of '%s' saved" % (", ".join(modified), fn), author=self.author)
                 #print("commited %s" % (fn), rtc)
                 return repo, 1, True
@@ -111,7 +112,6 @@ def save(fn, version, writefunc, #contents,
     return repo, 1, False
 
 
-
 #def oosave(fn, version, writefunc, #contents,
 #         warnings, messages, do_add=True):
 #    # returns tuple: (repo, saveok, gitok)
@@ -122,7 +122,7 @@ def save(fn, version, writefunc, #contents,
 #        print("check git for <%s>" % fn)
 #        repo = git.Repo(os.path.dirname(fn), search_parent_directories=True)
 #        #print("ZZZZ", fn, repo.untracked_files, repo.working_tree_dir)
-#        
+#
 #        for utf in repo.untracked_files:
 #            absutf = os.path.join(repo.working_tree_dir, utf)
 #            #print(absfn, absutf)
@@ -172,7 +172,6 @@ def save(fn, version, writefunc, #contents,
 #            warnings.append("commit error <%s> <%s> <%s>" % (e, fn, rtc))
 #            return repo, 1, False
 #    return repo, 1, False
-
 
 
 class FileNotGitControlled(Exception):

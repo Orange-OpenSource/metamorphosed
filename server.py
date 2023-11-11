@@ -9,15 +9,15 @@
 # modification, are permitted provided that the following conditions are met:
 #    * Redistributions of source code must retain the above copyright
 #      notice, this list of conditions and the following disclaimer.
-# 
+#
 #    * Redistributions in binary form must reproduce the above copyright
 #      notice, this list of conditions and the following disclaimer in the
 #      documentation and/or other materials provided with the distribution.
-# 
+#
 #    * Neither the name of Orange nor the
 #      names of its contributors may be used to endorse or promote products
 #      derived from this software without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 # ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 # WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -41,8 +41,7 @@ import json
 import time
 import socket
 
-from flask import Flask, escape, request, Response, redirect, render_template, jsonify
-import git
+from flask import Flask, request, Response, render_template, jsonify
 
 import amreditor
 import amrdoc
@@ -60,12 +59,13 @@ import gitinterface
 # find an example in AMR data
 # call an AMRserver for an (empty) sentence ? rather not
 
-APIVERSION="1.3.0"
+APIVERSION = "1.3.0"
+
 
 class AMR_Edit_Server:
     def __init__(self, port, filename, pbframes, rels, concepts, constraints, readonly, author=None, reifications=None, do_git=True):
         self.port = port
-        self.filename= filename
+        self.filename = filename
         self.amrdoc = amrdoc.AMRdoc(filename)
         self.aps = {} # parsed and possibly modified PENMAN AMRs
         self.author = author
@@ -101,7 +101,6 @@ class AMR_Edit_Server:
         self.undos = [] # (self.apps:sentnum, [lastpm])
         self.redos = []
 
-
         mydir = os.path.abspath(os.path.dirname(__file__))
 
         self.isInt = re.compile(r"^\d+$")
@@ -121,21 +120,21 @@ class AMR_Edit_Server:
         app.config['TEMPLATES_AUTO_RELOAD'] = True # needed to reload index.html
         self.app = app
 
-        @app.route('/',methods=["GET"])
+        @app.route('/', methods=["GET"])
         def index():
             # Displays the index page accessible at '/'
             return render_template('index.html', toolname="AMR Editor")
 
-        @app.route('/version',methods=["GET"])
+        @app.route('/version', methods=["GET"])
         def version():
             dico = {"name": "AMR Editor",
                     "version": amreditor.VERSION,
                     "apiversion": APIVERSION}
             return Response("%s\n" % json.dumps(dico), 200, mimetype="application/json")
 
-        @app.route('/info',methods=["GET"])
+        @app.route('/info', methods=["GET"])
         def info():
-            withdata = self.checkParameter(request, 'withdata' , 'boolean', isOptional=True, defaultValue=False)
+            withdata = self.checkParameter(request, 'withdata', 'boolean', isOptional=True, defaultValue=False)
             dico = {"cmdline": " ".join(sys.argv),
                     "pwd": os.getcwd(),
                     "hostname": socket.gethostname(),
@@ -156,50 +155,47 @@ class AMR_Edit_Server:
                 dico["reifications"] = reifs
             return Response("%s\n" % json.dumps(dico), 200, mimetype="application/json")
 
-        
-
         @app.route('/edit', methods=["GET", "POST"])
         def modify():
-            sentnum = self.checkParameter(request, 'num' , 'integer', isOptional=False)
-            cmd = self.checkParameter(request, 'cmd' , 'string', isOptional=True, defaultValue=None)
-            addconcept = self.checkParameter(request, 'addconcept' , 'string', isOptional=True, defaultValue=None)
-            addname = self.checkParameter(request, 'addname' , 'string', isOptional=True, defaultValue=None)
-            nameof = self.checkParameter(request, 'nameof' , 'string', isOptional=True, defaultValue=None)
+            sentnum = self.checkParameter(request, 'num', 'integer', isOptional=False)
+            cmd = self.checkParameter(request, 'cmd', 'string', isOptional=True, defaultValue=None)
+            addconcept = self.checkParameter(request, 'addconcept', 'string', isOptional=True, defaultValue=None)
+            addname = self.checkParameter(request, 'addname', 'string', isOptional=True, defaultValue=None)
+            nameof = self.checkParameter(request, 'nameof', 'string', isOptional=True, defaultValue=None)
 
-            start = self.checkParameter(request, 'start' , 'string', isOptional=True, defaultValue=None)
-            end = self.checkParameter(request, 'end' , 'string', isOptional=True, defaultValue=None)
-            label = self.checkParameter(request, 'label' , 'string', isOptional=True, defaultValue=None)
+            start = self.checkParameter(request, 'start', 'string', isOptional=True, defaultValue=None)
+            end = self.checkParameter(request, 'end', 'string', isOptional=True, defaultValue=None)
+            label = self.checkParameter(request, 'label', 'string', isOptional=True, defaultValue=None)
 
-            modconcept = self.checkParameter(request, 'modconcept' , 'string', isOptional=True, defaultValue=None)
-            newconcept = self.checkParameter(request, 'newconcept' , 'string', isOptional=True, defaultValue=None)
+            modconcept = self.checkParameter(request, 'modconcept', 'string', isOptional=True, defaultValue=None)
+            newconcept = self.checkParameter(request, 'newconcept', 'string', isOptional=True, defaultValue=None)
 
+            newtop = self.checkParameter(request, 'newtop', 'string', isOptional=True, defaultValue=None)
 
-            newtop = self.checkParameter(request, 'newtop' , 'string', isOptional=True, defaultValue=None)
+            delinstance = self.checkParameter(request, 'delinstance', 'string', isOptional=True, defaultValue=None)
 
-            delinstance = self.checkParameter(request, 'delinstance' , 'string', isOptional=True, defaultValue=None)
+            modedge_start = self.checkParameter(request, 'modedge_start', 'string', isOptional=True, defaultValue=None)
+            modedge_end = self.checkParameter(request, 'modedge_end', 'string', isOptional=True, defaultValue=None)
+            newedge = self.checkParameter(request, 'newedge', 'string', isOptional=True, defaultValue=None)
+            modedge_newstart = self.checkParameter(request, 'modedge_newstart', 'string', isOptional=True, defaultValue=None)
 
-            modedge_start = self.checkParameter(request, 'modedge_start' , 'string', isOptional=True, defaultValue=None)
-            modedge_end = self.checkParameter(request, 'modedge_end' , 'string', isOptional=True, defaultValue=None)
-            newedge = self.checkParameter(request, 'newedge' , 'string', isOptional=True, defaultValue=None)
-            modedge_newstart = self.checkParameter(request, 'modedge_newstart' , 'string', isOptional=True, defaultValue=None)
+            deledge_start = self.checkParameter(request, 'deledge_start', 'string', isOptional=True, defaultValue=None)
+            deledge_end = self.checkParameter(request, 'deledge_end', 'string', isOptional=True, defaultValue=None)
+            deledge = self.checkParameter(request, 'deledge', 'string', isOptional=True, defaultValue=None)
 
-            deledge_start = self.checkParameter(request, 'deledge_start' , 'string', isOptional=True, defaultValue=None)
-            deledge_end = self.checkParameter(request, 'deledge_end' , 'string', isOptional=True, defaultValue=None)
-            deledge = self.checkParameter(request, 'deledge' , 'string', isOptional=True, defaultValue=None)
+            literalid = self.checkParameter(request, 'literalid', 'string', isOptional=True, defaultValue=None)
+            literaledge = self.checkParameter(request, 'literaledge', 'string', isOptional=True, defaultValue=None)
+            newliteral = self.checkParameter(request, 'newliteral', 'string', isOptional=True, defaultValue=None)
+            delliteral = self.checkParameter(request, 'delliteral', 'string', isOptional=True, defaultValue=None)
 
-            literalid = self.checkParameter(request, 'literalid' , 'string', isOptional=True, defaultValue=None)
-            literaledge = self.checkParameter(request, 'literaledge' , 'string', isOptional=True, defaultValue=None)
-            newliteral = self.checkParameter(request, 'newliteral' , 'string', isOptional=True, defaultValue=None)
-            delliteral = self.checkParameter(request, 'delliteral' , 'string', isOptional=True, defaultValue=None)
+            literalof = self.checkParameter(request, 'literalof', 'string', isOptional=True, defaultValue=None)
+            relationforliteral = self.checkParameter(request, 'relationforliteral', 'string', isOptional=True, defaultValue=None)
+            newliteral = self.checkParameter(request, 'newliteral', 'string', isOptional=True, defaultValue=None)
 
-            literalof = self.checkParameter(request, 'literalof' , 'string', isOptional=True, defaultValue=None)
-            relationforliteral = self.checkParameter(request, 'relationforliteral' , 'string', isOptional=True, defaultValue=None)
-            newliteral = self.checkParameter(request, 'newliteral' , 'string', isOptional=True, defaultValue=None)
-
-            modpenman = self.checkParameter(request, 'modpenman' , 'string', isOptional=True, defaultValue=None)
-            modcomment = self.checkParameter(request, 'modcomment' , 'string', isOptional=True, defaultValue=None)
-            reify = self.checkParameter(request, 'reify' , 'string', isOptional=True, defaultValue=None)
-            dereify = self.checkParameter(request, 'dereify' , 'string', isOptional=True, defaultValue=None)
+            modpenman = self.checkParameter(request, 'modpenman', 'string', isOptional=True, defaultValue=None)
+            modcomment = self.checkParameter(request, 'modcomment', 'string', isOptional=True, defaultValue=None)
+            reify = self.checkParameter(request, 'reify', 'string', isOptional=True, defaultValue=None)
+            dereify = self.checkParameter(request, 'dereify', 'string', isOptional=True, defaultValue=None)
 
             if sentnum < 1 or sentnum > len(self.amrdoc.sentences):
                 # creates an http status code 400
@@ -207,7 +203,6 @@ class AMR_Edit_Server:
                 #dico = {"error": "invalid sentence number: must be between 1 and %d\n" % len(self.amrdoc.sentences)}
                 #return Response("%s\n" % json.dumps(dico),
                 #                400, mimetype="application/json")
-
 
             validparams = ["num", "cmd",
                            "addconcept",
@@ -227,7 +222,7 @@ class AMR_Edit_Server:
 
             print("COMMAND:", end=" ")
             for v in validparams:
-                if v != "num" and eval(v) != None:
+                if v != "num" and eval(v) is not None:
                     print('%s: "%s"' % (v, eval(v)), end=" ")
             print()
 
@@ -237,8 +232,8 @@ class AMR_Edit_Server:
                 ap.readpenman(ap.lastpm)
                 ap.show()
 
-            cursentence = self.amrdoc.sentences[sentnum-1]
-            if not ap.valid and modpenman == None:
+            cursentence = self.amrdoc.sentences[sentnum - 1]
+            if not ap.valid and modpenman is None:
                 # an invalid PENMAN can only be corrected using modpenman
                 return invalidamr(ap, ap.lastpm, cursentence, sentnum)
 
@@ -264,8 +259,8 @@ class AMR_Edit_Server:
             elif addname and nameof:
                 var = ap.addconcept("name")
                 words = addname.split()
-                for i,w in enumerate(words):
-                    ap.addedge(var, '"%s"' % w, ":op%d" % (i+1))
+                for i, w in enumerate(words):
+                    ap.addedge(var, '"%s"' % w, ":op%d" % (i + 1))
                 ap.addedge(nameof, var, "name")
             elif start and end and label:
                 rtc = ap.addedge(start, end, label)
@@ -292,14 +287,14 @@ class AMR_Edit_Server:
                 if not newap.valid:
                     return invalidamr(newap,
                                       modpenman,
-                                      self.amrdoc.sentences[sentnum-1],
+                                      self.amrdoc.sentences[sentnum - 1],
                                       sentnum)
                 else:
                     newap.show() # to create penman
                     self.aps[sentnum] = newap
                     ap = newap
                     ap.modified = True # set rather by ap.-functions ??
-            elif modcomment != None:
+            elif modcomment is not None:
                 # comments are not processed in AMRProcessor
                 cursentence.modcomment(modcomment)
             elif newtop:
@@ -317,45 +312,43 @@ class AMR_Edit_Server:
                 # creates an http status code 400
                 raise ServerException("No edit valid operation given")
 
-            pm,svg = ap.show()
+            pm, svg = ap.show()
 
             framedoc = None
             framedocs = self.pbframes.getdoc(ap.triples)
             if len(framedocs):
                 framedoc = "\n".join(framedocs)
 
-
             warnings = []
             if isinstance(rtc, list):
                 warnings.extend(rtc)
             elif isinstance(rtc, str):
                 warnings.append(rtc)
-            warnings += ap.validate(valfuncs = [self.amr_rels.validate, self.amr_concepts.validate, self.pbframes.validate, self.constraints.validate])
+            warnings += ap.validate(valfuncs=[self.amr_rels.validate, self.amr_concepts.validate, self.pbframes.validate, self.constraints.validate])
             if len(warnings) < 1:
                 warnings = None
-            cursentence = self.amrdoc.sentences[sentnum-1]
+            cursentence = self.amrdoc.sentences[sentnum - 1]
             lastchanged = cursentence.date
             if not lastchanged:
                 lastchanged = cursentence.savedateorig
-            dico = { "warning": warnings, "framedoc": framedoc, "readonly": readonly,
-                     "penman": pm, "svg": svg.decode("utf8") if svg else "",
-                     "filename": filename, "numsent": len(self.amrdoc.sentences),
-                     "num": sentnum,
-                     "text": cursentence.text,
-                     "comments": "\n".join(cursentence.comments),
-                     "sentid": cursentence.id,
-                     "lastchanged": lastchanged,
-                     "variables": sorted(list(set(ap.vars.keys()))),
-                     "undos": len(self.undos),
-                     "redos": len(self.redos) }
+            dico = {"warning": warnings, "framedoc": framedoc, "readonly": readonly,
+                    "penman": pm, "svg": svg.decode("utf8") if svg else "",
+                    "filename": filename, "numsent": len(self.amrdoc.sentences),
+                    "num": sentnum,
+                    "text": cursentence.text,
+                    "comments": "\n".join(cursentence.comments),
+                    "sentid": cursentence.id,
+                    "lastchanged": lastchanged,
+                    "variables": sorted(list(set(ap.vars.keys()))),
+                    "undos": len(self.undos),
+                    "redos": len(self.redos)}
             return Response("%s\n" % json.dumps(dico), 200, mimetype="application/json")
-
 
         @app.route('/search', methods=["GET"])
         def search():
-            sentnum = self.checkParameter(request, 'num' , 'integer', isOptional=False, defaultValue=None)
-            what = self.checkParameter(request, 'what' , 'string', isOptional=False, defaultValue=None)
-            regex = self.checkParameter(request, 'regex' , 'string', isOptional=False, defaultValue=None)
+            sentnum = self.checkParameter(request, 'num', 'integer', isOptional=False, defaultValue=None)
+            what = self.checkParameter(request, 'what', 'string', isOptional=False, defaultValue=None)
+            regex = self.checkParameter(request, 'regex', 'string', isOptional=False, defaultValue=None)
 
             okt = None
             oka = None
@@ -363,48 +356,48 @@ class AMR_Edit_Server:
                 for x in range(sentnum, len(self.amrdoc.sentences)):
                     okt = list(self.amrdoc.sentences[x].findtext(regex))
                     if okt:
-                        sentnum = x+1
+                        sentnum = x + 1
                         break
             elif what == "findidnext":
                 for x in range(sentnum, len(self.amrdoc.sentences)):
                     ok = self.amrdoc.sentences[x].findid(regex)
                     if ok:
-                        sentnum = x+1
+                        sentnum = x + 1
                         break
             elif what == "findcommentnext":
-                for x in range(sentnum+1, len(self.amrdoc.sentences)):
+                for x in range(sentnum + 1, len(self.amrdoc.sentences)):
                     okc = list(self.amrdoc.sentences[x].findcomment(regex))
                     if okc:
-                        sentnum = x+1
+                        sentnum = x + 1
                         break
             elif what == "findamrnext":
-                for x in range(sentnum+1, len(self.amrdoc.sentences)+1):
+                for x in range(sentnum + 1, len(self.amrdoc.sentences) + 1):
                     #oka = list(self.amrdoc.sentences[x].findamr(regex))
                     oka = list(self.aps[x].findamr(regex))
                     if oka:
                         sentnum = x
                         break
             elif what == "findtextprec":
-                for x in range(sentnum-2, -1, -1):
+                for x in range(sentnum - 2, -1, -1):
                     okt = list(self.amrdoc.sentences[x].findtext(regex))
                     if okt:
-                        sentnum = x+1
+                        sentnum = x + 1
                         break
             elif what == "findidprec":
-                for x in range(sentnum-2, -1, -1):
+                for x in range(sentnum - 2, -1, -1):
                     ok = self.amrdoc.sentences[x].findid(regex)
                     if ok:
-                        sentnum = x+1
+                        sentnum = x + 1
                         break
             elif what == "findcommentprec":
-                for x in range(sentnum-2, -1, -1):
+                for x in range(sentnum - 2, -1, -1):
                     ok = self.amrdoc.sentences[x].findcomment(regex)
                     if ok:
-                        sentnum = x+1
+                        sentnum = x + 1
                         break
 
             elif what == "findamrprec":
-                for x in range(sentnum-1, 0, -1):
+                for x in range(sentnum - 1, 0, -1):
                     oka = list(self.aps[x].findamr(regex))
                     #oka = list(self.amrdoc.sentences[x].findamr(regex))
                     if oka:
@@ -418,17 +411,14 @@ class AMR_Edit_Server:
 
         @app.route('/history', methods=["GET"])
         def history():
-            sentnum = self.checkParameter(request, 'num' , 'integer', isOptional=False, defaultValue=None)
-            history = self.checkParameter(request, 'history' , 'string', isOptional=False, defaultValue=None)
+            sentnum = self.checkParameter(request, 'num', 'integer', isOptional=False, defaultValue=None)
+            history = self.checkParameter(request, 'history', 'string', isOptional=False, defaultValue=None)
 
             #print("hUNDOS: %d" % (len(self.undos)))
             #print("hREDOS: %d" % (len(self.redos)))
 
-
             #for n,pm in self.states:
             #    print("HHH   sentnum:%s pm:%s" % (n, " ## ".join(pm).replace("\n", "")))
-
-
 
             if history == "undo":
                 if len(self.undos) > 0:
@@ -464,14 +454,13 @@ class AMR_Edit_Server:
                     ap.show()
                     print("AP", ap)
 
-
             #print("QQQ", sentnum, history)
             return prepare_newpage(sentnum)
 
         @app.route('/next', methods=["GET"])
         def next():
-            sentnum = self.checkParameter(request, 'num' , 'integer', isOptional=False, defaultValue=None)
-            direction = self.checkParameter(request, 'direction' , 'string', isOptional=False, defaultValue=None)
+            sentnum = self.checkParameter(request, 'num', 'integer', isOptional=False, defaultValue=None)
+            direction = self.checkParameter(request, 'direction', 'string', isOptional=False, defaultValue=None)
 
             if direction == "preceding":
                 if sentnum > 1:
@@ -486,10 +475,9 @@ class AMR_Edit_Server:
 
             return prepare_newpage(sentnum)
 
-
         @app.route('/read', methods=["GET"])
         def read():
-            sentnum = self.checkParameter(request, 'num' , 'integer', isOptional=False, defaultValue=None)
+            sentnum = self.checkParameter(request, 'num', 'integer', isOptional=False, defaultValue=None)
             #sentnum = int(sentnum)
             if sentnum < 1 or sentnum > len(self.amrdoc.sentences):
                 dico = {"error": "invalid sentence number: must be between 1 and %d" % len(self.amrdoc.sentences)}
@@ -502,7 +490,7 @@ class AMR_Edit_Server:
 
         @app.route('/save', methods=["GET"])
         def save():
-            sentnum = self.checkParameter(request, 'num' , 'integer', isOptional=True, defaultValue=1)
+            sentnum = self.checkParameter(request, 'num', 'integer', isOptional=True, defaultValue=1)
             #sentnum = int(sentnum)
 
             self.save()
@@ -516,13 +504,11 @@ class AMR_Edit_Server:
             #    print("AAAAAPPPP", x, self.aps[x].lastpm)
             return prepare_newpage(sentnum)
 
-
         @app.errorhandler(ServerException)
         def handle_invalid_usage(error):
             response = jsonify({"error": error.value}) #jsonify(error.to_dict())
             response.status_code = 400 #error.status_code
             return response
-
 
         def invalidamr(ap, pm, cursentence, sentnum):
             # format error in file
@@ -535,8 +521,8 @@ class AMR_Edit_Server:
                 else:
                     endpos = 1
                 text = '%s<span class="syntaxerror">%s</span>%s' % (text[:pos],
-                                                                    text[pos:pos+endpos],
-                                                                    text[pos+endpos:]
+                                                                    text[pos:pos + endpos],
+                                                                    text[pos + endpos:]
                                                                     )
             warnings = ["format error: %s in line %s:%s « %s », please correct file in a text editor first" %
                         (ap.parsererror["message"],
@@ -544,23 +530,23 @@ class AMR_Edit_Server:
                          ap.parsererror["offset"],
                          text)
                         ]
-            dico = { "penman": pm, "svg": "",
-                     "warning": warnings, "framedoc": "", "readonly": readonly,
-                     "filename": filename, "numsent": len(self.amrdoc.sentences),
-                     "num": sentnum,
-                     "text": cursentence.text,
-                     "comments": "\n".join(cursentence.comments),
-                     "sentid": cursentence.id,
-                     "undos": len(self.undos),
-                     "redos": len(self.redos)
-                     }
+            dico = {"penman": pm, "svg": "",
+                    "warning": warnings, "framedoc": "", "readonly": readonly,
+                    "filename": filename, "numsent": len(self.amrdoc.sentences),
+                    "num": sentnum,
+                    "text": cursentence.text,
+                    "comments": "\n".join(cursentence.comments),
+                    "sentid": cursentence.id,
+                    "undos": len(self.undos),
+                    "redos": len(self.redos)
+                    }
             return Response("%s\n" % json.dumps(dico), 200, mimetype="application/json")
 
         def prepare_newpage(sentnum, oktext=None, okamr=None):
             # sentnum uses 1 ... length
             # self.amrdoc.sentences is a list: 0 length-1
-            cursentence = self.amrdoc.sentences[sentnum-1]
-            if not sentnum in self.aps:
+            cursentence = self.amrdoc.sentences[sentnum - 1]
+            if sentnum not in self.aps:
                 ap = amreditor.AMRProcessor()
                 self.aps[sentnum] = ap
                 ap.readpenman(cursentence.amr)
@@ -568,7 +554,6 @@ class AMR_Edit_Server:
                 ap = self.aps[sentnum]
                 if not ap.isparsed:
                     ap.readpenman(cursentence.amr)
-
 
             pm, svg = ap.show()
             if not ap.valid:
@@ -581,18 +566,15 @@ class AMR_Edit_Server:
                 for mo in reversed(list(okamr)):
                     pm = pm[:mo.start()] + '<span class="highlight">%s</span>' % pm[mo.start():mo.end()] + pm[mo.end():]
 
-
             sentencetext = cursentence.text
             if sentencetext:
-                sentencetext = sentencetext.replace("<", "&lt;").replace(">", "&gt;");
+                sentencetext = sentencetext.replace("<", "&lt;").replace(">", "&gt;")
             if oktext:
                 #print("aaaaaaaaaaaaae", oktext, list(oktext))
                 for mo in reversed(list(oktext)):
                     sentencetext = sentencetext[:mo.start()] + '<span class="highlight">%s</span>' % sentencetext[mo.start():mo.end()] + sentencetext[mo.end():]
 
-
-
-            warnings = ap.validate(valfuncs = [self.amr_rels.validate, self.pbframes.validate, self.constraints.validate])
+            warnings = ap.validate(valfuncs=[self.amr_rels.validate, self.pbframes.validate, self.constraints.validate])
             if len(warnings) < 1:
                 warnings = None
 
@@ -605,20 +587,18 @@ class AMR_Edit_Server:
             if not lastchanged:
                 lastchanged = cursentence.savedateorig
 
-            dico = { "penman": pm, "svg": svg.decode("utf8"),
-                     "warning": warnings, "framedoc": framedoc, "readonly": readonly,
-                     "filename": filename, "numsent": len(self.amrdoc.sentences),
-                     "num": sentnum,
-                     "text": sentencetext, #cursentence.text,
-                     "comments": "\n".join(cursentence.comments),
-                     "sentid": cursentence.id,
-                     "lastchanged": lastchanged,
-                     "variables": sorted(list(set(ap.vars.keys()))),
-                     "undos": len(self.undos),
-                     "redos": len(self.redos) }
+            dico = {"penman": pm, "svg": svg.decode("utf8"),
+                    "warning": warnings, "framedoc": framedoc, "readonly": readonly,
+                    "filename": filename, "numsent": len(self.amrdoc.sentences),
+                    "num": sentnum,
+                    "text": sentencetext, #cursentence.text,
+                    "comments": "\n".join(cursentence.comments),
+                    "sentid": cursentence.id,
+                    "lastchanged": lastchanged,
+                    "variables": sorted(list(set(ap.vars.keys()))),
+                    "undos": len(self.undos),
+                    "redos": len(self.redos)}
             return Response("%s\n" % json.dumps(dico), 200, mimetype="application/json")
-
-
 
     def start(self):
         self.app.run(host="0.0.0.0", port=self.port) #, threaded=False, processes=4)
@@ -629,13 +609,11 @@ class AMR_Edit_Server:
         self.savefile(self.filename, self.fileversion)
         #print("saved as %s.%s" % (self.filename, version))
 
-
     def findinvalidparameters(self, request, validlist):
-        for k,v in request.values.items():
+        for k, v in request.values.items():
             #print("kkk", k,v)
             if k not in validlist:
                 raise ServerException("invalid parameter '%s'" % k)
-
 
     def checkParameter(self, request, paramName, paramType, isOptional=False, defaultValue=None):
         # needed for curl -F txt=@file.txt
@@ -645,7 +623,7 @@ class AMR_Edit_Server:
 
         #for k,v in request.values.items():
         #    print("kkk", k,v)
-        if not(paramName in request.values):
+        if paramName not in request.values:
             if not isOptional:
                 #raise apifactory_errors.Error(27)
                 raise ServerException("missing mandatory parameter '%s'" % paramName)
@@ -653,7 +631,7 @@ class AMR_Edit_Server:
             else:
                 return defaultValue
 
-        value=request.values[paramName].strip()
+        value = request.values[paramName].strip()
         #print("nnnn", paramType, value)
         if paramType == "string":
             if len(value) == 0 and not isOptional:
@@ -661,7 +639,7 @@ class AMR_Edit_Server:
             else:
                 return str(value)
         if paramType == "boolean":
-            if not( str(value).lower() in ("true", "1", "false", "0")):
+            if not (str(value).lower() in ("true", "1", "false", "0")):
                 raise ServerException("Parameter '%s' should be a boolean (i.e. one of 'true', 'false', '0', '1')." % paramName)
             else:
                 return (value.lower() in ("true", "1"))
@@ -678,7 +656,6 @@ class AMR_Edit_Server:
 
         raise ServerException("Another stupid error occurred. Invalid paramtype? %s %s" % (paramName, paramType))
 
-
     def savefile(self, fn, version="2"):
         messages = []
         warnings = []
@@ -686,7 +663,7 @@ class AMR_Edit_Server:
         repo, saveok, gitok = gitinterface.save(fn, version,
                                                 self.writedoc,
                                                 #sg.xml(),
-                                                warnings, messages, do_add = self.do_git)
+                                                warnings, messages, do_add=self.do_git)
 
         if gitok and self.do_git:
             #rtc = repo.git.status()
@@ -702,60 +679,18 @@ class AMR_Edit_Server:
                 print("COMMIT Error <%s> <%s> <%s>" % (e, fn, rtc))
                 pass
 
-
     def writedoc(self, ofp):
         for i, sent in enumerate(self.amrdoc.sentences):
-            if i+1 in self.aps:
-                if self.aps[i+1].modified:
-                    self.modified.append(str(i+1))
+            if i + 1 in self.aps:
+                if self.aps[i + 1].modified:
+                    self.modified.append(str(i + 1))
                     sent.date = time.strftime("%a %b %d, %Y %H:%M", time.localtime(time.time()))
                 sent.write(ofp, onlyheader=True)
                 #print("SENT", i+1, self.aps[i+1].modified, sent.id, sent.text, self.aps[i+1].triples)
-                self.aps[i+1].write(ofp)
+                self.aps[i + 1].write(ofp)
             else:
                 sent.write(ofp)
 
-
-
-
-#    def oosavefile(self, fn, version="2"):
-#        gitok = False
-#        try:
-#            repo = git.Repo(os.path.dirname(fn))
-#            gitok = True
-#            # file versioned under git, we overwrite the input file
-#            ofp = open(fn, "w")
-#        except:
-#            # file not versioned, we write a new file
-#            ofp = open(fn + "." + version, "w")
-#
-#        modified = []
-#        for i, sent in enumerate(self.amrdoc.sentences):
-#            if i+1 in self.aps:
-#                if self.aps[i+1].modified:
-#                    modified.append(str(i+1))
-#                    sent.date = time.strftime("%a %b %d, %Y %H:%M", time.localtime(time.time()))
-#                sent.write(ofp, onlyheader=True)
-#                #print("SENT", i+1, self.aps[i+1].modified, sent.id, sent.text, self.aps[i+1].triples)
-#                self.aps[i+1].write(ofp)
-#            else:
-#                sent.write(ofp)
-#        print("written %s" % ofp.name)
-#        ofp.close()
-#
-#        if gitok:
-#            #rtc = repo.git.status()
-#            try:
-#                rtc = repo.git.diff(os.path.basename(fn))
-#                if rtc:
-#                    rtc = repo.git.add(os.path.basename(fn))
-#                    rtc = repo.git.commit("-m", "metamorphosed AMR editor: %s of '%s' saved" % (", ".join(modified), fn), author=self.author)
-#                    print("commited %s" % (fn), rtc)
-#                else:
-#                    print("nothing to commit for %s" % (fn), rtc)
-#            except Exception as e:
-#                print("COMMIT Error <%s> <%s> <%s>" % (e, fn, rtc))
-#                pass
 
 class ServerException(Exception):
     def __init__(self, value):

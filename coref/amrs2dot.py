@@ -9,15 +9,15 @@
 # modification, are permitted provided that the following conditions are met:
 #    * Redistributions of source code must retain the above copyright
 #      notice, this list of conditions and the following disclaimer.
-# 
+#
 #    * Redistributions in binary form must reproduce the above copyright
 #      notice, this list of conditions and the following disclaimer in the
 #      documentation and/or other materials provided with the distribution.
-# 
+#
 #    * Neither the name of Orange nor the
 #      names of its contributors may be used to endorse or promote products
 #      derived from this software without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 # ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 # WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -42,8 +42,8 @@ import logging
 import penman
 import random
 import re
-import readline
-import sys
+# import readline
+# import sys
 
 logger = logging.getLogger("amrcoref-editor")
 
@@ -75,7 +75,7 @@ orangecolors = {
     ":op4": "#595959",
     ":value": "#595959",
     "EN": "#ffe5cc",
-    }
+}
 
 
 orangedark = collections.OrderedDict({
@@ -86,8 +86,7 @@ orangedark = collections.OrderedDict({
     "charteVioletDark": "#492191",
     "charteGreenDark": "#0a6e31",
     #"charteGrayDark": "#595959",
-    })
-
+})
 orangedarkkeys = list(orangedark.keys())
 
 orangecols = collections.OrderedDict({
@@ -98,10 +97,8 @@ orangecols = collections.OrderedDict({
     "charteViolet": "#9164cd",
     "charteGreen": "#50be87",
     #"charteGray": "#8f8f8f",
-    })
-
+})
 orangecolskeys = list(orangecols.keys())
-
 
 orangebright = collections.OrderedDict({
     "charteYellowBright": "#fff6b6",
@@ -111,7 +108,7 @@ orangebright = collections.OrderedDict({
     "charteVioletBright": "#d9c2f0",
     "charteGreenBright": "#b8ebd6",
     #"charteGrayBright": "#d6d6d6",
-    })
+})
 
 # we need many colours since long texts have many coref chains
 random.seed(2023) # we use random shuffle to put the colour in a random order, but the same random order every time ...
@@ -123,20 +120,19 @@ manyothercols = {}
 #            z = [a,b,c]
 #            random.shuffle(z)
 #            col = "#%02x%02x%02x" % tuple(z)
-#            
+#
 #            #print(col, "black" if sum(z)/3 > 128 else "white")
 #            manyothercols[col] = col
 
 # maybe awkward, but the objective is to create many differnet colours which the human eye can distinguish well
 for h in [0, 0.1666, 0.333, 0.666, 0.8333, 1]:
-    for l in [0.333, 0.666,  .9]:
-        for s in [0.333, 0.666,  .9]:
-            r,g,b = colorsys.hls_to_rgb(h, l, s)
-            col = "#%02x%02x%02x" % (int(r*255), int(g*255),int( b*255))
+    for lum in [0.333, 0.666, 0.9]:
+        for s in [0.333, 0.666, 0.9]:
+            r, g, b = colorsys.hls_to_rgb(h, lum, s)
+            col = "#%02x%02x%02x" % (int(r * 255), int(g * 255), int(b * 255))
 
             #print(col, "black" if sum(z)/3 > 128 else "white")
             manyothercols[col] = col
-
 
 
 orangebright.update(orangedark)
@@ -149,15 +145,16 @@ orangebrightkeys = list(orangebright.keys())
 
 SVGDIMS = re.compile('(width|height)="(\\d+)')
 
+
 class AMRs2dot:
     def __init__(self, amrs, corefs, implicitroles, scaling=1):
-        self.scaling = 0.65*scaling
+        self.scaling = 0.65 * scaling
         self.corefchains = corefs
 
         self.coreferenced = {} # sid: {var: corefchainid}
-        for crid,cchain in enumerate(self.corefchains):
-            for sid,var in cchain:
-                if not sid in self.coreferenced:
+        for crid, cchain in enumerate(self.corefchains):
+            for sid, var in cchain:
+                if sid not in self.coreferenced:
                     self.coreferenced[sid] = {}
                 self.coreferenced[sid][var] = crid
 
@@ -173,117 +170,13 @@ class AMRs2dot:
         #ofp = open("g.pdf", "w")
         #print(self.dot(), file=ofp)
         #ofp.close()
-    
-
-#    def dot(self, format="svg"):
-#        # put all AMR graphs into a single SVG graph
-#        graph_attr={#'rankdir':'LR'
-#            }
-#        font = "Lato"
-#        kwargs = {
-#            "fontname": font
-#            }
-#        graph = graphviz.Digraph('amr_graph', format=format, graph_attr=graph_attr)
-#        firstnodes = [] # first note of each AMR graph (needed to keep clusters in correct order
-#        for ig,pg in enumerate(self.pgraphs):
-#            # for all penman graphs
-#            varset = set(pg.variables())
-#            varsetnew = set(["G_%d_%s" % (ig,x) for x in varset])
-#
-#            #print(varset)
-#            #sgraph = graph.subgraph(name="cluster_%d" % ig)
-#
-#            firstok = False
-#            with graph.subgraph(name="cluster_%d" % ig) as sgraph:
-#                if pg.metadata and "id" in pg.metadata:
-#                    sgraph.attr(label="%d: %s" % (ig, pg.metadata["id"]))
-#                else:
-#                    sgraph.attr(label="%s" % ig)
-#                sgraph.attr(fontname=font)
-#                for s,p,o in pg.triples:
-#                    oorig = o
-#                    sorig = s
-#                    if s in varset:
-#                        s = "G_%d_%s" % (ig, s)
-#                    if p != ":instance" and o in varset:
-#                        o = "G_%d_%s" % (ig, o)
-#                    if p == ":instance":
-#                        if not firstok:
-#                            firstnodes.append(s)
-#                            firstok = True
-#                        kwargs2 = {"fontname": font}
-#                        if ig in self.coreferenced and sorig in self.coreferenced[ig]:
-#                            col = self.coreferenced[ig][sorig]
-#                            fillcol = orangebright.get(orangebrightkeys[col % len(orangebrightkeys)])
-#                            r = int(fillcol[1:3], 16)
-#                            g = int(fillcol[3:5], 16)
-#                            b = int(fillcol[5:], 16)
-#                            brightness = (r+g+b)/3
-#                            #print("BRIGTHNESS", fillcol, r,g,b, brightness)
-#                            fontcol = "black"
-#                            if brightness < 100:
-#                                fontcol = "white"
-#                                #print(fillcol, brightness, fontcol)
-#                            kwargs2 = {"style": "filled",
-#                                       "fontname": font,
-#                                       "fontcolor": fontcol,
-#                                       "fillcolor": fillcol} #orangebright.get(orangebrightkeys[col % len(orangebrightkeys)])}
-#                        sgraph.node("%s" % s, label="%s/%s" % (sorig,o), shape="box",
-#                                    id="node %s %s" % (s,o),
-#                                    #URL=branch[0],
-#                                    **kwargs2)
-#
-#                    else:
-#                        onodeid = o
-#                        if o not in varsetnew:
-#                            oo = o.replace('"', 'DQUOTE').replace(':', 'COLON').replace('\\', 'BSLASH')
-#                            onodeid = "%s_%s" % (s,oo)
-#                            sgraph.node(onodeid, label="%s" % (o),
-#                                       id="literal %s %s %s" % (s,p,o),
-#                                       style="filled",
-#                                       #color=orangecolors.get("EN"),
-#                                       fillcolor="#e2e2e2", #orangecolors.get("EN"),
-#                                       #URL=branch[0],
-#                                       **kwargs)
-#
-#                        sgraph.edge(s, onodeid, label=p,
-#                                   id="edge#%s#%s#%s" % (s,o,p),
-#                                   #color=orangecolors.get(p.replace("-of", ""), "black"),
-#                                   #fontcolor=orangecolors.get(p.replace("-of", ""), "black"),
-#                                   **kwargs)
-#        #for ix in range(1, len(firstnodes)):
-#        #    # should keep the order of clusters, but does not
-#        #    graph.edge(firstnodes[ix-1],
-#        #               firstnodes[ix],
-#        #               constraint="false")
-#
-#        
-#        for crid, corefchain in enumerate(self.corefchains):
-#            # does influence the order of clusters
-#            # so we quit here und rely on colours only !!!
-#            break
-#            logger.debug("Coref chain %s" % corefchain)
-#            for pos in range(1, len(corefchain)):
-#                graph.edge("G_%d_%s" % (corefchain[pos-1][0], corefchain[pos-1][1]),
-#                           "G_%d_%s" % (corefchain[pos][0], corefchain[pos][1]),
-#                           #label="coref",
-#                           color=orangedark.get(orangedarkkeys[crid % len(orangedarkkeys)]),
-#                           penwidth="3",
-#                           dir="none",
-#                           constraint="false"
-#                           )
-#        #print("GV", graph, sep="\n", file=sys.stderr) # dot sources
-#        if format == "pdf":
-#            graph.render(outfile="g.pdf")
-#        elif format == "svg":
-#            return graph.pipe()
 
     def chainid2col(self, cid):
         fillcol = orangebright.get(orangebrightkeys[cid % len(orangebrightkeys)])
         r = int(fillcol[1:3], 16)
         g = int(fillcol[3:5], 16)
         b = int(fillcol[5:], 16)
-        hue,luminosity,sat = colorsys.rgb_to_hls(r/255, g/255, g/255)
+        hue, luminosity, sat = colorsys.rgb_to_hls(r / 255, g / 255, b / 255)
 
         # print("BRIGTHNESS", s, o, fillcol,  "R", r,  "G",g, "B",b, ", H", hue,  "S", sat, "LUM", luminosity)
         fontcol = "black"
@@ -292,10 +185,9 @@ class AMRs2dot:
         # print(  "FONTCOL", luminosity, fontcol)
         return fillcol, fontcol
 
-    
     def multidot(self, svgs, showfrom=None, shownumber=None):
         # put each AMR graphs into a SVG graph and return a list of SVG
-        graph_attr={# 'rankdir':'LR',
+        graph_attr = {# 'rankdir':'LR',
             "bgcolor": "transparent"
             }
         font = "Lato"
@@ -305,17 +197,17 @@ class AMRs2dot:
 
         svglist = collections.OrderedDict() # sentid: SVG
         # needed to scale the generated SVG (easier here than in the HTML/CSS/JS hell)
-        def scale(x):
-            return '%s="%s' % (x.group(1), int(x.group(2))*self.scaling)
 
+        def scale(x):
+            return '%s="%s' % (x.group(1), int(x.group(2)) * self.scaling)
 
         #print("window", showfrom, shownumber)
-        for ig,pg in enumerate(self.pgraphs):
+        for ig, pg in enumerate(self.pgraphs):
             #print("ig", ig)
-            if showfrom and ig+1 < showfrom:
+            if showfrom and ig + 1 < showfrom:
                 #print("skip", ig)
                 continue
-            if shownumber and ig+1 >= showfrom+shownumber:
+            if shownumber and ig + 1 >= showfrom + shownumber:
                 #print("break", ig)
                 break
             title = "%s" % ig
@@ -329,22 +221,22 @@ class AMRs2dot:
 
             if ig in svgs:
                 # only redo svgs if absent or modified (in this case they are absent)
-                svglist[title] = { "svg": svgs[ig],
-                                   "text": text }
+                svglist[title] = {"svg": svgs[ig],
+                                  "text": text}
                 #print("SVG  OK", ig, title)
                 continue
 
             #print("REDO SVG", ig, title)
             graph = graphviz.Digraph('amr_graph', format="svg", graph_attr=graph_attr)
             varset = set(pg.variables())
-            varsetnew = set(["G_%d_%s" % (ig,x) for x in varset])
+            varsetnew = set(["G_%d_%s" % (ig, x) for x in varset])
 
-            firstok = False
+            # firstok = False
 
             sgraph = graph
 
-            for s,p,o in pg.triples:
-                oorig = o
+            for s, p, o in pg.triples:
+                #oorig = o
                 sorig = s
                 if s in varset:
                     s = "G_%d_%s" % (ig, s)
@@ -361,14 +253,14 @@ class AMRs2dot:
                         chainid = self.coreferenced[ig][sorig]
                         chainnum = "chain_%s" % chainid
                         relid = "\nrel-%s" % chainid
-                        
-                        fillcol,fontcol = self.chainid2col(chainid)
+
+                        fillcol, fontcol = self.chainid2col(chainid)
                         kwargs2 = {"style": "filled",
                                    "fontname": font,
                                    "fontcolor": fontcol,
-                                   "fillcolor": fillcol} #orangebright.get(orangebrightkeys[col % len(orangebrightkeys)])}
-                    sgraph.node("%s" % s, label="%s/%s%s" % (sorig,o,relid), shape="box",
-                                id="node %s %s %s" % (s,o,chainnum),
+                                   "fillcolor": fillcol}
+                    sgraph.node("%s" % s, label="%s/%s%s" % (sorig, o, relid), shape="box",
+                                id="node %s %s %s" % (s, o, chainnum),
                                 #URL=branch[0],
                                 **kwargs2)
 
@@ -376,28 +268,27 @@ class AMRs2dot:
                     onodeid = o
                     if o not in varsetnew:
                         oo = o.replace('"', 'DQUOTE').replace(':', 'COLON').replace('\\', 'BSLASH')
-                        onodeid = "%s_%s" % (s,oo)
+                        onodeid = "%s_%s" % (s, oo)
                         sgraph.node(onodeid, label="%s" % (o),
-                                   id="literal %s %s %s" % (s,p,o),
-                                   style="filled",
-                                   #color=orangecolors.get("EN"),
-                                   fillcolor="#e2e2e2", #orangecolors.get("EN"),
-                                   #URL=branch[0],
-                                   **kwargs)
+                                    id="literal %s %s %s" % (s, p, o),
+                                    style="filled",
+                                    #color=orangecolors.get("EN"),
+                                    fillcolor="#e2e2e2", #orangecolors.get("EN"),
+                                    #URL=branch[0],
+                                    **kwargs)
 
                     sgraph.edge(s, onodeid, label=p,
-                               id="edge#%s#%s#%s" % (s,o,p),
-                               #color=orangecolors.get(p.replace("-of", ""), "black"),
-                               #fontcolor=orangecolors.get(p.replace("-of", ""), "black"),
-                               **kwargs)
-
+                                id="edge#%s#%s#%s" % (s, o, p),
+                                #color=orangecolors.get(p.replace("-of", ""), "black"),
+                                #fontcolor=orangecolors.get(p.replace("-of", ""), "black"),
+                                **kwargs)
 
             # self.implicitroles # sentpos: [chainid, parentvar, ARG]
             if ig in self.implicitroles:
-                for cid,pv,arg in self.implicitroles[ig]:
+                for cid, pv, arg in self.implicitroles[ig]:
                     ss = "G_%d_%s" % (ig, pv)
                     oo = "I_%d_%s_%d" % (ig, pv, cid)
-                    fillcol,fontcol = self.chainid2col(cid)
+                    fillcol, fontcol = self.chainid2col(cid)
                     kwargs2 = {"style": "rounded,filled",
                                "color": "gray",
                                "fontname": font,
@@ -406,24 +297,22 @@ class AMRs2dot:
                     sgraph.node(oo, #label="i%s/implicit\nrel-%d" % (pv, cid),
                                 label="i%s rel-%d" % (pv, cid),
                                 shape="diamond",
-            #                    #id="node %s %s %s" % (s,o,chainnum),
+                                #id="node %s %s %s" % (s,o,chainnum),
                                 **kwargs2
-                            )
+                                )
                     sgraph.edge(ss, oo, label=arg,
                                 color="gray",
                                 fontcolor="gray",
                                 **kwargs)
                     #print("IIII", ss, oo, arg)
 
-
             #print("GV", graph, sep="\n", file=sys.stderr) # dot sources
             svgraw = graph.pipe().decode("utf8")
             svgraw = SVGDIMS.sub(scale, svgraw)
             svgs[ig] = svgraw
-            svglist[title] = { "svg": svgraw, #graph.pipe().decode("utf8"),
-                              "text": text }
+            svglist[title] = {"svg": svgraw, #graph.pipe().decode("utf8"),
+                              "text": text}
         return svglist
-
 
 
 if __name__ == "__main__":
@@ -456,11 +345,10 @@ if __name__ == "__main__":
     a4 = '''(h / hails-01
                :ARG0 (s / she)
                :ARG1 ( c /country :name (n2 / name :op1 "Jamaica")))'''
-                     
 
-    ad = AMRs2dot([a0,a1,a2,a3,a4],
-                  [[(0, "p"), (1, "s"), (2, "s"), (3, "h")], # coreference chain: (sentence, variable)
+    ad = AMRs2dot([a0, a1, a2, a3, a4],
+                  [[(0, "p"), (1, "s"), (2, "s"), (3, "h")],  # coreference chain: (sentence, variable)
                    [(0, "c"), (1, "c"), (3, "c")],
-                   [(3, "m"),(4, "s")]
+                   [(3, "m"), (4, "s")]
                    ])
-    #ad.dot(format="pdf")
+    # ad.dot(format="pdf")

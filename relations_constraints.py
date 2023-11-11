@@ -9,15 +9,15 @@
 # modification, are permitted provided that the following conditions are met:
 #    * Redistributions of source code must retain the above copyright
 #      notice, this list of conditions and the following disclaimer.
-# 
+#
 #    * Redistributions in binary form must reproduce the above copyright
 #      notice, this list of conditions and the following disclaimer in the
 #      documentation and/or other materials provided with the distribution.
-# 
+#
 #    * Neither the name of Orange nor the
 #      names of its contributors may be used to endorse or promote products
 #      derived from this software without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 # ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 # WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -32,7 +32,6 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Software Name: MetAMoRphosED AMR-Editor
 # Author: Johannes Heinecke
-
 
 
 import yaml
@@ -63,7 +62,8 @@ import re
 fixedtypes = {
     "_string": str,
     "_int": int,
-    "_float": float }
+    "_float": float}
+
 
 class Predicate:
     def __init__(self, p, objects):
@@ -77,12 +77,11 @@ class Predicate:
                 else:
                     self.objects.append(o)
 
-    def __str__(self, indent = ""):
-        res = ["%spred: <%s>" % (indent,self.pred)]
+    def __str__(self, indent=""):
+        res = ["%spred: <%s>" % (indent, self.pred)]
         for o in self.objects:
-            res.append("%s  object: <%s>" % (indent,o))
+            res.append("%s  object: <%s>" % (indent, o))
         return "\n".join(res)
-
 
     def valid(self, o, oclass):
         #print("TEST PREDICATE %s %s/%s" % (self.pred, o, oclass))
@@ -101,7 +100,8 @@ class Predicate:
                     ok = True
                     break
         return ok
-    
+
+
 class Subject:
     def __init__(self, s, preds):
         self.subject = s
@@ -110,22 +110,22 @@ class Subject:
         for p in preds:
             if p.startswith("_"):
                 P = Predicate(p, preds[p])
-                self.predicates_regex.append((re.compile(p[1:]),P))
+                self.predicates_regex.append((re.compile(p[1:]), P))
             else:
                 P = Predicate(p, preds[p])
                 self.predicates[p] = P
-
 
     def __str__(self):
         res = ["subject: <%s>" % self.subject]
         for p in self.predicates:
             res.append(self.predicates[p].__str__("  "))
-        for (r,P) in self.predicates_regex:
+        for (r, P) in self.predicates_regex:
             res.append(P.__str__("  "))
         return "\n".join(res)
 
 
-EMPTY_SUBJECT="_"
+EMPTY_SUBJECT = "_"
+
 
 class Constraints:
     def __init__(self, fn):
@@ -145,29 +145,28 @@ class Constraints:
                 # predicates which are tested for any subject
                 self.S[EMPTY_SUBJECT] = Subject(EMPTY_SUBJECT, preds)
 
-                
         else:
             self.data = {}
             self.S = {} # s: Subject
             self.P = {} # p: Predicate
-        
 
     def validate(self, triples, debug=False):
         errors = []
         classes = {} # inst: class
-        for s,p,o in triples:
+        for s, p, o in triples:
             # we must know of which class an instance instantiates
             if p == ":instance":
                 classes[s] = o
 
         if debug:
             print("instances:")
-            for i,c in classes.items():
-                print("  ",i,c)
+            for i, c in classes.items():
+                print("  ", i, c)
 
-        for s,p,o in triples:
+        for s, p, o in triples:
             if p != ":instance":
-                if debug: print("\ntriple",s,p,o)
+                if debug:
+                    print("\ntriple", s, p, o)
                 if p.endswith("-of"):
                     oclass = classes.get(s)
                     sclass = classes.get(o)
@@ -176,27 +175,27 @@ class Constraints:
                     oclass = classes.get(o)
 
                 if sclass in self.S:
-                    if debug: print("TEST SUBJECT %s/%s %s" % (s, sclass, p))
+                    if debug:
+                        print("TEST SUBJECT %s/%s %s" % (s, sclass, p))
                     S = self.S[sclass]
 
-                    if not p in S.predicates:
+                    if p not in S.predicates:
                         ok = False
-                        for reobj,P in S.predicates_regex:
+                        for reobj, P in S.predicates_regex:
                             #print("AAA", reobj, P)
                             if reobj.match(p) and P.valid(o, oclass):
                                 ok = True
                                 break
                         if not ok:
-                            errors.append("instance «%s» of «%s» has an invalid relation «%s»" % (s,sclass,p))
+                            errors.append("instance «%s» of «%s» has an invalid relation «%s»" % (s, sclass, p))
                         continue
-                    if S.predicates[p] != None:
+                    if S.predicates[p] is not None:
                         P = S.predicates[p]
                         ok = P.valid(o, oclass)
 
                         if not ok:
                             errors.append("instance «%s» of «%s» with relation «%s» has invalid object «%s» of «%s»" % (s, sclass, p, o, oclass))
                             continue
-
 
                 if EMPTY_SUBJECT in self.S:
                     empty = self.S[EMPTY_SUBJECT]
@@ -209,7 +208,7 @@ class Constraints:
 
                     if empty.predicates_regex:
                         ok = True
-                        for reobj,P in empty.predicates_regex:
+                        for reobj, P in empty.predicates_regex:
                             #print("AAA", reobj, P)
                             if reobj.match(p) and not P.valid(o, oclass):
                                 ok = False
@@ -219,7 +218,6 @@ class Constraints:
 
         return errors
 
-
     def show(self):
         print(self.data)
         print("subjects:")
@@ -227,7 +225,6 @@ class Constraints:
             print(s)
 
         print("\n")
-
 
 
 if __name__ == "__main__":
@@ -256,7 +253,6 @@ if __name__ == "__main__":
           ("d", ":day", '11'),
           ("d", ":year", '2010')]
 
-
     tr2 = [("d", ":instance", "date-entity"),
            ("d", ":month", '9'),
            ("d", ":day", '11'),
@@ -270,7 +266,6 @@ if __name__ == "__main__":
            ('h', ':instance', 'ham'),
            ('a', ':op2', 'e2'),
            ('e2', ':instance', 'egg')]
-
 
     print(tr3)
     ee = cc.validate(tr3, True)
@@ -292,4 +287,3 @@ if __name__ == "__main__":
         print(parsedgraph.triples)
         for e in ee:
             print("***", e)
-
