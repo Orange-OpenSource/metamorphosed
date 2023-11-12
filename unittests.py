@@ -160,7 +160,7 @@ def test_info(client):
     response = client.get("/version")
     res = json.loads(response.data)
     #print("res", res, file=sys.stderr)
-    assert res == {'name': 'AMR Editor', 'version': '2.6.0', 'apiversion': '1.3.0'}
+    assert res == {'name': 'AMR Editor', 'version': '2.7.0', 'apiversion': '1.3.0'}
 
     response = client.get("/info")
     res = json.loads(response.data)
