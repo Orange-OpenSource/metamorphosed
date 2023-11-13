@@ -1,0 +1,49 @@
+# ::id wikipedia.welsh.1
+# ::snt Welsh is a Celtic language of the Brittonic subgroup
+(l / language
+    :mod (l2 / language
+        :name (n / name
+            :op1 "Celtic"))
+    :domain (l3 / language
+        :name (n2 / name
+            :op1 "Welsh"))
+    :part-of (s / subgroup
+        :mod (c / country
+            :name (n3 / name
+                :op1 "Britain"))))
+
+# ::id wikipedia.welsh.2
+# ::snt It is spoken natively in Wales, by some in England, and in Y Wladfa
+(s / speak-01
+    :ARG0 (s2 / some
+        :location (c / country
+            :name (n / name
+                :op1 "England")))
+    :ARG1 (ii / it)
+    :manner (n2 / native)
+    :location (a / and
+        :op1 (c2 / country
+            :name (n3 / name
+                :op1 "Wales"))
+        :op2 (c3 / country
+            :name (n4 / name
+                :op1 "Y"
+                :op2 "Wladfa"))))
+
+# ::id wikipedia.welsh.3
+# ::snt The Welsh Language Measure 2011 gave the Welsh language official status in Wales.
+(g / give-01
+    :ARG0 (l / law
+        :name (n / name
+            :op1 "Wales"
+            :op2 "Language"
+            :op3 "Measure")
+        :time (d / date-entity
+            :year 2011))
+    :ARG1 (s / status
+        :mod (o / official)
+        :mod (l2 / language
+            :name (n2 / name
+                :op1 "Wales")))
+    :ARG2 l2
+    :location (c / country))

@@ -67,6 +67,7 @@
         <mention concept="they" id="lpp_1943.16" variable="t"/>
         <mention concept="grown-up" id="lpp_1943.15" variable="g"/>
         <mention concept="grown-up" id="lpp_1943.17" variable="g"/>
+        <implicitrole argument="ARG1" id="lpp_1943.10" parentconcept="frighten-01" parentvariable="f"/>
       </identchain>
       <identchain relationid="rel-6">
         <mention concept="picture" id="lpp_1943.15" variable="p2"/>
