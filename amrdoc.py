@@ -248,6 +248,9 @@ class AMRdoc:
             self.sentences.append(asent)
             self.ids[sentid] = asent
         if verbose:
+            fnn = fn
+            if not isinstance(fn, str):
+                fnn = fn.name
             print("%d sentences read from %s" % (len(self.sentences), fn), file=sys.stderr)
 
     def tsv(self):
