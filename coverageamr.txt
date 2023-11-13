@@ -1,3 +1,4 @@
+# used to test the coverage of python
 # ::id sentence 1 ::date 2023-03-23T13:56:55 ::annotator JH
 # ::snt Naomie Harris was born in London. Naomie Harris still lives in London.
 # ::save-date Mon Sep 06, 1976
@@ -17,8 +18,9 @@
         :location c
         :mod (s / still)))
 
-# ::id sentence 2
+# ::id_hidden sentence 2
 # ::snt The cat killed the mouse
+# ::wikidata test
 # this is the second sentence in this file (needed to test searching for comments)
 (k / kill-01
     :ARG0 (c / cat)
@@ -53,10 +55,6 @@
             :op1 "Wales")
         :wiki "Q25")
     :ARG2 (c3 / capital))
-
-# ::id sentence 6 (empty)
-# ::snt the sun rises in the East and sets in the West
-()
 
 # ::id sentence 7
 # ::snt 100 children bought 100 apples for their school for 100 Euros
@@ -129,10 +127,10 @@
 
 # ::id sentence 13 bad format
 # ::snt The man who repaired the bike did not want to be paid
-(aaa / want-01
+(aaa / want-11
     :polarity -
     :ARG0 (m / man
-       ARG0-of (r / repair-01
+       :ARG10-of (r / repair-01
             :ARG1 (b / bike)))
     :ARG1 (p / pay-01
         :ARG2 m))
@@ -160,12 +158,8 @@
 
 # ::id sentence 16 OK
 # ::snt Wednesday, February 29, 2012, at 4:30pm PST
-(d / date-entity :month 2 :day 29 :year 2012 :time "16:30" :timezone "PST"
+(d / date-entity :month 02 :day 29 :year 2012 :time "16:30" :timezone "PST"
       :weekday (w / wednesday))
-
-# ::id sentence 17 (empty)
-# ::snt The man has gone to work
-()
 
 # ::id sentence 18
 # ::snt I did not know that the restaurant is not open

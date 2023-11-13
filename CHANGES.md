@@ -1,5 +1,8 @@
 # Changes
 
+## Version 2.7.0
+* added tests and coverage control using tox with flake8 and coverage
+
 ## Version 2.6.0
 * search in comments
 * new tests

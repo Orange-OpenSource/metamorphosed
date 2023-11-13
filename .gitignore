@@ -5,4 +5,5 @@ gui/lib/jquery*
 *.txt.2
 tmp
 amr3-training-all.txt
-
+.tox
+.coverage

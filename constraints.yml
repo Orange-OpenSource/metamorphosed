@@ -19,6 +19,8 @@ subjects:
     :year:
       - _\d\d\d\d
     :dayperiod:
+    :timezone:
+    :weekday:
 
   # (Non AMR) a hotel instances can only have :lieu relation to an address instance or a :starts relation to a hotelclass instance
   hotel:

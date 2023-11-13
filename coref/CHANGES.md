@@ -1,5 +1,8 @@
 # Changes
 
+## Version 1.6
+* added tests and coverage control using tox with flake8 and coverage
+
 ## Version 1.5
 * new tests: git add/commit existing backup file
 
