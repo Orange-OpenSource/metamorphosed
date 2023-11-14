@@ -682,7 +682,7 @@ class CorefEditor:
         #    raise Exception("Hey, I need either the jsonfile or amrfiles to find sentences")
 
         self.amrdocs = {} # fn: AMRdoc
-        self.sids = {} # sid: AMRsentence
+        self.sids = collections.OrderedDict() # sid: AMRsentence
 
         #if amrfiles:
         for fn in amrfiles:

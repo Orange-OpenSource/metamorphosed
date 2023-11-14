@@ -240,6 +240,7 @@ class AMRdoc:
                 amrblock.append(line)
 
         if amrblock:
+            # we pass here only if there is no final empty line in the amr file
             asent = AMRsentence("\n".join(amrblock))
             asent.id = sentid
             asent.text = text

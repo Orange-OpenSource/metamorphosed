@@ -44,6 +44,8 @@
         :mod (o / official)
         :mod (l2 / language
             :name (n2 / name
-                :op1 "Wales")))
+                :op1 "Welsh")))
     :ARG2 l2
-    :location (c / country))
+        :location (c / country
+            :name (n3 / name
+                :op1 "Wales")))

@@ -146,6 +146,7 @@ class CorefServer:
 
         @app.route('/addtochain', methods=["GET"])
         def addto():
+            # sentgroupnum starts with 1, not 0 !
             sentgroupnum = self.checkParameter(request, 'num', 'integer', isOptional=False)
             takechainfrom = self.checkParameter(request, 'from', 'string', isOptional=False)
             jointochain = self.checkParameter(request, 'to', 'string', isOptional=False)
@@ -153,7 +154,10 @@ class CorefServer:
             shownumber = self.checkParameter(request, 'shownumber', 'integer', isOptional=True, defaultValue=0)
             scaling = self.checkParameter(request, 'scaling', 'float', isOptional=True, defaultValue=1)
 
-            #print("ATC", sentgroupnum, takechainfrom, jointochain)
+            if sentgroupnum < 1 or sentgroupnum > len(self.editor.sentencegroups):
+                dico = {"error": "invalid sentence number: must be between 1 and %d\n" % len(self.editor.sentencegroups)}
+                return Response("%s\n" % json.dumps(dico), 400, mimetype="application/json")
+
             #sg = self.editor.sentencegroups[sid]
             key = list(self.editor.sentencegroups.keys())[sentgroupnum - 1]
             sg = self.editor.sentencegroups[key]

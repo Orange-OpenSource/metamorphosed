@@ -64,8 +64,8 @@ def app():
     #})
     #print("zzzzzzzzzzzzzzzzzzzz")
     aes = CorefServer(4569,
-                      [PATH + "/pp_001.xml"],
-                      [PATH + "/pp.amr.txt"],
+                      [PATH + "/pp_001.xml", PATH + "/wikipedia.shakespeare.xml", PATH + "/wikipedia.welsh.xml"],
+                      [PATH + "/pp.amr.txt", PATH + "/shakespeare.amr.txt", PATH + "/welsh.amr.txt"],
                       )
     app = aes.app
 
@@ -142,6 +142,29 @@ def test_read(client):
     assert res["bridgingtable"]["10"][0] == '<span class="bridgingtype">Superset: <span class="chain" data="G_4_b" style="background-color:#ffeccc;color:black"><b>5</b>: b / boa</span> <span class="chain" data="G_5_t" style="background-color:#ffeccc;color:black"><b>6</b>: t / they</span> <span class="chain" data="G_16_b2" style="background-color:#ffeccc;color:black"><b>17</b>: b2 / boa</span></span><br>members: '
 
 
+def test_read_badnum(client):
+    response = client.get("/read", query_string={"num": 4})
+    res = json.loads(response.data)
+    #print("res", res)
+    assert res['error'] == 'invalid sentence number: must be between 1 and 3\n'
+
+
+def test_read_next(client):
+    response = client.get("/next", query_string={"num": 1,
+                                                 "direction": "next"})
+    res = json.loads(response.data)
+    #print("res", res["numsent"], res["num"])
+    assert res["num"] == 2
+
+
+def test_read_prec(client):
+    response = client.get("/next", query_string={"num": 3,
+                                                 "direction": "preceding"})
+    res = json.loads(response.data)
+    #print("res", res["numsent"], res["num"])
+    assert res["num"] == 2
+
+
 def test_read_window(client):
     response = client.get("/read", query_string={"num": 1,
                                                  "showfrom": 3,
@@ -155,18 +178,30 @@ def test_read_window(client):
 
 
 def test_add_new_chain(client):
-    response = client.get("/addtochain", query_string={"num": 0,
+    response = client.get("/addtochain", query_string={"num": 1,
                                                        "showfrom": 3,
                                                        "shownumber": 2,
                                                        "from": "G_2_a",
                                                        "to": "G_3_t2"})
+    print("res", response.data)
     res = json.loads(response.data)
     assert len(res["chaintable"]) == 10
     assert res["chaintable"]["9"][0] == "<span class=\"chain\" data=\"G_2_a\" style=\"background-color:#ff7900;color:black\"><b>3</b>: a / animal</span>"
 
 
-def test_delete_chain(client):
+def test_add_new_chain_badnum(client):
     response = client.get("/addtochain", query_string={"num": 0,
+                                                       "showfrom": 3,
+                                                       "shownumber": 2,
+                                                       "from": "G_2_a",
+                                                       "to": "G_3_t2"})
+    #print("res", response.data)
+    res = json.loads(response.data)
+    assert res["error"] == "invalid sentence number: must be between 1 and 3\n"
+
+
+def test_delete_chain(client):
+    response = client.get("/addtochain", query_string={"num": 1,
                                                        "showfrom": 3,
                                                        "shownumber": 2,
                                                        "from": "G_2_a",
@@ -176,7 +211,7 @@ def test_delete_chain(client):
 
 
 def test_add_to_chain(client):
-    response = client.get("/addtochain", query_string={"num": 0,
+    response = client.get("/addtochain", query_string={"num": 1,
                                                        "showfrom": 3,
                                                        "shownumber": 2,
                                                        "from": "G_14_p2",
@@ -188,7 +223,7 @@ def test_add_to_chain(client):
 
 
 def test_remove_from_chain(client):
-    response = client.get("/addtochain", query_string={"num": 0,
+    response = client.get("/addtochain", query_string={"num": 1,
                                                        "showfrom": 3,
                                                        "shownumber": 2,
                                                        "from": "G_2_a",
@@ -230,7 +265,7 @@ def test_nogit_back_exists():
 def test_edit_addinstance_git(client_git):
     client, repo = client_git
 
-    response = client.get("/addtochain", query_string={"num": 0,
+    response = client.get("/addtochain", query_string={"num": 1,
                                                        "showfrom": 3,
                                                        "shownumber": 2,
                                                        "from": "G_14_p2",
@@ -240,7 +275,7 @@ def test_edit_addinstance_git(client_git):
     assert len(res["chaintable"]) == 9
     assert len(res["chaintable"]["6"]) == 4
 
-    response = client.get("/save", query_string={"num": 0})
+    response = client.get("/save", query_string={"num": 1})
     #res = json.loads(response.data)
     #print(res)
     for m in repo.head.log():

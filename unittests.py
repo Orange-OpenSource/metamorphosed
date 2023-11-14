@@ -482,6 +482,11 @@ def test_search_text(client):
     #print("res", res)
     assert res["num"] == 6
 
+    response = client.get("/search", query_string={"num": 4, "what": "findtextnext", "regex": "not existing text"})
+    res = json.loads(response.data)
+    #print("res", res)
+    assert res["num"] == 4
+
 
 def test_search_id(client):
     #response = client.get("/read", query_string={"num": 4})
