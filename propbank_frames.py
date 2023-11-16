@@ -110,7 +110,7 @@ class PropBankFrames:
             #print(fn)
             self.parsefile(fn)
             #break
-        print("%d framesets loaded" % (i + 1))
+        print("%d framesets loaded" % (i + 1), file=sys.stderr)
 
         #for rs in self.roleset_args:
         #    print(rs)
@@ -215,11 +215,15 @@ class PropBankFrames:
             return []
 
         for s, p, o in triples:
+
             if p == ":instance":
-                elems = o.rsplit("-", 1)
-                if len(elems) > 1 and (len(elems[1]) <= 3 and elems[1].isnumeric()):
-                    if o not in self.rolesets:
-                        errors.append("«%s» is not a defined propbank roleset" % o)
+                if o is None:
+                    errors.append("«%s» is an instance of None" % s)
+                else:
+                    elems = o.rsplit("-", 1)
+                    if len(elems) > 1 and (len(elems[1]) <= 3 and elems[1].isnumeric()):
+                        if o not in self.rolesets:
+                            errors.append("«%s» is not a defined propbank roleset" % o)
 
         # check whether ARG-relations uses are defined for the roleset
         # return ARG relations which ar note defined for the given concept
