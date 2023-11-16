@@ -39,6 +39,7 @@
 import glob
 import re
 import xml.etree.ElementTree as ET
+import sys
 
 
 class Lemma:
