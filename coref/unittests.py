@@ -165,6 +165,22 @@ def test_read_prec(client):
     assert res["num"] == 2
 
 
+def test_read_first(client):
+    response = client.get("/next", query_string={"num": 3,
+                                                 "direction": "first"})
+    res = json.loads(response.data)
+    #print("res", res["numsent"], res["num"])
+    assert res["num"] == 1
+
+
+def test_read_last(client):
+    response = client.get("/next", query_string={"num": 2,
+                                                 "direction": "last"})
+    res = json.loads(response.data)
+    #print("res", res["numsent"], res["num"])
+    assert res["num"] == 3
+
+
 def test_read_window(client):
     response = client.get("/read", query_string={"num": 1,
                                                  "showfrom": 3,
@@ -231,6 +247,16 @@ def test_remove_from_chain(client):
     res = json.loads(response.data)
     assert len(res["chaintable"]) == 9
     assert len(res["chaintable"]["6"]) == 3
+
+
+def test_addcomment(client):
+    response = client.get("/modifycomment", query_string={"num": 3,
+                                                          "showfrom": "",
+                                                          "shownumber": "",
+                                                          "comment": "a new comment"})
+    res = json.loads(response.data)
+    print("res", res["comment"])
+    assert res["comment"] == "a new comment"
 
 
 def ls(dn):

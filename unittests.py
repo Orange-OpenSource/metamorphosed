@@ -162,7 +162,7 @@ def test_info(client):
     #print("res", res, file=sys.stderr)
     assert res == {'name': 'AMR Editor', 'version': '2.7.0', 'apiversion': '1.3.0'}
 
-    response = client.get("/info")
+    response = client.get("/info", query_string={"withdata": True})
     res = json.loads(response.data)
     #print("res", res)
     assert res['reifications'] == [':accompanier ↔ accompany-01',
@@ -309,6 +309,13 @@ def test_edit_modconcept(client):
     assert res["warning"] == ['«bark-02» is not a defined propbank roleset']
     assert res["penman"] == "(b / bark-02\n   :ARG0 (d / dog\n            :mod (l / little))\n   :ARG2 (d2 / dog\n             :mod (b2 / big)))"
     #assert 1 == 2
+
+
+def test_edit_addname(client):
+    response = client.get("/edit", query_string={"num": 4, "addname": "Little Dog", "nameof": "d"})
+    res = json.loads(response.data)
+    print("res", json.dumps(res["penman"], indent=2))
+    assert res["penman"] == "(b / bark-02\n   :ARG0 (d / dog\n            :mod (l / little)\n            :name (n / name\n                     :op1 \"Little\"\n                     :op2 \"Dog\"))\n   :ARG2 (d2 / dog\n             :mod (b2 / big)))"
 
 
 def test_edit_modconcept_wrong_concept(client):
@@ -578,12 +585,18 @@ def test_edit_amr_undo_redo(client):
     #print("res", json.dumps(res, indent=2))
     assert "(r / rise-01\n   :location (e / east))" == res["penman"]
 
+    response = client.get("/history", query_string={"num": 6, "history": "redo"})
+    response = client.get("/history", query_string={"num": 6, "history": "redo"})
+    res = json.loads(response.data)
+    #print("res", json.dumps(res["penman"], indent=2))
+    assert "(r / rise-01\n   :location (e / east)\n   :ARG0 (s / sun))" == res["penman"]
+
 
 def test_edit_comment(client):
-    response = client.get("/read", query_string={"num": 6})
+    #response = client.get("/read", query_string={"num": 6})
     response = client.get("/edit", query_string={"num": 6, "modcomment": "adding a comment\n\nwith an empty line in between\n\n"})
     res = json.loads(response.data)
-    #print("res", json.dumps(res, indent=2))
+    print("res", json.dumps(res, indent=2))
     assert res["warning"] is None
     assert res["comments"] == "adding a comment\nwith an empty line in between"
     #assert 1 == 2

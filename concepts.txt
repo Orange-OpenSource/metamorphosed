@@ -70,6 +70,7 @@ school
 signal
 station
 still
+sun
 teach-01
 temporal-quantity
 total
