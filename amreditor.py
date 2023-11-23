@@ -271,13 +271,15 @@ class AMRProcessor:
                 onodeid = o
                 pp = p
                 if highlightrelations and (s, p, o) not in highlightrelations:
-                    kwargs = { "fontname": "Lato" } # "Lato Black" }
+                    kwargs["fontname"] = "Lato" # "Lato Black" }
+
                     pp = '< <table border="0"> <tr><td bgcolor="%s">%s</td></tr></table> >' % (orangecolors.get(":snt1"), p)
 
                 if o not in self.vars:
                     oo = o.replace('"', 'DQUOTE').replace(':', 'COLON').replace('\\', 'BSLASH')
                     onodeid = "%s_%s" % (s, oo)
                     kwargs["fillcolor"] = orangecolors.get("EN")
+                    kwargs["style"] = "filled"
                     
                     graph.node(onodeid, label="%s" % (o),
                                id="literal %s %s %s" % (s, p, o),
@@ -288,7 +290,8 @@ class AMRProcessor:
                                **kwargs)
                 #print("ZZZZ", s,p,o)
 
-                
+
+                kwargs["fillcolor"] = orangecolors.get(p.replace("-of", ""), "black")
                 graph.edge(s, onodeid, label=pp,
                            id="edge#%s#%s#%s" % (s, o, p),
                            color=orangecolors.get(p.replace("-of", ""), "black"),
