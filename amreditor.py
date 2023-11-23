@@ -249,22 +249,21 @@ class AMRProcessor:
         
         graph = Digraph('amr_graph', format="svg", graph_attr=graph_attr)
         for s, p, o in self.triples:
-            kwargs = {  "fontname": "Lato" }
+            kwargs = {  "fontname": "Lato Black" }
 
             if p == ":instance":
                 if highlightinstances and s in highlightinstances:
-                    kwargs = { "fontname": "Lato Black" }
+                    kwargs = { "fontname": "Lato" }
 
                 graph.node("%s" % s, label="%s/%s" % (s, o), shape="box",
                            id="node %s %s" % (s, o),
                            #URL=branch[0],
-                           #fontname="Lato Black",
                            **kwargs
                            )
             else:
                 onodeid = o
                 if highlightrelations and (s, p, o) in highlightrelations:
-                    kwargs = { "fontname": "Lato Black" }
+                    kwargs = { "fontname": "Lato" }
 
                 if o not in self.vars:
                     oo = o.replace('"', 'DQUOTE').replace(':', 'COLON').replace('\\', 'BSLASH')
