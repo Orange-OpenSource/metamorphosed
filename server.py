@@ -651,11 +651,13 @@ class AMR_Edit_Server:
 
                 p, r, f1 = smatch.compute_f(best_match_num, test_triple_num, gold_triple_num)
 
+                dico["filename2"] = self.comparefilename
                 dico["smatch"] = "%.2f" % (f1*100)
                 dico["svg"] = svg.decode("utf8")
                 dico["penman2"] = cpm
                 dico["svg2"] = csvg.decode("utf8")
                 dico["comments2"] = "\n".join(ccursentence.comments),
+                
                 if not cap.valid:
                     return invalidamr(cap, pm, ccursentence, sentnum)
 

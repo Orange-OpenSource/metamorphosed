@@ -37,86 +37,15 @@
     <!--button class="mybutton" id="toggledirection">display direction</button-->
     <!--button class="history mybutton" id="undo" disabled>undo</button>
     <button class="history mybutton" id="redo" disabled>redo</button-->
-    filenames: <span id="filename"></span> (<span id="numsent"></span> sentences) <button class="save mybutton"
-        id="save">&#x1F4BE; save file</button>
+    <!-- filenames: <span id="filename"></span> (<span id="numsent"></span> sentences) <button class="save mybutton"
+        id="save">&#x1F4BE; save file</button -->
     &nbsp;&nbsp;<button class="mybutton" id="choosesentence">sentence list</button>
-    &nbsp;&nbsp;<button class="mybutton" id="togglehelp">toggle help</button>
+    &nbsp;&nbsp;<button class="mybutton" id="togglecomments">toggle comments</button>
 
     <p />
 
 
     <div class="editmode" id="commands">
-        <div class="grouping" id="editing" style="display:none">
-            <h3>Add concepts/edges/names</h3>
-            <table>
-                <tr>
-                    <td>A)</td> <td>add a new instance for concept:</td>
-                    <td><input class="conceptfield" placeholder="concept" title="concept to be instantiated" type="text"
-                            id="concept" value="">
-                        <button class="addbutton mybutton" id="addconcept">add</button>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>B)</td> <td>add new relation between instances: </td>
-                    <td><!--input class="varfield" placeholder="source instance"
-                            title="variable of instance from which relation starts" type="text" id="startvar" value=""-->
-                        <select class="validvars" name="varb1" id="startvar"></select>
-                        <input class="edgefield" placeholder="relation"
-                            title="name of the relation to be inserted (like :quant or :polarity)" type="text"
-                            id="edgelabel" value="">
-                        <!--input class="varfield" placeholder="target instance"
-                            title="variable of the instance where relation ends" type="text" id="endvar" value=""-->
-                        <select class="validvars" name="varb2" id="endvar"></select>
-                        <button class="addbutton mybutton" id="addedge">add</button>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>C)</td> <td>set a new top:</td>
-                    <td><!--input class="varfield" placeholder="instance" title="instance which is in top position"
-                            type="text" id="topnode" value=""-->
-                        <select class="validvars" name="varc1" id="topnode"></select>
-                        <button class="addbutton mybutton" id="settop">set</button>
-                    </td>
-                </tr>
-
-                <!--tr>
-                    <td>&nbsp;</td>
-                </tr-->
-
-                <tr>
-                    <td>D)</td> <td>add new relation and literal:</td>
-                    <td><!--input class="varfield" placeholder="instance" title="instance to attach the relation to"
-                            type="text" id="literalof" value=""-->
-                        <select class="validvars" name="vard1" id="literalof"></select>
-                        <input class="edgefield" placeholder="relation" title="name of the relation to be inserted"
-                            type="text" id="relationforliteral" value="">
-                        <input class="literalfield" placeholder="literal (without quotes)"
-                            title="literal (without quotes)" type="text" id="newliteral" value="">
-                        <button class="addbutton mybutton" id="addliteral">add</button>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>E)</td> <td>add new <span class="code">:name</span>-relation for instance: </td>
-                    <td><!--input class="varfield" placeholder="instance" title="instance to attach the name to"
-                            type="text" id="nameof" value=""-->
-                        <select class="validvars" name="vare1" id="nameof"></select>
-                        <input class="literalfield" placeholder="name (without quotes)"
-                            title="new name to be inserted together with an instance of name" type="text" id="name"
-                            value="">
-                        <button class="addbutton mybutton" id="addname">add</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="3"><button class="cleanbutton mybutton" id="cleanfields">clean all</button></td </tr>
-            </table>
-        </div>
-
-        <div>
-            &nbsp;&nbsp;&nbsp;&nbsp;
-        </div>
 
 
         <div class="grouping">
@@ -159,9 +88,30 @@
                 </table>
             </div>
         </div>
-    </div>
 
+        <div class="grouping">
+            <div id="searchfunctions">
+                <h3>Information</h3>
+                <table>
+                    <tr>
+                        <td>Left filename:</td> <td class="info" id="leftfn"></td>
+                    </tr>
+                    <tr>
+                        <td>Right filename:</td> <td class="info" id="rightfn"></td>
+                    </tr>
+                    <tr>
+                        <td>sentences:</td> <td class="info" id="numberofsent"></td>
+                    </tr>
+                    <tr>
+                        <td>Smatch:</td> <td class="info" class="smatch" id="smatch"></td>
+	            </tr>
+                </table>
+            </div>
+        </div>
+    </div>
     <p />
+
+
     <div id="helptext" class="helptext" style="display:none">
         <h2>Help</h2>
         <h3>Add a new instances</h3>
@@ -204,83 +154,8 @@
     <p />
 
 
-    <div class="editmode grouping" id="modpenman" style="display:none">
-        <button class="canceleditmode" id="cancelpm">&times;</button>
-        <h3>Modify PENMAN</h3>
-        <textarea class="pnarea" title="modify penman directly" type="text" id="modifiedpenman" value=""></textarea>
-        <br />
-        <button class="addbutton mybutton" id="modifypenman">update</button>
-        <br />
-    </div>
-
-    <div class="editmode grouping" id="modcomment" style="display:none">
-        <button class="canceleditmode" id="cancelcom">&times;</button>
-        <h3>Modify comment</h3>
-        <textarea class="pnarea" title="modify comments" type="text" id="modifiedcomment" value=""></textarea>
-        <br />
-        <button class="addbutton mybutton" id="modifycomment">update</button>
-        <br />
-    </div>
 
     <div id="resultat"></div>
-
-    <!-- concept name edit -->
-    <div class="modal editmode" id="conceptsetmodal">
-        <div class="grouping noborder" id="modconcept">
-            <button class="cancelmodal" id="cancelmc">&times;</button>
-            <h3>Modify concept for instance &ldquo;<span id="conceptinstance"></span>&rdquo;</h3>
-            Change concept <input class="conceptfield" title="modify concept name" type="text" id="modifiedconcept"
-                value="">
-            <button class="addbutton mybutton" id="modifyconcept">update</button>
-            <button class="addbutton mybutton" id="delinstance">delete instance</button>
-            <br />
-            <!--button class="canceleditmode" id="cancelmc">cancel</button-->
-
-            add new relation and literal:
-            <input class="edgefield" placeholder="relation"
-                title="name of the relation to be inserted (like :quant or :polarity)" type="text"
-                id="relationforliteral2" value="">
-            <input class="literalfield" placeholder="literal (without quotes)" title="literal (without quotes)"
-                type="text" id="newliteral2" value="">
-            <button class="addbutton mybutton" id="addliteral2">add</button>
-            <br />
-
-            add new <span class="code">:name</span>-relation for instance:
-            <input class="literalfield" placeholder="name (without quotes)"
-                title="new name to be inserted together with an instance of name" type="text" id="name2" value="">
-            <button class="addbutton mybutton" id="addname2">add</button>
-        </div>
-    </div>
-
-    <!-- relation name edit -->
-    <div class="modal editmode" id="edgesetmodal">
-        <div class="grouping noborder" id="modedge">
-            <button class="cancelmodal" id="cancelme">&times;</button>
-            <h3>Modify relation &ldquo;<span id="relationfrom"></span> &ndash; <span id="relationto"></span>&rdquo;</h3>
-            <input class="edgefield" title="modify relation name" type="text" id="modifiededge" value="">
-            <button class="addbutton mybutton" id="modifyedge">update</button>
-            <button class="addbutton mybutton" id="deledge">delete</button>
-
-            <br /><!--input class="varfield" placeholder="instance" title="modify relation start" type="text"
-                id="newsource" value=""-->
-                  <select class="validvars" name="varmr" id="newsource"></select>
-            <button class="addbutton mybutton" id="moveedge">use as new head</button>
-            <br />
-        </div>
-    </div>
-
-    <!-- literal name edit -->
-    <div class="modal editmode" id="literalsetmodal">
-       <div class="grouping noborder" id="modlit">
-           <button class="cancelmodal" id="cancelml">&times;</button>
-           <h3>Modify literal</h3>
-           <input class="literalfield" title="modify literal (quotes are added automatically if needed)" type="text"
-               id="modifiedliteral" value="">
-           <button class="addbutton mybutton" id="modifyliteral">update</button>
-           <button class="addbutton mybutton" id="delliteral">delete literal</button>
-           <br />
-       </div>
-    </div>
 
     <!-- sentence list -->
     <div class="modal editmode" id="sentmodal">
@@ -294,6 +169,14 @@
            <select class="allsentences" name="sent1" id="sentencelist"></select>
            <br />
        </div>
+    </div>
+
+    <!-- comments list -->
+    <div class="modal editmode" id="commentmodal">
+        <div class="grouping noborder" id="commentsmod">
+            <button class="cancelmodal" id="cancelcomments">&times;</button>
+            <div id="showcomments"></div>
+        </div>
     </div>
 
 

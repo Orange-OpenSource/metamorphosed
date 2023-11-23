@@ -88,13 +88,9 @@ function getServerInfo() {
 			$("#save").hide();
 			$("#mainheader").html($("#mainheader").html() + " (read-only)");
 		    }
-		    $("#filename").empty();
-		    $("#filename").append(data.filename);
-		    $("#filename").append(" / ");
-		    $("#filename").append(data.filename2);
-
-		    $("#numsent").empty();
-		    $("#numsent").append(data.numsent);
+		    $("#leftfn").html(data.filename);
+		    $("#rightfn").html(data.filename2);
+		    $("#numberofsent").html(data.numsent);
 
 		    $("#version").empty();
 		    $("#version").append(data.version);
@@ -110,6 +106,7 @@ function getServerInfo() {
 		    $("#cmdl").empty();
 		    $("#cmdl").append(data.cmdline.replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
 
+		    /*
 		    if (data.relations) {
 			relationlist = data.relations;
 			// autocomplete for the fields where relations can be set
@@ -164,7 +161,7 @@ function getServerInfo() {
 					  appendTo: "#modconcept" // needed to avoid modal covering completion list
 				  });
 			  });
-		    }
+			  }*/
 
 		    if (data.sentences) {
 			sentencelist = data.sentences;
@@ -183,7 +180,7 @@ function getServerInfo() {
 			});
 		    }
 
-
+		    /*
 		    if (data.reifications) {
 			$.each(data.reifications,
 			       function (key, value) {
@@ -192,7 +189,7 @@ function getServerInfo() {
 			       });
 		    } else {
 			$('#reifygroup').hide();
-		    }
+			}*/
 		},
 		error: function (data) {
 			// do something else
@@ -241,11 +238,17 @@ function ToggleDiv(selector, togglebutton) {
 	}
 }
 
-function ToggleHelp() {
-	if ($("#helptext").is(":visible")) {
-		$("#helptext").hide();
+function ToggleComments() {
+	if ($("#commentmodal").is(":visible")) {
+		$("#commentmodal").hide();
 	} else {
-		$("#helptext").show();
+		$("#commentmodal").show();
+		$("#commentmodal").draggable();
+			$("#cancelcomments").click(function(){
+				//$("#conceptsetmodal").fadeOut();
+				$("#commentmodal").hide();
+			});			
+
 	}
 }
 
@@ -254,6 +257,7 @@ function ShowSentences() {
 		$("#sentmodal").hide();
 	} else {
 		$("#sentmodal").show();
+		$("#sentmodal").draggable();
 			$("#cancelsentlist").click(function(){
 				//$("#conceptsetmodal").fadeOut();
 				$("#sentmodal").hide();
@@ -261,13 +265,6 @@ function ShowSentences() {
 	}
 }
 
-function ToggleDirection() {
-	if ($("#gresultat").css("flexDirection") == "row") {
-		$("#gresultat").css("flexDirection", "column");
- 	} else {
- 		$("#gresultat").css("flexDirection", "row");
- 	}
-}
 
 
 function unhighlight() {
@@ -494,12 +491,33 @@ function formatOne(number, svg, penman) {
 	//$("#resultat").append('<div class="bothresults" id="doubleresultat_' + number + '">');
 	$("#doubleresultat").append('<div id="gresultat_' + number + '">');
 
-	$("#gresultat_" + number).append('<div id="g1resultat_' + number + '">'); // penman1
-	$("#gresultat_" + number).append('<div id="g2resultat_' + number + '">'); // svg1
+	$("#gresultat_" + number).append('<div id="svg_resultat_' + number + '">'); // svg
+	$("#gresultat_" + number).append('<div id="penman_ultat_' + number + '">'); // penman
 	$("#gresultat_" + number).css("flexDirection", "column");
 
+
+
+
+	// toggle button to hide/show the svg graph
+	$("#svg_resultat_" + number).append('<button class="toggleresult" id="togglesvggraph_' + number + '" >&#8210;</button>');
+	$("#togglesvggraph_" + number).click(function () {
+		//console.log("RRR", this.id);
+		ToggleDiv('#innersvggraph_' + number + '_' + currentsentnum, "#togglesvggraph_" + number);
+	});
+
+	// svg graph in an inner div
+	$('#svg_resultat_' + number).append('<div class="svggraph" id="svggraph_' + number + '_' + currentsentnum + '">');
+	$('#svggraph_' + number + '_' + currentsentnum).append('<div id="innersvggraph_' + number + '_' + currentsentnum + '">');
+	$('#innersvggraph_' + number + '_' + currentsentnum).append(svg.replace(/<svg /, '<svg onmousedown="info(event);" '));
+
+	if ('#innersvggraph_' + number + '_' + currentsentnum in visible_divselectors && visible_divselectors['#innersvggraph_' + number + '_' + currentsentnum] == false) {
+		ToggleDiv('#innersvggraph_' + number + '_' + currentsentnum, "#togglesvggraph" + number);
+	}
+
+
+
 	// toggle button to hide/show the penman graph
-	$("#g1resultat_" + number).append('<button class="toggleresult" id="togglepenman_' + number + '" >&#8210;</button>');
+	$("#penman_ultat_" + number).append('<button class="toggleresult" id="togglepenman_' + number + '" >&#8210;</button>');
 	$("#togglepenman_" + number).click(function () {
 		//console.log("RRR", currentsentnum, this.id);
 		ToggleDiv('#amr_' + number + '_' + currentsentnum, "#togglepenman_" + number);
@@ -507,7 +525,7 @@ function formatOne(number, svg, penman) {
 
 
 	// penman graph in an inner div
-	$("#g1resultat_" + number).append('<div class="penman" id="penman_' + number + '_' + currentsentnum + '">');
+	$("#penman_ultat_" + number).append('<div class="penman" id="penman_' + number + '_' + currentsentnum + '">');
 	$('#penman_' + number + '_' + currentsentnum).append('<pre id="amr_' + number + '_' + currentsentnum + '">');
 	$('#amr_' + number + '_' + currentsentnum).append(penman);
 
@@ -515,23 +533,6 @@ function formatOne(number, svg, penman) {
 		ToggleDiv('#amr_' + number + '_' + currentsentnum, "#togglepenman");
 	}
 
-
-
-	// toggle button to hide/show the svg graph
-	$("#g2resultat_" + number).append('<button class="toggleresult" id="togglesvggraph_' + number + '" >&#8210;</button>');
-	$("#togglesvggraph_" + number).click(function () {
-		//console.log("RRR", this.id);
-		ToggleDiv('#innersvggraph_' + number + '_' + currentsentnum, "#togglesvggraph_" + number);
-	});
-
-	// svg graph in an inner div
-	$('#g2resultat_' + number).append('<div class="svggraph" id="svggraph_' + number + '_' + currentsentnum + '">');
-	$('#svggraph_' + number + '_' + currentsentnum).append('<div id="innersvggraph_' + number + '_' + currentsentnum + '">');
-	$('#innersvggraph_' + number + '_' + currentsentnum).append(svg.replace(/<svg /, '<svg onmousedown="info(event);" '));
-
-	if ('#innersvggraph_' + number + '_' + currentsentnum in visible_divselectors && visible_divselectors['#innersvggraph_' + number + '_' + currentsentnum] == false) {
-		ToggleDiv('#innersvggraph_' + number + '_' + currentsentnum, "#togglesvggraph" + number);
-	}
 
 }
 
@@ -586,19 +587,20 @@ function formatAMR(data) {
 	$('#innertext_' + currentsentnum).append("<h4>" + data.sentid +lastchanged);
         var escapedtext = data.text; //.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 	$('#innertext_' + currentsentnum).append(escapedtext);
-	$('#innertext_' + currentsentnum).append("<br>Smatch: " + data.smatch);
+	$('#smatch').html(data.smatch);
 
 	if ('#innertext_' + currentsentnum in visible_divselectors && visible_divselectors['#innertext_' + currentsentnum] == false) {
 		ToggleDiv('#innertext_' + currentsentnum, "#togglesentence");
 	}
 
-
+	/*
 	// toggle button to hide/show comments
 	$("#resultat").append('<button class="toggleresult" id="togglecomment" >&#8210;</button>');
 	$("#togglecomment").click(function () {
 		ToggleDiv('#innercomment_' + currentsentnum, "#togglecomment");
 	});
 
+	
 	// comments (in an nested div to keep the outer div always displayed
 	$("#resultat").append('<div class="text" id="comment_' + currentsentnum + '">');
 	$('#comment_' + currentsentnum).append('<div id="innercomment_' + currentsentnum + '">');
@@ -618,121 +620,25 @@ function formatAMR(data) {
 		}
 		$("#modifiedcomment").val($('#precomment_' + currentsentnum).html());
 	});
+	*/
+
+	$('#showcomments').empty();
+	$('#showcomments').append("<h4>comments left");
+	$('#showcomments').append('<pre id="precomment_A' + currentsentnum + '">');
+	$('#precomment_A' + currentsentnum).append(data.comments);
+	$('#showcomments').append("<h4>comments left");
+	$('#showcomments').append('<pre id="precomment_B' + currentsentnum + '">');
+	$('#precomment_B' + currentsentnum).append(data.comments2);
 	
+
 	$("#resultat").append('<div id="doubleresultat">');
 	formatOne("A", data.svg, data.penman);
 	formatOne("B", data.svg2, data.penman2);
-	/*
-	// container for penman and svg, on top of one another
-	$("#resultat").append('<div id="doubleresultat">');
-	$("#doubleresultat").append('<div id="gresultat">');
-
-	$("#gresultat").append('<div id="g1resultat">'); // penman1
-	$("#gresultat").append('<div id="g2resultat">'); // svg1
-	$("#gresultat").css("flexDirection", "column");
-
-	// toggle button to hide/show the penman graph
-	$("#g1resultat").append('<button class="toggleresult" id="togglepenman" >&#8210;</button>');
-	$("#togglepenman").click(function () {
-		//console.log("RRR", currentsentnum, this.id);
-		ToggleDiv('#amr_' + currentsentnum, "#togglepenman");
-	});
-
-
-	// penman graph in an inner div
-	$("#g1resultat").append('<div class="penman" id="penman_' + currentsentnum + '">');
-	$('#penman_' + currentsentnum).append('<pre id="amr_' + currentsentnum + '">');
-	$('#amr_' + currentsentnum).append(data.penman);
-
-	if ('#amr_' + currentsentnum in visible_divselectors && visible_divselectors['#amr_' + currentsentnum] == false) {
-		ToggleDiv('#amr_' + currentsentnum, "#togglepenman");
-	}
-
-
-
-	// toggle button to hide/show the svg graph
-	$("#g2resultat").append('<button class="toggleresult" id="togglesvggraph" >&#8210;</button>');
-	$("#togglesvggraph").click(function () {
-		//console.log("RRR", this.id);
-		ToggleDiv('#innersvggraph_' + currentsentnum, "#togglesvggraph");
-	});
-
-	// svg graph in an inner div
-	$('#g2resultat').append('<div class="svggraph" id="svggraph_' + currentsentnum + '">');
-	$('#svggraph_' + currentsentnum).append('<div id="innersvggraph_' + currentsentnum + '">');
-	$('#innersvggraph_' + currentsentnum).append(data.svg.replace(/<svg /, '<svg onmousedown="info(event);" '));
-
-	if ('#innersvggraph_' + currentsentnum in visible_divselectors && visible_divselectors['#innersvggraph_' + currentsentnum] == false) {
-		ToggleDiv('#innersvggraph_' + currentsentnum, "#togglesvggraph");
-	}
-
-
-
-
-	$("#doubleresultat").append('<div id="gresultatB">');
-	$("#gresultatB").append('<div id="g1resultatB">'); // penman2
-	$("#gresultatB").append('<div id="g2resultatB">'); // svg2
-	$("#gresultatB").css("flexDirection", "column");
-
-	// toggle button to hide/show the penman graph
-	$("#g1resultatB").append('<button class="toggleresult" id="togglepenmanB" >&#8210;</button>');
-	$("#togglepenmanB").click(function () {
-				     //console.log("RRR", currentsentnum, this.id);
-				     ToggleDiv('#amrB_' + currentsentnum, "#togglepenmanB");
-				 });
-
-
-	// penman graph in an inner div
-	$("#g1resultatB").append('<div class="penman" id="penmanB_' + currentsentnum + '">');
-	$('#penmanB_' + currentsentnum).append('<pre id="amrB_' + currentsentnum + '">');
-	$('#amrB_' + currentsentnum).append(data.penman2);
-
-	if ('#amrB_' + currentsentnum in visible_divselectors && visible_divselectors['#amrB_' + currentsentnum] == false) {
-		ToggleDiv('#amrB_' + currentsentnum, "#togglepenmanB");
-	}
-
-
-
-
-	// toggle button to hide/show the second svg graph
-	$("#g2resultatB").append('<button class="toggleresult" id="togglesvggraphB" >&#8210;</button>');
-	$("#togglesvggraphB").click(function () {
-		//console.log("RRR", this.id);
-		ToggleDiv('#innersvggraphB_' + currentsentnum, "#togglesvggraphB");
-	});
-
-	// svg graph in an inner div
-	$('#g2resultatB').append('<div class="svggraph" id="svggraphB_' + currentsentnum + '">');
-	$('#svggraphB_' + currentsentnum).append('<div id="innersvggraphB_' + currentsentnum + '">');
-	$('#innersvggraphB_' + currentsentnum).append(data.svg2.replace(/<svg /, '<svg onmousedown="info(event);" '));
-
-	if ('#innersvggraphB_' + currentsentnum in visible_divselectors && visible_divselectors['#innersvggraphB_' + currentsentnum] == false) {
-		ToggleDiv('#innersvggraphB_' + currentsentnum, "#togglesvggraphB");
-	}
-
-*/
 	
-
-
-
-
-
-
 
 	if (data.framedoc) {
 		$("#resultat").append('<div class="text" id="framedoc_' + currentsentnum + '">');
 		$('#framedoc_' + currentsentnum).append(data.framedoc);
-	}
-
-	if (data.undos > 0) {
-		$("#undo").prop("disabled", false);
-	} else {
-		$("#undo").prop("disabled", true);
-	}
-	if (data.redos > 0) {
-		$("#redo").prop("disabled", false);
-	} else {
-		$("#redo").prop("disabled", true);
 	}
 
 }
@@ -743,32 +649,9 @@ $(document).ready(function () {
 	getServerInfo();
 	sentenceloaded = false;
 
-	// toggle the box with the search functions
-	$("#togglesearch").click(function () {
-		ToggleDiv('#searchfunctions', "#togglesearch");
-	});
 
-
-	$(".canceleditmode").click(function () {
-		if (!readonly) {
-		    $(".editmode").hide();
-		    $("#commands").show();
-		}
-	});
 
 	// use ENTER to emulate a click
-	$("#concept").keyup(function (event) {
-		//console.log("zzzz", event);
-		if (event.keyCode === 13) {
-			$("#addconcept").click();
-		}
-	});
-	$("#topnode").keyup(function (event) {
-		//console.log("zzzz", event);
-		if (event.keyCode === 13) {
-			$("#settop").click();
-		}
-	});
 	$("#sentnum").keyup(function (event) {
 		//console.log("zzzz", event);
 		if (event.keyCode === 13) {
@@ -776,74 +659,13 @@ $(document).ready(function () {
 		}
 	});
 
-	$("#togglehelp").click(function () {
-		ToggleHelp();
+	$("#togglecomments").click(function () {
+		ToggleComments();
 	});
 	$("#choosesentence").click(function () {
 		ShowSentences();
 	});
 
-	$("#toggledirection").click(function () {
-		ToggleDirection();
-	});
-
-
-	/*
-
-	$("#save").click(function () {
-		if (!readonly) {
-		    $(".editmode").hide();
-		    $("#commands").show();
-		}
-		//URL_BASE = 'http://' + window.location.host + '/save';
-		URL_BASE = 'save';
-		$("#resultat").empty(); // vider le div
-
-		$.ajax({
-			url: URL_BASE, // + "json", //+'/foo/fii?fuu=...',
-			type: 'GET',
-			data: { "num": $("#sentnum").val() },
-			//headers: {
-			//    'Content-type': 'text/plain',
-			//},
-			statusCode: {
-				204: function () {
-					alert('No input text');
-				},
-				//400: function () {
-				//alert('Bad query');
-				//},
-				//		500: function () {
-				//		    alert("Error on '" + URL_BASE + "' " + data);
-				//		}
-			},
-
-			success: function (data) {
-				//console.log("SUCCESS ", data);
-				formatAMR(data);
-
-				$("#filename").empty();
-				$("#filename").append(data.filename);
-
-				$("#numsent").empty();
-				$("#numsent").append(data.numsent);
-				currentsentnum = data.num;
-
-			},
-			error: function (data) {
-				// do something else
-				//console.log("ERREUR ", data);
-				$("#resultat").append('<div class="error" id="error">');
-				//$('#error').append(data.responseJSON.error);
-				if (data.responseJSON == undefined) {
-				    $('#error').append("serveur not responding");
-				} else {
-				    $('#error').append(data.responseJSON.error);
-				}
-			}
-		});
-	});
-	*/
 
 
 	$("#lire").click(function () {
@@ -874,11 +696,13 @@ $(document).ready(function () {
 				//console.log("SUCCESS ", data);
 				formatAMR(data);
 
-				$("#filename").empty();
-				$("#filename").append(data.filename);
+				//$("#filename").empty();
+				//$("#filename").append(data.filename);
+				//$("#filename").append(" / ");
+				//$("#filename").append(data.filename2);
 
-				$("#numsent").empty();
-				$("#numsent").append(data.numsent);
+				//$("#numsent").empty();
+				//$("#numsent").append(data.numsent);
 				currentsentnum = data.num;
 
 			},
@@ -895,63 +719,6 @@ $(document).ready(function () {
 			}
 		});
 	});
-
-
-
-
-	$(".history").click(function () {
-		//URL_BASE = 'http://' + window.location.host + '/history';
-		URL_BASE = 'history';
-		$("#resultat").empty(); // vider le div
-		//var command = "dog"; //$("#command").val();
-		//console.log("EEEEE", this.id);
-		var params = {};
-		params = { "history": this.id }
-
-		params["num"] = currentsentnum;
-		$.ajax({
-			url: URL_BASE,
-			type: 'GET',
-			//data: {"cmd": command},
-			data: params,
-			//headers: {
-			//    'Content-type': 'text/plain',
-			//},
-			statusCode: {
-				204: function () {
-					alert('No input text');
-				},
-				//400: function () {
-				//                    alert('Bad query');
-				//		},
-				//		500: function () {
-				//		    alert("Error on '" + URL_BASE + "' " + data);
-				//		}
-			},
-
-			success: function (data) {
-				//console.log("SUCCESS ", data);
-				formatAMR(data);
-			},
-			error: function (data) {
-				// do something else
-				console.log("ERREUR ", data);
-				$("#resultat").append('<div class="error" id="error">');
-				//$('#error').append(data.responseJSON.error);
-				if (data.responseJSON == undefined) {
-				    $('#error').append("serveur not responding");
-				} else {
-				    $('#error').append(data.responseJSON.error);
-				}
-			}
-		});
-	});
-
-
-
-
-
-
 
 
 	$(".walk").click(function () {
@@ -1290,14 +1057,5 @@ $(document).ready(function () {
 	});
 
 
-
-
-	/*    $("#vider").click(function () {
-			  //$('#enhdeprelEdit').modal('hide');
-			  $("#texte").val("");
-			  //$("#frameinfo").empty();
-			  $("#resultat").empty();
-			  $(window).scrollTop(0);
-			  }); */
 
 });
