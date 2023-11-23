@@ -240,21 +240,32 @@ class AMRProcessor:
                 insts.append(k)
         return insts
 
-    def dot(self):
+    def dot(self, highlightinstances=None, highlightrelations=None):
         graph_attr = {#'rankdir':'LR'
         }
-        kwargs = {
-            "fontname": "Lato"
-            }
+        # kwargs = {
+        #    "fontname": "Lato"
+        #    }
+        
         graph = Digraph('amr_graph', format="svg", graph_attr=graph_attr)
         for s, p, o in self.triples:
+            kwargs = {  "fontname": "Lato" }
+
             if p == ":instance":
+                if highlightinstances and s in highlightinstances:
+                    kwargs = { "fontname": "Lato Black" }
+
                 graph.node("%s" % s, label="%s/%s" % (s, o), shape="box",
                            id="node %s %s" % (s, o),
                            #URL=branch[0],
-                           **kwargs)
+                           #fontname="Lato Black",
+                           **kwargs
+                           )
             else:
                 onodeid = o
+                if highlightrelations and (s, p, o) in highlightrelations:
+                    kwargs = { "fontname": "Lato Black" }
+
                 if o not in self.vars:
                     oo = o.replace('"', 'DQUOTE').replace(':', 'COLON').replace('\\', 'BSLASH')
                     onodeid = "%s_%s" % (s, oo)
@@ -265,6 +276,7 @@ class AMRProcessor:
                                fillcolor=orangecolors.get("EN"),
                                #URL=branch[0],
                                **kwargs)
+                #print("ZZZZ", s,p,o)
 
                 graph.edge(s, onodeid, label=p,
                            id="edge#%s#%s#%s" % (s, o, p),
@@ -274,7 +286,7 @@ class AMRProcessor:
         #print("RRRRR", graph) # dot sources
         return graph.pipe()
 
-    def show(self):
+    def show(self, highlightinstances=None, highlightrelations=None):
         if self.inserver:
             #print(self.triples, self.vars)
             #for tr in self.triples:
@@ -291,7 +303,7 @@ class AMRProcessor:
                 #a.build(pm)
                 #self.lastsvg = a.graph.pipe()
                 self.readpenman(pm)
-                self.lastsvg = self.dot()
+                self.lastsvg = self.dot(highlightinstances, highlightrelations)
                 self.isDisconnected = False
             except penman.exceptions.LayoutError:
                 #a = amr2dot.AMR2DOT(format="svg", font="Lato", instances=False, lr=False, bw=False)

@@ -129,6 +129,11 @@ input {
   stroke: red;
 }
 
+#doubleresultat { 
+ display: flex;
+ flex-direction: row;
+}
+
 #reifygroup, #gresultat {
  display: flex;
  flex-direction: row;

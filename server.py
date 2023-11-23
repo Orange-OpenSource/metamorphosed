@@ -50,6 +50,7 @@ import gitinterface
 import propbank_frames
 import reification
 import relations_constraints
+import smatch
 
 # TODO
 # detect errors
@@ -63,7 +64,8 @@ APIVERSION = "1.3.0"
 
 
 class AMR_Edit_Server:
-    def __init__(self, port, filename, pbframes, rels, concepts, constraints, readonly, author=None, reifications=None, do_git=True):
+    def __init__(self, port, filename, pbframes, rels, concepts, constraints, readonly, author=None, reifications=None,
+                 do_git=True, compare=None):
         self.port = port
         self.filename = filename
         self.amrdoc = amrdoc.AMRdoc(filename)
@@ -71,8 +73,14 @@ class AMR_Edit_Server:
         self.author = author
         self.reificator = None
         self.do_git = do_git
-        if reifications:
-            self.reificator = reification.getInstance(reifications)
+
+        self.comparedoc = None
+        if compare is not None:
+            readonly = True
+            self.do_git = False
+        else:
+            if reifications:
+                self.reificator = reification.getInstance(reifications)
 
         self.fileversion = "2"
         if not readonly and not gitinterface.is_git_controlled(filename):
@@ -95,6 +103,20 @@ class AMR_Edit_Server:
             self.initstates.append(ap.lastpm)
 
         print("all sentences initialized")
+
+        if compare is not None:
+            self.comparedoc = amrdoc.AMRdoc(compare)
+            self.compare_aps = {}
+            for sentnum, cursentence in enumerate(self.comparedoc.sentences, start=1):
+                if sentnum % 10 == 0:
+                    print("%d initialized" % sentnum, end="\r")
+                    ap = amreditor.AMRProcessor()
+                    self.compare_aps[sentnum] = ap
+                    ap.lastpm = cursentence.amr
+                    ap.comments = cursentence.comments
+
+            print("all compare sentences initialized")
+
         # stack of last actions, used by undo/redo
         # save current ap **after** modifiying it
         # it is initalialized with a copy of all sentences
@@ -123,7 +145,10 @@ class AMR_Edit_Server:
         @app.route('/', methods=["GET"])
         def index():
             # Displays the index page accessible at '/'
-            return render_template('index.html', toolname="AMR Editor")
+            if self.comparedoc:
+                return render_template('compare.html', toolname="AMR File Comparison")
+            else:
+                return render_template('index.html', toolname="AMR Editor")
 
         @app.route('/version', methods=["GET"])
         def version():
@@ -461,7 +486,8 @@ class AMR_Edit_Server:
         def next():
             sentnum = self.checkParameter(request, 'num', 'integer', isOptional=False, defaultValue=None)
             direction = self.checkParameter(request, 'direction', 'string', isOptional=False, defaultValue=None)
-
+            iscompare = self.checkParameter(request, 'compare', 'boolean', isOptional=True, defaultValue=False)
+            
             if direction == "preceding":
                 if sentnum > 1:
                     sentnum -= 1
@@ -473,11 +499,12 @@ class AMR_Edit_Server:
             elif direction == "last":
                 sentnum = len(self.amrdoc.sentences)
 
-            return prepare_newpage(sentnum)
+            return prepare_newpage(sentnum, iscompare=iscompare)
 
         @app.route('/read', methods=["GET"])
         def read():
             sentnum = self.checkParameter(request, 'num', 'integer', isOptional=False, defaultValue=None)
+            iscompare = self.checkParameter(request, 'compare', 'boolean', isOptional=True, defaultValue=False)
             #sentnum = int(sentnum)
             if sentnum < 1 or sentnum > len(self.amrdoc.sentences):
                 dico = {"error": "invalid sentence number: must be between 1 and %d" % len(self.amrdoc.sentences)}
@@ -486,7 +513,7 @@ class AMR_Edit_Server:
 
             #for x in self.aps:
             #    print("AAAAAPPPP", x, self.aps[x].lastpm)
-            return prepare_newpage(sentnum)
+            return prepare_newpage(sentnum, iscompare=iscompare)
 
         @app.route('/save', methods=["GET"])
         def save():
@@ -542,7 +569,7 @@ class AMR_Edit_Server:
                     }
             return Response("%s\n" % json.dumps(dico), 200, mimetype="application/json")
 
-        def prepare_newpage(sentnum, oktext=None, okamr=None):
+        def prepare_newpage(sentnum, oktext=None, okamr=None, iscompare=False):
             # sentnum uses 1 ... length
             # self.amrdoc.sentences is a list: 0 length-1
             cursentence = self.amrdoc.sentences[sentnum - 1]
@@ -586,7 +613,7 @@ class AMR_Edit_Server:
             lastchanged = cursentence.date
             if not lastchanged:
                 lastchanged = cursentence.savedateorig
-
+                
             dico = {"penman": pm, "svg": svg.decode("utf8"),
                     "warning": warnings, "framedoc": framedoc, "readonly": readonly,
                     "filename": filename, "numsent": len(self.amrdoc.sentences),
@@ -598,6 +625,37 @@ class AMR_Edit_Server:
                     "variables": sorted(list(set(ap.vars.keys()))),
                     "undos": len(self.undos),
                     "redos": len(self.redos)}
+            if iscompare and self.comparedoc:
+                ccursentence = self.comparedoc.sentences[sentnum - 1]
+                if sentnum not in self.compare_aps:
+                    cap = amreditor.AMRProcessor()
+                    self.compare_aps[sentnum] = cap
+                    cap.readpenman(ccursentence.amr)
+                else:
+                    cap = self.compare_aps[sentnum]
+                    if not cap.isparsed:
+                        cap.readpenman(ccursentence.amr)
+
+                best_match_num, test_triple_num, gold_triple_num, instances1OK, rel1OK, instances2OK, rel2OK = smatch.get_amr_match(pm.replace("\n", " "), ccursentence.amr.replace("\n", " "))
+                #print("zzzz", best_match_num, test_triple_num, gold_triple_num, instances1OK, rel1OK, instances2OK, rel2OK, sep="\n")
+
+
+                cpm, csvg = cap.show(highlightinstances=instances2OK, highlightrelations=rel2OK)
+
+                # recreate SVG graph with highlights
+                pm, svg = ap.show(highlightinstances=instances1OK, highlightrelations=rel1OK)
+
+                p, r, f1 = smatch.compute_f(best_match_num, test_triple_num, gold_triple_num)
+
+                dico["smatch"] = "%.2f" % (f1*100)
+                dico["svg"] = svg.decode("utf8")
+                dico["penman2"] = cpm
+                dico["svg2"] = csvg.decode("utf8")
+                dico["comments2"] = "\n".join(ccursentence.comments),
+                if not cap.valid:
+                    return invalidamr(cap, pm, ccursentence, sentnum)
+
+                
             return Response("%s\n" % json.dumps(dico), 200, mimetype="application/json")
 
     def start(self):
@@ -707,6 +765,7 @@ if __name__ == "__main__":
 
     parser.add_argument("--port", "-p", default=4567, type=int, help="port to use")
     parser.add_argument("--file", "-f", required=True, help="AMR file to edit")
+    parser.add_argument("--compare", help="2nd AMR file to compare with first. Implies --readonly")
     parser.add_argument("--author", help="author (for git), use format 'Name <mail@example.com>', if absent current user+mail is used")
     parser.add_argument("--relations", "-R", default=None, help="list of valid AMR-relations (simple text file with list of all valid relations)")
     parser.add_argument("--concepts", "-C", default=None, help="list of valid AMR-concepts (simple text file with list of all valid concepts)")
@@ -726,7 +785,8 @@ if __name__ == "__main__":
                                   args.constraints, args.readonly,
                                   author=args.author,
                                   reifications=args.reifications,
-                                  do_git=args.git)
+                                  do_git=args.git,
+                                  compare=args.compare)
             aes.start()
         except Exception as e:
             print(e, file=sys.stderr)
