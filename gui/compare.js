@@ -593,34 +593,6 @@ function formatAMR(data) {
 		ToggleDiv('#innertext_' + currentsentnum, "#togglesentence");
 	}
 
-	/*
-	// toggle button to hide/show comments
-	$("#resultat").append('<button class="toggleresult" id="togglecomment" >&#8210;</button>');
-	$("#togglecomment").click(function () {
-		ToggleDiv('#innercomment_' + currentsentnum, "#togglecomment");
-	});
-
-	
-	// comments (in an nested div to keep the outer div always displayed
-	$("#resultat").append('<div class="text" id="comment_' + currentsentnum + '">');
-	$('#comment_' + currentsentnum).append('<div id="innercomment_' + currentsentnum + '">');
-	$('#innercomment_' + currentsentnum).append("<h4>comments");
-	$('#innercomment_' + currentsentnum).append('<pre id="precomment_' + currentsentnum + '">');
-	$('#precomment_' + currentsentnum).append(data.comments);
-
-	if ('#innercomment_' + currentsentnum in visible_divselectors && visible_divselectors['#innercomment_' + currentsentnum] == false) {
-		ToggleDiv('#innercomment_' + currentsentnum, "#togglesentence");
-	}
-
-
-	$("#comment_" + currentsentnum).click(function () {
-		if (!readonly) {
-		    $(".editmode").hide();
-		    $("#modcomment").show();
-		}
-		$("#modifiedcomment").val($('#precomment_' + currentsentnum).html());
-	});
-	*/
 
 	$('#showcomments').empty();
 	$('#showcomments').append("<h4>comments left");
@@ -1015,6 +987,7 @@ $(document).ready(function () {
 			return;
 		}
 		params["num"] = currentsentnum;
+		params["compare"] = true;
 		$.ajax({
 			url: URL_BASE,
 			type: 'GET',

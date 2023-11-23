@@ -378,6 +378,7 @@ class AMR_Edit_Server:
             sentnum = self.checkParameter(request, 'num', 'integer', isOptional=False, defaultValue=None)
             what = self.checkParameter(request, 'what', 'string', isOptional=False, defaultValue=None)
             regex = self.checkParameter(request, 'regex', 'string', isOptional=False, defaultValue=None)
+            iscompare = self.checkParameter(request, 'compare', 'boolean', isOptional=True, defaultValue=False)
 
             okt = None
             oka = None
@@ -436,7 +437,7 @@ class AMR_Edit_Server:
                 raise ServerException("invalid search parameter '%s'" % what)
             #print("OKA",oka)
             #print("OKT",okt)
-            return prepare_newpage(sentnum, okt, oka)
+            return prepare_newpage(sentnum, okt, oka, iscompare=iscompare)
 
         @app.route('/history', methods=["GET"])
         def history():
@@ -590,9 +591,10 @@ class AMR_Edit_Server:
             if not ap.valid:
                 return invalidamr(ap, pm, cursentence, sentnum)
 
-            if okamr:
+            if okamr and not iscompare:
                 # rerun search, because ap has reformated the original penman (possibly different indentation)
                 # so to highlight the search result correctly we apply the search in the (now reformatted) penman
+                # do not higlight in penman when iscompare is truen since the penaman becomes unparsable
                 okamr = list(ap.findamr(okamr[0].re.pattern))
                 for mo in reversed(list(okamr)):
                     pm = pm[:mo.start()] + '<span class="highlight">%s</span>' % pm[mo.start():mo.end()] + pm[mo.end():]
@@ -642,7 +644,6 @@ class AMR_Edit_Server:
 
                 best_match_num, test_triple_num, gold_triple_num, instances1OK, rel1OK, instances2OK, rel2OK = smatch.get_amr_match(pm.replace("\n", " "), ccursentence.amr.replace("\n", " "))
                 #print("zzzz", best_match_num, test_triple_num, gold_triple_num, instances1OK, rel1OK, instances2OK, rel2OK, sep="\n")
-
 
                 cpm, csvg = cap.show(highlightinstances=instances2OK, highlightrelations=rel2OK)
 
