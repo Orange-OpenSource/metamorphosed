@@ -642,6 +642,7 @@ class AMR_Edit_Server:
                     if not cap.isparsed:
                         cap.readpenman(ccursentence.amr)
 
+                smatch.match_triple_dict = {} # is not initialized automatically
                 best_match_num, test_triple_num, gold_triple_num, instances1OK, rel1OK, instances2OK, rel2OK = smatch.get_amr_match(pm.replace("\n", " "), ccursentence.amr.replace("\n", " "))
                 #print("zzzz", best_match_num, test_triple_num, gold_triple_num, instances1OK, rel1OK, instances2OK, rel2OK, sep="\n")
 
