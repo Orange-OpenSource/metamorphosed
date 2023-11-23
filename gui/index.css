@@ -129,7 +129,7 @@ input {
   stroke: red;
 }
 
-#doubleresultat { 
+#doubleresultat {
  display: flex;
  flex-direction: row;
 }

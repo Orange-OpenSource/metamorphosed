@@ -75,7 +75,9 @@ class AMR_Edit_Server:
         self.do_git = do_git
 
         self.comparedoc = None
+        self.comparefilename = None
         if compare is not None:
+            self.comparefilename = compare
             readonly = True
             self.do_git = False
         else:
@@ -171,6 +173,8 @@ class AMR_Edit_Server:
                     "version": amreditor.VERSION,
                     "apiversion": APIVERSION
                     }
+            if self.comparefilename:
+                dico["filename2"] = self.comparefilename
             if withdata:
                 dico["relations"] = sorted(self.amr_rels.relations)
                 dico["concepts"] = sorted(self.amr_concepts.relations)
