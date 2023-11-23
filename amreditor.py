@@ -243,41 +243,53 @@ class AMRProcessor:
     def dot(self, highlightinstances=None, highlightrelations=None):
         graph_attr = {#'rankdir':'LR'
         }
-        # kwargs = {
-        #    "fontname": "Lato"
-        #    }
+        kwargsinit = {
+            "fontname": "Lato",
+            "style": "filled",
+            "fillcolor": "white"
+            }
         
         graph = Digraph('amr_graph', format="svg", graph_attr=graph_attr)
         for s, p, o in self.triples:
-            kwargs = {  "fontname": "Lato Black" }
+            kwargs = kwargsinit.copy()
 
             if p == ":instance":
-                if highlightinstances and s in highlightinstances:
-                    kwargs = { "fontname": "Lato" }
+                ibg = "white"
+                if highlightinstances and s not in highlightinstances:
+                    kwargs = {"fontname": "Lato",  #"Lato Black",
+                              "style": "filled",
+                              "fillcolor": orangecolors.get(":snt1")}
 
                 graph.node("%s" % s, label="%s/%s" % (s, o), shape="box",
                            id="node %s %s" % (s, o),
                            #URL=branch[0],
+                           #fillcolor=ibg,
+                           #style="filled",
                            **kwargs
                            )
             else:
                 onodeid = o
-                if highlightrelations and (s, p, o) in highlightrelations:
-                    kwargs = { "fontname": "Lato" }
+                pp = p
+                if highlightrelations and (s, p, o) not in highlightrelations:
+                    kwargs = { "fontname": "Lato" } # "Lato Black" }
+                    pp = '< <table border="0"> <tr><td bgcolor="%s">%s</td></tr></table> >' % (orangecolors.get(":snt1"), p)
 
                 if o not in self.vars:
                     oo = o.replace('"', 'DQUOTE').replace(':', 'COLON').replace('\\', 'BSLASH')
                     onodeid = "%s_%s" % (s, oo)
+                    kwargs["fillcolor"] = orangecolors.get("EN")
+                    
                     graph.node(onodeid, label="%s" % (o),
                                id="literal %s %s %s" % (s, p, o),
-                               style="filled",
+                               #style="filled",
                                color=orangecolors.get("EN"),
-                               fillcolor=orangecolors.get("EN"),
+                               #fillcolor=orangecolors.get("EN"),
                                #URL=branch[0],
                                **kwargs)
                 #print("ZZZZ", s,p,o)
 
-                graph.edge(s, onodeid, label=p,
+                
+                graph.edge(s, onodeid, label=pp,
                            id="edge#%s#%s#%s" % (s, o, p),
                            color=orangecolors.get(p.replace("-of", ""), "black"),
                            fontcolor=orangecolors.get(p.replace("-of", ""), "black"),
