@@ -34,11 +34,6 @@
     <input type="text" id="sentnum" pattern="[1-9][0-9]*" size="4" value="1">
     <button class="walk mybutton" id="next">next &gt;&gt;</button>
     <button class="walk mybutton" id="last">last &gt|</button>
-    <!--button class="mybutton" id="toggledirection">display direction</button-->
-    <!--button class="history mybutton" id="undo" disabled>undo</button>
-    <button class="history mybutton" id="redo" disabled>redo</button-->
-    <!-- filenames: <span id="filename"></span> (<span id="numsent"></span> sentences) <button class="save mybutton"
-        id="save">&#x1F4BE; save file</button -->
     &nbsp;&nbsp;<button class="mybutton" id="choosesentence">sentence list</button>
     &nbsp;&nbsp;<button class="mybutton" id="togglecomments">toggle comments</button>
 
@@ -46,7 +41,6 @@
 
 
     <div class="editmode" id="commands">
-
 
         <div class="grouping">
            <button class="toggleresult searchbuttonpos" id="togglesearch">&#8210;</button>
@@ -94,16 +88,19 @@
                 <h3>Information</h3>
                 <table>
                     <tr>
-                        <td>Left filename:</td> <td class="info" id="leftfn"></td>
+                        <td>Left filename:</td> <td colspan="7" class="info" id="leftfn"></td>
                     </tr>
                     <tr>
-                        <td>Right filename:</td> <td class="info" id="rightfn"></td>
+                        <td>Right filename:</td> <td colspan="7" class="info" id="rightfn"></td>
                     </tr>
                     <tr>
-                        <td>sentences:</td> <td class="info" id="numberofsent"></td>
+                        <td>sentences:</td> <td colspan="7" class="info" id="numberofsent"></td>
                     </tr>
                     <tr>
-                        <td>Smatch:</td> <td class="info" class="smatch" id="smatch"></td>
+                        <td>Smatch:</td> <td class="info smatch" id="smatch"></td>
+                        <td>matching:</td> <td class="info smatch" id="nummatching"></td>
+                        <td>triples left:</td> <td class="info smatch" id="numleft"></td>
+                        <td>triples right:</td> <td class="info smatch" id="numright"></td>
 	            </tr>
                 </table>
             </div>

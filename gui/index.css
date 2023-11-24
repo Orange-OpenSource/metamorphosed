@@ -610,6 +610,10 @@ td.framealiastable {
   width: 100%;
  }
 
+.smatch { 
+  color: #0a6e31;
+ }
+
 .cancelmodal {
   float: right;
   font-family: 'Sans';

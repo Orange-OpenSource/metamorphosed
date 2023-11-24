@@ -589,6 +589,16 @@ function formatAMR(data) {
 	$('#innertext_' + currentsentnum).append(escapedtext);
 	$('#smatch').html(data.smatch);
 
+	if (data.smatch < 100) {
+	    $(".smatch").css("color", "red"); //"#ffb4e6");
+	} else {
+	    $(".smatch").css("color", "#0a6e31");
+	}
+
+	$('#nummatching').html(data.bestmatch);
+	$('#numleft').html(data.left_triplenum);
+	$('#numright').html(data.right_triplenum);
+
 	if ('#innertext_' + currentsentnum in visible_divselectors && visible_divselectors['#innertext_' + currentsentnum] == false) {
 		ToggleDiv('#innertext_' + currentsentnum, "#togglesentence");
 	}
