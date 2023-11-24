@@ -50,7 +50,7 @@ import gitinterface
 import propbank_frames
 import reification
 import relations_constraints
-import smatch
+from smatch_pm import Smatch
 
 # TODO
 # detect errors
@@ -642,19 +642,28 @@ class AMR_Edit_Server:
                     if not cap.isparsed:
                         cap.readpenman(ccursentence.amr)
 
-                smatch.match_triple_dict = {} # is not initialized automatically
-                best_match_num, test_triple_num, gold_triple_num, instances1OK, rel1OK, instances2OK, rel2OK = smatch.get_amr_match(pm.replace("\n", " "), ccursentence.amr.replace("\n", " "))
-                #print("zzzz", best_match_num, test_triple_num, gold_triple_num, instances1OK, rel1OK, instances2OK, rel2OK, sep="\n")
+                
+                #smatch.match_triple_dict = {} # is not initialized automatically
+                #best_match_num, test_triple_num, gold_triple_num, instances1OK, rel1OK, instances2OK, rel2OK = smatch.get_amr_match(pm.replace("\n", " "), ccursentence.amr.replace("\n", " "))
 
+
+                sm = Smatch()
+                best_match_num, test_triple_num, gold_triple_num, instances1OK, rel1OK, instances2OK, rel2OK = sm.get_amr_match(pm.replace("\n", " "), ccursentence.amr.replace("\n", " "))
+                #print("zzzz", best_match_num, test_triple_num, gold_triple_num, instances1OK, rel1OK, instances2OK, rel2OK, sep="\n>>>>")
+                
                 cpm, csvg = cap.show(highlightinstances=instances2OK, highlightrelations=rel2OK)
 
                 # recreate SVG graph with highlights
                 pm, svg = ap.show(highlightinstances=instances1OK, highlightrelations=rel1OK)
 
-                p, r, f1 = smatch.compute_f(best_match_num, test_triple_num, gold_triple_num)
+                #p, r, f1 = smatch.compute_f(best_match_num, test_triple_num, gold_triple_num)
+                p, r, f1 = sm.compute_f(best_match_num, test_triple_num, gold_triple_num)
 
                 dico["filename2"] = self.comparefilename
                 dico["smatch"] = "%.2f" % (f1*100)
+                dico["bestmatch"] = best_match_num
+                dico["left_triplenum"] = test_triple_num
+                dico["right_triplenum"] = gold_triple_num
                 dico["svg"] = svg.decode("utf8")
                 dico["penman2"] = cpm
                 dico["svg2"] = csvg.decode("utf8")
