@@ -93,13 +93,6 @@ class Smatch:
         # value: the matching triple count
         self.match_triple_dict = collections.OrderedDict()
 
-
-    def load_single_amr(self, arm1, arm2):
-        pass
-
-    def load_amr_file(self, f1, f2):
-        pass
-
     def generate_amr_lines(self, f1, f2):
         """
         Read one AMR line at a time from each file handle
@@ -133,7 +126,6 @@ class Smatch:
                 continue
             break
 
-
     def score_amr_pairs(self, f1, f2, justinstance=False, justattribute=False, justrelation=False):
         """
         Score one pair of AMR lines at a time from each file handle
@@ -149,12 +141,12 @@ class Smatch:
         # Read amr pairs from two files
         for sent_num, (cur_amr1, cur_amr2) in enumerate(self.generate_amr_lines(f1, f2), start=1):
             self.match_triple_dict.clear()
-            best_match_num, test_triple_num, gold_triple_num,_,_,_,_ = self.get_amr_match(cur_amr1.replace("\n", ""),
-                                                                                          cur_amr2.replace("\n", ""),
-                                                                                          sent_num=sent_num,  # sentence number
-                                                                                          justinstance=justinstance,
-                                                                                          justattribute=justattribute,
-                                                                                          justrelation=justrelation)
+            best_match_num, test_triple_num, gold_triple_num, _, _, _, _ = self.get_amr_match(cur_amr1.replace("\n", ""),
+                                                                                              cur_amr2.replace("\n", ""),
+                                                                                              sent_num=sent_num,  # sentence number
+                                                                                              justinstance=justinstance,
+                                                                                              justattribute=justattribute,
+                                                                                              justrelation=justrelation)
             total_match_num += best_match_num
             total_test_num += test_triple_num
             total_gold_num += gold_triple_num
@@ -168,7 +160,6 @@ class Smatch:
             print("---------------------------------------------------------------------------------", file=DEBUG_LOG)
         if self.single_score:  # output document-level smatch score (a single f-score for all AMR pairs in two files)
             yield self.compute_f(total_match_num, total_test_num, total_gold_num)
-
 
     def parse_AMR(self, amr, prefix):
         tree = penman.parse(amr)
@@ -206,15 +197,13 @@ class Smatch:
                 #if o in usedvariables:
                 #    o = "%s_new%d" % (o, i)
                 if p == ":instance":
-                    instancetriples.append((s,p,o))
+                    instancetriples.append((s, p, o))
                 else:
-                    othertriples.append((s,p,o))
-                triples.append((s,p,o))
+                    othertriples.append((s, p, o))
+                triples.append((s, p, o))
         #print("4444", triples)
 
-        
-        
-        for i, (s,p,o) in enumerate(instancetriples):
+        for i, (s, p, o) in enumerate(instancetriples):
             n = "%s%d" % (prefix, i)
             node_map_dict[s] = n
             reversemap[n] = s
@@ -222,12 +211,12 @@ class Smatch:
         instances = []
         attributes = [("TOP", node_map_dict[top], "top")]
         relations = []
-        for s,p,o in instancetriples:
+        for s, p, o in instancetriples:
             instances.append(("instance", node_map_dict[s], o))
 
         exceptions = set([":prep-on-behalf-of", ":prep-out-of", ":consist-of"])
         # edges
-        for u,r,v in othertriples:
+        for u, r, v in othertriples:
             if u not in node_map_dict or v not in node_map_dict:
                 # not an edge
                 continue
@@ -239,7 +228,7 @@ class Smatch:
             # If the relation name ends with "-of", we store the reverse relation.
             # but note some exceptions like "prep-on-behalf-of" and "prep-out-of"
             # also note relation "mod" is the reverse of "domain"
-            if r.endswith("-of") and not r in exceptions:
+            if r.endswith("-of") and r not in exceptions:
                 relations.append((r[1:-3], node_map_dict[v], node_map_dict[u]))
             elif r == ":mod":
                 relations.append(("domain", node_map_dict[v], node_map_dict[u]))
@@ -247,64 +236,61 @@ class Smatch:
                 relations.append((r[1:], node_map_dict[u], node_map_dict[v]))
 
         # attributes
-        for s,p,o in othertriples:
+        for s, p, o in othertriples:
             if s in node_map_dict and o in node_map_dict:
                 continue
             if o[0] == '"':
                 o = o[1:-1] + "_"
-            
+
             attributes.append((p[1:], node_map_dict[s], o))
 
         return reversemap, instances, attributes, relations
 
+#    def oooparse_AMR(self, pm, prefix):
+#        graph = penman.decode(pm)
+#        node_map_dict = {} # old: new
+#        reversemap = {} # new:old
+#        # map each node to its new name (e.g. "a1")
+#        for i, (s, p, o) in enumerate(graph.instances()):
+#            n = "%s%d" % (prefix, i)
+#            node_map_dict[s] = n
+#            reversemap[n] = s
+#        #print("NM", node_map_dict)
+#        instances = []
+#        attributes = [("TOP", node_map_dict[graph.top], "top")]
+#        relations = []
+#        for s, p, o in graph.instances():
+#            instances.append(("instance", node_map_dict[s], o))
+#        exceptions = set([":prep-on-behalf-of", ":prep-out-of", ":consist-of"])
+#        for s, p, o in graph.edges():
+#            #print("ZZZZZZ", s,p,o)
+#            # we detect a relation (r) between u and v, with direction u to v.
+#            # in most cases, if relation name ends with "-of", e.g."arg0-of",
+#            # it is reverse of some relation. For example, if a is "arg0-of" b,
+#            # we can also say b is "arg0" a.
+#            # If the relation name ends with "-of", we store the reverse relation.
+#            # but note some exceptions like "prep-on-behalf-of" and "prep-out-of"
+#            # also note relation "mod" is the reverse of "domain"
+#            if p.endswith("-of") and p not in exceptions:
+#                relations.append((p[1:-3], node_map_dict[o], node_map_dict[s]))
+#            elif p == ":mod":
+#                relations.append(("domain", node_map_dict[o], node_map_dict[s]))
+#            else:
+#                relations.append((p[1:], node_map_dict[s], node_map_dict[o]))
+#
+#        for s, p, o in graph.attributes():
+#            if o[0] == '"':
+#                o = o[1:-1] + "_"
+#
+#            attributes.append((p[1:], node_map_dict[s], o))
+#
+#        return reversemap, instances, attributes, relations
 
-    
-    def oooparse_AMR(self, pm, prefix):
-        graph = penman.decode(pm)
-        node_map_dict = {} # old: new
-        reversemap = {} # new:old
-        # map each node to its new name (e.g. "a1")
-        for i, (s,p,o) in enumerate(graph.instances()):
-        #for i,s in enumerate(graph.variables()):
-            n = "%s%d" % (prefix, i)
-            node_map_dict[s] = n
-            reversemap[n] = s
-        #print("NM", node_map_dict)
-        instances = []
-        attributes = [("TOP", node_map_dict[graph.top], "top")]
-        relations = []
-        for s,p,o in graph.instances():
-            instances.append(("instance", node_map_dict[s], o))
-        exceptions = set([":prep-on-behalf-of", ":prep-out-of", ":consist-of"])
-        for s,p,o in graph.edges():
-            #print("ZZZZZZ", s,p,o)
-            # we detect a relation (r) between u and v, with direction u to v.
-            # in most cases, if relation name ends with "-of", e.g."arg0-of",
-            # it is reverse of some relation. For example, if a is "arg0-of" b,
-            # we can also say b is "arg0" a.
-            # If the relation name ends with "-of", we store the reverse relation.
-            # but note some exceptions like "prep-on-behalf-of" and "prep-out-of"
-            # also note relation "mod" is the reverse of "domain"
-            if p.endswith("-of") and not p in exceptions:
-                relations.append((p[1:-3], node_map_dict[o], node_map_dict[s]))
-            elif p == ":mod":
-                relations.append(("domain", node_map_dict[o], node_map_dict[s]))
-            else:
-                relations.append((p[1:], node_map_dict[s], node_map_dict[o]))
-
-        for s,p,o in graph.attributes():
-            if o[0] == '"':
-                o = o[1:-1] + "_"
-            
-            attributes.append((p[1:], node_map_dict[s], o))
-
-        return reversemap, instances, attributes, relations
-        
     def get_amr_match(self, cur_amr1, cur_amr2, sent_num=1,
                       justinstance=False, justattribute=False, justrelation=False):
         nodemap1, instance1, attributes1, relation1 = self.parse_AMR(cur_amr1, "a")
         nodemap2, instance2, attributes2, relation2 = self.parse_AMR(cur_amr2, "b")
-        
+
         if self.verbose:
             print("AMR pair", sent_num, file=DEBUG_LOG)
             print("============================================", file=DEBUG_LOG)
@@ -357,18 +343,18 @@ class Smatch:
 
         def reorg(instances, attributes, relations):
             outgoing = {} # node {rel: [target]}
-            for p,s,o in instances:
+            for p, s, o in instances:
                 outgoing[s] = {"instance": [o]}
-            for p,s,o in attributes:
-                if not s in outgoing:
+            for p, s, o in attributes:
+                if s not in outgoing:
                     outgoing[s] = {}
-                if not p in outgoing[s]:
+                if p not in outgoing[s]:
                     outgoing[s][p] = []
                 outgoing[s][p].append(o)
-            for p,s,o in relations:
-                if not s in outgoing:
+            for p, s, o in relations:
+                if s not in outgoing:
                     outgoing[s] = {}
-                if not p in outgoing[s]:
+                if p not in outgoing[s]:
                     outgoing[s][p] = []
                 outgoing[s][p].append(o)
             return outgoing
@@ -384,7 +370,7 @@ class Smatch:
         instances2OK = set() # variables
         rel2OK = set() # (s,p,o)
 
-        for s1,s2 in mappednodes.items():
+        for s1, s2 in mappednodes.items():
             #if outgoing1[s1]["instance"] == outgoing2[s2]["instance"]:
             #    print(s1, s2, "OK")
             #    ok += 1
@@ -434,7 +420,6 @@ class Smatch:
         #print("TTTT", len(instance1) , len(attributes1) , len(relation1))
         #print("GGGG", len(instance2) , len(attributes2) , len(relation2))
         return best_match_num, test_triple_num, gold_triple_num, instances1OK, rel1OK, instances2OK, rel2OK
-
 
     def get_best_match(self, instance1, attribute1, relation1,
                        instance2, attribute2, relation2,
@@ -499,7 +484,7 @@ class Smatch:
             while True:
                 # get best gain
                 (gain, new_mapping) = self.get_best_gain(cur_mapping, candidate_mappings, weight_dict,
-                                                    len(instance2), match_num)
+                                                         len(instance2), match_num)
                 if self.veryVerbose:
                     print("Gain after the hill-climbing", gain, file=DEBUG_LOG)
                 # hill-climbing until there will be no gain for new node mapping
@@ -521,7 +506,6 @@ class Smatch:
         lowercase and remove quote signifiers from items that are about to be compared
         """
         return item.lower().rstrip('_')
-
 
     def compute_pool(self, instance1, attribute1, relation1,
                      instance2, attribute2, relation2,
@@ -641,7 +625,6 @@ class Smatch:
             instance2: instance triples of AMR 2
         Returns:
             initialized node mapping between two AMRs
-
         """
         random.seed()
         matched_dict = collections.OrderedDict()
@@ -682,7 +665,6 @@ class Smatch:
                     break
         return result
 
-
     def random_init_mapping(self, candidate_mapping):
         """
         Generate a random node mapping.
@@ -718,7 +700,6 @@ class Smatch:
             if not found:
                 result.append(-1)
         return result
-
 
     def compute_match(self, mapping, weight_dict):
         """
@@ -782,7 +763,6 @@ class Smatch:
         cur_match_num: current triple match number
         Returns:
         the best gain we can get via swap/move operation
-
         """
 
         largest_gain = 0
@@ -876,7 +856,6 @@ class Smatch:
             print("Current mapping", cur_mapping, file=DEBUG_LOG)
         return largest_gain, cur_mapping
 
-
     def print_alignment(self, mapping, instance1, instance2):
         """
         print the alignment based on a node mapping
@@ -904,7 +883,6 @@ class Smatch:
             result.append(r)
         #print("MAPPED", mappednodes)
         return " ".join(result), mappednodes
-
 
     def compute_f(self, match_num, test_num, gold_num):
         """
@@ -1046,7 +1024,6 @@ class Smatch:
         return gain
 
 
-
 if __name__ == "__main__":
     import argparse
 
@@ -1056,7 +1033,7 @@ if __name__ == "__main__":
                               'AMRs in each file are separated by a single blank line'))
     parser.add_argument('-r', type=int, default=4, help='Restart number (Default:4)')
     parser.add_argument('--significant', type=int, default=2, help='significant digits to output (default: 2)')
-    parser.add_argument('-v',  action='store_true', help='Verbose output (Default:false)')
+    parser.add_argument('-v', action='store_true', help='Verbose output (Default:false)')
     parser.add_argument('--vv', action='store_true', help='Very Verbose output (Default:false)')
     parser.add_argument('--ms', action='store_true', default=False,
                         help=('Output multiple scores (one AMR pair a score) '
@@ -1083,4 +1060,3 @@ if __name__ == "__main__":
             print("Precision: " + floatdisplay % precision)
             print("Recall: " + floatdisplay % recall)
         print("F-score: " + floatdisplay % best_f_score)
-

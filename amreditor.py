@@ -248,7 +248,7 @@ class AMRProcessor:
             "style": "filled",
             "fillcolor": "white"
             }
-        
+
         graph = Digraph('amr_graph', format="svg", graph_attr=graph_attr)
         for s, p, o in self.triples:
             kwargs = kwargsinit.copy()
@@ -280,7 +280,7 @@ class AMRProcessor:
                     onodeid = "%s_%s" % (s, oo)
                     kwargs["fillcolor"] = orangecolors.get("EN")
                     kwargs["style"] = "filled"
-                    
+
                     graph.node(onodeid, label="%s" % (o),
                                id="literal %s %s %s" % (s, p, o),
                                #style="filled",
@@ -289,7 +289,6 @@ class AMRProcessor:
                                #URL=branch[0],
                                **kwargs)
                 #print("ZZZZ", s,p,o)
-
 
                 kwargs["fillcolor"] = orangecolors.get(p.replace("-of", ""), "black")
                 graph.edge(s, onodeid, label=pp,

@@ -492,7 +492,7 @@ class AMR_Edit_Server:
             sentnum = self.checkParameter(request, 'num', 'integer', isOptional=False, defaultValue=None)
             direction = self.checkParameter(request, 'direction', 'string', isOptional=False, defaultValue=None)
             iscompare = self.checkParameter(request, 'compare', 'boolean', isOptional=True, defaultValue=False)
-            
+
             if direction == "preceding":
                 if sentnum > 1:
                     sentnum -= 1
@@ -619,7 +619,7 @@ class AMR_Edit_Server:
             lastchanged = cursentence.date
             if not lastchanged:
                 lastchanged = cursentence.savedateorig
-                
+
             dico = {"penman": pm, "svg": svg.decode("utf8"),
                     "warning": warnings, "framedoc": framedoc, "readonly": readonly,
                     "filename": filename, "numsent": len(self.amrdoc.sentences),
@@ -642,15 +642,13 @@ class AMR_Edit_Server:
                     if not cap.isparsed:
                         cap.readpenman(ccursentence.amr)
 
-                
                 #smatch.match_triple_dict = {} # is not initialized automatically
                 #best_match_num, test_triple_num, gold_triple_num, instances1OK, rel1OK, instances2OK, rel2OK = smatch.get_amr_match(pm.replace("\n", " "), ccursentence.amr.replace("\n", " "))
-
 
                 sm = Smatch()
                 best_match_num, test_triple_num, gold_triple_num, instances1OK, rel1OK, instances2OK, rel2OK = sm.get_amr_match(pm.replace("\n", " "), ccursentence.amr.replace("\n", " "))
                 #print("zzzz", best_match_num, test_triple_num, gold_triple_num, instances1OK, rel1OK, instances2OK, rel2OK, sep="\n>>>>")
-                
+
                 cpm, csvg = cap.show(highlightinstances=instances2OK, highlightrelations=rel2OK)
 
                 # recreate SVG graph with highlights
@@ -660,7 +658,7 @@ class AMR_Edit_Server:
                 p, r, f1 = sm.compute_f(best_match_num, test_triple_num, gold_triple_num)
 
                 dico["filename2"] = self.comparefilename
-                dico["smatch"] = "%.2f" % (f1*100)
+                dico["smatch"] = "%.2f" % (f1 * 100)
                 dico["bestmatch"] = best_match_num
                 dico["left_triplenum"] = test_triple_num
                 dico["right_triplenum"] = gold_triple_num
@@ -668,11 +666,10 @@ class AMR_Edit_Server:
                 dico["penman2"] = cpm
                 dico["svg2"] = csvg.decode("utf8")
                 dico["comments2"] = "\n".join(ccursentence.comments),
-                
+
                 if not cap.valid:
                     return invalidamr(cap, pm, ccursentence, sentnum)
 
-                
             return Response("%s\n" % json.dumps(dico), 200, mimetype="application/json")
 
     def start(self):
