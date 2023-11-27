@@ -141,12 +141,18 @@ class Smatch:
         # Read amr pairs from two files
         for sent_num, (cur_amr1, cur_amr2) in enumerate(self.generate_amr_lines(f1, f2), start=1):
             self.match_triple_dict.clear()
-            best_match_num, test_triple_num, gold_triple_num, _, _, _, _ = self.get_amr_match(cur_amr1.replace("\n", ""),
-                                                                                              cur_amr2.replace("\n", ""),
-                                                                                              sent_num=sent_num,  # sentence number
-                                                                                              justinstance=justinstance,
-                                                                                              justattribute=justattribute,
-                                                                                              justrelation=justrelation)
+            try:
+                best_match_num, test_triple_num, gold_triple_num, _, _, _, _ = self.get_amr_match(cur_amr1.replace("\n", ""),
+                                                                                                  cur_amr2.replace("\n", ""),
+                                                                                                  sent_num=sent_num,  # sentence number
+                                                                                                  justinstance=justinstance,
+                                                                                                  justattribute=justattribute,
+                                                                                                  justrelation=justrelation)
+            except penman.exceptions.DecodeError as e:
+                print("Invalid PENMAN", e)
+                best_match_num = 0
+                test_triple_num = 1 # need something > 0 here, else R and P are 100% in the case of bas penman!
+                gold_triple_num = 1
             total_match_num += best_match_num
             total_test_num += test_triple_num
             total_gold_num += gold_triple_num
@@ -162,8 +168,6 @@ class Smatch:
             yield self.compute_f(total_match_num, total_test_num, total_gold_num)
 
     def parse_AMR(self, amr, prefix):
-        tree = penman.parse(amr)
-        top = None
         node_map_dict = {} # old: new
         reversemap = {} # new:old
 
@@ -171,6 +175,14 @@ class Smatch:
         tvars = {} # var: concept
         instancetriples = []
         othertriples = []
+
+        #try:
+        tree = penman.parse(amr)
+        #except penman.exceptions.DecodeError as e:
+        #    print("invalid penman format", e)
+        #    return reversemap, None, None, None
+
+        top = None
         for branch in tree.nodes():
             s = branch[0]
             if not top:
@@ -209,7 +221,10 @@ class Smatch:
             reversemap[n] = s
         #print("NM", node_map_dict)
         instances = []
-        attributes = [("TOP", node_map_dict[top], "top")]
+        if top is not None:
+            attributes = [("TOP", node_map_dict.get(top), "top")]
+        else:
+            attributes = []
         relations = []
         for s, p, o in instancetriples:
             instances.append(("instance", node_map_dict[s], o))

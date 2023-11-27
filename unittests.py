@@ -84,26 +84,30 @@ def app():
 
 
 # start server just for one test
-#@pytest.fixture()
-#def app_once():
-#    #app = create_app()
-#    #app.config.update({
-#    #    "TESTING": True,
-#    #})
-#    aes = AMR_Edit_Server(4568,
-#                          "testamr.txt",
-#                          "propbank-frames/frames/",
-#                          "relations.txt",
-#                          "concepts.txt",
-#                          "constraints.yml",
-#                          False # readonly
-#                          )
-#    app = aes.app
-#
-#    # other setup can go here
-#    yield app
-#
-#    # clean up / reset resources here
+@pytest.fixture()
+def app_once():
+    #app = create_app()
+    #app.config.update({
+    #    "TESTING": True,
+    #})
+    aes = AMR_Edit_Server(4568,
+                          "comptest_gold.txt",
+                          None, #"propbank-frames/frames/",
+                          "relations.txt",
+                          None, #"concepts.txt",
+                          None, # "constraints.yml",
+                          False, # readonly
+                          None, # author
+                          "reification-table.txt",
+                          False, # do_git
+                          compare="comptest_sys.txt"
+                          )
+    app = aes.app
+
+    # other setup can go here
+    yield app
+
+    # clean up / reset resources here
 
 
 # start server just for one test without any validating stuff to test git
@@ -138,9 +142,9 @@ def client(app):
     return app.test_client()
 
 
-#@pytest.fixture()
-#def client_once(app_once):
-#    return app_once.test_client()
+@pytest.fixture()
+def client_once(app_once):
+    return app_once.test_client()
 
 
 @pytest.fixture()
@@ -729,6 +733,44 @@ def test_reify_dereify_missing_ARG(client):
         "invalid relation ':koARG2'"
         ]
 
+
+def test_compare_read(client_once):
+    response = client_once.get("/read", query_string={"num": 1, "compare": True})
+    res = json.loads(response.data)
+    #print("res", json.dumps(res, indent=2))
+    assert res["smatch"] == "80.00"
+    assert res["bestmatch"] == 12
+    assert res["left_triplenum"] == 16
+    assert res["right_triplenum"] == 14
+
+    response = client_once.get("/next", query_string={"num": 2, "direction": "next", "compare": True})
+    res = json.loads(response.data)
+    #print("res", json.dumps(res["penman"], indent=2))
+    #print("res", json.dumps(res["penman2"], indent=2))
+    assert res["smatch"] == "100.00"
+    assert res["penman"] == res["penman2"]
+
+    response = client_once.get("/next", query_string={"num": 2, "direction": "last", "compare": True})
+    res = json.loads(response.data)
+    #print("res", json.dumps(res["penman"], indent=2))
+    #print("res", json.dumps(res["penman2"], indent=2))
+    assert res["smatch"] == "57.14"
+
+
+def test_smatchpm():
+    from smatch_pm import Smatch
+    sm = Smatch(verbose=True, veryVerbose=True, single_score=False)
+
+    floatdisplay = "%%.%df" % 5
+    f = []
+    for (precision, recall, best_f_score) in sm.score_amr_pairs("comptest_gold.txt",
+                                                                "comptest_sys.txt",
+                                                                justinstance=False,
+                                                                justattribute=False,
+                                                                justrelation=False):
+        f.append(floatdisplay % best_f_score)
+
+    assert f == ['0.80000', '0.78261', '1.00000', '0.57143']
 
 def ls(dn):
     for x in glob.glob(dn + "/*"):
