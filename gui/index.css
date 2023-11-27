@@ -629,6 +629,14 @@ td.framealiastable {
   /*transform: translate(50%, -50%);*/
 }
 
+.subtitle {
+  font-style: italic;
+  color: #8f8f8f;
+  font-size: 160%;
+  padding-left: 20px;
+
+}
+
 
 .ui-autocomplete.ui-widget {
     /*font-family: sans; */

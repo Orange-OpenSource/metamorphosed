@@ -1,5 +1,9 @@
 # Changes
 
+## Version 2.8.0
+* added options to compare two AMR files (e.g. gold and system)
+* new tests
+
 ## Version 2.7.0
 * added tests and coverage control using tox with flake8 and coverage
 

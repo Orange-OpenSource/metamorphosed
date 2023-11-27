@@ -772,6 +772,7 @@ def test_smatchpm():
 
     assert f == ['0.80000', '0.78261', '1.00000', '0.57143']
 
+
 def ls(dn):
     for x in glob.glob(dn + "/*"):
         print("%-50s\t%7d" % (x, os.path.getsize(x)))
