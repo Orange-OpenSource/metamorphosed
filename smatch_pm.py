@@ -71,6 +71,7 @@ DEBUG_LOG = sys.stderr
 
 # Outputs micro Smatch (P/R/F1 calculated on total sum of matched triples, gold triples, test triples)
 
+
 class Smatch:
     def __init__(self, verbose=False, veryVerbose=False, single_score=True):
         # total number of iteration in smatch computation

@@ -294,7 +294,6 @@ class AMRProcessor:
 
                 kwargs["fillcolor"] = orangecolors.get(p.replace("-of", ""), "black")
 
-                
                 graph.edge(s, onodeid, label=pp,
                            id="edge#%s#%s#%s" % (s, o, p),
                            color=orangecolors.get(p.replace("-of", ""), "black"),
