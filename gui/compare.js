@@ -608,7 +608,7 @@ function formatAMR(data) {
 	$('#showcomments').append("<h4>comments left");
 	$('#showcomments').append('<pre id="precomment_A' + currentsentnum + '">');
 	$('#precomment_A' + currentsentnum).append(data.comments);
-	$('#showcomments').append("<h4>comments left");
+	$('#showcomments').append("<h4>comments right");
 	$('#showcomments').append('<pre id="precomment_B' + currentsentnum + '">');
 	$('#precomment_B' + currentsentnum).append(data.comments2);
 	

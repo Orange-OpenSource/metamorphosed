@@ -258,7 +258,7 @@ class AMRProcessor:
                 if highlightinstances and s not in highlightinstances:
                     kwargs = {"fontname": "Lato",  #"Lato Black",
                               "style": "filled",
-                              "fillcolor": orangecolors.get(":snt1")}
+                              "fillcolor": "#ff7900"} #orangecolors.get(":snt1")}
 
                 graph.node("%s" % s, label="%s/%s" % (s, o), shape="box",
                            id="node %s %s" % (s, o),
@@ -270,10 +270,12 @@ class AMRProcessor:
             else:
                 onodeid = o
                 pp = p
+                kwargs["fontcolor"] = orangecolors.get(p.replace("-of", ""), "black")
                 if highlightrelations and (s, p, o) not in highlightrelations:
                     kwargs["fontname"] = "Lato" # "Lato Black" }
-
-                    pp = '< <table border="0"> <tr><td bgcolor="%s">%s</td></tr></table> >' % (orangecolors.get(":snt1"), p)
+                    kwargs["fontcolor"] = "black"
+                    pp = '< <table border="0"> <tr><td bgcolor="%s">%s</td></tr></table> >' % ("#ff7900", #orangecolors.get(":snt1"),
+                                                                                               p)
 
                 if o not in self.vars:
                     oo = o.replace('"', 'DQUOTE').replace(':', 'COLON').replace('\\', 'BSLASH')
@@ -291,10 +293,12 @@ class AMRProcessor:
                 #print("ZZZZ", s,p,o)
 
                 kwargs["fillcolor"] = orangecolors.get(p.replace("-of", ""), "black")
+
+                
                 graph.edge(s, onodeid, label=pp,
                            id="edge#%s#%s#%s" % (s, o, p),
                            color=orangecolors.get(p.replace("-of", ""), "black"),
-                           fontcolor=orangecolors.get(p.replace("-of", ""), "black"),
+                           #fontcolor=orangecolors.get(p.replace("-of", ""), "black"),
                            **kwargs)
         #print("RRRRR", graph) # dot sources
         return graph.pipe()
