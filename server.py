@@ -81,15 +81,16 @@ class AMR_Edit_Server:
         #    self.comparefilename = compare
         #    readonly = True
         #    self.do_git = False
+        self.readonly = readonly
         if compare is not None:
-            readonly = True
+            self.readonly = True
             self.do_git = False
         else:
             if reifications:
                 self.reificator = reification.getInstance(reifications)
 
         self.fileversion = "2"
-        if not readonly and not gitinterface.is_git_controlled(filename):
+        if not self.readonly and not gitinterface.is_git_controlled(filename):
             bak_filename = filename + "." + self.fileversion
             if os.path.exists(bak_filename):
                 raise Exception("Edited file <%s> not under git version control. Backup file <%s> exists already.\nPlease rename Backup file first" % (filename, bak_filename))
@@ -188,7 +189,7 @@ class AMR_Edit_Server:
                     "propbank_frames": pbframes,
                     #"relations": sorted(self.amr_rels.relations),
                     #"concepts": sorted(self.amr_concepts.relations),
-                    "readonly": readonly,
+                    "readonly": self.readonly,
                     "version": amreditor.VERSION,
                     "apiversion": APIVERSION
                     }
@@ -387,7 +388,7 @@ class AMR_Edit_Server:
             lastchanged = cursentence.date
             if not lastchanged:
                 lastchanged = cursentence.savedateorig
-            dico = {"warning": warnings, "framedoc": framedoc, "readonly": readonly,
+            dico = {"warning": warnings, "framedoc": framedoc, "readonly": self.readonly,
                     "penman": pm, "svg": svg.decode("utf8") if svg else "",
                     "filename": filename, "numsent": len(self.amrdoc.sentences),
                     "num": sentnum,
@@ -593,7 +594,7 @@ class AMR_Edit_Server:
                          text)
                         ]
             dico = {"penman": pm, "svg": "",
-                    "warning": warnings, "framedoc": "", "readonly": readonly,
+                    "warning": warnings, "framedoc": "", "readonly": self.readonly,
                     "filename": filename, "numsent": len(self.amrdoc.sentences),
                     "num": sentnum,
                     "text": cursentence.text,
@@ -653,7 +654,7 @@ class AMR_Edit_Server:
                 lastchanged = cursentence.savedateorig
 
             dico = {"penman": pm, "svg": svg.decode("utf8"),
-                    "warning": warnings, "framedoc": framedoc, "readonly": readonly,
+                    "warning": warnings, "framedoc": framedoc, "readonly": self.readonly,
                     "filename": filename, "numsent": len(self.amrdoc.sentences),
                     "num": sentnum,
                     "text": sentencetext, #cursentence.text,
@@ -757,9 +758,10 @@ class AMR_Edit_Server:
         self.save()
 
     def save(self):
-        print("saving", self.filename)
-        self.savefile(self.filename, self.fileversion)
-        #print("saved as %s.%s" % (self.filename, version))
+        if not self.readonly:
+            print("saving", self.filename)
+            self.savefile(self.filename, self.fileversion)
+            # print("saved as %s.%s" % (self.filename, version))
 
     def findinvalidparameters(self, request, validlist):
         for k, v in request.values.items():
