@@ -1,5 +1,8 @@
 # Changes
 
+## Version 3.0.0
+* comparison of multiple files
+
 ## Version 2.8.0
 * added options to compare two AMR files (e.g. gold and system)
 * new tests

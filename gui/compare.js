@@ -88,10 +88,29 @@ function getServerInfo() {
 			$("#save").hide();
 			$("#mainheader").html($("#mainheader").html() + " (read-only)");
 		    }
-		    $("#leftfn").html(data.filename);
-		    $("#rightfn").html(data.filename2);
 		    $("#numberofsent").html(data.numsent);
+	
+		    //console.log("BBB", data);
+		    if (data.otherfilenames.length > 1) {
+			$('.comparisons').empty();
+			data.otherfilenames.splice(0, 0, data.filename);
+			//console.log("BBB", data.otherfilenames);
+			$.each(data.comparisons,
+			       function (key, value) {
+				   //console.log("AAA", key, value[0], value[1]);
+				   $('.comparisons').append('<option value="' + value +'">' + data.otherfilenames[value[0]-1] + " / "  + data.otherfilenames[value[1]-1]);
+			       });
+			$(".onlytwo").hide();
+			$(".several").show();
+		    } else {
+			$("#leftfn").html(data.filename);
+			$("#rightfn").html(data.otherfilenames[0]);
+			$(".onlytwo").show();
+			$(".several").hide();
+			$('.comparisons').append('<option value="1,2">1,2');
+		    }
 
+		    console.log("AAA", $('.comparisons').val());
 		    $("#version").empty();
 		    $("#version").append(data.version);
 		    $("#version2").empty();
@@ -179,17 +198,6 @@ function getServerInfo() {
                            $("#sentmodal").hide();
 			});
 		    }
-
-		    /*
-		    if (data.reifications) {
-			$.each(data.reifications,
-			       function (key, value) {
-				   //console.log("AAA", key, value);
-				   $('#reifylist').append('<option value="' + value +'">' + value);
-			       });
-		    } else {
-			$('#reifygroup').hide();
-			}*/
 		},
 		error: function (data) {
 			// do something else
@@ -279,6 +287,7 @@ function unhighlight() {
 
 //const wdq = new RegExp('.*(Q[0-9]+).*');
 
+/*
 // needed to modify nodes and edges
 var modconceptvar = "";
 var modedge_start = "";
@@ -291,11 +300,15 @@ var litedge = "";
 var lastclickededge = null;
 var lastclickednode = null;
 var lastclickedElement = null;
+*/
 
 function info(event) {
-	//console.log("EEEE", event);
-	//console.log("EEEF", event.target.parentNode.id);
-	//console.log("EEEG", event.target.parentNode.children[1]);
+}
+/*
+function info(event) {
+    //console.log("EEEE", event);
+    //console.log("EEEF", event.target.parentNode.id);
+    //console.log("EEEG", event.target.parentNode.children[1]);
 	node = event.target.textContent;
 
 	unhighlight();
@@ -447,6 +460,9 @@ function info(event) {
 	}
 }
 
+*/
+
+/*
 function runcommand(params) {
 	params["num"] = currentsentnum;
 	//URL_BASE = 'http://' + window.location.host + '/edit';
@@ -482,11 +498,11 @@ function runcommand(params) {
 		}
 	});
 }
-
+*/
 
 var currentsentnum = 0;
 
-function formatOne(number, svg, penman) {
+function formatOne(number, svg, penman, fn) {
 	// container for penman and svg, on top of one another
 	//$("#resultat").append('<div class="bothresults" id="doubleresultat_' + number + '">');
 	$("#doubleresultat").append('<div id="gresultat_' + number + '">');
@@ -494,9 +510,6 @@ function formatOne(number, svg, penman) {
 	$("#gresultat_" + number).append('<div id="svg_resultat_' + number + '">'); // svg
 	$("#gresultat_" + number).append('<div id="penman_ultat_' + number + '">'); // penman
 	$("#gresultat_" + number).css("flexDirection", "column");
-
-
-
 
 	// toggle button to hide/show the svg graph
 	$("#svg_resultat_" + number).append('<button class="toggleresult" id="togglesvggraph_' + number + '" >&#8210;</button>');
@@ -507,14 +520,14 @@ function formatOne(number, svg, penman) {
 
 	// svg graph in an inner div
 	$('#svg_resultat_' + number).append('<div class="svggraph" id="svggraph_' + number + '_' + currentsentnum + '">');
+	$('#svggraph_' + number + '_' + currentsentnum).append('<span class="info">' + fn + '</span>');
 	$('#svggraph_' + number + '_' + currentsentnum).append('<div id="innersvggraph_' + number + '_' + currentsentnum + '">');
+
 	$('#innersvggraph_' + number + '_' + currentsentnum).append(svg.replace(/<svg /, '<svg onmousedown="info(event);" '));
 
 	if ('#innersvggraph_' + number + '_' + currentsentnum in visible_divselectors && visible_divselectors['#innersvggraph_' + number + '_' + currentsentnum] == false) {
 		ToggleDiv('#innersvggraph_' + number + '_' + currentsentnum, "#togglesvggraph" + number);
 	}
-
-
 
 	// toggle button to hide/show the penman graph
 	$("#penman_ultat_" + number).append('<button class="toggleresult" id="togglepenman_' + number + '" >&#8210;</button>');
@@ -532,9 +545,8 @@ function formatOne(number, svg, penman) {
 	if ('#amr_' + number + '_' + currentsentnum in visible_divselectors && visible_divselectors['#amr_' + currentsentnum] == false) {
 		ToggleDiv('#amr_' + number + '_' + currentsentnum, "#togglepenman");
 	}
-
-
 }
+
 
 function formatAMR(data) {
     lastclickededge = null;
@@ -561,14 +573,6 @@ function formatAMR(data) {
 
 	// set valid variables to <select> tags
 	
-	$('.validvars').empty();
-
-	$.each(data.variables,
-	       function (key, value) {
-		   //console.log("AAA", key, value);
-		   $('.validvars').append('<option value="' + value +'">' + value);
-	       });
-
 	// toggle button to hide/show the sentence id and the sentence
 	$("#resultat").append('<button class="toggleresult" id="togglesentence" >&#8210;</button>');
 	$("#togglesentence").click(function () {
@@ -605,24 +609,26 @@ function formatAMR(data) {
 
 
 	$('#showcomments').empty();
-	$('#showcomments').append("<h4>comments left");
+	$('#showcomments').append("<h4>comments 1");
 	$('#showcomments').append('<pre id="precomment_A' + currentsentnum + '">');
 	$('#precomment_A' + currentsentnum).append(data.comments);
-	$('#showcomments').append("<h4>comments right");
-	$('#showcomments').append('<pre id="precomment_B' + currentsentnum + '">');
-	$('#precomment_B' + currentsentnum).append(data.comments2);
 	
 
 	$("#resultat").append('<div id="doubleresultat">');
-	formatOne("A", data.svg, data.penman);
-	formatOne("B", data.svg2, data.penman2);
-	
+	formatOne("A", data.svg, data.penman, data.filename);
+
+	for (let i = 0; i < data.others.length; i++) {
+	    //console.log(data.others[i]);
+	    formatOne("B"+i, data.others[i].svg, data.others[i].penman, data.others[i].filename);
+	    $('#showcomments').append("<h4>comments " + (2+i));
+	    $('#showcomments').append('<pre id="precomment_B' + i + '_' + currentsentnum + '">');
+	    $('#precomment_B'  + i + '_' + currentsentnum).append(data.others[i].comments);
+	}
 
 	if (data.framedoc) {
 		$("#resultat").append('<div class="text" id="framedoc_' + currentsentnum + '">');
 		$('#framedoc_' + currentsentnum).append(data.framedoc);
 	}
-
 }
 
 
@@ -630,8 +636,6 @@ $(document).ready(function () {
 	$('body').css("margin-top", "0");
 	getServerInfo();
 	sentenceloaded = false;
-
-
 
 	// use ENTER to emulate a click
 	$("#sentnum").keyup(function (event) {
@@ -658,12 +662,11 @@ $(document).ready(function () {
 		//URL_BASE = 'http://' + window.location.host + '/read';
 		URL_BASE = 'read';
 		$("#resultat").empty(); // vider le div
-
 		$.ajax({
 		    url: URL_BASE, // + "json", //+'/foo/fii?fuu=...',
 			    type: 'GET',
 			    data: { "num": $("#sentnum").val(),
-				"compare": true
+				"compare": $(".comparisons").val(),
 				},
 			//headers: {
 			//    'Content-type': 'text/plain',
@@ -677,16 +680,7 @@ $(document).ready(function () {
 			success: function (data) {
 				//console.log("SUCCESS ", data);
 				formatAMR(data);
-
-				//$("#filename").empty();
-				//$("#filename").append(data.filename);
-				//$("#filename").append(" / ");
-				//$("#filename").append(data.filename2);
-
-				//$("#numsent").empty();
-				//$("#numsent").append(data.numsent);
 				currentsentnum = data.num;
-
 			},
 			error: function (data) {
 				// do something else
@@ -720,7 +714,8 @@ $(document).ready(function () {
 		*/
 		params["direction"] = this.id;
 		params["num"] = currentsentnum;
-		params["compare"] = true;
+		//params["compare"] = true;
+		params["compare"] = $(".comparisons").val();
 		$.ajax({
 			url: URL_BASE,
 			type: 'GET',
@@ -756,6 +751,7 @@ $(document).ready(function () {
 
 
 	/* modify the AMR graph by clicking on buttons of the addbutton-class */
+	/*
 	$(".addbutton").click(function () {
 	    //URL_BASE = 'http://' + window.location.host + '/edit';
 		URL_BASE = 'edit';
@@ -955,7 +951,7 @@ $(document).ready(function () {
 			}
 		});
 		}
-	});
+	});*/
 
 	$(".cleanbutton").click(function () {
 	      if (this.id == "cleanfields") {
@@ -997,7 +993,8 @@ $(document).ready(function () {
 			return;
 		}
 		params["num"] = currentsentnum;
-		params["compare"] = true;
+		//params["compare"] = true;
+		params["compare"] = $(".comparisons").val();
 		$.ajax({
 			url: URL_BASE,
 			type: 'GET',

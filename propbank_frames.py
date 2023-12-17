@@ -240,8 +240,11 @@ class PropBankFrames:
             if p != ":instance" and instances[s] in self.roleset_args:
                 if p.startswith(":ARG"):
                     if p.endswith("-of"):
-                        concept = instances[o]
-                        p = p[:-3]
+                        if o not in instances:
+                            errors.append("invalid argument «%s» for relation «%s»" % (o, p))
+                        else:
+                            concept = instances[o]
+                            p = p[:-3]
                     else:
                         concept = instances[s]
 

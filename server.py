@@ -60,11 +60,12 @@ from smatch_pm import Smatch
 # find an example in AMR data
 # call an AMRserver for an (empty) sentence ? rather not
 
-APIVERSION = "1.3.0"
+APIVERSION = "1.4.0"
 
 
 class AMR_Edit_Server:
-    def __init__(self, port, filename, pbframes, rels, concepts, constraints, readonly, author=None, reifications=None,
+    def __init__(self, port, filename, pbframes, rels, concepts, constraints,
+                 readonly, author=None, reifications=None,
                  do_git=True, compare=None):
         self.port = port
         self.filename = filename
@@ -74,10 +75,13 @@ class AMR_Edit_Server:
         self.reificator = None
         self.do_git = do_git
 
-        self.comparedoc = None
-        self.comparefilename = None
+        #self.comparedoc = None
+        #self.comparefilename = None
+        #if compare is not None:
+        #    self.comparefilename = compare
+        #    readonly = True
+        #    self.do_git = False
         if compare is not None:
-            self.comparefilename = compare
             readonly = True
             self.do_git = False
         else:
@@ -100,22 +104,35 @@ class AMR_Edit_Server:
             self.aps[sentnum] = ap
             ap.lastpm = cursentence.amr
             ap.comments = cursentence.comments
-            #ap.readpenman(cursentence.amr)
-            #ap.show() # to create penman format with penman library (may differ from from PENMAN found in file: indenting etc)
             self.initstates.append(ap.lastpm)
 
         print("all sentences initialized")
 
+        self.otheramrdocs = [] # (doc,aps)
         if compare is not None:
-            self.comparedoc = amrdoc.AMRdoc(compare)
-            self.compare_aps = {}
-            for sentnum, cursentence in enumerate(self.comparedoc.sentences, start=1):
-                if sentnum % 10 == 0:
-                    print("%d initialized" % sentnum, end="\r")
-                    ap = amreditor.AMRProcessor()
-                    self.compare_aps[sentnum] = ap
-                    ap.lastpm = cursentence.amr
-                    ap.comments = cursentence.comments
+            # interannotator mode
+            for fn in compare:
+                doc = amrdoc.AMRdoc(fn)
+                aps = {}
+                for sentnum, cursentence in enumerate(doc.sentences, start=1):
+                    if sentnum % 10 == 0:
+                        print("%d initialized" % sentnum, end="\r")
+                        ap = amreditor.AMRProcessor()
+                        aps[sentnum] = ap
+                        ap.lastpm = cursentence.amr
+                        ap.comments = cursentence.comments
+                self.otheramrdocs.append((doc, aps))
+
+        #elif compare is not None:
+        #    self.comparedoc = amrdoc.AMRdoc(compare)
+        #    self.compare_aps = {}
+        #    for sentnum, cursentence in enumerate(self.comparedoc.sentences, start=1):
+        #        if sentnum % 10 == 0:
+        #            print("%d initialized" % sentnum, end="\r")
+        #            ap = amreditor.AMRProcessor()
+        #            self.compare_aps[sentnum] = ap
+        #            ap.lastpm = cursentence.amr
+        #            ap.comments = cursentence.comments
 
             print("all compare sentences initialized")
 
@@ -147,7 +164,9 @@ class AMR_Edit_Server:
         @app.route('/', methods=["GET"])
         def index():
             # Displays the index page accessible at '/'
-            if self.comparedoc:
+            #if self.comparedoc:
+            #    return render_template('compare.html', toolname="AMR File Comparison")
+            if self.otheramrdocs:
                 return render_template('compare.html', toolname="AMR File Comparison")
             else:
                 return render_template('index.html', toolname="AMR Editor")
@@ -173,8 +192,16 @@ class AMR_Edit_Server:
                     "version": amreditor.VERSION,
                     "apiversion": APIVERSION
                     }
-            if self.comparefilename:
-                dico["filename2"] = self.comparefilename
+
+            if self.otheramrdocs:
+                dico["otherfilenames"] = [doc.fn for doc, aps in self.otheramrdocs]
+                possible_comparisons = []
+                for a in range(len(self.otheramrdocs) + 1):
+                    for b in range(a + 1, len(self.otheramrdocs) + 1):
+                        possible_comparisons.append([a + 1, b + 1])
+                dico["comparisons"] = possible_comparisons
+            #elif self.comparefilename:
+            #    dico["filename2"] = self.comparefilename
             if withdata:
                 dico["relations"] = sorted(self.amr_rels.relations)
                 dico["concepts"] = sorted(self.amr_concepts.relations)
@@ -378,7 +405,8 @@ class AMR_Edit_Server:
             sentnum = self.checkParameter(request, 'num', 'integer', isOptional=False, defaultValue=None)
             what = self.checkParameter(request, 'what', 'string', isOptional=False, defaultValue=None)
             regex = self.checkParameter(request, 'regex', 'string', isOptional=False, defaultValue=None)
-            iscompare = self.checkParameter(request, 'compare', 'boolean', isOptional=True, defaultValue=False)
+            #iscompare = self.checkParameter(request, 'compare', 'boolean', isOptional=True, defaultValue=False)
+            compare = self.checkParameter(request, 'compare', 'string', isOptional=True, defaultValue=None)
 
             okt = None
             oka = None
@@ -437,7 +465,7 @@ class AMR_Edit_Server:
                 raise ServerException("invalid search parameter '%s'" % what)
             #print("OKA",oka)
             #print("OKT",okt)
-            return prepare_newpage(sentnum, okt, oka, iscompare=iscompare)
+            return prepare_newpage(sentnum, okt, oka, compare=compare) #, iscompare=iscompare)
 
         @app.route('/history', methods=["GET"])
         def history():
@@ -491,7 +519,8 @@ class AMR_Edit_Server:
         def next():
             sentnum = self.checkParameter(request, 'num', 'integer', isOptional=False, defaultValue=None)
             direction = self.checkParameter(request, 'direction', 'string', isOptional=False, defaultValue=None)
-            iscompare = self.checkParameter(request, 'compare', 'boolean', isOptional=True, defaultValue=False)
+            #iscompare = self.checkParameter(request, 'compare', 'boolean', isOptional=True, defaultValue=False)
+            compare = self.checkParameter(request, 'compare', 'string', isOptional=True, defaultValue=None)
 
             if direction == "preceding":
                 if sentnum > 1:
@@ -504,12 +533,13 @@ class AMR_Edit_Server:
             elif direction == "last":
                 sentnum = len(self.amrdoc.sentences)
 
-            return prepare_newpage(sentnum, iscompare=iscompare)
+            return prepare_newpage(sentnum, compare=compare) #, iscompare=iscompare)
 
         @app.route('/read', methods=["GET"])
         def read():
             sentnum = self.checkParameter(request, 'num', 'integer', isOptional=False, defaultValue=None)
-            iscompare = self.checkParameter(request, 'compare', 'boolean', isOptional=True, defaultValue=False)
+            #iscompare = self.checkParameter(request, 'compare', 'boolean', isOptional=True, defaultValue=False)
+            compare = self.checkParameter(request, 'compare', 'string', isOptional=True, defaultValue=None)
             #sentnum = int(sentnum)
             if sentnum < 1 or sentnum > len(self.amrdoc.sentences):
                 dico = {"error": "invalid sentence number: must be between 1 and %d" % len(self.amrdoc.sentences)}
@@ -518,7 +548,7 @@ class AMR_Edit_Server:
 
             #for x in self.aps:
             #    print("AAAAAPPPP", x, self.aps[x].lastpm)
-            return prepare_newpage(sentnum, iscompare=iscompare)
+            return prepare_newpage(sentnum, compare=compare) #, iscompare=iscompare)
 
         @app.route('/save', methods=["GET"])
         def save():
@@ -574,7 +604,7 @@ class AMR_Edit_Server:
                     }
             return Response("%s\n" % json.dumps(dico), 200, mimetype="application/json")
 
-        def prepare_newpage(sentnum, oktext=None, okamr=None, iscompare=False):
+        def prepare_newpage(sentnum, oktext=None, okamr=None, compare=None): #, iscompare=False):
             # sentnum uses 1 ... length
             # self.amrdoc.sentences is a list: 0 length-1
             cursentence = self.amrdoc.sentences[sentnum - 1]
@@ -591,6 +621,8 @@ class AMR_Edit_Server:
             if not ap.valid:
                 return invalidamr(ap, pm, cursentence, sentnum)
 
+            #iscompare = self.comparefilename is not None
+            iscompare = compare is not None
             if okamr and not iscompare:
                 # rerun search, because ap has reformated the original penman (possibly different indentation)
                 # so to highlight the search result correctly we apply the search in the (now reformatted) penman
@@ -631,44 +663,92 @@ class AMR_Edit_Server:
                     "variables": sorted(list(set(ap.vars.keys()))),
                     "undos": len(self.undos),
                     "redos": len(self.redos)}
-            if iscompare and self.comparedoc:
-                ccursentence = self.comparedoc.sentences[sentnum - 1]
-                if sentnum not in self.compare_aps:
-                    cap = amreditor.AMRProcessor()
-                    self.compare_aps[sentnum] = cap
-                    cap.readpenman(ccursentence.amr)
+            if self.otheramrdocs:
+                others = []
+                first_to_compare, second_to_compare = compare.split(",")
+                first_to_compare = int(first_to_compare) - 2
+                second_to_compare = int(second_to_compare) - 2
+
+                # get graphs from dos to compare
+                if first_to_compare == -1:
+                    firstsent = cursentence
                 else:
-                    cap = self.compare_aps[sentnum]
-                    if not cap.isparsed:
-                        cap.readpenman(ccursentence.amr)
-
-                #smatch.match_triple_dict = {} # is not initialized automatically
-                #best_match_num, test_triple_num, gold_triple_num, instances1OK, rel1OK, instances2OK, rel2OK = smatch.get_amr_match(pm.replace("\n", " "), ccursentence.amr.replace("\n", " "))
-
+                    firstdoc, firstaps = self.otheramrdocs[first_to_compare]
+                    firstsent = firstdoc.sentences[sentnum - 1]
+                seconddoc, secondaps = self.otheramrdocs[second_to_compare]
+                secondsent = seconddoc.sentences[sentnum - 1]
                 sm = Smatch()
-                best_match_num, test_triple_num, gold_triple_num, instances1OK, rel1OK, instances2OK, rel2OK = sm.get_amr_match(pm.replace("\n", " "), ccursentence.amr.replace("\n", " "))
-                #print("zzzz", best_match_num, test_triple_num, gold_triple_num, instances1OK, rel1OK, instances2OK, rel2OK, sep="\n>>>>")
-
-                cpm, csvg = cap.show(highlightinstances=instances2OK, highlightrelations=rel2OK)
-
-                # recreate SVG graph with highlights
-                pm, svg = ap.show(highlightinstances=instances1OK, highlightrelations=rel1OK)
-
-                #p, r, f1 = smatch.compute_f(best_match_num, test_triple_num, gold_triple_num)
+                best_match_num, test_triple_num, gold_triple_num, instances1OK, rel1OK, instances2OK, rel2OK = sm.get_amr_match(firstsent.amr.replace("\n", " "), secondsent.amr.replace("\n", " "))
                 p, r, f1 = sm.compute_f(best_match_num, test_triple_num, gold_triple_num)
+                if first_to_compare == -1:
+                    # update display of first document
+                    cpm, csvg = ap.show(highlightinstances=instances1OK, highlightrelations=rel1OK)
+                    dico["svg"] = csvg.decode("utf8")
 
-                dico["filename2"] = self.comparefilename
+                for ix, (doc, aps) in enumerate(self.otheramrdocs):
+                    ccursentence = doc.sentences[sentnum - 1]
+                    if sentnum not in aps:
+                        cap = amreditor.AMRProcessor()
+                        aps[sentnum] = cap
+                        cap.readpenman(ccursentence.amr)
+                    else:
+                        cap = aps[sentnum]
+                        if not cap.isparsed:
+                            cap.readpenman(ccursentence.amr)
+
+                    # show differences of chosen pair
+                    if ix == first_to_compare:
+                        cpm, csvg = cap.show(highlightinstances=instances1OK, highlightrelations=rel1OK)
+                    elif ix == second_to_compare:
+                        cpm, csvg = cap.show(highlightinstances=instances1OK, highlightrelations=rel1OK)
+                    else:
+                        cpm, csvg = cap.show()
+
+                    dico2 = {}
+                    dico2["filename"] = doc.fn
+                    dico2["svg"] = csvg.decode("utf8")
+                    dico2["penman"] = cpm
+                    dico2["comments"] = "\n".join(ccursentence.comments),
+                    others.append(dico2)
+                dico["others"] = others
                 dico["smatch"] = "%.2f" % (f1 * 100)
                 dico["bestmatch"] = best_match_num
                 dico["left_triplenum"] = test_triple_num
                 dico["right_triplenum"] = gold_triple_num
-                dico["svg"] = svg.decode("utf8")
-                dico["penman2"] = cpm
-                dico["svg2"] = csvg.decode("utf8")
-                dico["comments2"] = "\n".join(ccursentence.comments),
 
-                if not cap.valid:
-                    return invalidamr(cap, pm, ccursentence, sentnum)
+            #elif iscompare: #and self.comparedoc:
+            #    ccursentence = self.comparedoc.sentences[sentnum - 1]
+            #    if sentnum not in self.compare_aps:
+            #        cap = amreditor.AMRProcessor()
+            #        self.compare_aps[sentnum] = cap
+            #        cap.readpenman(ccursentence.amr)
+            #    else:
+            #        cap = self.compare_aps[sentnum]
+            #        if not cap.isparsed:
+            #            cap.readpenman(ccursentence.amr)
+            #    sm = Smatch()
+            #    best_match_num, test_triple_num, gold_triple_num, instances1OK, rel1OK, instances2OK, rel2OK = sm.get_amr_match(pm.replace("\n", " "), ccursentence.amr.replace("\n", " "))
+            #    #print("zzzz", best_match_num, test_triple_num, gold_triple_num, instances1OK, rel1OK, instances2OK, rel2OK, sep="\n>>>>")
+
+            #    cpm, csvg = cap.show(highlightinstances=instances2OK, highlightrelations=rel2OK)
+
+            #    # recreate SVG graph with highlights
+            #    pm, svg = ap.show(highlightinstances=instances1OK, highlightrelations=rel1OK)
+
+            #    p, r, f1 = sm.compute_f(best_match_num, test_triple_num, gold_triple_num)
+
+            #    dico["filename2"] = self.comparefilename
+            #    dico["smatch"] = "%.2f" % (f1 * 100)
+            #    dico["bestmatch"] = best_match_num
+            #    dico["left_triplenum"] = test_triple_num
+            #    dico["right_triplenum"] = gold_triple_num
+            #    dico["svg"] = svg.decode("utf8")
+            #    dico["penman2"] = cpm
+            #    dico["svg2"] = csvg.decode("utf8")
+            #    dico["comments2"] = "\n".join(ccursentence.comments),
+
+            #    if not cap.valid:
+            #        return invalidamr(cap, pm, ccursentence, sentnum)
 
             return Response("%s\n" % json.dumps(dico), 200, mimetype="application/json")
 
@@ -779,7 +859,8 @@ if __name__ == "__main__":
 
     parser.add_argument("--port", "-p", default=4567, type=int, help="port to use")
     parser.add_argument("--file", "-f", required=True, help="AMR file to edit")
-    parser.add_argument("--compare", help="2nd AMR file to compare with first. Implies --readonly")
+    parser.add_argument("--compare", nargs="+", help="AMR file of additional annotators")
+    #parser.add_argument("--compare", help="2nd AMR file to compare with first. Implies --readonly")
     parser.add_argument("--author", help="author (for git), use format 'Name <mail@example.com>', if absent current user+mail is used")
     parser.add_argument("--relations", "-R", default=None, help="list of valid AMR-relations (simple text file with list of all valid relations)")
     parser.add_argument("--concepts", "-C", default=None, help="list of valid AMR-concepts (simple text file with list of all valid concepts)")

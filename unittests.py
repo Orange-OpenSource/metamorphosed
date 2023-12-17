@@ -100,7 +100,7 @@ def app_once():
                           None, # author
                           "reification-table.txt",
                           False, # do_git
-                          compare="comptest_sys.txt"
+                          compare=["comptest_sys.txt"]
                           )
     app = aes.app
 
@@ -164,7 +164,7 @@ def test_info(client):
     response = client.get("/version")
     res = json.loads(response.data)
     #print("res", res, file=sys.stderr)
-    assert res == {'name': 'AMR Editor', 'version': '2.7.0', 'apiversion': '1.3.0'}
+    assert res == {'name': 'AMR Editor', 'version': '3.0.0', 'apiversion': '1.4.0'}
 
     response = client.get("/info", query_string={"withdata": True})
     res = json.loads(response.data)
@@ -735,7 +735,7 @@ def test_reify_dereify_missing_ARG(client):
 
 
 def test_compare_read(client_once):
-    response = client_once.get("/read", query_string={"num": 1, "compare": True})
+    response = client_once.get("/read", query_string={"num": 1, "compare": "1,2"})
     res = json.loads(response.data)
     #print("res", json.dumps(res, indent=2))
     assert res["smatch"] == "80.00"
@@ -743,14 +743,15 @@ def test_compare_read(client_once):
     assert res["left_triplenum"] == 16
     assert res["right_triplenum"] == 14
 
-    response = client_once.get("/next", query_string={"num": 2, "direction": "next", "compare": True})
+    response = client_once.get("/next", query_string={"num": 2, "direction": "next", "compare": "1,2"})
     res = json.loads(response.data)
+    print("res", json.dumps(res, indent=2))
     #print("res", json.dumps(res["penman"], indent=2))
     #print("res", json.dumps(res["penman2"], indent=2))
     assert res["smatch"] == "100.00"
-    assert res["penman"] == res["penman2"]
+    assert res["penman"] == res["others"][0]["penman"]
 
-    response = client_once.get("/next", query_string={"num": 2, "direction": "last", "compare": True})
+    response = client_once.get("/next", query_string={"num": 2, "direction": "last", "compare": "1,2"})
     res = json.loads(response.data)
     #print("res", json.dumps(res["penman"], indent=2))
     #print("res", json.dumps(res["penman2"], indent=2))

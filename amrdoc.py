@@ -175,6 +175,7 @@ class AMRdoc:
     def __init__(self, fn, verbose=True):
         self.sentences = []
         self.ids = {} # id: sentence
+        self.fn = fn
 
         if isinstance(fn, str):
             ifp = open(fn)

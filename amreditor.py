@@ -33,7 +33,7 @@
 # Software Name: MetAMoRphosED AMR-Editor
 # Author: Johannes Heinecke
 
-# version 2.7.0 as of 12th November 2023
+# version 3.0.0 as of 17th December 2023
 import re
 import readline
 
@@ -43,7 +43,7 @@ from graphviz import Digraph
 import graph
 from reification import getInstance
 
-VERSION = "2.7.0"
+VERSION = "3.0.0"
 
 # terminology
 # instance  a / ...

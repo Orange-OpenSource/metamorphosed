@@ -89,16 +89,24 @@
             <div id="searchfunctions">
                 <h3>Information</h3>
                 <table>
-                    <tr>
-                        <td>Left filename:</td> <td colspan="7" class="info" id="leftfn"></td>
+                    <tr class="several" style="display:none">
+                        <td>comparisons:</td> <td colspan="7" class="info" id="comparefiles">
+                        <select class="comparisons" name="comp" id="compvars"></select>
+                        </td>
                     </tr>
-                    <tr>
+                    <tr class="onlytwo" style="display:none">
+                        <td>Left filename:</td> <td colspan="7" class="info" id="leftfn">
+                        <select class="comparisons" name="comp" id="compvars" style="display:none"></select>
+                        </td>
+                    </tr>
+                    <tr class="onlytwo" style="display:none">
                         <td>Right filename:</td> <td colspan="7" class="info" id="rightfn"></td>
                     </tr>
+
                     <tr>
                         <td>sentences:</td> <td colspan="7" class="info" id="numberofsent"></td>
                     </tr>
-                    <tr>
+                    <tr class="comparison">
                         <td>Smatch:</td> <td class="info smatch" id="smatch"></td>
                         <td>matching:</td> <td class="info smatch" id="nummatching"></td>
                         <td>triples left:</td> <td class="info smatch" id="numleft"></td>

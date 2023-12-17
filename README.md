@@ -15,7 +15,7 @@ _metAMmoRphosED_ can be started in comparison mode in order to compare two AMR f
 
 _metAMmoRphosED_ provides to annotate coreferences in AMR graphs of sentences from a single text. See [coref/README.md](coref/README.md) for more information
 
-Version 2.8.0 (see [CHANGES.md](CHANGES.md))
+Version 3.0.0 (see [CHANGES.md](CHANGES.md))
 
 ## installation
 
@@ -254,7 +254,12 @@ If you specify a second AMR file using the option `--compare <amr file>`, _metAM
 
 ![AMR file comparison ](doc/comparison.png)
 
-It is possible to search in the text, PENAMN and comments as in the edit mode.
+It is possible to search in the text, PENAMN and comments as in the edit mode. However, editing is not possible.
+
+To compare several files (for instance the annotations of multiple annotators), specify one of the files using the `-f <amr file 1>` option, and all other with  `--compare <amr file 2> <amr file 3> <amr file 4>`.
+_metAMmoRphosED_ switches automatically in multifile mode. In order to see the difference (ans Smatch) between two files for the displayed sentence choose the two files to compare with the `comparisons`-selection bar
+
+![AMR file comparison ](doc/comparison-multiple-files.png)
 
 # AMR Coreference editor
 
