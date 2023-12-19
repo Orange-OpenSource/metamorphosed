@@ -1,0 +1,34 @@
+# ::id sentence 1
+# ::snt Cardiff is the Welsh capital
+(z3 / capital-03
+    :ARG0 (c / city
+        :name (n / name
+            :op1 "Cardiff"))
+    :ARG1 (c2 / country
+        :name (z2 / name
+            :op1 "Wales")))
+
+# ::id sentence 2
+# ::snt I cannot see the man with the telescope
+# who has the telescope? I?
+(s / see-02
+    :ARG0 (ii / i
+         :instrument (t / telescope))
+    :ARG1 (m / man)
+    :mode (p / possible-01
+              :polarity -))
+
+# ::id sentence 3
+# ::snt please do not touch!
+(t / touch-01
+    :polarity -
+    :mode imperative
+    :ARG0 (y / you)
+    :ARG1 (ii / it))
+
+# ::id sentence 4
+# ::snt the cat catched the little mouse
+(c2 / cat
+   :ARG0-of (c / catch-01
+      :ARG1 (m / mouse
+        :mod (l / little))))

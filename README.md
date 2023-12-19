@@ -11,7 +11,11 @@ by LDC (https://catalog.ldc.upenn.edu/LDC2020T02)
 
 _metAMmoRphosED_ runs as a local Web server, an internet browser must be used to navigate through the sentences and modifiy them. If the edited file is under git version control, every modification is automatically commited to the local repository.
 
-Version 2.6.0 (see [CHANGES.md](CHANGES.md))
+_metAMmoRphosED_ can be started in comparison mode in order to compare two AMR files (e.g. a gold file and a system file).
+
+_metAMmoRphosED_ provides to annotate coreferences in AMR graphs of sentences from a single text. See [coref/README.md](coref/README.md) for more information
+
+Version 3.0.0 (see [CHANGES.md](CHANGES.md))
 
 ## installation
 
@@ -83,6 +87,7 @@ pytest unittests.py -vv [-k testname] [-s]
         [--reifications <reification-table.txt]
         [--readonly]
         [--author 'Name <mail@example.com>']
+        [--compare <amr-file2>]
 ```
 
 use our internet browser as GUI: https://localhost:<port>
@@ -243,6 +248,18 @@ becomes this after reifying `:location`
 
 ![Reified relation ](doc/reified.png)
 
+# AMR file comparison
+
+If you specify a second AMR file using the option `--compare <amr file>`, _metAMmoRphosED_ will show the corresponding graphs of both files side-by-side, highlighting differences (in green) and displaying the [Smatch](https://github.com/snowblink14/smatch) score:
+
+![AMR file comparison ](doc/comparison.png)
+
+It is possible to search in the text, PENAMN and comments as in the edit mode. However, editing is not possible.
+
+To compare several files (for instance the annotations of multiple annotators), specify one of the files using the `-f <amr file 1>` option, and all other with  `--compare <amr file 2> <amr file 3> <amr file 4>`.
+_metAMmoRphosED_ switches automatically in multifile mode. In order to see the difference (ans Smatch) between two files for the displayed sentence choose the two files to compare with the `comparisons`-selection bar
+
+![AMR file comparison ](doc/comparison-multiple-files.png)
 
 # AMR Coreference editor
 

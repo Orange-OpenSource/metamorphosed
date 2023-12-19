@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>metAMoRphosED AMR Editor</title>
+
+
+    <link rel="shortcut icon" type="image/x-icon" href="./img/orange.ico">
+
+    <script src="./lib/jquery-3.6.0.min.js" type="text/javascript"></script>
+    <script src="./lib/jquery.modal-0.9.2.min.js"></script>
+    <script src="./lib/jquery-ui-1.13.2/jquery-ui.min.js" type="text/javascript"></script>
+
+    <script src="./compare.js" type="text/javascript"></script>
+
+
+    <link rel="stylesheet" href="./lib/jquery.modal-0.9.2.min.css" />
+    <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="lib/jquery-ui-1.13.2/jquery-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="./index.css" />
+</head>
+
+<body>
+    <!--img src="img/metamorphosed+.png" width="500px"-->
+    <img style="vertical-align:middle" src="img/metamorphosed+transparent.png" width="500px"> <span class="subtitle">File Comparison</span>
+
+    <p/>
+    <!--h1 id="mainheader">Abstract Meaning Representation - Editor <span id="version"></span></h1-->
+
+
+    <button class="walk mybutton" id="first">|&lt; first</button>
+    <button class="walk mybutton" id="preceding">&lt;&lt; preceding</button>
+    <button class="mybutton" id="lire">load sentence</button>
+    <input type="text" id="sentnum" pattern="[1-9][0-9]*" size="4" value="1">
+    <button class="walk mybutton" id="next">next &gt;&gt;</button>
+    <button class="walk mybutton" id="last">last &gt|</button>
+    &nbsp;&nbsp;<button class="mybutton" id="choosesentence">sentence list</button>
+    &nbsp;&nbsp;<button class="mybutton" id="togglecomments">toggle comments</button>
+
+    <p />
+
+
+    <div class="editmode" id="commands">
+
+        <div class="grouping">
+           <button class="toggleresult searchbuttonpos" id="togglesearch">&#8210;</button>
+	      <div id="searchfunctions">
+                <h3>Search</h3>
+                <table>
+                    <tr>
+                        <td>Id:</td>
+                        <td><input class="textfield" placeholder="regex" title="" type="text" id="idsearch" value="">
+                            <button class="findbutton mybutton" id="findidprec" title="find preceding occurrence">&lt;&lt;</button>
+                            <button class="findbutton mybutton" id="findidnext" title="find next occurrence">&gt;&gt;</button>
+                        </td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Text:</td>
+                        <td><input class="textfield" placeholder="regex" title="" type="text" id="textsearch" value="">
+                            <button class="findbutton mybutton" id="findtextprec" title="find preceding occurrence">&lt;&lt;</button>
+                            <button class="findbutton mybutton" id="findtextnext" title="find next occurrence">&gt;&gt;</button>
+                        </td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>AMR:</td>
+                        <td><input class="amrfield" placeholder="regex" title="??" type="text" id="amrsearch" value="">
+                            <button class="findbutton mybutton" id="findamrprec" title="find preceding occurrence">&lt;&lt;</button>
+                            <button class="findbutton mybutton" id="findamrnext" title="find next occurrence">&gt;&gt;</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>comments:</td>
+                        <td><input class="amrfield" placeholder="regex" title="??" type="text" id="commentsearch" value="">
+                            <button class="findbutton mybutton" id="findcommentprec" title="find preceding occurrence">&lt;&lt;</button>
+                            <button class="findbutton mybutton" id="findcommentnext" title="find next occurrence">&gt;&gt;</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="grouping">
+            <div id="searchfunctions">
+                <h3>Information</h3>
+                <table>
+                    <tr class="several" style="display:none">
+                        <td>comparisons:</td> <td colspan="7" class="info" id="comparefiles">
+                        <select class="comparisons" name="comp" id="compvars"></select>
+                        </td>
+                    </tr>
+                    <tr class="onlytwo" style="display:none">
+                        <td>Left filename:</td> <td colspan="7" class="info" id="leftfn">
+                        <select class="comparisons" name="comp" id="compvars" style="display:none"></select>
+                        </td>
+                    </tr>
+                    <tr class="onlytwo" style="display:none">
+                        <td>Right filename:</td> <td colspan="7" class="info" id="rightfn"></td>
+                    </tr>
+
+                    <tr>
+                        <td>sentences:</td> <td colspan="7" class="info" id="numberofsent"></td>
+                    </tr>
+                    <tr class="comparison">
+                        <td>Smatch:</td> <td class="info smatch" id="smatch"></td>
+                        <td>matching:</td> <td class="info smatch" id="nummatching"></td>
+                        <td>triples left:</td> <td class="info smatch" id="numleft"></td>
+                        <td>triples right:</td> <td class="info smatch" id="numright"></td>
+	            </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <p />
+
+
+    <div id="helptext" class="helptext" style="display:none">
+        <h2>Help</h2>
+        <h3>Add a new instances</h3>
+        Type the concept in line (A) and click <span class="knopf">add</span>
+        <h3>Add a new relation between instances</h3>
+        Add source- and target instance and relation name in line (B) and click <span class="knopf">add</span> or
+        click on source-instance and than on the target-instance. A new <span class="code">:todo</span> relation is added which must be modified in a second step
+        <h3>Make another instance top instance</h3>
+        set instance in line (C)and click <span class="knopf">set</span>
+        <h3>Add a literal (like a number) and a relation (like <span class="code">:quant</span>)</h3>
+        fill fields in line (D) and click <span class="knopf">add</span>
+        <h3>Add name to an instance</h3>
+        Add instance which will get <span class="code">:name</span> node and <span class="code">:op</span>-linked strings and name in line (E) and click <span
+            class="knopf">add</span>
+        <h3>Modify concept</h3>
+        Click the concept in the graph, edit concept and click <span class="knopf">update</span> in the «Modify Concept»
+        window
+        <h3>Delete concept (including associated instance and all incoming and outgoing relations)</h3>
+        Click the concept in the graph and click <span class="knopf">delete</span> in the «Modify Concept» window
+        <h3>Modify relation name</h3>
+        Click the relation label, edit name and click <span class="knopf">update</span> in the «Modify Relation» window
+        <h3>Modify relation source</h3>
+        Click the relation label and then click the new source instance.
+        <h3>Delete relation</h3>
+        Click the relation label and click <span class="knopf">delete</span> in the «Modify Relation» window
+        <h3>Change source instance of relation</h3>
+        Click on the relation (in the graph) and click on the future source instance
+
+        <h2>About</h2>
+        <span class="logo2"><img src="img/metamorphosed+.png" width="16%"></span>
+        version <span id="version2"></span> (API version: <span id="apiversion"></span>)<br/>
+        Author: Johannes Heinecke.
+        Copyright © 2022-2023 by Orange. This software is published under the <a target="_blank" href="https://opensource.org/licenses/BSD-3-Clause">3-Clause BSD License</a>.
+
+        <h2>This instance</h2>
+        Started on <span class="code" id="hostname"></span>
+        <br><span class="code">cd</span> <span class="code" id="dir"></span>
+        <br><span class="code" id="cmdl"></span>
+    </div>
+    <p />
+
+
+
+    <div id="resultat"></div>
+
+    <!-- sentence list -->
+    <div class="modal editmode" id="sentmodal">
+       <div class="grouping noborder" id="sentencelistmod">
+           <button class="cancelmodal" id="cancelsentlist">&times;</button>
+           <h3>Choose sentence</h3>
+           sentence id filter: <input title="filter sentence ids" type="text"  id="sidfilter" size="20" value="">
+           sentence text filter: <input title="filter sentence text" type="text"  id="textfilter" size="20" value="">
+           <button class="addbutton mybutton" id="modifysentencelist">apply</button>
+           </p>
+           <select class="allsentences" name="sent1" id="sentencelist"></select>
+           <br />
+       </div>
+    </div>
+
+    <!-- comments list -->
+    <div class="modal editmode" id="commentmodal">
+        <div class="grouping noborder" id="commentsmod">
+            <button class="cancelmodal" id="cancelcomments">&times;</button>
+            <div id="showcomments"></div>
+        </div>
+    </div>
+
+
+</body>
+</html>

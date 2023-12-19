@@ -129,6 +129,15 @@ input {
   stroke: red;
 }
 
+.info { 
+  font-style: italic;
+}
+
+#doubleresultat {
+ display: flex;
+ flex-direction: row;
+}
+
 #reifygroup, #gresultat {
  display: flex;
  flex-direction: row;
@@ -176,6 +185,16 @@ input {
   text-indent: -2em;
   padding-left: 3em;
 }
+
+.comments {
+  border-radius: 10px;
+  border: solid 1px #1f471f;
+  margin: 10px 10px 10px 10px;
+  padding: 10px;
+  text-indent: -2em;
+  padding-left: 3em;
+}
+
 
 .code {
   font-family: monospace;
@@ -581,7 +600,7 @@ td.framealiastable {
   width: 330px;
 }
 
-#sentmodal {
+#sentmodal, #commentmodal {
   top: 20%;
   max-width: 90%;
   width: 90%;
@@ -589,6 +608,10 @@ td.framealiastable {
 
 #sentencelist {
   width: 100%;
+ }
+
+.smatch { 
+  color: #0a6e31;
  }
 
 .cancelmodal {
@@ -604,6 +627,14 @@ td.framealiastable {
   margin-top: -33px;
   margin-right: -28px;
   /*transform: translate(50%, -50%);*/
+}
+
+.subtitle {
+  font-style: italic;
+  color: #8f8f8f;
+  font-size: 160%;
+  padding-left: 20px;
+
 }
 
 

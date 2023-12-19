@@ -1,0 +1,38 @@
+# ::id wikipedia.shakespeare.1
+# ::snt William Shakespeare was an English playwright.
+(p / playwright
+    :mod (c / country
+        :name (n / name
+            :op1 "England"))
+    :domain (p2 / person
+        :name (n2 / name
+            :op1 "William"
+            :op2 "Shakespeare")))
+
+# ::id wikipedia.shakespeare.2
+# ::snt He is widely regarded as the greatest writer in the English language.
+(r / regard-01
+    :ARG1 (h / he)
+    :ARG2 (p / person
+        :ARG0-of (w / write-01)
+        :ARG1-of (h2 / have-degree-91
+            :ARG2 (g / great)
+            :ARG3 (m / most)
+            :ARG5 (l / language
+                :name (n / name
+                    :op1 "English"))))
+    :ARG1-of (w2 / wide-02))
+
+# ::id wikipedia.shakespeare.3
+# ::snt He is often called England's national poet.
+(c / call-01
+    :ARG1 (h / he)
+    :ARG2 (p / poet
+        :mod (n / nation)
+        :poss (c2 / country
+            :name (n2 / name
+                :op1 "England")))
+    :frequency (o / often))
+
+
+

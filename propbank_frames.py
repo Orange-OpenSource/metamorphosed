@@ -9,15 +9,15 @@
 # modification, are permitted provided that the following conditions are met:
 #    * Redistributions of source code must retain the above copyright
 #      notice, this list of conditions and the following disclaimer.
-# 
+#
 #    * Redistributions in binary form must reproduce the above copyright
 #      notice, this list of conditions and the following disclaimer in the
 #      documentation and/or other materials provided with the distribution.
-# 
+#
 #    * Neither the name of Orange nor the
 #      names of its contributors may be used to endorse or promote products
 #      derived from this software without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 # ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 # WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -34,12 +34,13 @@
 # Author: Johannes Heinecke
 
 
-
 # loads propbank frames in XML format
 # https://github.com/propbank/propbank-frames/ or AMR3 data
 import glob
 import re
 import xml.etree.ElementTree as ET
+import sys
+
 
 class Lemma:
     def __init__(self, lemma):
@@ -48,11 +49,12 @@ class Lemma:
 
     def __str__(self):
         template = '<h2>%s</h2>\n' % self.lemma
-        print("LLLLL", self.lemma, self.rolesets)
+        #print("LLLLL", self.lemma, self.rolesets)
         for r in self.rolesets:
             template += "%s\n" % r
         #template += ""
         return template
+
 
 class Roleset:
     def __init__(self, rid, name):
@@ -65,8 +67,8 @@ class Roleset:
         #print("ZZZ2", self.id, self.name)
         template = '<h3>%s: <i>%s</i></h3>' % (self.id, self.name)
         template += '<h4>role definitions</h4>\n<ul>\n'
-        for r,d in self.roles.items():
-            template += '<li><span class="ARG%stext">ARG%s</span>: %s\n' % (r,r,d)
+        for r, d in self.roles.items():
+            template += '<li><span class="ARG%stext">ARG%s</span>: %s\n' % (r, r, d)
         template += "</ul>"
         template += '<h4>examples</h4>\n<ul>\n'
         for e in self.examples:
@@ -83,9 +85,9 @@ class Example:
 
     def __str__(self):
         res = self.text
-        for a,t in self.args.items():
+        for a, t in self.args.items():
             try:
-                res = re.sub(r"((?<=\W)|^)%s(?=\W)" % t, '<span class="%stext">%s</span>' % (a,t), res)
+                res = re.sub(r"((?<=\W)|^)%s(?=\W)" % t, '<span class="%stext">%s</span>' % (a, t), res)
             except Exception as e:
                 print("Problem in PropBank documentation", e)
 
@@ -93,6 +95,7 @@ class Example:
             #res = res.replace(self.rel, "<b>%s</b>" % self.rel)
             res = res.replace(self.rel, '<span class="docinstance predname">%s</span>' % self.rel)
         return res
+
 
 class PropBankFrames:
     def __init__(self, dirname):
@@ -103,12 +106,12 @@ class PropBankFrames:
         #self.parsefile("%s/finance.xml" % dirname)
         #return
 
-        i=0
-        for i,fn in enumerate(sorted(glob.glob("%s/*.xml" % dirname))):
+        i = 0
+        for i, fn in enumerate(sorted(glob.glob("%s/*.xml" % dirname))):
             #print(fn)
             self.parsefile(fn)
             #break
-        print("%d framesets loaded" % (i+1))
+        print("%d framesets loaded" % (i + 1), file=sys.stderr)
 
         #for rs in self.roleset_args:
         #    print(rs)
@@ -161,9 +164,9 @@ class PropBankFrames:
                                             nn = exampleChild.attrib["n"]
                                             if nn in "0123456789":
                                                 if exampleChild.text:
-                                                    ex.args["ARG"+nn] = exampleChild.text.replace('[', ' ').replace(']', ' ')
+                                                    ex.args["ARG" + nn] = exampleChild.text.replace('[', ' ').replace(']', ' ')
                                                 else:
-                                                    ex.args["ARG"+nn] = ""
+                                                    ex.args["ARG" + nn] = ""
 
                                     elif exampleChild.tag == "rel":
                                         # oldformat
@@ -188,12 +191,11 @@ class PropBankFrames:
                             lemma.rolesets.append(roleset)
                             self.roleset_args[rs] = roleset_args
 
-
                 #print("%s" % lemma)
 
     def getdoc(self, triples):
         doclist = []
-        for s,p,o in triples:
+        for s, p, o in triples:
             if p == ":instance":
                 elems = o.rsplit("-", 1)
                 if len(elems) > 1 and len(elems[1]) <= 3:
@@ -212,40 +214,44 @@ class PropBankFrames:
         if not self.rolesets:
             # no data to check has been loaded
             return []
-        for s,p,o in triples:
+
+        for s, p, o in triples:
+
             if p == ":instance":
-                elems = o.rsplit("-", 1)
-                if len(elems) > 1 and (len(elems[1]) <= 3 and elems[1].isnumeric()):
-                    if o not in self.rolesets:
-                        errors.append("«%s» is not a defined propbank roleset" % o)
+                if o is None:
+                    errors.append("«%s» is an instance of None" % s)
+                else:
+                    elems = o.rsplit("-", 1)
+                    if len(elems) > 1 and (len(elems[1]) <= 3 and elems[1].isnumeric()):
+                        if o not in self.rolesets:
+                            errors.append("«%s» is not a defined propbank roleset" % o)
 
         # check whether ARG-relations uses are defined for the roleset
         # return ARG relations which ar note defined for the given concept
         instances = {} # var: concept
 
-        for s,p,o in triples:
+        for s, p, o in triples:
             if p == ":instance":
                 instances[s] = o
             #if p not in self.relations:
             #    errors.append("invalid relation '%s'" % (p))
 
-        for s,p,o in triples:
+        for s, p, o in triples:
             if p != ":instance" and instances[s] in self.roleset_args:
                 if p.startswith(":ARG"):
                     if p.endswith("-of"):
-                        concept = instances[o]
-                        p = p[:-3]
+                        if o not in instances:
+                            errors.append("invalid argument «%s» for relation «%s»" % (o, p))
+                        else:
+                            concept = instances[o]
+                            p = p[:-3]
                     else:
                         concept = instances[s]
 
                     if concept not in self.roleset_args or p not in self.roleset_args[concept]:
-                        errors.append("invalid argument «%s» for concept «%s»" % (p,concept))
+                        errors.append("invalid argument «%s» for concept «%s»" % (p, concept))
         return errors
 
 
-        return res
-
 if __name__ == "__main__":
     pf = PropBankFrames("~/SemanticData/AMR/amr3/amr_annotation_3.0/data/frames/propbank-amr-frames-xml-2018-01-25/")
-
-
