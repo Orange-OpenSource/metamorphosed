@@ -252,7 +252,7 @@ class AMRdoc:
             fnn = fn
             if not isinstance(fn, str):
                 fnn = fn.name
-            print("%d sentences read from %s" % (len(self.sentences), fn), file=sys.stderr)
+            print("%d sentences read from %s" % (len(self.sentences), fnn), file=sys.stderr)
 
     def tsv(self):
         # output all AMR graphs as triple list
