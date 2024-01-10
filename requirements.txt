@@ -4,5 +4,5 @@ Flask==2.2.5
 Flask-Cors==3.0.10
 graphviz==0.19.1
 Penman==1.2.1
-GitPython==3.1.37
+GitPython==3.1.41
 PyYAML==6.0
