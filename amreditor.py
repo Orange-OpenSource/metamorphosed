@@ -382,7 +382,7 @@ class AMRProcessor:
                 rtc.append("more than one relation between « %s » and « %s » (%s)" % (s, o, p))
             if (o, s) in edges:
                 rtc.append("more than one relation between « %s » and « %s » (inverted) (%s)" % (s, o, p))
-            edges.add((o, s))
+            edges.add((s, o))
 
             # find missing :sntNN or :opNN
             if p.startswith(":snt"):

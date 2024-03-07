@@ -15,7 +15,7 @@ _metAMmoRphosED_ can be started in comparison mode in order to compare two AMR f
 
 _metAMmoRphosED_ provides to annotate coreferences in AMR graphs of sentences from a single text. See [coref/README.md](coref/README.md) for more information
 
-Version 3.0.0 (see [CHANGES.md](CHANGES.md))
+Version 3.0.1 (see [CHANGES.md](CHANGES.md))
 
 ## installation
 
@@ -72,6 +72,13 @@ popd
 
 ```
 pytest unittests.py -vv [-k testname] [-s]
+```
+
+For more complete testing use `tox`:
+
+```
+pip install -r requirements-test.txt
+tox
 ```
 
 

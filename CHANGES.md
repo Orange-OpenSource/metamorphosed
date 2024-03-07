@@ -1,5 +1,8 @@
 # Changes
 
+## Version 3.0.1
+* coloring issue in comparison mode corrected
+
 ## Version 3.0.0
 * comparison of multiple files
 

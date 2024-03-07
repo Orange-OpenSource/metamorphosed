@@ -341,6 +341,7 @@ class Smatch:
                                                              doattribute=doattribute, dorelation=dorelation)
         #print("B MN", best_match_num)
         alignments, mappednodes = self.print_alignment(best_mapping, instance1, instance2)
+
         if self.verbose:
             print("best match number", best_match_num, file=DEBUG_LOG)
             print("best node mapping", best_mapping, file=DEBUG_LOG)
@@ -377,7 +378,7 @@ class Smatch:
             return outgoing
         outgoing1 = reorg(instance1, attributes1, relation1)
         outgoing2 = reorg(instance2, attributes2, relation2)
-        #print("TT1",outgoing1)
+        #print("TT1", outgoing1)
         #print("TT2", outgoing2)
 
         ok = 0
