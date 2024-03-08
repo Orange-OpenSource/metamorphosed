@@ -15,7 +15,7 @@ _metAMmoRphosED_ can be started in comparison mode in order to compare two AMR f
 
 _metAMmoRphosED_ provides to annotate coreferences in AMR graphs of sentences from a single text. See [coref/README.md](coref/README.md) for more information
 
-Version 3.0.1 (see [CHANGES.md](CHANGES.md))
+Version 3.0.2 (see [CHANGES.md](CHANGES.md))
 
 ## installation
 

@@ -1,5 +1,8 @@
 # Changes
 
+## Version 3.0.2
+* file comparison: reload comparison when compared pair is changed
+
 ## Version 3.0.1
 * coloring issue in comparison mode corrected
 
