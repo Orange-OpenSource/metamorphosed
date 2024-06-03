@@ -765,11 +765,11 @@ def test_smatchpm():
 
     floatdisplay = "%%.%df" % 5
     f = []
-    for (precision, recall, best_f_score) in sm.score_amr_pairs("comptest_gold.txt",
-                                                                "comptest_sys.txt",
-                                                                justinstance=False,
-                                                                justattribute=False,
-                                                                justrelation=False):
+    for i, sid1, sid2, numdiffs, (precision, recall, best_f_score) in sm.score_amr_pairs("comptest_gold.txt",
+                                                                                         "comptest_sys.txt",
+                                                                                         justinstance=False,
+                                                                                         justattribute=False,
+                                                                                         justrelation=False):
         f.append(floatdisplay % best_f_score)
     assert f == ['0.80000', '0.78261', '1.00000', '0.57143', '1.00000']
 

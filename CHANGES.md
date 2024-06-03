@@ -1,5 +1,9 @@
 # Changes
 
+## Version 3.0.3
+* retrieve more information from smatch_pm
+* dependencies updated
+
 ## Version 3.0.2
 * file comparison: reload comparison when compared pair is changed
 

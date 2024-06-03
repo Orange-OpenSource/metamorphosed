@@ -124,7 +124,8 @@ class Smatch:
                 print("Ignoring remaining AMRs", file=ERROR_LOG)
             else:
                 #print("AAAA",sent1.id)
-                yield sent1.amr, sent2.amr
+                #yield sent1.amr, sent2.amr
+                yield sent1, sent2
                 continue
             break
 
@@ -144,8 +145,8 @@ class Smatch:
         for sent_num, (cur_amr1, cur_amr2) in enumerate(self.generate_amr_lines(f1, f2), start=1):
             self.match_triple_dict.clear()
             try:
-                best_match_num, test_triple_num, gold_triple_num, _, _, _, _ = self.get_amr_match(cur_amr1.replace("\n", ""),
-                                                                                                  cur_amr2.replace("\n", ""),
+                best_match_num, test_triple_num, gold_triple_num, _, _, _, _ = self.get_amr_match(cur_amr1.amr.replace("\n", ""),
+                                                                                                  cur_amr2.amr.replace("\n", ""),
                                                                                                   sent_num=sent_num,  # sentence number
                                                                                                   justinstance=justinstance,
                                                                                                   justattribute=justattribute,
@@ -160,14 +161,17 @@ class Smatch:
             total_gold_num += gold_triple_num
             # clear the matching triple dictionary for the next AMR pair
             #self.match_triple_dict.clear()
+            #print("ZZZZ", best_match_num, test_triple_num, gold_triple_num)
+            number_of_diffs = max(test_triple_num, gold_triple_num) - best_match_num
+            #print("#Diffs", number_of_diffs)
             if not self.single_score:  # if each AMR pair should have a score, compute and output it here
-                yield self.compute_f(best_match_num, test_triple_num, gold_triple_num)
+                yield sent_num, cur_amr1.id, cur_amr2.id, number_of_diffs, self.compute_f(best_match_num, test_triple_num, gold_triple_num)
         if self.verbose:
             print("Total match number, total triple number in AMR 1, and total triple number in AMR 2:", file=DEBUG_LOG)
             print(total_match_num, total_test_num, total_gold_num, file=DEBUG_LOG)
             print("---------------------------------------------------------------------------------", file=DEBUG_LOG)
         if self.single_score:  # output document-level smatch score (a single f-score for all AMR pairs in two files)
-            yield self.compute_f(total_match_num, total_test_num, total_gold_num)
+            yield -1, "", "", -1, self.compute_f(total_match_num, total_test_num, total_gold_num)
 
     def parse_AMR(self, amr, prefix):
         node_map_dict = {} # old: new
@@ -916,7 +920,7 @@ class Smatch:
             recall: match_num/gold_num
             f_score: 2*precision*recall/(precision+recall)
         """
-        print("matchnum", match_num, "test", test_num, "gold", gold_num)
+        #print("matchnum", match_num, "test", test_num, "gold", gold_num)
         if test_num == 0 or gold_num == 0:
             return 0.00, 0.00, 0.00
         precision = float(match_num) / float(test_num)
@@ -1050,7 +1054,7 @@ if __name__ == "__main__":
                         help=('Two files containing AMR pairs. '
                               'AMRs in each file are separated by a single blank line'))
     parser.add_argument('-r', type=int, default=4, help='Restart number (Default:4)')
-    parser.add_argument('--significant', type=int, default=2, help='significant digits to output (default: 2)')
+    parser.add_argument('--significant', type=int, default=4, help='significant digits to output (default: 2)')
     parser.add_argument('-v', action='store_true', help='Verbose output (Default:false)')
     parser.add_argument('--vv', action='store_true', help='Very Verbose output (Default:false)')
     parser.add_argument('--ms', action='store_true', default=False,
@@ -1069,12 +1073,12 @@ if __name__ == "__main__":
     sm = Smatch(verbose=args.v, veryVerbose=args.vv, single_score=not args.ms)
 
     floatdisplay = "%%.%df" % args.significant
-    for (precision, recall, best_f_score) in sm.score_amr_pairs(args.f[0], args.f[1],
-                                                                justinstance=args.justinstance,
-                                                                justattribute=args.justattribute,
-                                                                justrelation=args.justrelation):
+    for i, sid1, sid2, numdiffs, (precision, recall, best_f_score) in sm.score_amr_pairs(args.f[0], args.f[1],
+                                                                                         justinstance=args.justinstance,
+                                                                                         justattribute=args.justattribute,
+                                                                                         justrelation=args.justrelation):
         # print("Sentence", sent_num)
         if args.pr:
             print("Precision: " + floatdisplay % precision)
             print("Recall: " + floatdisplay % recall)
-        print("F-score: " + floatdisplay % best_f_score)
+        print(i, sid1, sid2, numdiffs, "F-score: " + floatdisplay % best_f_score, sep="\t")
