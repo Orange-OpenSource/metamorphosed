@@ -2,7 +2,7 @@
 
 # This library is under the 3-Clause BSD License
 #
-# Copyright (c) 2022-2023,  Orange
+# Copyright (c) 2022-2024,  Orange
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -680,6 +680,7 @@ class AMR_Edit_Server:
                 secondsent = seconddoc.sentences[sentnum - 1]
                 sm = Smatch()
                 best_match_num, test_triple_num, gold_triple_num, instances1OK, rel1OK, instances2OK, rel2OK = sm.get_amr_match(firstsent.amr.replace("\n", " "), secondsent.amr.replace("\n", " "))
+
                 p, r, f1 = sm.compute_f(best_match_num, test_triple_num, gold_triple_num)
                 if first_to_compare == -1:
                     # update display of first document
@@ -701,7 +702,7 @@ class AMR_Edit_Server:
                     if ix == first_to_compare:
                         cpm, csvg = cap.show(highlightinstances=instances1OK, highlightrelations=rel1OK)
                     elif ix == second_to_compare:
-                        cpm, csvg = cap.show(highlightinstances=instances1OK, highlightrelations=rel1OK)
+                        cpm, csvg = cap.show(highlightinstances=instances2OK, highlightrelations=rel2OK)
                     else:
                         cpm, csvg = cap.show()
 

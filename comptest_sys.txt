@@ -33,3 +33,15 @@
    :ARG0-of (c / chase-01
       :ARG1 (m / mouse
         :mod (l / little))))
+
+# ::id sentence 5
+# ::snt Where 's Homer Simpson when you need him ?
+(b / be-located-at-91
+   :ARG1 (p / person
+            :name (h / name
+                     :op1 "Homer"
+                     :op2 "Simpson"))
+   :ARG2 (au / amr-unknown)
+   :time (n / need-01
+            :ARG0 (y / you)
+            :ARG1 p))

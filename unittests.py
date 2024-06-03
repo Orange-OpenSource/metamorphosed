@@ -2,7 +2,7 @@
 
 # This library is under the 3-Clause BSD License
 #
-# Copyright (c) 2022-2023,  Orange
+# Copyright (c) 2022-2024,  Orange
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -475,10 +475,10 @@ def test_duplicate_edge(client):
     response = client.get("/edit", query_string={"num": 23, "start": "k", "label": "ARG0", "end": "a"})
     response = client.get("/edit", query_string={"num": 23, "start": "a", "label": "ARG0", "end": "k"})
     res = json.loads(response.data)
-    #print("res", res["warning"])
-    assert res["warning"] == ['more than one relation between « k » and « a » (inverted) (:ARG0)',
+    print("res", res["penman"])
+    assert res["warning"] == ['more than one relation between « k » and « a » (:ARG0)',
                               'more than one relation label « :ARG0 » start at instance « k »',
-                              'more than one relation between « a » and « k » (:ARG0)']
+                              'more than one relation between « a » and « k » (inverted) (:ARG0)']
 
 
 def test_search_text(client):
@@ -752,9 +752,10 @@ def test_compare_read(client_once):
     assert res["penman"] == res["others"][0]["penman"]
 
     response = client_once.get("/next", query_string={"num": 2, "direction": "last", "compare": "1,2"})
+    response = client_once.get("/read", query_string={"num": 4, "compare": "1,2"})
     res = json.loads(response.data)
-    #print("res", json.dumps(res["penman"], indent=2))
-    #print("res", json.dumps(res["penman2"], indent=2))
+    #print("res1", json.dumps(res["penman"], indent=2))
+    #print("res2", json.dumps(res["others"][0]["penman"], indent=2))
     assert res["smatch"] == "57.14"
 
 
@@ -770,8 +771,7 @@ def test_smatchpm():
                                                                 justattribute=False,
                                                                 justrelation=False):
         f.append(floatdisplay % best_f_score)
-
-    assert f == ['0.80000', '0.78261', '1.00000', '0.57143']
+    assert f == ['0.80000', '0.78261', '1.00000', '0.57143', '1.00000']
 
 
 def ls(dn):

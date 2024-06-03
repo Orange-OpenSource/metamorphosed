@@ -1,6 +1,6 @@
 # relation	reification	domain	range
 # taken form AMR documentation https://github.com/amrisi/amr-guidelines/blob/master/amr.md
-:accompanier	accompany-01	:ARG0	:ARG1
+:accompanier	accompany-01	:ARG1	:ARG0
 :age	age-01	:ARG1	:ARG2
 :cause	cause-01	:ARG1	:ARG0
 :beneficiary	benefit-01	:ARG0	:ARG1
@@ -9,7 +9,7 @@
 :degree	have-degree-92	:ARG1	:ARG2
 :destination	be-destined-for-91	:ARG1	:ARG2
 :duration	last-01	:ARG1	:ARG2
-:example	exemplify-01	:ARG0	:ARG1
+:example	exemplify-01	:ARG1	:ARG0
 :extent	have-extent-91	:ARG1	:ARG2
 :frequency	have-frequency-91	:ARG1	:ARG2
 :instrument	have-instrument-91	:ARG1	:ARG2
@@ -21,7 +21,7 @@
 :ord	have-ord-91	:ARG1	:ARG2
 :part	have-part-91	:ARG1	:ARG2
 :polarity	have-polarity-91	:ARG1	:ARG2
-:poss	own-01	:ARG0	:ARG1
+:poss	own-01	:ARG1	:ARG0
 :purpose	have-purpose-91	:ARG1	:ARG2
 :quant	have-quant-91	:ARG1	:ARG2
 :source	be-from-91	:ARG1	:ARG2

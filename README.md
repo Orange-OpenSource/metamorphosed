@@ -15,7 +15,7 @@ _metAMmoRphosED_ can be started in comparison mode in order to compare two AMR f
 
 _metAMmoRphosED_ provides to annotate coreferences in AMR graphs of sentences from a single text. See [coref/README.md](coref/README.md) for more information
 
-Version 3.0.0 (see [CHANGES.md](CHANGES.md))
+Version 3.0.2 (see [CHANGES.md](CHANGES.md))
 
 ## installation
 
@@ -28,9 +28,9 @@ python3 -m venv VENV
 source VENV/bin/activate
 pip install -r requirements.txt
 git submodule update --init
-pushd propbank-frames;
+pushd propbank-frames/frames;
   git checkout ad2bafa4c9c9c58cc1bc89;
-  wget https://raw.githubusercontent.com/propbank/propbank-frames/main/frames/AMR-UMR-91-rolesets.xml
+  wget https://raw.githubusercontent.com/propbank/propbank-frames/development/frames/AMR-UMR-91-rolesets.xml
 popd
 ```
 
@@ -72,6 +72,13 @@ popd
 
 ```
 pytest unittests.py -vv [-k testname] [-s]
+```
+
+For more complete testing use `tox`:
+
+```
+pip install -r requirements-test.txt
+tox
 ```
 
 

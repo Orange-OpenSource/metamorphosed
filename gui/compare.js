@@ -1,7 +1,7 @@
 /*
  This library is under the 3-Clause BSD License
 
- Copyright (c) 2022-2023,  Orange
+ Copyright (c) 2022-2024,  Orange
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -230,6 +230,10 @@ function downloadSVG(svgelem, ident) {
 
 var visible_divselectors = {};
 
+function getcompval(obj) {
+    // reload sentence when changing pair to be compared
+    $("#lire").click();
+}
 
 function ToggleDiv(selector, togglebutton) {
 	if ($(selector).is(":visible")) {

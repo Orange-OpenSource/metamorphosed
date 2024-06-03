@@ -12,7 +12,8 @@ However, some information present in the AMR coreference data is not yet editabl
 
 ## Preparing an annotation
 
-The first step is preparing an empty annotation file with all sentence ids of sentences present in an AMR annotatet file
+The first step is preparing an empty annotation file with all sentence ids of sentences present in an AMR
+annotated file
 
 initialise xml files with `corefinit.py` 
 

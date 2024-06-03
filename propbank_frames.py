@@ -98,7 +98,7 @@ class Example:
 
 
 class PropBankFrames:
-    def __init__(self, dirname):
+    def __init__(self, dirname, onlyinuse=True):
         self.lemmas = {}
         self.rolesets = set() # all valid rolesets like take-01 etc
         self.roleset_args = {} # take-01: { ARG0: "taker" .... }
@@ -109,7 +109,7 @@ class PropBankFrames:
         i = 0
         for i, fn in enumerate(sorted(glob.glob("%s/*.xml" % dirname))):
             #print(fn)
-            self.parsefile(fn)
+            self.parsefile(fn, onlyinuse)
             #break
         print("%d framesets loaded" % (i + 1), file=sys.stderr)
 
@@ -118,8 +118,9 @@ class PropBankFrames:
         #    for a in self.roleset_args[rs]:
         #        print("   ", a, self.roleset_args[rs][a])
 
-    def parsefile(self, fn):
+    def parsefile(self, fn, onlyinuse=False):
         tree = ET.parse(fn)
+        #print("FN", fn)
         for predicate in tree.getroot():
             if predicate.tag == "predicate":
                 #print("PRED", predicate.attrib)
@@ -185,11 +186,13 @@ class PropBankFrames:
                                                             ex.args[nn] = ""
                                             elif pb.tag == "rel":
                                                 ex.rel = pb.text
-                        if inuse:
-                            rs = predicateChild.attrib["id"].replace(".", "-").replace("_", "-")
+                        rs = predicateChild.attrib["id"].replace(".", "-").replace("_", "-")
+                        if inuse or onlyinuse is False:
                             self.rolesets.add(rs)
                             lemma.rolesets.append(roleset)
                             self.roleset_args[rs] = roleset_args
+                        #else:
+                        #    print("NOT IN USE", rs, inuse, onlyinuse)
 
                 #print("%s" % lemma)
 
@@ -225,6 +228,9 @@ class PropBankFrames:
                     if len(elems) > 1 and (len(elems[1]) <= 3 and elems[1].isnumeric()):
                         if o not in self.rolesets:
                             errors.append("«%s» is not a defined propbank roleset" % o)
+                            #for o in sorted(self.rolesets):
+                            #    print("RRR", o)
+                            #assert 1 == 0
 
         # check whether ARG-relations uses are defined for the roleset
         # return ARG relations which ar note defined for the given concept
