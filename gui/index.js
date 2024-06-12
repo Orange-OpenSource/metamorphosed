@@ -611,11 +611,16 @@ function formatAMR(data) {
 	// svg graph in an inner div
 	$('#g2resultat').append('<div class="svggraph" id="svggraph_' + currentsentnum + '">');
 	$('#svggraph_' + currentsentnum).append('<div id="innersvggraph_' + currentsentnum + '">');
+
 	$('#innersvggraph_' + currentsentnum).append(data.svg.replace(/<svg /, '<svg onmousedown="info(event);" '));
 
 	if ('#innersvggraph_' + currentsentnum in visible_divselectors && visible_divselectors['#innersvggraph_' + currentsentnum] == false) {
 		ToggleDiv('#innersvggraph_' + currentsentnum, "#togglesvggraph");
 	}
+
+	$('#svggraph_' + currentsentnum).append('<a id="semgraph_' + currentsentnum + '" download="graph.svg" type="image/svg+xml"><button class="mybutton">download image</button></a>');
+	downloadSVG('innersvggraph_' + currentsentnum, 'semgraph_' + currentsentnum);
+
 
 	if (data.framedoc) {
 		$("#resultat").append('<div class="text" id="framedoc_' + currentsentnum + '">');
