@@ -40,6 +40,11 @@ import sys
 
 import penman
 
+# silence penman
+import logging
+logging.getLogger('penman').setLevel(logging.ERROR)
+
+
 ONESPACE = re.compile("[ \n\t]+")
 
 
@@ -277,6 +282,11 @@ class AMRdoc:
                     msgs += ee
                 #for e in ee:
                 #    print("ZZZ", e)
+            try:
+                ddd = penman.parse(sent.amr.replace("\n", "")) # penman needs \n replaced to detect quote errors
+                #print("eee",ddd)
+            except Exception as e:
+                msgs.append(str(e))
         return msgs
 
     def getsentencelist(self):
@@ -509,12 +519,14 @@ if __name__ == "__main__":
             if args.constraints:
                 validators.append(relations_constraints.Constraints(args.constraints))
 
-            print(validators)
+            #print(validators)
         ads = []
 
         for fn in args.file:
             ad = AMRdoc(fn)
-            ad.validate(validators)
+            msg = ad.validate(validators)
+            for m in msg:
+                print("Problem:", m)
 
             ads.append(ad)
             #ad.tsv()
