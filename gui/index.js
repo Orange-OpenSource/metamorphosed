@@ -205,7 +205,7 @@ function getServerInfo() {
 	});
 }
 
-function downloadSVG(svgelem, ident) {
+function downloadSVG(svgelem, ident, sentnum) {
 	// download the generated svg to use elsewhere (e.G. transform to pdf with inkscape)
 	var svg = document.getElementById(svgelem);
 	/* TODO add here in to svg/defs:
@@ -216,7 +216,7 @@ function downloadSVG(svgelem, ident) {
 	var data = new Blob([svg.innerHTML]);
 	var a2 = document.getElementById(ident);
 	a2.href = URL.createObjectURL(data);
-	a2.download = "graph.svg";
+	a2.download = "graph_" + sentnum + ".svg";
 }
 
 
@@ -619,8 +619,7 @@ function formatAMR(data) {
 	}
 
 	$('#svggraph_' + currentsentnum).append('<a id="semgraph_' + currentsentnum + '" download="graph.svg" type="image/svg+xml"><button class="mybutton">download image</button></a>');
-	downloadSVG('innersvggraph_' + currentsentnum, 'semgraph_' + currentsentnum);
-
+	downloadSVG('innersvggraph_' + currentsentnum, 'semgraph_' + currentsentnum, currentsentnum);
 
 	if (data.framedoc) {
 		$("#resultat").append('<div class="text" id="framedoc_' + currentsentnum + '">');

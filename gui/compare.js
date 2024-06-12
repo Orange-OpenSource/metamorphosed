@@ -212,7 +212,7 @@ function getServerInfo() {
 	});
 }
 
-function downloadSVG(svgelem, ident) {
+function downloadSVG(svgelem, ident, filename) {
 	// download the generated svg to use elsewhere (e.G. transform to pdf with inkscape)
 	var svg = document.getElementById(svgelem);
 	/* TODO add here in to svg/defs:
@@ -223,7 +223,7 @@ function downloadSVG(svgelem, ident) {
 	var data = new Blob([svg.innerHTML]);
 	var a2 = document.getElementById(ident);
 	a2.href = URL.createObjectURL(data);
-	a2.download = "graph.svg";
+	a2.download = filename;
 }
 
 
@@ -532,6 +532,10 @@ function formatOne(number, svg, penman, fn) {
 	if ('#innersvggraph_' + number + '_' + currentsentnum in visible_divselectors && visible_divselectors['#innersvggraph_' + number + '_' + currentsentnum] == false) {
 		ToggleDiv('#innersvggraph_' + number + '_' + currentsentnum, "#togglesvggraph" + number);
 	}
+
+	$('#svggraph_' + number + '_' + currentsentnum).append('<a id="semgraph_' + number + '_' + currentsentnum + '" download="graph.svg" type="image/svg+xml"><button class="mybutton">download image</button></a>');
+	downloadSVG('innersvggraph_' + number + '_' + currentsentnum, 'semgraph_' + number + '_' + currentsentnum, "graph_" + number + "_" + currentsentnum + ".svg");
+
 
 	// toggle button to hide/show the penman graph
 	$("#penman_ultat_" + number).append('<button class="toggleresult" id="togglepenman_' + number + '" >&#8210;</button>');
