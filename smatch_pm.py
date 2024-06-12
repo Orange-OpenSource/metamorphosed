@@ -2,7 +2,7 @@
 
 # This library is under the 3-Clause BSD License
 #
-# Copyright (c) 2022-2023,  Orange
+# Copyright (c) 2022-2024,  Orange
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
