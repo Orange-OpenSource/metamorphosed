@@ -247,6 +247,20 @@ function ToggleHelp() {
 	}
 }
 
+
+function ToggleSVGExport() {
+	if ($("#svgexport").is(":visible")) {
+		$("#svgexport").hide();
+	} else {
+		$("#svgexport").show();
+		$("#svgexport").draggable();
+		$("#cancelsvgexport").click(function(){
+						$("#svgexport").hide();
+					    });
+	}
+}
+
+
 function ShowSentences() {
 	if ($("#sentmodal").is(":visible")) {
 		$("#sentmodal").hide();
@@ -494,6 +508,8 @@ function formatAMR(data) {
 
     sentenceloaded = true;
     currentsentnum = $("#sentnum").val();
+
+
     if (data.warning) {
 		// display warnings
 		$("#resultat").append('<div class="error" id="errordiv">');
@@ -680,6 +696,9 @@ $(document).ready(function () {
 
 	$("#togglehelp").click(function () {
 		ToggleHelp();
+	});
+	$("#saveallSVG").click(function () {
+				   //ToggleSVGExport();
 	});
 	$("#choosesentence").click(function () {
 		ShowSentences();

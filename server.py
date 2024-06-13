@@ -34,12 +34,14 @@
 # Author: Johannes Heinecke
 
 
+import io
 import json
 import os
 import re
 import socket
 import sys
 import time
+import zipfile
 
 from flask import Flask, Response, jsonify, render_template, request
 
@@ -60,7 +62,7 @@ from smatch_pm import Smatch
 # find an example in AMR data
 # call an AMRserver for an (empty) sentence ? rather not
 
-APIVERSION = "1.4.0"
+APIVERSION = "1.5.0"
 
 
 class AMR_Edit_Server:
@@ -550,6 +552,22 @@ class AMR_Edit_Server:
             #for x in self.aps:
             #    print("AAAAAPPPP", x, self.aps[x].lastpm)
             return prepare_newpage(sentnum, compare=compare) #, iscompare=iscompare)
+
+        @app.route('/graphs', methods=["GET"])
+        def downloadgraphs():
+            dataformat = self.checkParameter(request, 'format', 'string', isOptional=True, defaultValue="svg")
+            zip_buffer = io.BytesIO()
+            with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED, False) as zip_file:
+                for ix,x in enumerate(self.aps):
+                    ap = self.aps[x]
+                    if not ap.isparsed:
+                        ap.readpenman(ap.lastpm)
+                    pm, svg = ap.show()
+                    if svg:
+                        zip_file.writestr("%d.svg" % ix, svg)
+                    print(ix, svg.decode("utf8")[:100] if svg else svg)
+
+            return Response(zip_buffer.getvalue(), 200, mimetype="application/zip")
 
         @app.route('/save', methods=["GET"])
         def save():
