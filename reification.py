@@ -295,6 +295,7 @@ def runtest(table):
     #test(reificator, ur3, r3)
     #test(reificator, ur4, r4)
 
+
 if __name__ == "__main__":
     import argparse
     mydir = os.path.dirname(__file__)
@@ -322,4 +323,3 @@ if __name__ == "__main__":
                 #print(sent.amr)
                 print(amr2)
                 print()
-                

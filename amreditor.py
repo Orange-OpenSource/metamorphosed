@@ -241,7 +241,7 @@ class AMRProcessor:
                 insts.append(k)
         return insts
 
-    def dot(self, highlightinstances=None, highlightrelations=None):
+    def dot(self, highlightinstances=None, highlightrelations=None, format="svg"):
         graph_attr = {#'rankdir':'LR'
         }
         kwargsinit = {
@@ -250,7 +250,7 @@ class AMRProcessor:
             "fillcolor": "white"
             }
 
-        graph = Digraph('amr_graph', format="svg", graph_attr=graph_attr)
+        graph = Digraph('amr_graph', format=format, graph_attr=graph_attr)
         for s, p, o in self.triples:
             kwargs = kwargsinit.copy()
 
@@ -303,7 +303,7 @@ class AMRProcessor:
         #print("RRRRR", graph) # dot sources
         return graph.pipe()
 
-    def show(self, highlightinstances=None, highlightrelations=None):
+    def show(self, highlightinstances=None, highlightrelations=None, format="svg"):
         if self.inserver:
             #print(self.triples, self.vars)
             #for tr in self.triples:
@@ -320,13 +320,13 @@ class AMRProcessor:
                 #a.build(pm)
                 #self.lastsvg = a.graph.pipe()
                 self.readpenman(pm)
-                self.lastsvg = self.dot(highlightinstances, highlightrelations)
+                self.lastsvg = self.dot(highlightinstances, highlightrelations, format=format)
                 self.isDisconnected = False
             except penman.exceptions.LayoutError:
                 #a = amr2dot.AMR2DOT(format="svg", font="Lato", instances=False, lr=False, bw=False)
                 #a.buildtriples(self.triples)
                 #self.lastsvg = a.graph.pipe()
-                self.lastsvg = self.dot()
+                self.lastsvg = self.dot(format=format)
 
                 noninst = []
                 for tr in self.triples:

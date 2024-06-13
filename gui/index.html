@@ -41,7 +41,7 @@
         id="save">&#x1F4BE; save file</button>
     &nbsp;&nbsp;<button class="mybutton" id="choosesentence">sentence list</button>
     &nbsp;&nbsp;<button class="mybutton" id="togglehelp">toggle help</button>
-    &nbsp;&nbsp;<a download="graphs.zip" href="/graphs" type="application/zip"><button class="mybutton" id="saveallSVG">download all graphs as SVG</button></a>
+    &nbsp;&nbsp;<button class="mybutton" id="saveallSVG">export visualised graphs</button>
 
     <p />
 
@@ -170,19 +170,28 @@
     </div>
 
     <p />
-	<!-- div class="modal editmode" id="svgexport">
+	<div class="modal QQeditmode" id="svgexport">
 	  <div class="grouping noborder" id="modconcept">
             <button class="cancelmodal" id="cancelsvgexport">&times;</button>
-	    <h2>export all graphs as SVGs</h2>
-	    <table>
-	      <tr>
-		<td>Output path</td>
-		<td><input class="amrfield" placeholder="output path" title="??" type="text" id="svgoutputpath" value=""></td>
-	      </tr>
-	    </table>
-            <button class="addbutton mybutton" id="runsvgexport">export SVGs</button>
+	    <h2>export all AMR graphs</h2>
+	    <legend>choose output format</legend>
+	    <div>
+	      <input type="radio" id="pdfgraph" name="graphformat" onclick="updateExportFormat(this)" value="pdf" checked />
+		<label for="pdfgraph">pdf</label>
+	    </div>
+	    <div>
+	      <input type="radio" id="pnggraph" name="graphformat" onclick="updateExportFormat(this)" value="png" />
+		<label for="pnggraph">png</label>
+	    </div>
+	    <div>
+	      <input type="radio" id="svggraph" name="graphformat" onclick="updateExportFormat(this)" value="svg" />
+		<label for="svggraph">svg</label>
+	    </div>
+	    <p/>
+	      <a href="/graphs/amrgraphs.zip?format=png" id="exporthref" type="application/zip"><button class="mybutton" id="runsvgexport">export graphs</button></a>
+
 	  </div>
-	</div -->
+	</div>
 	
 
     <div id="helptext" class="helptext" style="display:none">

@@ -34,12 +34,14 @@
 
 
 import glob
+import io
 import json
 import os
 import shutil
 import sys
 import tempfile
 import time
+import zipfile
 
 import git
 import pytest
@@ -164,7 +166,7 @@ def test_info(client):
     response = client.get("/version")
     res = json.loads(response.data)
     #print("res", res, file=sys.stderr)
-    assert res == {'name': 'AMR Editor', 'version': '3.0.0', 'apiversion': '1.4.0'}
+    assert res == {'name': 'AMR Editor', 'version': '3.1.0', 'apiversion': '1.5.0'}
 
     response = client.get("/info", query_string={"withdata": True})
     res = json.loads(response.data)
@@ -198,6 +200,58 @@ def test_info(client):
                                    ':topic ↔ concern-02',
                                    ':value ↔ have-value-91',
                                    ':subset ↔ include-91']
+
+
+def test_exportgraphs(client):
+    # must be run before other tests modify the graphs
+    # get SVG files
+    response = client.get("/graphs/exportfile.zip", query_string={"format": "svg"})
+    fp = io.BytesIO(response.data)
+    #print("res", response.data)
+    zfp = zipfile.ZipFile(fp, "r")
+    #for x in zfp.infolist():
+    #    print(x.filename, x.file_size)
+    #    #print(zfp.read(x.filename))
+    #    #break
+
+    assert len(zfp.infolist()) == 23
+    fobj = zfp.infolist()[0]
+    assert fobj.filename == "0.svg"
+    assert fobj.file_size == 10642
+    contents = zfp.read(fobj.filename)
+    assert b'<svg width="418pt" height="392pt"' in contents
+
+    # get PDF files
+    response = client.get("/graphs/exportfile.zip", query_string={"format": "pdf"})
+    fp = io.BytesIO(response.data)
+    #print("res", response.data)
+    zfp = zipfile.ZipFile(fp, "r")
+    assert len(zfp.infolist()) == 23
+    fobj = zfp.infolist()[10]
+    #print(fobj)
+    assert fobj.filename == "10.pdf"
+    assert fobj.file_size == 9306
+    contents = zfp.read(fobj.filename)
+    assert contents.startswith(b'%PDF-1.5\n%\xb5\xed\xae\xfb\n4')
+
+    # get PNG files
+    response = client.get("/graphs/exportfile.zip", query_string={"format": "png"})
+    fp = io.BytesIO(response.data)
+    #print("res", response.data)
+    zfp = zipfile.ZipFile(fp, "r")
+    assert len(zfp.infolist()) == 23
+    fobj = zfp.infolist()[11]
+    #print(fobj)
+    assert fobj.filename == "11.png"
+    assert fobj.file_size == 21430
+    contents = zfp.read(fobj.filename)
+    #print(contents)
+    assert contents.startswith(b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x01\xae\x00\x00\x01#\x08\x06\x00\x00\x00j')
+
+    #for x in zfp.infolist():
+    #    print(x.filename, x.file_size)
+    #    print(zfp.read(x.filename))
+    #    break
 
 
 def test_read(client):

@@ -610,6 +610,12 @@ td.framealiastable {
   width: 100%;
  }
 
+#svgexport { 
+  top: 40%;
+  left: 33%;
+ }
+
+
 .smatch { 
   color: #0a6e31;
  }

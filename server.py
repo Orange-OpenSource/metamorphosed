@@ -553,19 +553,20 @@ class AMR_Edit_Server:
             #    print("AAAAAPPPP", x, self.aps[x].lastpm)
             return prepare_newpage(sentnum, compare=compare) #, iscompare=iscompare)
 
-        @app.route('/graphs', methods=["GET"])
-        def downloadgraphs():
+        @app.route('/graphs/<filename>', methods=["GET"])
+        def downloadgraphs(filename: str):
             dataformat = self.checkParameter(request, 'format', 'string', isOptional=True, defaultValue="svg")
+
             zip_buffer = io.BytesIO()
             with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED, False) as zip_file:
-                for ix,x in enumerate(self.aps):
+                for ix, x in enumerate(self.aps):
                     ap = self.aps[x]
                     if not ap.isparsed:
                         ap.readpenman(ap.lastpm)
-                    pm, svg = ap.show()
+                    pm, svg = ap.show(format=dataformat)
                     if svg:
-                        zip_file.writestr("%d.svg" % ix, svg)
-                    print(ix, svg.decode("utf8")[:100] if svg else svg)
+                        zip_file.writestr("%d.%s" % (ix, dataformat), svg)
+                    #print("FILE", ix, svg[:100] if svg else svg)
 
             return Response(zip_buffer.getvalue(), 200, mimetype="application/zip")
 
