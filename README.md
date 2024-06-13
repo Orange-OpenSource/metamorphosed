@@ -1,21 +1,15 @@
 # metAMmoRphosED: the AMR editor
 
-_metAMmoRphosED_ is a graphical editor to edit Abstract Meaning
-Representations graphs (in PENMAN) format easily. _metAMmoRphosED_
-displays the graph in a graphical format and allows adding/deleting
-instances, edges, attributes and comments in a simple way.
-
-_metAMmoRphosED_ reads and writes AMR-files as proposed by the principal AMR
-site (https://amr.isi.edu/) and used in the AMr corpora proposed there and
+* _metAMmoRphosED_ is a graphical editor to edit Abstract Meaning Representations graphs (in PENMAN) format easily. _metAMmoRphosED_ displays the graph in a graphical format and allows adding/deleting instances, edges, attributes and comments in a simple way.
+* _metAMmoRphosED_ reads and writes AMR-files as proposed by the principal AMR site (https://amr.isi.edu/) and used in the AMr corpora proposed there and
 by LDC (https://catalog.ldc.upenn.edu/LDC2020T02)
+* _metAMmoRphosED_ runs as a local Web server, an internet browser must be used to navigate through the sentences and modifiy them. If the edited file is under git version control, every modification is automatically commited to the local repository.
+* _metAMmoRphosED_ can be started in comparison mode in order to compare two AMR files (e.g. a gold file and a system file).
+* _metAMmoRphosED_ provides to annotate coreferences in AMR graphs of sentences from a single text. See [coref/README.md](coref/README.md) for more information
+* _metAMmoRphosED_ allows to download the displayed graphs as SVG or to export all graphs in either SVG, PDF or PNG format
 
-_metAMmoRphosED_ runs as a local Web server, an internet browser must be used to navigate through the sentences and modifiy them. If the edited file is under git version control, every modification is automatically commited to the local repository.
 
-_metAMmoRphosED_ can be started in comparison mode in order to compare two AMR files (e.g. a gold file and a system file).
-
-_metAMmoRphosED_ provides to annotate coreferences in AMR graphs of sentences from a single text. See [coref/README.md](coref/README.md) for more information
-
-Current version 3.0.3 (see [CHANGES.md](CHANGES.md))
+Current version 3.1.0 (see [CHANGES.md](CHANGES.md))
 
 ## installation
 
@@ -219,7 +213,8 @@ fill in the fields and hit the add button
 * adding relations (like `:ARG0` or `:location` between to instances. If the preceded by `/`, the following will be interpreted as a conceptname, so a new instances of this concept will be created first and than used for the new relation. The prefix `//` first tries to find an existing instance of this concept to be used, if this cannot be found, a new instance is created.
 * define which instance is the `top instance` (appears on top in the PENMAN notation)
 * add a relation and a literal (like `:quant 200`)
-* add a name instance and `:op1` etc to strings
+* add a name instance and `:op1` etc. to strings
+* to download the graphical version as SVG, click on `download image` (see also below section *Export*)
 
 ![Main window](doc/main.png)
 
@@ -254,6 +249,13 @@ If the option `--reificiations` is used, a reifiable relation can be reified (an
 becomes this after reifying `:location`
 
 ![Reified relation ](doc/reified.png)
+
+## Graph export
+
+The button `export visualised graphs` opens a menu which allows to download all or a subset of graphs in either SVG, PDF or PNG format.
+Choose format and numbers of sentences for which you want the graphic exported (default: all sentences)
+
+![Reified relation ](doc/export_graphs.png)
 
 # AMR file comparison
 

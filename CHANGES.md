@@ -1,5 +1,11 @@
 # Changes
 
+## Version 3.1.0
+* buttons to download AMR graphs as SVG
+* menu to download all graphs of the file as SVG, PDF or PNG
+* tests updates, new tests
+* documentation updated
+
 ## Version 3.0.3
 * retrieve more information from smatch_pm
 * dependencies updated

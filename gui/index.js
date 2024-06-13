@@ -93,7 +93,7 @@ function getServerInfo() {
 
 		    $("#numsent").empty();
 		    $("#numsent").append(data.numsent);
-
+		    $("#sentnumlist").attr("placeholder", "1-" + data.numsent);
 		    $("#version").empty();
 		    $("#version").append(data.version);
 		    $("#version2").empty();
@@ -260,21 +260,22 @@ function ToggleSVGExport() {
 	}
 }
 
-function updateExportFormat(obj) {
-    $("#exporthref")[0].href="/graphs/amrgraphs.zip?format=" + obj.value;
+function updateExportFormat() {
+    //$("#exporthref")[0].href="/graphs/amrgraphs.zip?format=" + obj.value;
+    $("#exporthref")[0].href = "/graphs/amrgraphs.zip?format=" + $('input:radio[name=graphformat]:checked').val()
+	+ "&sentences=" + $("#sentnumlist").val().trim();
 }
 
-
 function ShowSentences() {
-	if ($("#sentmodal").is(":visible")) {
-		$("#sentmodal").hide();
-	} else {
-		$("#sentmodal").show();
-			$("#cancelsentlist").click(function(){
-				//$("#conceptsetmodal").fadeOut();
-				$("#sentmodal").hide();
-			});			
-	}
+    if ($("#sentmodal").is(":visible")) {
+	$("#sentmodal").hide();
+    } else {
+	$("#sentmodal").show();
+	$("#cancelsentlist").click(function(){
+				       //$("#conceptsetmodal").fadeOut();
+				       $("#sentmodal").hide();
+				   });
+    }
 }
 
 function ToggleDirection() {

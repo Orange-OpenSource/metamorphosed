@@ -176,19 +176,25 @@
 	    <h2>export all AMR graphs</h2>
 	    <legend>choose output format</legend>
 	    <div>
-	      <input type="radio" id="pdfgraph" name="graphformat" onclick="updateExportFormat(this)" value="pdf" checked />
+	      <input type="radio" id="pdfgraph" name="graphformat" value="pdf" checked />
 		<label for="pdfgraph">pdf</label>
 	    </div>
 	    <div>
-	      <input type="radio" id="pnggraph" name="graphformat" onclick="updateExportFormat(this)" value="png" />
+	      <input type="radio" id="pnggraph" name="graphformat" value="png" />
 		<label for="pnggraph">png</label>
 	    </div>
 	    <div>
-	      <input type="radio" id="svggraph" name="graphformat" onclick="updateExportFormat(this)" value="svg" />
+	      <input type="radio" id="svggraph" name="graphformat"  value="svg" />
 		<label for="svggraph">svg</label>
 	    </div>
 	    <p/>
-	      <a href="/graphs/amrgraphs.zip?format=png" id="exporthref" type="application/zip"><button class="mybutton" id="runsvgexport">export graphs</button></a>
+
+	    list of graphs to be exposted <input class="textfield" placeholder=""
+                            title="numbers of the sentences for which a visualised graph is exported" type="text"
+                            id="sentnumlist" value="">
+		<p/>
+
+	      <a href="/graphs/amrgraphs.zip?format=png" id="exporthref" onclick="updateExportFormat()" type="application/zip"><button class="mybutton" id="runsvgexport">export graphs</button></a>
 
 	  </div>
 	</div>

@@ -216,7 +216,7 @@ def test_exportgraphs(client):
 
     assert len(zfp.infolist()) == 23
     fobj = zfp.infolist()[0]
-    assert fobj.filename == "0.svg"
+    assert fobj.filename == "1.svg"
     assert fobj.file_size == 10642
     contents = zfp.read(fobj.filename)
     assert b'<svg width="418pt" height="392pt"' in contents
@@ -229,7 +229,7 @@ def test_exportgraphs(client):
     assert len(zfp.infolist()) == 23
     fobj = zfp.infolist()[10]
     #print(fobj)
-    assert fobj.filename == "10.pdf"
+    assert fobj.filename == "11.pdf"
     assert fobj.file_size == 9306
     contents = zfp.read(fobj.filename)
     assert contents.startswith(b'%PDF-1.5\n%\xb5\xed\xae\xfb\n4')
@@ -242,7 +242,7 @@ def test_exportgraphs(client):
     assert len(zfp.infolist()) == 23
     fobj = zfp.infolist()[11]
     #print(fobj)
-    assert fobj.filename == "11.png"
+    assert fobj.filename == "12.png"
     assert fobj.file_size == 21430
     contents = zfp.read(fobj.filename)
     #print(contents)

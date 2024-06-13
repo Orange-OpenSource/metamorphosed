@@ -556,10 +556,38 @@ class AMR_Edit_Server:
         @app.route('/graphs/<filename>', methods=["GET"])
         def downloadgraphs(filename: str):
             dataformat = self.checkParameter(request, 'format', 'string', isOptional=True, defaultValue="svg")
+            pages = self.checkParameter(request, 'sentences', 'string', isOptional=True, defaultValue=None)
+
+            def parse_pages(page_string):
+                page_string2 = re.sub("[^0-9, -]", "", page_string)
+                pages = []
+                ranges = page_string2.split(',')
+                for r in ranges:
+                    r = r.strip()
+                    if not r:
+                        # empty string between two commas
+                        continue
+                    if r.count("-") > 1:
+                        # too many hyphens
+                        continue
+                    if '-' in r:
+                        if r[-1] == "-":
+                            # no number *after* the hyphen given
+                            r += "0"
+                        start, end = map(int, r.split('-'))
+                        pages.extend(range(start, end + 1))
+                    else:
+                        pages.append(int(r))
+                return pages
+
+            if pages:
+                pages = parse_pages(pages)
 
             zip_buffer = io.BytesIO()
             with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED, False) as zip_file:
-                for ix, x in enumerate(self.aps):
+                for ix, x in enumerate(self.aps, 1):
+                    if pages and ix not in pages:
+                        continue
                     ap = self.aps[x]
                     if not ap.isparsed:
                         ap.readpenman(ap.lastpm)
