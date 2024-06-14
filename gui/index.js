@@ -261,6 +261,7 @@ function ToggleSVGExport() {
 }
 
 function updateExportFormat() {
+    // check also here to improve download mechanism: https://codepen.io/chrisdpratt/pen/RKxJNo
     //$("#exporthref")[0].href="/graphs/amrgraphs.zip?format=" + obj.value;
     $("#exporthref")[0].href = "/graphs/amrgraphs.zip?format=" + $('input:radio[name=graphformat]:checked').val()
 	+ "&sentences=" + $("#sentnumlist").val().trim();
