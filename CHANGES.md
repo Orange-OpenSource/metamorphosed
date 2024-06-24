@@ -1,5 +1,10 @@
 # Changes
 
+## Version 3.2.0
+* added a script to calculate the inter-annotator agreement (using Smatch F1 or number of differences)
+* new tests
+* documentation updated
+
 ## Version 3.1.0
 * buttons to download AMR graphs as SVG
 * menu to download all graphs of the file as SVG, PDF or PNG

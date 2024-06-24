@@ -4,12 +4,13 @@
 * _metAMmoRphosED_ reads and writes AMR-files as proposed by the principal AMR site (https://amr.isi.edu/) and used in the AMr corpora proposed there and
 by LDC (https://catalog.ldc.upenn.edu/LDC2020T02)
 * _metAMmoRphosED_ runs as a local Web server, an internet browser must be used to navigate through the sentences and modifiy them. If the edited file is under git version control, every modification is automatically commited to the local repository.
-* _metAMmoRphosED_ can be started in comparison mode in order to compare two AMR files (e.g. a gold file and a system file).
+* _metAMmoRphosED_ can be started in comparison mode in order to compare two AMR files (e.g. a gold file and a system file, see section [AMR file comparison](#amr-file-comparison))
 * _metAMmoRphosED_ provides to annotate coreferences in AMR graphs of sentences from a single text. See [coref/README.md](coref/README.md) for more information
 * _metAMmoRphosED_ allows to download the displayed graphs as SVG or to export all graphs in either SVG, PDF or PNG format
+* _metAMmoRphosED_ provides a script to calculate inter-annotator agreement (see section [Inter-annotator agreement](#inter-annotator-agreement))
 
 
-Current version 3.1.0 (see [CHANGES.md](CHANGES.md))
+Current version 3.2.0 (see [CHANGES.md](CHANGES.md))
 
 ## installation
 
@@ -274,6 +275,88 @@ _metAMmoRphosED_ switches automatically in multifile mode. In order to see the d
 
 see [coref/README.md](coref/README.md)
 
+
+# Inter-annotator agreement
+
+_metAMmoRphosED_ comes with a script which allows to calculate an inter-annotator agreement (IAA) score on 2 or more files containing the same sentences. The metrics used are Smatch F1
+or the number if differences between two graphs (each concept or relation which is different or absent in one of the graphs is counted)
+
+The IAA is calculated either by
+* for each sentence:
+   * calculate a score for each annotator pair and keep the average
+   * calculate the average of the score obtained for each sentence
+or
+
+* for each annotator pair
+   * calculate the score for each sentence and keep the average
+   * calculate the average of the score obtained for annotator pair
+
+
+
+```
+usage: inter_annotator.py [-h] --files FILES [FILES ...] [--sentences] [--debug] [--runs RUNS] [--first FIRST] [--last LAST]
+
+inter-annotator agreement
+
+options:
+  -h, --help            show this help message and exit
+  --files FILES [FILES ...], -f FILES [FILES ...]
+                        AMR files of all annotatoris
+  --sentences, -s       sentences are in inner loop
+  --debug, -d           debug
+  --runs RUNS           run smatch n times to get the best possible match
+  --first FIRST         skip first n sentences
+  --last LAST           stop after sentences n
+```
+
+For instance the for 3 test files provided the IAA can be calculated by
+```
+inter_annotator.py -f comptest_annot1.txt comptest_annot3.txt comptest_annot4.txt -d
+```
+
+which results in:
+
+```
+4 sentences read from comptest_annot1.txt
+4 sentences read from comptest_annot3.txt
+4 sentences read from comptest_annot4.txt
+sentence     0: annotator pairs smatch: [69.23, 71.43, 61.54]
+                annotator pairs diffs.: [5.0, 4.0, 6.0]
+sentence     1: annotator pairs smatch: [66.67, 75.0, 72.73]
+                annotator pairs diffs.: [5.0, 4.0, 3.0]
+sentence     2: annotator pairs smatch: [40.0, 22.22, 40.0]
+                annotator pairs diffs.: [5.0, 6.0, 6.0]
+sentence     3: annotator pairs smatch: [62.5, 50.0, 75.0]
+                annotator pairs diffs.: [3.0, 4.0, 2.0]
+averages for 4 sentences (smatch): [67.4, 71.46, 34.07, 62.5]
+                          (diffs): [5.0, 4.0, 5.67, 3.0]
+annotator pair inter-annotator agreement Smatch F1: 58.86 differences: 4.4167
+```
+
+
+Using the option `-s` loops on annotator pairs
+
+```
+inter_annotator.py -f comptest_annot1.txt comptest_annot3.txt comptest_annot4.txt -d -s
+```
+
+
+which results in:
+
+```
+4 sentences read from comptest_annot1.txt
+4 sentences read from comptest_annot3.txt
+4 sentences read from comptest_annot4.txt
+annotators 0/1: sentence comparison smatch: [69.23, 66.67, 40.0, 62.5]
+                sentence comparison diffs.: [5.0, 5.0, 5.0, 3.0]
+annotators 0/2: sentence comparison smatch: [71.43, 75.0, 22.22, 50.0]
+                sentence comparison diffs.: [4.0, 4.0, 6.0, 4.0]
+annotators 1/2: sentence comparison smatch: [61.54, 72.73, 40.0, 75.0]
+                sentence comparison diffs.: [6.0, 3.0, 6.0, 2.0]
+averages for 3 annotator pairs (smatch): [59.6, 54.66, 62.32]
+                                (diffs): [4.5, 4.5, 4.25]
+sentence inter-annotator agreement Smatch F1: 58.86 differences: 4.4167
+```
 
 # License
 
