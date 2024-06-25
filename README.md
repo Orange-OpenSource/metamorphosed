@@ -307,6 +307,8 @@ options:
   --runs RUNS           run smatch n times to get the best possible match
   --first FIRST         skip first n sentences
   --last LAST           stop after sentences n
+  --report, -r REPORT
+                        filename for a report in TSV format
 ```
 
 For instance the for 3 test files provided the IAA can be calculated by

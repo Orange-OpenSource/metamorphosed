@@ -33,14 +33,34 @@ class IAA:
             self.docs.append(doc)
         for d in self.docs[1:]:
             if len(d.sentences) != len(self.docs[0].sentences):
-                print("file %s and %s differ in number of sentences" % (d.fn, self.docs[0].fn))
+                print("!!! file %s and %s differ in number of sentences" % (d.fn, self.docs[0].fn))
                 raise Exception("file %s and %s differ in number of sentences" % (d.fn, self.docs[0].fn))
 
-    def eval(self, micro=True, runs=1, ofp=sys.stdout):
+    def eval(self, micro=True, runs=1, ofp=sys.stdout, report=None):
+        rfp = None
+        if report:
+            rfp = open(report, "w")
+
         if micro:
             # comparing all sentences of a pair of annotators and calculate an average fo each pair of annotators
             results = [] # list of averages of smatch of annotator pairs on all sentences
             diffresults = []  # list of averages of differences of annotator pairs on all sentences
+            if rfp:
+                headers = ["annotators"]
+                for ix, s in enumerate(self.docs[0].sentences):
+                    sid = s.id
+                    if not sid:
+                        sid = ix
+                    headers.append("smatch: %s" % sid)
+                headers.append("average smatch")
+                for s in self.docs[0].sentences:
+                    sid = s.id
+                    if not sid:
+                        sid = ix
+                    headers.append("diffs: %s" % s.id)
+                headers.append("average diffs")
+                print("\t".join(headers), file=rfp)
+
             for fi1 in range(self.numfiles):
                 for fi2 in range(fi1 + 1, self.numfiles):
                     localresults = [] # list of smatch on all sentences for a given annotator pair
@@ -61,10 +81,21 @@ class IAA:
                     if self.debug:
                         print("annotators %d/%d: sentence comparison smatch: %s" % (fi1, fi2, [float("%.2f" % (100 * x)) for x in localresults]), file=ofp)
                         print("                sentence comparison diffs.: %s" % ([float("%.4f" % (x)) for x in localdiffresults]), file=ofp)
+
                     lmean = sum(localresults) / len(localresults)
                     ldmean = sum(localdiffresults) / len(localdiffresults)
                     results.append(lmean)
                     diffresults.append(ldmean)
+
+                    if rfp:
+                        couple = "annotator %d-%d" % (fi1, fi2)
+                        print(couple,
+                              "\t".join(["%.2f" % (100 * x) for x in localresults]),
+                              "%.2f" % (100 * lmean),
+                              "\t".join(["%.2f" % (x) for x in localdiffresults]),
+                              "%.2f" % (ldmean),
+                              sep="\t", file=rfp)
+
                     #print("annotator", fi1, fi2, localresults, lmean)
             # calculating the average
             mean = sum(results) / len(results)
@@ -78,6 +109,18 @@ class IAA:
             # comparing all pairs of annotators of a sentence and calculate an average for each sentence
             results = [] # list of averages of all sentences smatch of all annotator pairs
             diffresults = []  # differences on all sentences
+            if rfp:
+                headers = ["id"]
+                for fi1 in range(self.numfiles):
+                    for fi2 in range(fi1 + 1, self.numfiles):
+                        headers.append("smatch %d-%d" % (fi1, fi2))
+                headers.append("average smatch")
+                for fi1 in range(self.numfiles):
+                    for fi2 in range(fi1 + 1, self.numfiles):
+                        headers.append("diffs %d-%d" % (fi1, fi2))
+                headers.append("average diffs")
+                print("\t".join(headers), file=rfp)
+
             for ix in range(len(self.docs[0].sentences)):
                 if ix < self.first:
                     continue
@@ -88,6 +131,8 @@ class IAA:
                     sent1 = self.docs[fi1].sentences[ix]
                     for fi2 in range(fi1 + 1, self.numfiles):
                         sent2 = self.docs[fi2].sentences[ix]
+                        if sent1.id != sent2.id:
+                            print("!! Sentences to be compared have different ids: %s != %s" % (sent1.id, sent2.id))
                         sm = Smatch()
                         best_match_num = 0
                         for r in range(runs):
@@ -110,6 +155,17 @@ class IAA:
                 ldmean = sum(localdiffresults) / len(localdiffresults)
                 results.append(lmean)
                 diffresults.append(ldmean)
+
+                if rfp:
+                    sid = sent1.id
+                    if not sid:
+                        sid = ix
+                    print(sid,
+                          "\t".join(["%.2f" % (100 * x) for x in localresults]),
+                          "%.2f" % (100 * lmean),
+                          "\t".join(["%.2f" % (x) for x in localdiffresults]),
+                          "%.2f" % (ldmean),
+                          sep="\t", file=rfp)
                 #print("sent", ix, localresults, lmean)
                 if self.last > 0 and ix == self.last:
                     break
@@ -129,10 +185,11 @@ if __name__ == "__main__":
     parser.add_argument("--files", '-f', nargs="+", required=True, type=argparse.FileType('r'), help='AMR files of all annotatoris')
     parser.add_argument("--sentences", '-s', action='store_true', default=False, help='sentences are in inner loop')
     parser.add_argument("--debug", '-d', action='store_true', help='debug')
+    parser.add_argument("--report", '-r', help='filename for a report in TSV format')
     parser.add_argument('--runs', type=int, default=1, help='run smatch n times to get the best possible match')
     parser.add_argument('--first', type=int, default=0, help='skip first n sentences')
     parser.add_argument('--last', type=int, default=0, help='stop after sentences n')
 
     args = parser.parse_args()
     iaa = IAA(args.files, debug=args.debug, first=args.first, last=args.last)
-    iaa.eval(micro=args.sentences, runs=args.runs, ofp=sys.stdout)
+    iaa.eval(micro=args.sentences, runs=args.runs, ofp=sys.stdout, report=args.report)
