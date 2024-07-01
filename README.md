@@ -10,7 +10,7 @@ by LDC (https://catalog.ldc.upenn.edu/LDC2020T02)
 * _metAMmoRphosED_ provides a script to calculate inter-annotator agreement (see section [Inter-annotator agreement](#inter-annotator-agreement))
 
 
-Current version 3.2.0 (see [CHANGES.md](CHANGES.md))
+Current version 3.2.1 (see [CHANGES.md](CHANGES.md))
 
 ## installation
 

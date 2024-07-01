@@ -37,6 +37,7 @@
 # loads propbank frames in XML format
 # https://github.com/propbank/propbank-frames/ or AMR3 data
 import glob
+import os
 import re
 import xml.etree.ElementTree as ET
 import sys
@@ -60,7 +61,8 @@ class Roleset:
     def __init__(self, rid, name):
         self.id = rid
         self.name = name
-        self.roles = {} # role: def
+        self.roles = {} # role-no: (descr, f)   e.g.  0: "Taker"
+        self.rolelinks = {} # role-no: [rolelinks]  e.e 0: [actor, cause]]
         self.examples = []
 
     def __str__(self):
@@ -68,7 +70,10 @@ class Roleset:
         template = '<h3>%s: <i>%s</i></h3>' % (self.id, self.name)
         template += '<h4>role definitions</h4>\n<ul>\n'
         for r, d in self.roles.items():
-            template += '<li><span class="ARG%stext">ARG%s</span>: %s\n' % (r, r, d)
+            rolelinks = " ".join(self.rolelinks.get(r, []))
+            if rolelinks:
+                rolelinks = ", (VerbNet: %s)" % rolelinks
+            template += '<li><span class="ARG%stext">ARG%s</span>: %s%s\n' % (r, r, ", ".join(d), rolelinks)
         template += "</ul>"
         template += '<h4>examples</h4>\n<ul>\n'
         for e in self.examples:
@@ -100,7 +105,8 @@ class Example:
 class PropBankFrames:
     def __init__(self, dirname, onlyinuse=True):
         self.lemmas = {}
-        self.rolesets = set() # all valid rolesets like take-01 etc
+        #self.rolesets = set() # all valid rolesets like take-01 etc
+        self.rolesets = {} # take-01: RoleSet
         self.roleset_args = {} # take-01: { ARG0: "taker" .... }
 
         #self.parsefile("%s/finance.xml" % dirname)
@@ -140,8 +146,16 @@ class PropBankFrames:
                                     if rolesChild.tag == "role":
                                         #print("         ", rolesChild.tag, rolesChild.attrib)
                                         argno = rolesChild.attrib["n"]
-                                        roleset.roles[argno] = rolesChild.attrib["descr"]
+                                        roleset.roles[argno] = (rolesChild.attrib["descr"], rolesChild.attrib["f"])
                                         roleset_args[":ARG" + argno] = rolesChild.attrib["descr"]
+
+                                        roleset.rolelinks[argno] = set()
+                                        for rolelinksChild in rolesChild:
+                                            if rolelinksChild.tag == "rolelinks":
+                                                for rolelinkChild in rolelinksChild:
+                                                    if rolelinkChild.tag == "rolelink" and rolelinkChild.attrib["resource"] == "VerbNet":
+                                                        roleset.rolelinks[argno].add(rolelinkChild.text)
+                                                        #print("AAA", rolelinkChild.text)
                             elif rolesetChild.tag == "usagenotes":
                                 for usage in rolesetChild:
                                     if usage.tag == "usage":
@@ -188,7 +202,8 @@ class PropBankFrames:
                                                 ex.rel = pb.text
                         rs = predicateChild.attrib["id"].replace(".", "-").replace("_", "-")
                         if inuse or onlyinuse is False:
-                            self.rolesets.add(rs)
+                            #self.rolesets.add(rs)
+                            self.rolesets[rs] = roleset
                             lemma.rolesets.append(roleset)
                             self.roleset_args[rs] = roleset_args
                         #else:
@@ -258,6 +273,12 @@ class PropBankFrames:
                         errors.append("invalid argument «%s» for concept «%s»" % (p, concept))
         return errors
 
+    def getRole(self, roleset):
+        if roleset in self.rolesets:
+            return self.rolesets[roleset]
+        return None
+
 
 if __name__ == "__main__":
-    pf = PropBankFrames("~/SemanticData/AMR/amr3/amr_annotation_3.0/data/frames/propbank-amr-frames-xml-2018-01-25/")
+    curdir = os.path.dirname(os.path.abspath(__file__))
+    pf = PropBankFrames(curdir + "/propbank-frames/frames/")

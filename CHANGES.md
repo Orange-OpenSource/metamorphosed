@@ -1,5 +1,9 @@
 # Changes
 
+## Version 3.2.1
+* modify sentence id's if duplicate in AMR file
+* display f-tags and VerbNet semantic roles in documentation (as documented in PropBank)
+
 ## Version 3.2.0
 * added a script to calculate the inter-annotator agreement (using Smatch F1 or number of differences)
 * new tests
