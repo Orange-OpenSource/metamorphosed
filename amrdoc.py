@@ -177,7 +177,7 @@ class AMRsentence:
 
 
 class AMRdoc:
-    def __init__(self, fn, verbose=True):
+    def __init__(self, fn, verbose=True, rename_duplicate_ids=False):
         self.sentences = []
         self.ids = {} # id: sentence
         self.fn = fn
@@ -197,6 +197,7 @@ class AMRdoc:
         savedaterest = ""
         savedateRE = re.compile(r"# ::save-date (\w+) (\w+) (\d+), (\d+) (.*)")
         comments = []
+        duplicated = {} # id: number
         for line in ifp:
             line = line.rstrip()
             #print("LL <%s>" % line)
@@ -220,7 +221,20 @@ class AMRdoc:
                     amrblock = []
                     comments = []
                     self.sentences.append(asent)
-                    self.ids[asent.id] = asent
+                    newid = asent.id # we do not want to overwrite an ID, event if it's a duplicate
+                    if asent.id in self.ids:
+                        if asent.id not in duplicated:
+                            duplicated[asent.id] = 1
+                        else:
+                            duplicated[asent.id] += 1
+                        print("*** duplicate sentence id <%s> renamed to <%s-%d>" % (asent.id, asent.id, duplicated[asent.id]), file=sys.stderr)
+                        #print("     ", asent.comments, file=sys.stderr)
+                        newid = "%s-%d" % (asent.id, duplicated[asent.id])
+
+                        if rename_duplicate_ids:
+                            asent.id = "%s-%d" % (asent.id, duplicated[asent.id])
+
+                    self.ids[newid] = asent
             elif line.startswith("# ::id "):
                 elems = line[7:].split("::")
                 #sentid = line[7:]
