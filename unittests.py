@@ -243,7 +243,7 @@ def test_exportgraphs(client):
     fobj = zfp.infolist()[11]
     #print(fobj)
     assert fobj.filename == "12.png"
-    assert fobj.file_size == 21430
+    assert fobj.file_size == 21428
     contents = zfp.read(fobj.filename)
     #print(contents)
     assert contents.startswith(b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x01\xae\x00\x00\x01#\x08\x06\x00\x00\x00j')

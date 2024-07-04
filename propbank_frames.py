@@ -226,6 +226,20 @@ class PropBankFrames:
                         doclist.append("%s" % self.lemmas[elems[0]])
         return sorted(doclist)
 
+    def getframedoc(self, rolesetname):
+        elems = rolesetname.rsplit("-", 1)
+        #print(self.lemmas.get(elems[0]))
+        return elems[0], self.lemmas.get(elems[0])
+
+    def getargdoc(self, rolesetname):
+        if rolesetname in self.rolesets:
+            dico = {"name": rolesetname,
+                    "verb": self.rolesets_lemma[rolesetname],
+                    "roles": [{"n": a[1:], "descr": desc} for a, desc in self.roleset_args[rolesetname].items()]
+                    }
+            return dico
+        return None
+
     def validate(self, triples):
         # check whether the AMR concept is a valid roleset in propbank  frames
         errors = []
