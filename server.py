@@ -155,6 +155,7 @@ class AMR_Edit_Server:
         self.amr_rels = AMR_relations.Relations(rels)
         self.amr_concepts = AMR_relations.Relations(concepts, isconceptlist=True)
         self.pbframes = propbank_frames.PropBankFrames(pbframes)
+        amreditor.AMRProcessor.pbframes = self.pbframes # to add some documentation from propbank to SVG
         self.constraints = relations_constraints.Constraints(constraints)
 
         app = Flask(__name__,

@@ -33,7 +33,7 @@
 # Software Name: MetAMoRphosED AMR-Editor
 # Author: Johannes Heinecke
 
-# version 3.2.1 as of 1st July 2024
+# version 3.2.2 as of 8th July 2024
 
 import re
 import readline
@@ -44,7 +44,7 @@ from graphviz import Digraph
 import graph
 from reification import getInstance
 
-VERSION = "3.2.1"
+VERSION = "3.2.2"
 
 # terminology
 # instance  a / ...
@@ -90,6 +90,8 @@ ONESPACE = re.compile("[ \n\t]+")
 
 
 class AMRProcessor:
+    pbframes = None
+
     def __init__(self, inserver=True):
         self.triples = []
         self.top = None
@@ -261,6 +263,19 @@ class AMRProcessor:
                               "style": "filled",
                               "fillcolor": "#ff7900"} #orangecolors.get(":snt1")}
 
+                if AMRProcessor.pbframes:
+                    argdoc = AMRProcessor.pbframes.getargdoc(o)
+                    lines = []
+                    if argdoc:
+                        lines.append("%s: %s" % (o, argdoc["descr"]))
+                        for r in sorted(argdoc["roles"], key=lambda x: x["n"]):
+                            vn = ""
+                            if r["vn"]:
+                                vn = " (%s)" % ", ".join(r["vn"])
+                            lines.append(" - %s %s%s" % (r["n"], r["descr"], vn))
+
+                    kwargs["tooltip"] = "\n".join(lines)
+
                 graph.node("%s" % s, label="%s/%s" % (s, o), shape="box",
                            id="node %s %s" % (s, o),
                            #URL=branch[0],
@@ -283,6 +298,7 @@ class AMRProcessor:
                     onodeid = "%s_%s" % (s, oo)
                     kwargs["fillcolor"] = orangecolors.get("EN")
                     kwargs["style"] = "filled"
+                    #kwargs["tooltip"] = "qsqqs\n<b>f</b>illed"
 
                     graph.node(onodeid, label="%s" % (o),
                                id="literal %s %s %s" % (s, p, o),

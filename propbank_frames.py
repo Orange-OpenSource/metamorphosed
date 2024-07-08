@@ -108,6 +108,7 @@ class PropBankFrames:
         #self.rolesets = set() # all valid rolesets like take-01 etc
         self.rolesets = {} # take-01: RoleSet
         self.roleset_args = {} # take-01: { ARG0: "taker" .... }
+        self.rolesets_lemma = {} # take-01: take
 
         #self.parsefile("%s/finance.xml" % dirname)
         #return
@@ -202,7 +203,9 @@ class PropBankFrames:
                                                 ex.rel = pb.text
                         rs = predicateChild.attrib["id"].replace(".", "-").replace("_", "-")
                         if inuse or onlyinuse is False:
+                            rs = predicateChild.attrib["id"].replace(".", "-").replace("_", "-")
                             #self.rolesets.add(rs)
+                            self.rolesets_lemma[rs] = lemma.lemma
                             self.rolesets[rs] = roleset
                             lemma.rolesets.append(roleset)
                             self.roleset_args[rs] = roleset_args
@@ -233,9 +236,17 @@ class PropBankFrames:
 
     def getargdoc(self, rolesetname):
         if rolesetname in self.rolesets:
+            rs = self.rolesets[rolesetname]
+            roles = []
+            for i in rs.roles:
+                t = {"n": "ARG%s" % i, "descr": ", ".join(rs.roles[i])}
+                if i in rs.rolelinks:
+                    t["vn"] = rs.rolelinks[i]
+                roles.append(t)
             dico = {"name": rolesetname,
+                    "descr": rs.name,
                     "verb": self.rolesets_lemma[rolesetname],
-                    "roles": [{"n": a[1:], "descr": desc} for a, desc in self.roleset_args[rolesetname].items()]
+                    "roles": roles, #[{"n": a[1:], "descr": desc} for a, desc in self.roleset_args[rolesetname].items()],
                     }
             return dico
         return None

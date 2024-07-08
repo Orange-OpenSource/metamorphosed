@@ -1,5 +1,9 @@
 # Changes
 
+## Version 3.2.2
+* show ARGn definitions as tooltip when mouse hovers over PropBank concepts
+* tests updated
+
 ## Version 3.2.1
 * modify sentence id's if duplicate in AMR file
 * display f-tags and VerbNet semantic roles in documentation (as documented in PropBank)
