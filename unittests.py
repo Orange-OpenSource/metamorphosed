@@ -166,7 +166,7 @@ def test_info(client):
     response = client.get("/version")
     res = json.loads(response.data)
     #print("res", res, file=sys.stderr)
-    assert res == {'name': 'AMR Editor', 'version': '3.2.2', 'apiversion': '1.5.0'}
+    assert res == {'name': 'AMR Editor', 'version': '3.3.0', 'apiversion': '1.5.0'}
 
     response = client.get("/info", query_string={"withdata": True})
     res = json.loads(response.data)
@@ -589,9 +589,9 @@ def test_search_comment(client):
     response = client.get("/search", query_string={"num": 1, "what": "findcommentnext", "regex": "h.re"})
     res = json.loads(response.data)
     #print("res", res)
-    assert res["num"] == 15
+    assert res["num"] == 13
 
-    response = client.get("/search", query_string={"num": 4, "what": "findcommentprec", "regex": "s[aeiou]cond"})
+    response = client.get("/search", query_string={"num": 13, "what": "findcommentprec", "regex": "s[aeiou]cond"})
     res = json.loads(response.data)
     #print("res", res)
     assert res["num"] == 2

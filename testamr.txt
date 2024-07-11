@@ -56,6 +56,7 @@
 
 # ::id sentence 6 (empty)
 # ::snt the sun rises in the East and sets in the West
+# this graph is empty intentionally (for testing)
 ()
 
 # ::id sentence 7
@@ -119,6 +120,7 @@
 
 # ::id sentence 12 disconnected
 # ::snt The man who repaired the bike did not want to be paid
+# this graph is disconnected intentionally
 (r / repair-01
    :ARG1 (b / bike))
 (zzz / want-01
@@ -129,6 +131,7 @@
 
 # ::id sentence 13 bad format
 # ::snt The man who repaired the bike did not want to be paid
+# in this sentence there is intentionally a bad role (ARG0-of instead of :ARG0-of
 (aaa / want-01
     :polarity -
     :ARG0 (m / man

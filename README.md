@@ -10,7 +10,7 @@ by LDC (https://catalog.ldc.upenn.edu/LDC2020T02)
 * _metAMmoRphosED_ provides a script to calculate inter-annotator agreement (see section [Inter-annotator agreement](#inter-annotator-agreement))
 
 
-Current version 3.2.2 (see [CHANGES.md](CHANGES.md))
+Current version 3.3.0 (see [CHANGES.md](CHANGES.md))
 
 ## installation
 
@@ -143,7 +143,7 @@ predicates:
      - _\d\.\d+
 ```
 
-A predicate with an initial `_è means that the predicate is interpreted as a regex. for example
+A predicate with an initial `_` means that the predicate is interpreted as a regex. for example
 
 ```
 subjects:
@@ -257,6 +257,47 @@ The button `export visualised graphs` opens a menu which allows to download all 
 Choose format and numbers of sentences for which you want the graphic exported (default: all sentences)
 
 ![Reified relation ](doc/export_graphs.png)
+
+## Edge prediction
+
+(still Beta)
+
+When creating a new edge (relation) between two instances, _metamorphosed_ tries to guess the most likely label for this relation. The implementation is very simple, if the target instance is of type `name` the guessed relation is `:name`, if the concept of the source instance is `name`, `and` or `or`, the guessed relation is `:op2`, else if the source relations ends with `-01` etc, the guessed relations is `:ARGn`. In moste cases this has to be correct. 
+However you can implement or more sophisticated classifier, trained on any data whic is available to you and use your classifier. To do so,
+Subclass the class `Basic_EdgePredictor` in [edge_predictor.py](edge_predictor.py) and implement your classifier. You must redefine the method
+`predict(self, source_concept, target_concept):`. For instance:
+
+```
+from edge_predictor import Basic_EdgePredictor
+
+class Perfect_EdgePredictor(Basic_EdgePredictor):
+    def __init__(self, arglist):
+        print("initialising my Perfect_EdgePredictor with %s as argument" % arglist[0])
+        self.classifier = Perfect_Classifier(arglist[0])
+
+    def predict(self, source_concept, target_concept):
+        predicted_label = self.classifier.find(source_concept, target_concept)
+        print("predicted label <<<%s>>>" % predicted_label)
+	return predicted label
+```
+
+In order to use this class and the needed data, create a yaml file `mypredictor.yml`:
+
+```
+# __localpath__ is the path where the yaml file is placed in
+
+# filename can also any relative or absolute path
+filename: __localpath__/perfect_predictor.py
+classname: Perfect_EdgePredictor
+args:
+  - __localpath__/mydata.dat
+```
+
+start _metamorphosed_ with the option `--edge_predictor` (or `-E`):
+
+```
+./server.py --edge_predictor mypredictor.yml [other options]
+```
 
 # AMR file comparison
 

@@ -146,16 +146,14 @@ class AMRsentence:
             #rtc = re.search(regex, self.text, re.IGNORECASE)
             rtc = re.finditer(regex, self.text, re.IGNORECASE)
             if rtc:
-                #print(rtc)
                 return rtc
         return [] #False
 
     def findcomment(self, regex):
         if self.comments:
             for c in self.comments:
-                rtc = re.finditer(regex, c, re.IGNORECASE)
+                rtc = list(re.finditer(regex, c, re.IGNORECASE))
                 if rtc:
-                    # print(rtc)
                     return rtc
         return [] #False
 

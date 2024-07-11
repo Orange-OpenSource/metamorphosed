@@ -1,7 +1,9 @@
 # Changes
 
-## Version 3.2.2
+## Version 3.3.0
 * show ARGn definitions as tooltip when mouse hovers over PropBank concepts
+* correct search in comments
+* added a very basic edge predictor which can be subclassed by a more sophisticated tool. It is used when a new edge is added between two instance to predict the most probably edge label
 * tests updated
 
 ## Version 3.2.1

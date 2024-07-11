@@ -1,0 +1,33 @@
+# relation	reification	domain	range
+# taken form AMR documentation https://github.com/amrisi/amr-guidelines/blob/master/amr.md
+# using Wiser relations https://www.emorynlp.org/projects/wiser-semantic-representation
+:accompanier	accompany-01	:theme	:actor
+:age	age-01	:theme	:age
+:cause	cause-01	:theme	:actor
+:beneficiary	benefit-01	:actor	:theme
+:concession	have-concession-91	:theme	:concession
+:condition	have-condition-91	:theme	:condition
+:degree	have-degree-92	:theme	:attribute
+:destination	be-destined-for-91	:theme	:end
+:duration	last-01	:theme	:extend
+:example	exemplify-01	:theme	:actor
+:extent	have-extent-91	:theme	:extent
+:frequency	have-frequency-91	:theme	:frequency
+:instrument	have-instrument-91	:theme	:instrument
+:li	have-li-91	:theme	:li
+:location	be-located-at-91	:theme	:location
+:manner	have-manner-91	:theme	:manner
+:mod	have-mod-91	:theme	:mod
+#:name	have-name-91	:TODO1	:TODO2
+:ord	have-ord-91	:theme	:ord
+:part	have-part-91	:theme	:part
+:polarity	have-polarity-91	:theme	:polarity
+:poss	own-01	:theme	:actor
+:purpose	have-purpose-91	:theme	:purpose
+:quant	have-quant-91	:theme	:quant
+:source	be-from-91	:theme	:start
+:subevent	have-subevent-91	:theme	:subevent
+:time	be-temporally-at-91	:theme	:time
+:topic	concern-02	:theme	:topic
+:value	have-value-91	:theme	:value
+:subset	include-91	:consists-of	:part-of

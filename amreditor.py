@@ -33,7 +33,7 @@
 # Software Name: MetAMoRphosED AMR-Editor
 # Author: Johannes Heinecke
 
-# version 3.2.2 as of 8th July 2024
+# version 3.3.0 as of 11th July 2024
 
 import re
 import readline
@@ -44,7 +44,7 @@ from graphviz import Digraph
 import graph
 from reification import getInstance
 
-VERSION = "3.2.2"
+VERSION = "3.3.0"
 
 # terminology
 # instance  a / ...
@@ -274,6 +274,7 @@ class AMRProcessor:
                                 vn = " (%s)" % ", ".join(r["vn"])
                             lines.append(" - %s %s%s" % (r["n"], r["descr"], vn))
 
+                    # this adds a tooltip, but changes the SVG drastically
                     kwargs["tooltip"] = "\n".join(lines)
 
                 graph.node("%s" % s, label="%s/%s" % (s, o), shape="box",

@@ -313,159 +313,169 @@ var lastclickededge = null;
 var lastclickednode = null;
 var lastclickedElement = null;
 
+function getAncestor(element) {
+    //console.log("element id:", element.id, "class:", element.getAttribute("class"));
+    if (element.nodeName == "svg"
+	|| element.getAttribute("class") === "node"
+	|| element.getAttribute("class") === "edge") {
+	return element;
+    } else {
+	return getAncestor(element.parentNode);
+    }
+}
+
 function info(event) {
-	//console.log("EEEE", event);
-	//console.log("EEEF", event.target.parentNode.id);
-	//console.log("EEEG", event.target.parentNode.children[1]);
-	node = event.target.textContent;
+    //console.log("======", event);
+    //console.log("EEEF", event.target.parentNode.id);
+    //console.log("EEEa", getAncestor(event.target));
 
-	unhighlight();
+    //console.log("EEEG", event.target.parentNode.children[1]);
+    node = event.target.textContent;
+    node = getAncestor(event.target);
+    //console.log("EEEb", node, node.id, lastclickededge);
+    unhighlight();
 
-	if (readonly) {
-	    return;
-	}
-	if (event.target.parentNode.id.startsWith("node ")) {
-		// edit node
-		modconceptvar = event.target.parentNode.id.split(" ")[1];
-
-		if (lastclickededge != null) {
-			// we take the last clicked edge and connect to the now clicked instance
-			$(".editmode").hide();
-			$("#commands").show();
-			//console.log("RRR", lastclickededge);
-			var edgestart = lastclickededge.split("#")[1];
-			var edgeend = lastclickededge.split("#")[2];
-			var edgename = lastclickededge.split("#")[3];
-			var params = {
-				"modedge_start": edgestart,
-				"modedge_end": edgeend,
-				"modedge_newstart": modconceptvar,
-				"newedge": edgename
-			}
-			lastclickededge = null;
-			runcommand(params);
-		} else if (lastclickednode != null) {
-		    	var params = {
-				"start": lastclickednode,
-				"end": modconceptvar,
-				"label": "todo"
-			}
-			lastclickednode = null;
-			runcommand(params);
-			$("#conceptsetmodal").hide();
-		} else {
-			// we modify an instance/class node
-			$(".modal").hide();
-			//$("#modconcept").show();
-			const conceptname = event.target.parentNode.id.split(" ")[2];
-			lastclickednode = modconceptvar;
-
-			$("#modifiedconcept").val(conceptname);
-			$("#conceptinstance").empty();
-			$("#conceptinstance").append(modconceptvar);
-			$("#relationforliteral2").val(modconceptvar);
-			$("#newliteral2").val("");
-			$("#name2").val("");
-
-			// open edit modal
-			//console.log("ffff", event.clientY, event.pageY, event.screenY);
-			$("#conceptsetmodal").css("top", event.pageY + "px");
-			$("#conceptsetmodal").css("left", event.pageX + "px");
-			$("#conceptsetmodal").show();
-			$("#conceptsetmodal").draggable();
-			event.target.parentNode.setAttribute("class", "boxhighlight");
-			lastclickedElement = event.target.parentNode
-			$("#cancelmc").click(function(){
-				//$("#conceptsetmodal").fadeOut();
-				$("#conceptsetmodal").hide();
-			});			
-	
-		}
-		
-
-	} else if (event.target.parentNode.id.startsWith("edge#")) {
-	    if (lastclickedElement != null) {
-		lastclickedElement.removeAttribute("class");
-		lastclickednode = null;
-		lastclickededge = null;
-		$(".modal").hide();
+    if (readonly) {
+	return;
+    }
+    if (node.id.startsWith("node ")) {
+	// edit node
+	modconceptvar = node.id.split(" ")[1];
+	if (lastclickededge != null) {
+	    // we take the last clicked edge and connect to the now clicked instance
+	    $(".editmode").hide();
+	    $("#commands").show();
+	    //console.log("RRR", lastclickededge);
+	    var edgestart = lastclickededge.split("#")[1];
+	    var edgeend = lastclickededge.split("#")[2];
+	    var edgename = lastclickededge.split("#")[3];
+	    var params = {
+		"modedge_start": edgestart,
+		"modedge_end": edgeend,
+		"modedge_newstart": modconceptvar,
+		"newedge": edgename
 	    }
-
-		// we modify an edge
-		$(".modal").hide();
-		//$("#modedge").show();
-		const edgename = event.target.parentNode.id.split("#")[3];
-
-		// get polygon child of current 
-		var chosenrel = -1;
-		for (var i = 0; i < event.target.parentNode.children.length; i++) {
-			//console.log("TTTT", i, event.target.parentNode.children[i].tagName);
-			if (event.target.parentNode.children[i].tagName == "polygon") {
-				event.target.parentNode.children[i].setAttribute("class", "boxhighlight");
-				lastclickededge = event.target.parentNode.id;
-				chosenrel = i;
-				//console.log("HIER");
-			}
-		};
-
-
-		$("#modifiededge").val(edgename)
-		modedge = edgename;
-		modedge_start = event.target.parentNode.id.split("#")[1];
-		modedge_end = event.target.parentNode.id.split("#")[2];
-		$("#relationfrom").empty();
-		$("#relationfrom").append(modedge_start);
-		$("#relationto").empty();
-		$("#relationto").append(modedge_end);
-		$("#newsource").val("");
-
-          	// open edit modal
-		$("#edgesetmodal").css("top", event.pageY + "px");
-		$("#edgesetmodal").css("left", event.pageX + "px");
-		$("#edgesetmodal").show();
-		$("#edgesetmodal").draggable();
-
-		$("#cancelme").click(function(){
-			lastclickededge = null;
-			$("#edgesetmodal").hide();
-			if (chosenrel > -1) {
-				console.log("aaaaa", event.target.parentNode.children[chosenrel]);
-				event.target.parentNode.children[chosenrel].setAttribute("class", "");
-			}
-		});			
-	
-	} else if (event.target.parentNode.id.startsWith("literal ")) {
-		// edit literal
-		$(".modal").hide();
-		//$("#modlit").show();
-		//console.log("ZZZZ", event.target.parentNode.id.split(" "));
-                const elems = event.target.parentNode.id.split(" ");
-		const toto = elems.slice(3);
-		const literalname = toto.join(" ");
-		//const literalname = event.target.parentNode.id.split(" ")[3];
-		litid = event.target.parentNode.id.split(" ")[1];
-		litedge = event.target.parentNode.id.split(" ")[2];
-		$("#modifiedliteral").val(literalname.replaceAll('"', ''));
-
-		// open edit modal
-		$("#literalsetmodal").css("top", event.pageY + "px");
-		$("#literalsetmodal").css("left", event.pageX + "px");
-		$("#literalsetmodal").show();
-		$("#literalsetmodal").draggable();
-		
-		$("#cancelml").click(function(){
-			$("#literalsetmodal").hide();
-		});	
+	    lastclickededge = null;
+	    runcommand(params);
+	} else if (lastclickednode != null) {
+	    var params = {
+		"start": lastclickednode,
+		"end": modconceptvar,
+		"label": "todo"
+	    }
+	    lastclickednode = null;
+	    runcommand(params);
+	    $("#conceptsetmodal").hide();
 	} else {
-	    // even if a node is selected, unselect it
-	    if (lastclickedElement != null) {
-		lastclickedElement.removeAttribute("class");
-		lastclickednode = null;
-		lastclickededge = null;
-		$(".modal").hide();
-	    }
+	    // we modify an instance/class node
+	    $(".modal").hide();
+	    //$("#modconcept").show();
+	    const conceptname = node.id.split(" ")[2]; //event.target.parentNode.id.split(" ")[2];
+	    lastclickednode = modconceptvar;
 
+	    $("#modifiedconcept").val(conceptname);
+	    $("#conceptinstance").empty();
+	    $("#conceptinstance").append(modconceptvar);
+	    $("#relationforliteral2").val(modconceptvar);
+	    $("#newliteral2").val("");
+	    $("#name2").val("");
+
+	    // open edit modal
+	    //console.log("ffff", event.clientY, event.pageY, event.screenY);
+	    $("#conceptsetmodal").css("top", event.pageY + "px");
+	    $("#conceptsetmodal").css("left", event.pageX + "px");
+	    $("#conceptsetmodal").show();
+	    $("#conceptsetmodal").draggable();
+	    //event.target.parentNode.setAttribute("class", "node boxhighlight");
+	    node.setAttribute("class", "node boxhighlight");
+	    lastclickedElement = node; //event.target.parentNode
+	    $("#cancelmc").click(function(){
+				     //$("#conceptsetmodal").fadeOut();
+				     $("#conceptsetmodal").hide();
+				 });
 	}
+    } else if (node.id.startsWith("edge#")) {
+	if (lastclickedElement != null) {
+	    lastclickedElement.removeAttribute("class");
+	    lastclickednode = null;
+	    lastclickededge = null;
+	    $(".modal").hide();
+	}
+
+	// we modify an edge
+	$(".modal").hide();
+	//$("#modedge").show();
+	//const edgename = event.target.parentNode.id.split("#")[3];
+	const edgename = node.id.split("#")[3];
+
+	// get polygon child of current 
+	var chosenrel = -1;
+	for (var i = 0; i < node.children.length; i++) {
+	    //console.log("TTTT", i, event.target.parentNode.children[i].tagName);
+	    if (node.children[i].tagName == "polygon") {
+		node.children[i].setAttribute("class", "node boxhighlight");
+		lastclickededge = node.id;
+		chosenrel = i;
+		//console.log("HIER");
+	    }
+	};
+
+	$("#modifiededge").val(edgename)
+	    modedge = edgename;
+	modedge_start = node.id.split("#")[1];
+	modedge_end = node.id.split("#")[2];
+	$("#relationfrom").empty();
+	$("#relationfrom").append(modedge_start);
+	$("#relationto").empty();
+	$("#relationto").append(modedge_end);
+	$("#newsource").val("");
+
+	// open edit modal
+	$("#edgesetmodal").css("top", event.pageY + "px");
+	$("#edgesetmodal").css("left", event.pageX + "px");
+	$("#edgesetmodal").show();
+	$("#edgesetmodal").draggable();
+	
+	$("#cancelme").click(function(){
+				 lastclickededge = null;
+				 $("#edgesetmodal").hide();
+				 if (chosenrel > -1) {
+				     console.log("aaaaa", node.children[chosenrel]);
+				     node.children[chosenrel].setAttribute("class", "");
+				 }
+			     });
+    } else if (node.id.startsWith("literal ")) {
+	// edit literal
+	$(".modal").hide();
+	//$("#modlit").show();
+	//console.log("ZZZZ", event.target.parentNode.id.split(" "));
+	const elems = node.id.split(" ");
+	const toto = elems.slice(3);
+	const literalname = toto.join(" ");
+	//const literalname = event.target.parentNode.id.split(" ")[3];
+	litid = node.id.split(" ")[1];
+	litedge = node.id.split(" ")[2];
+	$("#modifiedliteral").val(literalname.replaceAll('"', ''));
+	
+	// open edit modal
+	$("#literalsetmodal").css("top", event.pageY + "px");
+	$("#literalsetmodal").css("left", event.pageX + "px");
+	$("#literalsetmodal").show();
+	$("#literalsetmodal").draggable();
+	
+	$("#cancelml").click(function(){
+				 $("#literalsetmodal").hide();
+			     });
+    } else {
+	// even if a node is selected, unselect it
+	if (lastclickedElement != null) {
+	    //lastclickedElement.removeAttribute("class"); // removes all classes
+	    lastclickedElement.classList.remove("boxhighlight");
+	    lastclickednode = null;
+	    lastclickededge = null;
+	    $(".modal").hide();
+	}
+    }
 }
 
 function runcommand(params) {

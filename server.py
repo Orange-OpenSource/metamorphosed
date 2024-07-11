@@ -34,6 +34,7 @@
 # Author: Johannes Heinecke
 
 
+import importlib
 import io
 import json
 import os
@@ -44,6 +45,7 @@ import time
 import zipfile
 
 from flask import Flask, Response, jsonify, render_template, request
+import yaml
 
 import AMR_relations
 import amrdoc
@@ -53,6 +55,8 @@ import propbank_frames
 import reification
 import relations_constraints
 from smatch_pm import Smatch
+
+from edge_predictor import Basic_EdgePredictor as EdgePredictor
 
 # TODO
 # detect errors
@@ -68,6 +72,7 @@ APIVERSION = "1.5.0"
 class AMR_Edit_Server:
     def __init__(self, port, filename, pbframes, rels, concepts, constraints,
                  readonly, author=None, reifications=None,
+                 predictor=None,
                  do_git=True, compare=None):
         self.port = port
         self.filename = filename
@@ -157,6 +162,13 @@ class AMR_Edit_Server:
         self.pbframes = propbank_frames.PropBankFrames(pbframes)
         amreditor.AMRProcessor.pbframes = self.pbframes # to add some documentation from propbank to SVG
         self.constraints = relations_constraints.Constraints(constraints)
+
+        self.edge_predictor = None
+        if predictor:
+            self.create_edge_predictor(yamlfile=predictor)
+
+        if not self.edge_predictor:
+            self.edge_predictor = EdgePredictor()
 
         app = Flask(__name__,
                     static_url_path='',
@@ -323,6 +335,12 @@ class AMR_Edit_Server:
                     ap.addedge(var, '"%s"' % w, ":op%d" % (i + 1))
                 ap.addedge(nameof, var, "name")
             elif start and end and label:
+                # add new edge between to nodes
+                if label == "todo":
+                    # print("label", label, end=" ")
+
+                    label = self.edge_predictor.predict(ap.vars.get(start), ap.vars.get(end))
+                    # print("->", label)
                 rtc = ap.addedge(start, end, label)
             elif modconcept and newconcept:
                 ap.modconcept(modconcept, newconcept)
@@ -428,7 +446,7 @@ class AMR_Edit_Server:
                         break
             elif what == "findcommentnext":
                 for x in range(sentnum + 1, len(self.amrdoc.sentences)):
-                    okc = list(self.amrdoc.sentences[x].findcomment(regex))
+                    okc = self.amrdoc.sentences[x].findcomment(regex)
                     if okc:
                         sentnum = x + 1
                         break
@@ -469,6 +487,7 @@ class AMR_Edit_Server:
                 raise ServerException("invalid search parameter '%s'" % what)
             #print("OKA",oka)
             #print("OKT",okt)
+            print("SSSS", sentnum)
             return prepare_newpage(sentnum, okt, oka, compare=compare) #, iscompare=iscompare)
 
         @app.route('/history', methods=["GET"])
@@ -894,6 +913,40 @@ class AMR_Edit_Server:
             else:
                 sent.write(ofp)
 
+    def create_edge_predictor(self, yamlfile):
+        self.edge_predictor = None
+        with open(yamlfile) as ifp:
+            yamldir = os.path.dirname(yamlfile)
+            conf = yaml.safe_load(ifp)
+            print(conf)
+            if "filename" not in conf:
+                print("Missing filename in %s" % yamlfile, file=sys.stderr)
+                return None
+            if "classname" not in conf:
+                print("Missing classname in %s" % yamlfile, file=sys.stderr)
+                return None
+
+            # cutting final .py
+            filename = conf["filename"][:-3].replace("__localpath__", yamldir)
+            # get dirname
+            dirname = os.path.dirname(filename)
+            modname = os.path.basename(filename)
+
+            print("dir", dirname)
+            print("mod", modname)
+            args = None
+            if "args" in conf:
+                args = [x.replace("__localpath__", yamldir) for x in conf["args"]]
+            print("args", args)
+            # append PYTHONPATH
+            sys.path.append(dirname)
+
+            # load module
+            mymodule = importlib.import_module(modname)
+
+            EdgePredictor = getattr(mymodule, conf["classname"])
+            self.edge_predictor = EdgePredictor(args)
+
 
 class ServerException(Exception):
     def __init__(self, value):
@@ -911,7 +964,6 @@ if __name__ == "__main__":
     parser.add_argument("--port", "-p", default=4567, type=int, help="port to use")
     parser.add_argument("--file", "-f", required=True, help="AMR file to edit")
     parser.add_argument("--compare", nargs="+", help="AMR file of additional annotators")
-    #parser.add_argument("--compare", help="2nd AMR file to compare with first. Implies --readonly")
     parser.add_argument("--author", help="author (for git), use format 'Name <mail@example.com>', if absent current user+mail is used")
     parser.add_argument("--relations", "-R", default=None, help="list of valid AMR-relations (simple text file with list of all valid relations)")
     parser.add_argument("--concepts", "-C", default=None, help="list of valid AMR-concepts (simple text file with list of all valid concepts)")
@@ -920,6 +972,7 @@ if __name__ == "__main__":
     parser.add_argument("--readonly", "--ro", default=False, action="store_true", help='browse corpus only')
     parser.add_argument("--reifications", "-X", default=None, help="table for (de)reification")
     parser.add_argument("--nogit", dest="git", default=True, action="store_false", help='no git add/commit, even if file is git controlled (does nevertheless overwrite existing file)')
+    parser.add_argument("--edge_predictor", "-E", default=None, help="yml file which defines an Edge Predictor class (filename, Classname and parameters")
 
     if len(sys.argv) < 2:
         parser.print_help()
@@ -931,6 +984,7 @@ if __name__ == "__main__":
                                   args.constraints, args.readonly,
                                   author=args.author,
                                   reifications=args.reifications,
+                                  predictor=args.edge_predictor,
                                   do_git=args.git,
                                   compare=args.compare)
             aes.start()
