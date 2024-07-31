@@ -1,13 +1,13 @@
-# metAMmoRphosED: the AMR editor
+# metAMoRphosED: the AMR editor
 
-* _metAMmoRphosED_ is a graphical editor to edit Abstract Meaning Representations graphs (in PENMAN) format easily. _metAMmoRphosED_ displays the graph in a graphical format and allows adding/deleting instances, edges, attributes and comments in a simple way.
-* _metAMmoRphosED_ reads and writes AMR-files as proposed by the principal AMR site (https://amr.isi.edu/) and used in the AMr corpora proposed there and
+* _metAMoRphosED_ is a graphical editor to edit Abstract Meaning Representations graphs (in PENMAN) format easily. _metAMoRphosED_ displays the graph in a graphical format and allows adding/deleting instances, edges, attributes and comments in a simple way.
+* _metAMoRphosED_ reads and writes AMR-files as proposed by the principal AMR site (https://amr.isi.edu/) and used in the AMr corpora proposed there and
 by LDC (https://catalog.ldc.upenn.edu/LDC2020T02)
-* _metAMmoRphosED_ runs as a local Web server, an internet browser must be used to navigate through the sentences and modifiy them. If the edited file is under git version control, every modification is automatically commited to the local repository.
-* _metAMmoRphosED_ can be started in comparison mode in order to compare two AMR files (e.g. a gold file and a system file, see section [AMR file comparison](#amr-file-comparison))
-* _metAMmoRphosED_ provides to annotate coreferences in AMR graphs of sentences from a single text. See [coref/README.md](coref/README.md) for more information
-* _metAMmoRphosED_ allows to download the displayed graphs as SVG or to export all graphs in either SVG, PDF or PNG format
-* _metAMmoRphosED_ provides a script to calculate inter-annotator agreement (see section [Inter-annotator agreement](#inter-annotator-agreement))
+* _metAMoRphosED_ runs as a local Web server, an internet browser must be used to navigate through the sentences and modifiy them. If the edited file is under git version control, every modification is automatically commited to the local repository.
+* _metAMoRphosED_ can be started in comparison mode in order to compare two AMR files (e.g. a gold file and a system file, see section [AMR file comparison](#amr-file-comparison))
+* _metAMoRphosED_ provides to annotate coreferences in AMR graphs of sentences from a single text. See [coref/README.md](coref/README.md) for more information
+* _metAMoRphosED_ allows to download the displayed graphs as SVG or to export all graphs in either SVG, PDF or PNG format
+* _metAMoRphosED_ provides a script to calculate inter-annotator agreement (see section [Inter-annotator agreement](#inter-annotator-agreement))
 
 
 Current version 3.3.0 (see [CHANGES.md](CHANGES.md))
@@ -301,14 +301,14 @@ start _metamorphosed_ with the option `--edge_predictor` (or `-E`):
 
 # AMR file comparison
 
-If you specify a second AMR file using the option `--compare <amr file>`, _metAMmoRphosED_ will show the corresponding graphs of both files side-by-side, highlighting differences (in green) and displaying the [Smatch](https://github.com/snowblink14/smatch) score:
+If you specify a second AMR file using the option `--compare <amr file>`, _metAMoRphosED_ will show the corresponding graphs of both files side-by-side, highlighting differences (in green) and displaying the [Smatch](https://github.com/snowblink14/smatch) score:
 
 ![AMR file comparison ](doc/comparison.png)
 
 It is possible to search in the text, PENAMN and comments as in the edit mode. However, editing is not possible.
 
 To compare several files (for instance the annotations of multiple annotators), specify one of the files using the `-f <amr file 1>` option, and all other with  `--compare <amr file 2> <amr file 3> <amr file 4>`.
-_metAMmoRphosED_ switches automatically in multifile mode. In order to see the difference (ans Smatch) between two files for the displayed sentence choose the two files to compare with the `comparisons`-selection bar
+_metAMoRphosED_ switches automatically in multifile mode. In order to see the difference (ans Smatch) between two files for the displayed sentence choose the two files to compare with the `comparisons`-selection bar
 
 ![AMR file comparison ](doc/comparison-multiple-files.png)
 
@@ -319,7 +319,7 @@ see [coref/README.md](coref/README.md)
 
 # Inter-annotator agreement
 
-_metAMmoRphosED_ comes with a script which allows to calculate an inter-annotator agreement (IAA) score on 2 or more files containing the same sentences. The metrics used are Smatch F1
+_metAMoRphosED_ comes with a script which allows to calculate an inter-annotator agreement (IAA) score on 2 or more files containing the same sentences. The metrics used are Smatch F1
 or the number if differences between two graphs (each concept or relation which is different or absent in one of the graphs is counted)
 
 The IAA is calculated either by
