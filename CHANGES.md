@@ -1,7 +1,7 @@
 # Changes
 
 ## Version 3.4.0
-* integrated Smatch++ (https://github.com/flipz357/smatchpp) into `inter_annotator.py`
+* integrated Smatch++ (https://github.com/flipz357/smatchpp) into `inter_annotator.py` and `server.py`
 * test extended
 
 ## Version 3.3.0

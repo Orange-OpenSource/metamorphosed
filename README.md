@@ -90,6 +90,7 @@ tox
         [--readonly]
         [--author 'Name <mail@example.com>']
         [--compare <amr-file2>]
+        [--smatchpp]
 ```
 
 use our internet browser as GUI: https://localhost:<port>
@@ -301,7 +302,7 @@ start _metamorphosed_ with the option `--edge_predictor` (or `-E`):
 
 # AMR file comparison
 
-If you specify a second AMR file using the option `--compare <amr file>`, _metAMoRphosED_ will show the corresponding graphs of both files side-by-side, highlighting differences (in green) and displaying the [Smatch](https://github.com/snowblink14/smatch) score:
+If you specify a second AMR file using the option `--compare <amr file>`, _metAMoRphosED_ will show the corresponding graphs of both files side-by-side, highlighting differences (in green) and displaying the [Smatch](https://github.com/snowblink14/smatch) score (with the option `--smatchpp` the [SmatchPP](https://github.com/flipz357/smatchpp/) package is used instead of Smatch):
 
 ![AMR file comparison ](doc/comparison.png)
 
@@ -332,7 +333,7 @@ or
    * calculate the score for each sentence and keep the average
    * calculate the average of the score obtained for annotator pair
 
-By default Smatch is used. the option `--smatchpp`) switches to Smatch++ (https://github.com/flipz357/smatchpp)
+By default Smatch is used. the option `--smatchpp`) switches to SmatchPP (https://github.com/flipz357/smatchpp)
 
 ```
 usage: inter_annotator.py [-h] --files FILES [FILES ...] [--sentences] [--debug] [--runs RUNS] [--first FIRST] [--last LAST] [--smatchpp]
@@ -344,6 +345,7 @@ options:
   --files FILES [FILES ...], -f FILES [FILES ...]
                         AMR files of all annotatoris
   --sentences, -s       sentences are in inner loop
+  --smatchpp, -S        use smatchpp instead of smatc
   --debug, -d           debug
   --runs RUNS           run smatch n times to get the best possible match
   --first FIRST         skip first n sentences
