@@ -487,7 +487,7 @@ class AMR_Edit_Server:
                 raise ServerException("invalid search parameter '%s'" % what)
             #print("OKA",oka)
             #print("OKT",okt)
-            print("SSSS", sentnum)
+            #print("Sentnum", sentnum)
             return prepare_newpage(sentnum, okt, oka, compare=compare) #, iscompare=iscompare)
 
         @app.route('/history', methods=["GET"])

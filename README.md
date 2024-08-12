@@ -10,7 +10,7 @@ by LDC (https://catalog.ldc.upenn.edu/LDC2020T02)
 * _metAMoRphosED_ provides a script to calculate inter-annotator agreement (see section [Inter-annotator agreement](#inter-annotator-agreement))
 
 
-Current version 3.3.0 (see [CHANGES.md](CHANGES.md))
+Current version 3.4.0 (see [CHANGES.md](CHANGES.md))
 
 ## installation
 
@@ -332,10 +332,10 @@ or
    * calculate the score for each sentence and keep the average
    * calculate the average of the score obtained for annotator pair
 
-
+By default Smatch is used. the option `--smatchpp`) switches to Smatch++ (https://github.com/flipz357/smatchpp)
 
 ```
-usage: inter_annotator.py [-h] --files FILES [FILES ...] [--sentences] [--debug] [--runs RUNS] [--first FIRST] [--last LAST]
+usage: inter_annotator.py [-h] --files FILES [FILES ...] [--sentences] [--debug] [--runs RUNS] [--first FIRST] [--last LAST] [--smatchpp]
 
 inter-annotator agreement
 

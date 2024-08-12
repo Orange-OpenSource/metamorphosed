@@ -1014,3 +1014,60 @@ sentence 4	62.50	50.00	75.00	62.50	3.00	4.00	2.00	3.00
 
     ifp = open(os.path.join(reportfile.name, "report2.txt"))
     assert ifp.read() == report2
+
+
+def test_iaa_smatchpp():
+    import io
+    import inter_annotator
+    reportfile = tempfile.TemporaryDirectory()
+    #print("AAAA", reportfile.name, dir(reportfile))
+    iaa = inter_annotator.IAA(["comptest_annot1.txt", "comptest_annot3.txt", "comptest_annot4.txt"], debug=True)
+    s1 = io.StringIO()
+    iaa.eval(micro=True, runs=1, ofp=s1, report=os.path.join(reportfile.name, "report1+.txt"), smatchpp=True)
+    #print("<<%s>>" % s1.getvalue())
+    gold1 = """annotators 0/1: sentence comparison smatch: [69.23, 66.67, 40.0, 62.5]
+                sentence comparison diffs.: [5.0, 5.0, 5.0, 3.0]
+annotators 0/2: sentence comparison smatch: [71.43, 75.0, 22.22, 50.0]
+                sentence comparison diffs.: [4.0, 4.0, 6.0, 4.0]
+annotators 1/2: sentence comparison smatch: [61.54, 72.73, 40.0, 75.0]
+                sentence comparison diffs.: [6.0, 3.0, 6.0, 2.0]
+averages for 3 annotator pairs (smatch): [59.6, 54.66, 62.32]
+                                (diffs): [4.5, 4.5, 4.25]
+sentence inter-annotator agreement Smatch F1: 58.86 differences: 4.4167
+"""
+    assert gold1 == s1.getvalue()
+
+    report1 = """annotators	smatch: sentence 1	smatch: sentence 2	smatch: sentence 3	smatch: sentence 4	average smatch	diffs: sentence 1	diffs: sentence 2	diffs: sentence 3	diffs: sentence 4	average diffs
+annotator 0-1	69.23	66.67	40.00	62.50	59.60	5.00	5.00	5.00	3.00	4.50
+annotator 0-2	71.43	75.00	22.22	50.00	54.66	4.00	4.00	6.00	4.00	4.50
+annotator 1-2	61.54	72.73	40.00	75.00	62.32	6.00	3.00	6.00	2.00	4.25
+"""
+    ifp = open(os.path.join(reportfile.name, "report1+.txt"))
+    assert ifp.read() == report1
+
+    s2 = io.StringIO()
+    iaa.eval(micro=False, runs=1, ofp=s2, report=os.path.join(reportfile.name, "report2+.txt"), smatchpp=True)
+    #print("<%s>" % s2.getvalue())
+    gold2 = """sentence     0: annotator pairs smatch: [69.23, 71.43, 61.54]
+                annotator pairs diffs.: [5.0, 4.0, 6.0]
+sentence     1: annotator pairs smatch: [66.67, 75.0, 72.73]
+                annotator pairs diffs.: [5.0, 4.0, 3.0]
+sentence     2: annotator pairs smatch: [40.0, 22.22, 40.0]
+                annotator pairs diffs.: [5.0, 6.0, 6.0]
+sentence     3: annotator pairs smatch: [62.5, 50.0, 75.0]
+                annotator pairs diffs.: [3.0, 4.0, 2.0]
+averages for 4 sentences (smatch): [67.4, 71.46, 34.07, 62.5]
+                          (diffs): [5.0, 4.0, 5.67, 3.0]
+annotator pair inter-annotator agreement Smatch F1: 58.86 differences: 4.4167
+"""
+    assert gold2 == s2.getvalue()
+
+    report2 = """id	smatch 0-1	smatch 0-2	smatch 1-2	average smatch	diffs 0-1	diffs 0-2	diffs 1-2	average diffs
+sentence 1	69.23	71.43	61.54	67.40	5.00	4.00	6.00	5.00
+sentence 2	66.67	75.00	72.73	71.46	5.00	4.00	3.00	4.00
+sentence 3	40.00	22.22	40.00	34.07	5.00	6.00	6.00	5.67
+sentence 4	62.50	50.00	75.00	62.50	3.00	4.00	2.00	3.00
+"""
+
+    ifp = open(os.path.join(reportfile.name, "report2+.txt"))
+    assert ifp.read() == report2

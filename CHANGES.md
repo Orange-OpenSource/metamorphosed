@@ -1,5 +1,9 @@
 # Changes
 
+## Version 3.4.0
+* integrated Smatch++ (https://github.com/flipz357/smatchpp) into `inter_annotator.py`
+* test extended
+
 ## Version 3.3.0
 * show ARGn definitions as tooltip when mouse hovers over PropBank concepts
 * correct search in comments
