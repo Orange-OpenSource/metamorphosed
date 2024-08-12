@@ -39,6 +39,7 @@
 from smatch_pm import Smatch
 from smatchpp import Smatchpp, solvers, data_helpers
 
+
 class CompResult:
     def __init__(self):
         self.p = 0
@@ -52,6 +53,7 @@ class CompResult:
         self.rel1OK = set()
         self.instances2OK = set()
         self.rel2OK = set()
+
 
 def compare(s1, s2, runs=1, use_smatchpp=False, align=False):
     compres = CompResult()

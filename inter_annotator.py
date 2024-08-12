@@ -77,31 +77,7 @@ class IAA:
                         sent1 = self.docs[fi1].sentences[ix]
                         sent2 = self.docs[fi2].sentences[ix]
 
-                        #p, r, f1, number_of_diffs, best_match_num, instances1OK, rel1OK, instances2OK, rel2OK = amr_comparison.compare(sent1.amr, sent2.amr, runs=runs, use_smatchpp=smatchpp, align=False)
                         compres = amr_comparison.compare(sent1.amr, sent2.amr, runs=runs, use_smatchpp=smatchpp, align=False)
-
-#                        sm = Smatch()
-#                        if not smatchpp:
-#                            best_match_num, test_triple_num, gold_triple_num, instances1OK, rel1OK, instances2OK, rel2OK = sm.get_amr_match(sent1.amr.replace("\n", " "), sent2.amr.replace("\n", " "))
-#                            #number_of_diffs = max(test_triple_num, gold_triple_num) - best_match_num
-#                            #p, r, f1 = sm.compute_f(best_match_num, test_triple_num, gold_triple_num)
-#
-#                        else:
-#                            graph_reader = data_helpers.GoodmamiPenmanReader()
-#                            ilp = solvers.ILP()
-#                            measure = Smatchpp(graph_reader=graph_reader, alignmentsolver=ilp)
-#                            match, optimization_status, alignment = measure.process_pair(sent1.amr.replace("\n", " "), sent2.amr.replace("\n", " "))
-#                            print("AAA", alignment)
-#                            test_triple_num = match["main"][2]
-#                            gold_triple_num = match["main"][3]
-#                            best_match_num = match["main"][1]
-#                            # score = measure.score_pair(sent1.amr.replace("\n", " "), sent2.amr.replace("\n", " "))
-#                            # print("cccc", score)
-#
-#                        number_of_diffs = max(test_triple_num, gold_triple_num) - best_match_num
-#                        p, r, f1 = sm.compute_f(best_match_num, test_triple_num, gold_triple_num)
-
-                        # print("AAAA", test_triple_num, gold_triple_num, best_match_num, p, r, f1)
 
                         localresults.append(compres.f1)
                         localdiffresults.append(compres.number_of_diffs)
@@ -161,43 +137,9 @@ class IAA:
                         sent2 = self.docs[fi2].sentences[ix]
                         if sent1.id != sent2.id:
                             print("!! Sentences to be compared have different ids: %s != %s" % (sent1.id, sent2.id))
-                        #p, r, f1, number_of_diffs, best_match_num, instances1OK, rel1OK, instances2OK, rel2OK = amr_comparison.compare(sent1.amr, sent2.amr, runs=runs, use_smatchpp=smatchpp, align=False)
+
                         compres = amr_comparison.compare(sent1.amr, sent2.amr, runs=runs, use_smatchpp=smatchpp, align=True)
-#                        sm = Smatch()
-#                        if not smatchpp:
-#                            best_match_num = 0
-#                            for r in range(runs):
-#                                best_match_num_2, test_triple_num, gold_triple_num, instances1OK, rel1OK, instances2OK, rel2OK = sm.get_amr_match(sent1.amr.replace("\n", " "), sent2.amr.replace("\n", " "))
-#                                #print("EEE", best_match_num_2, end=" ")
-#                                best_match_num = max(best_match_num_2, best_match_num)
-#                                print("ZZZZZ", instances1OK, rel1OK)
-#                                print("zzzzz", instances2OK, rel2OK)
-#                            #print()
-#                        else:
-#                            graph_reader = data_helpers.GoodmamiPenmanReader()
-#                            ilp = solvers.ILP()
-#                            measure = Smatchpp(graph_reader=graph_reader, alignmentsolver=ilp)
-#                            match, optimization_status, alignment = measure.process_pair(sent1.amr.replace("\n", " "), sent2.amr.replace("\n", " "))
-#                            print("aaa", alignment)
-#                            test_triple_num = match["main"][2]
-#                            gold_triple_num = match["main"][3]
-#                            best_match_num = match["main"][1]
-#
-#                            #measure = Smatchpp(graph_reader=graph_reader) #, alignmentsolver=ilp)
-#                            g1 = measure.graph_reader.string2graph(sent1.amr)
-#                            g1a = measure.graph_standardizer.standardize(g1)
-#                            g2 = measure.graph_reader.string2graph(sent2.amr)
-#                            g2a = measure.graph_standardizer.standardize(g2)
-#                            g1b, g2b, v1, v2 = measure.graph_pair_preparer.prepare_get_vars(g1a, g2a)
-#                            alignment, var_index, _ = measure.graph_aligner.align(g1b, g2b, v1, v2)
-#                            var_map = measure.graph_aligner._get_var_map(alignment, var_index)
-#                            #print(var_map)
-#                            interpretable_mapping = measure.graph_aligner._interpretable_mapping(var_map, g1b, g2b)
-#                            print("BBBB", interpretable_mapping) 
-#
-#                        number_of_diffs = max(test_triple_num, gold_triple_num) - best_match_num
-#                        p, r, f1 = sm.compute_f(best_match_num, test_triple_num, gold_triple_num)
-                        #print(fi1, fi2, f1)
+
                         localresults.append(compres.f1)
                         localdiffresults.append(compres.number_of_diffs)
                 if self.debug:

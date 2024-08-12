@@ -387,7 +387,7 @@ class Smatch:
 
         ok = 0
 
-        instances1OK = set() # variables which are correctly mapped 
+        instances1OK = set() # variables which are correctly mapped
         rel1OK = set() # (s,p,o) which maps correctly
         instances2OK = set() # variables
         rel2OK = set() # (s,p,o)

@@ -749,29 +749,7 @@ class AMR_Edit_Server:
                 seconddoc, secondaps = self.otheramrdocs[second_to_compare]
                 secondsent = seconddoc.sentences[sentnum - 1]
 
-#                sm = Smatch()
-#                if not smatchpp:
-#                    best_match_num, test_triple_num, gold_triple_num, instances1OK, rel1OK, instances2OK, rel2OK = sm.get_amr_match(firstsent.amr.replace("\n", " "), secondsent.amr.replace("\n", " "))
-#                    #print("ZZZZZ", instances1OK, rel1OK, instances2OK, rel2OK)
-#                else:
-#                    graph_reader = data_helpers.GoodmamiPenmanReader()
-#                    ilp = solvers.ILP()
-#                    measure = Smatchpp(graph_reader=graph_reader, alignmentsolver=ilp)
-#                    match, optimization_status, alignment = measure.process_pair(firstsent.amr.replace("\n", " "), secondsent.amr.replace("\n", " "))
-#                    test_triple_num = match["main"][2]
-#                    gold_triple_num = match["main"][3]
-#                    best_match_num = match["main"][1]
-#
-#                    instances1OK = None
-#                    rel1OK = None
-#                    instances2OK = None
-#                    rel2OK = None
-#
-#                p, r, f1 = sm.compute_f(best_match_num, test_triple_num, gold_triple_num)
-
-                #p, r, f1, number_of_diffs, best_match_num, instances1OK, rel1OK, instances2OK, rel2OK = amr_comparison.compare(firstsent.amr, secondsent.amr, use_smatchpp=smatchpp, align=False)
                 compres = amr_comparison.compare(firstsent.amr, secondsent.amr, use_smatchpp=smatchpp, align=True)
-
 
                 if first_to_compare == -1:
                     # update display of first document
