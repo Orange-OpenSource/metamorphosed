@@ -54,7 +54,10 @@ import gitinterface
 import propbank_frames
 import reification
 import relations_constraints
-from smatch_pm import Smatch
+
+import amr_comparison
+#from smatch_pm import Smatch
+#from smatchpp import Smatchpp, solvers, data_helpers
 
 from edge_predictor import Basic_EdgePredictor as EdgePredictor
 
@@ -73,7 +76,7 @@ class AMR_Edit_Server:
     def __init__(self, port, filename, pbframes, rels, concepts, constraints,
                  readonly, author=None, reifications=None,
                  predictor=None,
-                 do_git=True, compare=None):
+                 do_git=True, compare=None, smatchpp=False):
         self.port = port
         self.filename = filename
         self.amrdoc = amrdoc.AMRdoc(filename)
@@ -745,13 +748,35 @@ class AMR_Edit_Server:
                     firstsent = firstdoc.sentences[sentnum - 1]
                 seconddoc, secondaps = self.otheramrdocs[second_to_compare]
                 secondsent = seconddoc.sentences[sentnum - 1]
-                sm = Smatch()
-                best_match_num, test_triple_num, gold_triple_num, instances1OK, rel1OK, instances2OK, rel2OK = sm.get_amr_match(firstsent.amr.replace("\n", " "), secondsent.amr.replace("\n", " "))
 
-                p, r, f1 = sm.compute_f(best_match_num, test_triple_num, gold_triple_num)
+#                sm = Smatch()
+#                if not smatchpp:
+#                    best_match_num, test_triple_num, gold_triple_num, instances1OK, rel1OK, instances2OK, rel2OK = sm.get_amr_match(firstsent.amr.replace("\n", " "), secondsent.amr.replace("\n", " "))
+#                    #print("ZZZZZ", instances1OK, rel1OK, instances2OK, rel2OK)
+#                else:
+#                    graph_reader = data_helpers.GoodmamiPenmanReader()
+#                    ilp = solvers.ILP()
+#                    measure = Smatchpp(graph_reader=graph_reader, alignmentsolver=ilp)
+#                    match, optimization_status, alignment = measure.process_pair(firstsent.amr.replace("\n", " "), secondsent.amr.replace("\n", " "))
+#                    test_triple_num = match["main"][2]
+#                    gold_triple_num = match["main"][3]
+#                    best_match_num = match["main"][1]
+#
+#                    instances1OK = None
+#                    rel1OK = None
+#                    instances2OK = None
+#                    rel2OK = None
+#
+#                p, r, f1 = sm.compute_f(best_match_num, test_triple_num, gold_triple_num)
+
+                #p, r, f1, number_of_diffs, best_match_num, instances1OK, rel1OK, instances2OK, rel2OK = amr_comparison.compare(firstsent.amr, secondsent.amr, use_smatchpp=smatchpp, align=False)
+                compres = amr_comparison.compare(firstsent.amr, secondsent.amr, use_smatchpp=smatchpp, align=True)
+
+
                 if first_to_compare == -1:
                     # update display of first document
-                    cpm, csvg = ap.show(highlightinstances=instances1OK, highlightrelations=rel1OK)
+                    # highlight instances and relations NOT in highlightinstances and highlightrelations
+                    cpm, csvg = ap.show(highlightinstances=compres.instances1OK, highlightrelations=compres.rel1OK)
                     dico["svg"] = csvg.decode("utf8")
 
                 for ix, (doc, aps) in enumerate(self.otheramrdocs):
@@ -767,9 +792,9 @@ class AMR_Edit_Server:
 
                     # show differences of chosen pair
                     if ix == first_to_compare:
-                        cpm, csvg = cap.show(highlightinstances=instances1OK, highlightrelations=rel1OK)
+                        cpm, csvg = cap.show(highlightinstances=compres.instances1OK, highlightrelations=compres.rel1OK)
                     elif ix == second_to_compare:
-                        cpm, csvg = cap.show(highlightinstances=instances2OK, highlightrelations=rel2OK)
+                        cpm, csvg = cap.show(highlightinstances=compres.instances2OK, highlightrelations=compres.rel2OK)
                     else:
                         cpm, csvg = cap.show()
 
@@ -780,44 +805,10 @@ class AMR_Edit_Server:
                     dico2["comments"] = "\n".join(ccursentence.comments),
                     others.append(dico2)
                 dico["others"] = others
-                dico["smatch"] = "%.2f" % (f1 * 100)
-                dico["bestmatch"] = best_match_num
-                dico["left_triplenum"] = test_triple_num
-                dico["right_triplenum"] = gold_triple_num
-
-            #elif iscompare: #and self.comparedoc:
-            #    ccursentence = self.comparedoc.sentences[sentnum - 1]
-            #    if sentnum not in self.compare_aps:
-            #        cap = amreditor.AMRProcessor()
-            #        self.compare_aps[sentnum] = cap
-            #        cap.readpenman(ccursentence.amr)
-            #    else:
-            #        cap = self.compare_aps[sentnum]
-            #        if not cap.isparsed:
-            #            cap.readpenman(ccursentence.amr)
-            #    sm = Smatch()
-            #    best_match_num, test_triple_num, gold_triple_num, instances1OK, rel1OK, instances2OK, rel2OK = sm.get_amr_match(pm.replace("\n", " "), ccursentence.amr.replace("\n", " "))
-            #    #print("zzzz", best_match_num, test_triple_num, gold_triple_num, instances1OK, rel1OK, instances2OK, rel2OK, sep="\n>>>>")
-
-            #    cpm, csvg = cap.show(highlightinstances=instances2OK, highlightrelations=rel2OK)
-
-            #    # recreate SVG graph with highlights
-            #    pm, svg = ap.show(highlightinstances=instances1OK, highlightrelations=rel1OK)
-
-            #    p, r, f1 = sm.compute_f(best_match_num, test_triple_num, gold_triple_num)
-
-            #    dico["filename2"] = self.comparefilename
-            #    dico["smatch"] = "%.2f" % (f1 * 100)
-            #    dico["bestmatch"] = best_match_num
-            #    dico["left_triplenum"] = test_triple_num
-            #    dico["right_triplenum"] = gold_triple_num
-            #    dico["svg"] = svg.decode("utf8")
-            #    dico["penman2"] = cpm
-            #    dico["svg2"] = csvg.decode("utf8")
-            #    dico["comments2"] = "\n".join(ccursentence.comments),
-
-            #    if not cap.valid:
-            #        return invalidamr(cap, pm, ccursentence, sentnum)
+                dico["smatch"] = "%.2f" % (compres.f1 * 100)
+                dico["bestmatch"] = compres.best_match_num
+                dico["left_triplenum"] = compres.test_triple_num
+                dico["right_triplenum"] = compres.gold_triple_num
 
             return Response("%s\n" % json.dumps(dico), 200, mimetype="application/json")
 
@@ -973,6 +964,7 @@ if __name__ == "__main__":
     parser.add_argument("--reifications", "-X", default=None, help="table for (de)reification")
     parser.add_argument("--nogit", dest="git", default=True, action="store_false", help='no git add/commit, even if file is git controlled (does nevertheless overwrite existing file)')
     parser.add_argument("--edge_predictor", "-E", default=None, help="yml file which defines an Edge Predictor class (filename, Classname and parameters")
+    parser.add_argument("--smatchpp", "-S", action='store_true', help='use smatchpp (https://github.com/flipz357/smatchpp) instead of smatch')
 
     if len(sys.argv) < 2:
         parser.print_help()
@@ -986,7 +978,8 @@ if __name__ == "__main__":
                                   reifications=args.reifications,
                                   predictor=args.edge_predictor,
                                   do_git=args.git,
-                                  compare=args.compare)
+                                  compare=args.compare,
+                                  smatchpp=args.smatchpp)
             aes.start()
         except Exception as e:
             print(e, file=sys.stderr)

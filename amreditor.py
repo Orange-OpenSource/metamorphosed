@@ -244,6 +244,7 @@ class AMRProcessor:
         return insts
 
     def dot(self, highlightinstances=None, highlightrelations=None, format="svg"):
+        # highlight instances and relations NOT in highlightinstances and highlightrelations
         graph_attr = {#'rankdir':'LR'
         }
         kwargsinit = {
