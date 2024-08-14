@@ -33,7 +33,7 @@
 # Software Name: MetAMoRphosED AMR-Editor
 # Author: Johannes Heinecke
 
-# version 3.3.0 as of 11th July 2024
+# version 3.4.0 as of 11th July 2024
 
 import re
 import readline
@@ -44,7 +44,7 @@ from graphviz import Digraph
 import graph
 from reification import getInstance
 
-VERSION = "3.3.0"
+VERSION = "3.4.0"
 
 # terminology
 # instance  a / ...
@@ -123,20 +123,19 @@ class AMRProcessor:
             alltriples = []
             for pm in pms:
                 g = penman.decode(pm)
-                #print("hhhh", g, dir(g))
                 alltriples += g.triples
                 tops.append(g.top)
             alltriples.insert(0, ("mmmm", ":instance", "multigraph"))
             for i, t in enumerate(tops, start=1):
                 alltriples.append(("mmmm", ":snt%d" % i, t))
             pm = penman.encode(penman.Graph(alltriples, top="mmmm"))
-            #print("eeeee", alltriples)
+            # print("All triples", alltriples)
             print(pm, file=ofp)
 
         else:
-            #print("AAA", self.lastpm)
-            #print("BBB", self.triples)
-            #print("CCC", self.top)
+            # print("LAST PM", self.lastpm)
+            # print("TRIPLES", self.triples)
+            # print("TOP    ", self.top)
             pm = penman.encode(penman.Graph(self.triples, top=self.top))
             print(pm, file=ofp)
         print(file=ofp)
@@ -150,12 +149,11 @@ class AMRProcessor:
         return []
 
     def readpenman(self, amr):
-        # amr is in penman format
+        # AMR is in PENMAN format
         self.triples = []
         self.valid = True
         self.isparsed = True
         amr = ONESPACE.sub(" ", amr)
-        #amr = amr.replace("\n", "")
         amrs = amr.replace(") (", ")\n(").split("\n")
         self.varletters = {}
         try:
@@ -168,17 +166,15 @@ class AMRProcessor:
                 self.top = None
 
                 for branch in tree.nodes():
-                    #print("==used", usedvariables)
-                    #print("==vars", self.varletters)
                     s = branch[0]
                     if not self.top:
                         self.top = s
-                    #print(s)
+                    # print(s)
                     if s in usedvariables:
                         s = "%s_new%d" % (s, i)
 
                     for po in branch[1]:
-                        #print("   ", po)
+                        # print("   ", po)
                         p = po[0]
                         o = po[1]
 
@@ -194,7 +190,7 @@ class AMRProcessor:
 
                         if o in usedvariables:
                             o = "%s_new%d" % (o, i)
-                        #print("TR", s,p,o)
+                        # print("TR", s,p,o)
                         if p == ":instance":
                             # duplicated "v :instance concept" create errors in penman.encode(triples)
                             if s in defined_instances:
@@ -202,7 +198,6 @@ class AMRProcessor:
                             defined_instances.add(s)
                         self.triples.append((s, p, o))
 
-                #usedvariables.update(self.varletters.keys())
                 for varnames in self.varletters.values():
                     usedvariables.update(varnames)
 
@@ -292,7 +287,7 @@ class AMRProcessor:
                 if highlightrelations and (s, p, o) not in highlightrelations:
                     kwargs["fontname"] = "Lato" # "Lato Black" }
                     kwargs["fontcolor"] = "black"
-                    pp = '< <table border="0"> <tr><td bgcolor="%s">%s</td></tr></table> >' % ("#ff7900", #orangecolors.get(":snt1"),
+                    pp = '< <table border="0"> <tr><td bgcolor="%s">%s</td></tr></table> >' % ("#ff7900",
                                                                                                p)
 
                 if o not in self.vars:
@@ -300,7 +295,6 @@ class AMRProcessor:
                     onodeid = "%s_%s" % (s, oo)
                     kwargs["fillcolor"] = orangecolors.get("EN")
                     kwargs["style"] = "filled"
-                    #kwargs["tooltip"] = "qsqqs\n<b>f</b>illed"
 
                     graph.node(onodeid, label="%s" % (o),
                                id="literal %s %s %s" % (s, p, o),
@@ -316,18 +310,13 @@ class AMRProcessor:
                 graph.edge(s, onodeid, label=pp,
                            id="edge#%s#%s#%s" % (s, o, p),
                            color=orangecolors.get(p.replace("-of", ""), "black"),
-                           #fontcolor=orangecolors.get(p.replace("-of", ""), "black"),
+                           # fontcolor=orangecolors.get(p.replace("-of", ""), "black"),
                            **kwargs)
-        #print("RRRRR", graph) # dot sources
+        # print("DOT source", graph)
         return graph.pipe()
 
     def show(self, highlightinstances=None, highlightrelations=None, format="svg"):
         if self.inserver:
-            #print(self.triples, self.vars)
-            #for tr in self.triples:
-            #    print("SHOWTR", tr)
-            #print(self.vars)
-
             if not self.valid:
                 return self.lastpm, None
 
@@ -349,23 +338,18 @@ class AMRProcessor:
                 noninst = []
                 for tr in self.triples:
                     noninst.append(tr)
-                    #if tr[1] != ":instance":
-                    #    noninst.append(tr)
-                    #else:
-                    #    noninst.append((tr[0], "/", tr[2]))
                 sgs = graph.findsubgraphs(noninst)
 
                 pms = []
                 for sg in sgs:
                     triples = []
-                    #cset = set(sg)
 
                     for tr in self.triples:
                         if tr[0] in sg or (tr[2] in sg and tr[1] != ":instance"):
                             triples.append(tr)
                     pm = penman.encode(penman.Graph(triples))
                     pms.append(pm)
-                    #print("DISCONNECTED", pm)
+                    # print("DISCONNECTED", pm)
 
                 self.lastpm = "\n\n".join(pms)
                 if len(sgs) > 1:
@@ -454,9 +438,7 @@ class AMRProcessor:
     def dereify(self, dereify):
         reificator = getInstance()
         if reificator:
-            #print("zzzz", self.lastpm)
             npm, msgs = reificator.dereify(self.lastpm, only=dereify)
-            #triples, msgs = reificator.dereify(self.lastpm, returntriples=True, only=dereify)
             if not msgs:
                 self.readpenman(npm)
 
@@ -595,8 +577,6 @@ class AMRProcessor:
                     todelete.append(tr)
         for tr in todelete:
             self.triples.remove(tr)
-        #for ix,tr in enumerate(self.triples):
-        #    print("uuuu", ix, tr)
 
         #self.show()
 
@@ -633,8 +613,6 @@ class AMRProcessor:
 
 if __name__ == "__main__":
     aa = AMRProcessor(inserver=False)
-    #for l in tr:
-    #    aa.process(l)
     aa.readpenman("(c / cat)")
     aa.show()
 

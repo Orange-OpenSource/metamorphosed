@@ -64,8 +64,6 @@ def compare(s1, s2, runs=1, use_smatchpp=False, align=False):
         for r in range(runs):
             best_match_num_2, compres.test_triple_num, compres.gold_triple_num, compres.instances1OK, compres.rel1OK, compres.instances2OK, compres.rel2OK = sm.get_amr_match(s1.replace("\n", " "), s2.replace("\n", " "))
             compres.best_match_num = max(best_match_num_2, compres.best_match_num)
-            # print("ZZZZZ", compres.instances1OK, compres.rel1OK)
-            # print("zzzzz", compres.instances2OK, compres.rel2OK)
     else:
         graph_reader = data_helpers.GoodmamiPenmanReader()
         ilp = solvers.ILP()

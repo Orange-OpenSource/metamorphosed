@@ -56,9 +56,6 @@ import reification
 import relations_constraints
 
 import amr_comparison
-#from smatch_pm import Smatch
-#from smatchpp import Smatchpp, solvers, data_helpers
-
 from edge_predictor import Basic_EdgePredictor as EdgePredictor
 
 # TODO
@@ -85,12 +82,6 @@ class AMR_Edit_Server:
         self.reificator = None
         self.do_git = do_git
 
-        #self.comparedoc = None
-        #self.comparefilename = None
-        #if compare is not None:
-        #    self.comparefilename = compare
-        #    readonly = True
-        #    self.do_git = False
         self.readonly = readonly
         if compare is not None:
             self.readonly = True
@@ -105,7 +96,7 @@ class AMR_Edit_Server:
             if os.path.exists(bak_filename):
                 raise Exception("Edited file <%s> not under git version control. Backup file <%s> exists already.\nPlease rename Backup file first" % (filename, bak_filename))
 
-        # initial version of PM
+        # initial version of Penman graph
         self.initstates = []
         print("initializing...")
         for sentnum, cursentence in enumerate(self.amrdoc.sentences, start=1):
@@ -121,7 +112,7 @@ class AMR_Edit_Server:
 
         self.otheramrdocs = [] # (doc,aps)
         if compare is not None:
-            # interannotator mode
+            # inter-annotator mode
             for fn in compare:
                 doc = amrdoc.AMRdoc(fn)
                 aps = {}
@@ -133,17 +124,6 @@ class AMR_Edit_Server:
                         ap.lastpm = cursentence.amr
                         ap.comments = cursentence.comments
                 self.otheramrdocs.append((doc, aps))
-
-        #elif compare is not None:
-        #    self.comparedoc = amrdoc.AMRdoc(compare)
-        #    self.compare_aps = {}
-        #    for sentnum, cursentence in enumerate(self.comparedoc.sentences, start=1):
-        #        if sentnum % 10 == 0:
-        #            print("%d initialized" % sentnum, end="\r")
-        #            ap = amreditor.AMRProcessor()
-        #            self.compare_aps[sentnum] = ap
-        #            ap.lastpm = cursentence.amr
-        #            ap.comments = cursentence.comments
 
             print("all compare sentences initialized")
 
@@ -183,8 +163,6 @@ class AMR_Edit_Server:
         @app.route('/', methods=["GET"])
         def index():
             # Displays the index page accessible at '/'
-            #if self.comparedoc:
-            #    return render_template('compare.html', toolname="AMR File Comparison")
             if self.otheramrdocs:
                 return render_template('compare.html', toolname="AMR File Comparison")
             else:
@@ -219,12 +197,12 @@ class AMR_Edit_Server:
                     for b in range(a + 1, len(self.otheramrdocs) + 1):
                         possible_comparisons.append([a + 1, b + 1])
                 dico["comparisons"] = possible_comparisons
-            #elif self.comparefilename:
-            #    dico["filename2"] = self.comparefilename
+
             if withdata:
                 dico["relations"] = sorted(self.amr_rels.relations)
                 dico["concepts"] = sorted(self.amr_concepts.relations)
                 dico["sentences"] = self.amrdoc.getsentencelist()
+
             if self.reificator:
                 reifs = self.reificator.getquivalences()
                 dico["reifications"] = reifs
@@ -380,10 +358,6 @@ class AMR_Edit_Server:
                 cursentence.modcomment(modcomment)
             elif newtop:
                 rtc = ap.settop(newtop)
-                #if rtc:
-                #    rtc = " ".join(rtc)
-                #else:
-                #    rtc = None
             elif reify:
                 #print(ap.lastpm)
                 ap.reify(reify)
@@ -430,7 +404,6 @@ class AMR_Edit_Server:
             sentnum = self.checkParameter(request, 'num', 'integer', isOptional=False, defaultValue=None)
             what = self.checkParameter(request, 'what', 'string', isOptional=False, defaultValue=None)
             regex = self.checkParameter(request, 'regex', 'string', isOptional=False, defaultValue=None)
-            #iscompare = self.checkParameter(request, 'compare', 'boolean', isOptional=True, defaultValue=False)
             compare = self.checkParameter(request, 'compare', 'string', isOptional=True, defaultValue=None)
 
             okt = None
@@ -545,7 +518,6 @@ class AMR_Edit_Server:
         def next():
             sentnum = self.checkParameter(request, 'num', 'integer', isOptional=False, defaultValue=None)
             direction = self.checkParameter(request, 'direction', 'string', isOptional=False, defaultValue=None)
-            #iscompare = self.checkParameter(request, 'compare', 'boolean', isOptional=True, defaultValue=False)
             compare = self.checkParameter(request, 'compare', 'string', isOptional=True, defaultValue=None)
 
             if direction == "preceding":
@@ -559,22 +531,19 @@ class AMR_Edit_Server:
             elif direction == "last":
                 sentnum = len(self.amrdoc.sentences)
 
-            return prepare_newpage(sentnum, compare=compare) #, iscompare=iscompare)
+            return prepare_newpage(sentnum, compare=compare)
 
         @app.route('/read', methods=["GET"])
         def read():
             sentnum = self.checkParameter(request, 'num', 'integer', isOptional=False, defaultValue=None)
-            #iscompare = self.checkParameter(request, 'compare', 'boolean', isOptional=True, defaultValue=False)
             compare = self.checkParameter(request, 'compare', 'string', isOptional=True, defaultValue=None)
-            #sentnum = int(sentnum)
+
             if sentnum < 1 or sentnum > len(self.amrdoc.sentences):
                 dico = {"error": "invalid sentence number: must be between 1 and %d" % len(self.amrdoc.sentences)}
                 return Response("%s\n" % json.dumps(dico),
                                 400, mimetype="application/json")
 
-            #for x in self.aps:
-            #    print("AAAAAPPPP", x, self.aps[x].lastpm)
-            return prepare_newpage(sentnum, compare=compare) #, iscompare=iscompare)
+            return prepare_newpage(sentnum, compare=compare)
 
         @app.route('/graphs/<filename>', methods=["GET"])
         def downloadgraphs(filename: str):
@@ -624,7 +593,6 @@ class AMR_Edit_Server:
         @app.route('/save', methods=["GET"])
         def save():
             sentnum = self.checkParameter(request, 'num', 'integer', isOptional=True, defaultValue=1)
-            #sentnum = int(sentnum)
 
             self.save()
 
@@ -633,8 +601,6 @@ class AMR_Edit_Server:
                 return Response("%s\n" % json.dumps(dico),
                                 400, mimetype="application/json")
 
-            #for x in self.aps:
-            #    print("AAAAAPPPP", x, self.aps[x].lastpm)
             return prepare_newpage(sentnum)
 
         @app.errorhandler(ServerException)
@@ -705,8 +671,8 @@ class AMR_Edit_Server:
             sentencetext = cursentence.text
             if sentencetext:
                 sentencetext = sentencetext.replace("<", "&lt;").replace(">", "&gt;")
+
             if oktext:
-                #print("aaaaaaaaaaaaae", oktext, list(oktext))
                 for mo in reversed(list(oktext)):
                     sentencetext = sentencetext[:mo.start()] + '<span class="highlight">%s</span>' % sentencetext[mo.start():mo.end()] + sentencetext[mo.end():]
 
@@ -857,15 +823,9 @@ class AMR_Edit_Server:
                                                 warnings, messages, do_add=self.do_git)
 
         if gitok and self.do_git:
-            #rtc = repo.git.status()
             try:
-                #rtc = repo.git.diff(os.path.basename(fn))
-                #if rtc:
-                #    rtc = repo.git.add(os.path.basename(fn))
                 rtc = repo.git.commit("-m", "metamorphosed AMR editor: %s of '%s' saved" % (", ".join(self.modified), fn), author=self.author)
                 print("commited %s" % (fn), rtc)
-                #else:
-                #    print("nothing to commit for %s" % (fn), rtc)
             except Exception as e:
                 print("COMMIT Error <%s> <%s> <%s>" % (e, fn, rtc))
                 pass
