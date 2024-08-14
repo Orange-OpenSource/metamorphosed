@@ -125,7 +125,7 @@ def compare(s1, s2, runs=1, use_smatchpp=False, align=False):
                     compres.rel2OK.add((s2, p1, o2))
                     compres.rel2OK.add((o2, p1 + "-of", s2))
 
-    compres.number_of_diffs = max(compres.test_triple_num, compres.gold_triple_num) - compres.best_match_num
+    compres.number_of_diffs = int(max(compres.test_triple_num, compres.gold_triple_num) - compres.best_match_num)
     compres.p, compres.r, compres.f1 = sm.compute_f(compres.best_match_num, compres.test_triple_num, compres.gold_triple_num)
 
     return compres

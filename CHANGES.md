@@ -2,6 +2,7 @@
 
 ## Version 3.4.0
 * integrated Smatch++ (https://github.com/flipz357/smatchpp) into `inter_annotator.py` and `server.py`
+* added option `--sortcol` to `inter_annotator.py` to sort colums in TSV report file
 * test extended
 
 ## Version 3.3.0

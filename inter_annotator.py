@@ -36,13 +36,17 @@ class IAA:
             self.docs.append(doc)
         for d in self.docs[1:]:
             if len(d.sentences) != len(self.docs[0].sentences):
+                # if length > last, we can go on
+                if last and len(d.sentences) > last and len(self.docs[0].sentences) > last:
+                    continue
                 print("!!! file %s and %s differ in number of sentences" % (d.fn, self.docs[0].fn))
                 raise Exception("file %s and %s differ in number of sentences" % (d.fn, self.docs[0].fn))
 
-    def eval(self, micro=True, runs=1, ofp=sys.stdout, report=None, smatchpp=False):
+    def eval(self, micro=True, runs=1, ofp=sys.stdout, report=None, smatchpp=False, sortcolumn=None):
         rfp = None
         if report:
             rfp = open(report, "w")
+            reportlines = []
 
         if micro:
             # comparing all sentences of a pair of annotators and calculate an average fo each pair of annotators
@@ -84,7 +88,7 @@ class IAA:
 
                     if self.debug:
                         print("annotators %d/%d: sentence comparison smatch: %s" % (fi1, fi2, [float("%.2f" % (100 * x)) for x in localresults]), file=ofp)
-                        print("                sentence comparison diffs.: %s" % ([float("%.4f" % (x)) for x in localdiffresults]), file=ofp)
+                        print("                sentence comparison diffs.: %s" % ([x for x in localdiffresults]), file=ofp)
 
                     lmean = sum(localresults) / len(localresults)
                     ldmean = sum(localdiffresults) / len(localdiffresults)
@@ -93,14 +97,29 @@ class IAA:
 
                     if rfp:
                         couple = "annotator %d-%d" % (fi1, fi2)
-                        print(couple,
-                              "\t".join(["%.2f" % (100 * x) for x in localresults]),
-                              "%.2f" % (100 * lmean),
-                              "\t".join(["%.2f" % (x) for x in localdiffresults]),
-                              "%.2f" % (ldmean),
-                              sep="\t", file=rfp)
+                        entry = [couple]
+                        for x in localresults:
+                            entry.append(round(100 * x, 2))
+                        entry.append(round(100 * lmean, 2))
+                        for x in localdiffresults:
+                            entry.append(x)
+                        entry.append(round(ldmean, 2))
+
+                        reportlines.append(entry)
+                        # print(couple,
+                        #       "\t".join(["%.2f" % (100 * x) for x in localresults]),
+                        #       "%.2f" % (100 * lmean),
+                        #       "\t".join(["%.2f" % (x) for x in localdiffresults]),
+                        #       "%.2f" % (ldmean),
+                        #       sep="\t", file=rfp)
 
                     #print("annotator", fi1, fi2, localresults, lmean)
+            if rfp:
+                if sortcolumn is not None:
+                    reportlines = sorted(reportlines, key=lambda x: x[sortcolumn])
+                for line in reportlines:
+                    s = [str(i) for i in line]
+                    print("\t".join(s), file=rfp)
             # calculating the average
             mean = sum(results) / len(results)
             if self.debug:
@@ -144,7 +163,7 @@ class IAA:
                         localdiffresults.append(compres.number_of_diffs)
                 if self.debug:
                     print("sentence %5d: annotator pairs smatch: %s" % (ix, [float("%.2f" % (100 * x)) for x in localresults]), file=ofp)
-                    print("                annotator pairs diffs.: %s" % ([float("%.2f" % (x)) for x in localdiffresults]), file=ofp)
+                    print("                annotator pairs diffs.: %s" % ([x for x in localdiffresults]), file=ofp)
 
                 lmean = sum(localresults) / len(localresults)
                 ldmean = sum(localdiffresults) / len(localdiffresults)
@@ -155,16 +174,30 @@ class IAA:
                     sid = sent1.id
                     if not sid:
                         sid = ix
-                    print(sid,
-                          "\t".join(["%.2f" % (100 * x) for x in localresults]),
-                          "%.2f" % (100 * lmean),
-                          "\t".join(["%.2f" % (x) for x in localdiffresults]),
-                          "%.2f" % (ldmean),
-                          sep="\t", file=rfp)
+                    entry = [sid]
+                    for x in localresults:
+                        entry.append(round(100 * x, 2))
+                    entry.append(round(100 * lmean, 2))
+                    for x in localdiffresults:
+                        entry.append(x)
+                    entry.append(round(ldmean, 2))
+                    reportlines.append(entry)
+                    # print(sid,
+                    #       "\t".join(["%.2f" % (100 * x) for x in localresults]),
+                    #       "%.2f" % (100 * lmean),
+                    #       "\t".join(["%.2f" % (x) for x in localdiffresults]),
+                    #       "%.2f" % (ldmean),
+                    #       sep="\t", file=rfp)
                 #print("sent", ix, localresults, lmean)
                 if self.last > 0 and ix == self.last:
                     break
 
+            if rfp:
+                if sortcolumn is not None:
+                    reportlines = sorted(reportlines, key=lambda x: x[sortcolumn])
+                for line in reportlines:
+                    s = [str(i) for i in line]
+                    print("\t".join(s), file=rfp)
             mean = sum(results) / len(results)
             dmean = sum(diffresults) / len(diffresults)
             if self.debug:
@@ -185,7 +218,8 @@ if __name__ == "__main__":
     parser.add_argument('--runs', type=int, default=1, help='run smatch n times to get the best possible match')
     parser.add_argument('--first', type=int, default=0, help='skip first n sentences')
     parser.add_argument('--last', type=int, default=0, help='stop after sentences n')
+    parser.add_argument('--sortcol', type=int, default=None, help='sort data in report file on column (needs --report)')
 
     args = parser.parse_args()
     iaa = IAA(args.files, debug=args.debug, first=args.first, last=args.last)
-    iaa.eval(micro=args.sentences, runs=args.runs, ofp=sys.stdout, report=args.report, smatchpp=args.smatchpp)
+    iaa.eval(micro=args.sentences, runs=args.runs, ofp=sys.stdout, report=args.report, smatchpp=args.smatchpp, sortcolumn=args.sortcol)

@@ -337,6 +337,7 @@ By default Smatch is used. the option `--smatchpp`) switches to SmatchPP (https:
 
 ```
 usage: inter_annotator.py [-h] --files FILES [FILES ...] [--sentences] [--debug] [--runs RUNS] [--first FIRST] [--last LAST] [--smatchpp]
+                          [--report REPORT] [--sortcol SORTCOL]
 
 inter-annotator agreement
 
@@ -352,6 +353,7 @@ options:
   --last LAST           stop after sentences n
   --report, -r REPORT
                         filename for a report in TSV format
+  --sortcol SORTCOL     sort data in report file on column (needs --report)
 ```
 
 For instance the for 3 test files provided the IAA can be calculated by
