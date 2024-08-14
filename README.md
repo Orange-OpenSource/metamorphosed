@@ -334,6 +334,9 @@ or
    * calculate the average of the score obtained for annotator pair
 
 By default Smatch is used. the option `--smatchpp`) switches to SmatchPP (https://github.com/flipz357/smatchpp)
+Whereas the default is faster, SmatchPP is using a different Solver (ILP instead of Smatch's HillClimber).
+* ILP always gives the same result (even for more complicated matches)
+* ILP provides verifiable and optimal results.
 
 ```
 usage: inter_annotator.py [-h] --files FILES [FILES ...] [--sentences] [--debug] [--runs RUNS] [--first FIRST] [--last LAST] [--smatchpp]
