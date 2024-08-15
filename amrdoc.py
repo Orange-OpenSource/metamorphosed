@@ -35,6 +35,7 @@
 
 
 # read and store an AMR file
+import os
 import re
 import sys
 
@@ -386,17 +387,19 @@ def relations_between_concepts(ads, depth=2):
     return output
 
 
-def stats(ads, conceptlist):
+def stats(ads, conceptlist, plotting=True, outdir="."):
     triples = []
     sentences = 0
     for ad in ads:
         sentences += len(ad.sentences)
         for sent in ad.sentences:
             triples += sent.tsv()
-        #print("DDD", len(triples))
+        #print("DDD", triples)
     relations = {} # rel: freq
     concepts = {} # cpt: freq
     for s, p, o in triples:
+        if s is None or o is None:
+            continue
         if p == ":instance":
             if o in concepts:
                 concepts[o] += 1
@@ -457,45 +460,46 @@ def stats(ads, conceptlist):
             print("%s\t%d" % (c, others[c]))
         return
 
-    ofp = open("verbalconcepts-list.txt", "w")
+    ofp = open(os.path.join(outdir, "verbalconcepts-list.txt"), "w")
     for c in verbs:
         print("%s\t%d" % (c, verbs[c]), file=ofp)
     ofp.close()
-    ofp = open("nonverbalconcepts-list.txt", "w")
+    ofp = open(os.path.join(outdir, "nonverbalconcepts-list.txt"), "w")
     for c in others:
         print("%s\t%d" % (c, others[c]), file=ofp)
     ofp.close()
-    ofp = open("relations-list.txt", "w")
+    ofp = open(os.path.join(outdir, "relations-list.txt"), "w")
     for c in relations:
         print("%s\t%d" % (c, relations[c]), file=ofp)
     ofp.close()
 
-    print("plotting graph...")
-    import matplotlib.pyplot as plt
+    if plotting:
+        print("plotting graph...")
+        import matplotlib.pyplot as plt
 
-    def graph(dico, fn, mean, med, logscale=True):
-        #print(sorted(dico.values()))
-        plt.rcParams["font.family"] = "Lato"
-        plt.rcParams["figure.figsize"] = [6.4, 2] # default 6.4, 4.8
-        plt.bar(range(len(dico)), sorted(dico.values(), reverse=True),
-                color="#ff7900")
-        plt.ylabel("frequency")
+        def graph(dico, fn, mean, med, logscale=True):
+            # print(sorted(dico.values()))
+            plt.rcParams["font.family"] = "Lato"
+            plt.rcParams["figure.figsize"] = [6.4, 2] # default 6.4, 4.8
+            plt.bar(range(len(dico)), sorted(dico.values(), reverse=True),
+                    color="#ff7900")
+            plt.ylabel("frequency")
 
-        #plt.hist(sorted(dico.values(), reverse=True), bins=100, density=True)
-        if logscale:
-            plt.yscale('log')
+            # plt.hist(sorted(dico.values(), reverse=True), bins=100, density=True)
+            if logscale:
+                plt.yscale('log')
 
-        plt.axhline(mean, color='#50be87', linestyle='--', label="mean")
-        plt.axhline(med, color='#9164cd', linestyle='--', label="median")
-        plt.legend()
-        #plt.gca().axes.get_xaxis().set_visible(False)
-        #plt.show()
-        plt.savefig(fn, format="pdf", bbox_inches='tight')
-        plt.clf()
+            plt.axhline(mean, color='#50be87', linestyle='--', label="mean")
+            plt.axhline(med, color='#9164cd', linestyle='--', label="median")
+            plt.legend()
+            #plt.gca().axes.get_xaxis().set_visible(False)
+            #plt.show()
+            plt.savefig(fn, format="pdf", bbox_inches='tight')
+            plt.clf()
 
-    graph(relations, "rels.pdf", meanr, medr)
-    graph(verbs, "verbalconcepts.pdf", meanv, medv)
-    graph(others, "nonverbalconcepts.pdf", meano, medo)
+        graph(relations, "rels.pdf", meanr, medr)
+        graph(verbs, "verbalconcepts.pdf", meanv, medv)
+        graph(others, "nonverbalconcepts.pdf", meano, medo)
 
 
 if __name__ == "__main__":

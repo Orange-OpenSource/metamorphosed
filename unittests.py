@@ -166,7 +166,7 @@ def test_info(client):
     response = client.get("/version")
     res = json.loads(response.data)
     #print("res", res, file=sys.stderr)
-    assert res == {'name': 'AMR Editor', 'version': '3.4.0', 'apiversion': '1.5.0'}
+    assert res == {'name': 'AMR Editor', 'version': '3.4.1', 'apiversion': '1.5.0'}
 
     response = client.get("/info", query_string={"withdata": True})
     res = json.loads(response.data)
@@ -351,7 +351,10 @@ def test_edit_addedge_with_concepts(client):
     response = client.get("/read", query_string={"num": 17})
     response = client.get("/edit", query_string={"num": 17, "start": "//go-02", "label": "ARG0", "end": "//man"})
     response = client.get("/edit", query_string={"num": 17, "start": "//go-02", "label": "ARG4", "end": "/work-01"})
-    response = client.get("/edit", query_string={"num": 17, "start": "w", "label": "ARG0", "end": "//man"})
+    # predict edge
+    response = client.get("/edit", query_string={"num": 17, "start": "w",
+                                                 "label": "todo", #"ARG0",
+                                                 "end": "//man"})
     res = json.loads(response.data)
     #print("res", json.dumps(res, indent=2))
     assert res["warning"] is None
@@ -944,6 +947,25 @@ def test_amrdoc():
                   ('sentence last (must be last)', 'Is Joe Biden the US president?')]
 
 
+def test_amrdoc_stats():
+    import amrdoc
+    ad = amrdoc.AMRdoc("coverageamr.txt")
+    reportfile = tempfile.TemporaryDirectory()
+    amrdoc.stats([ad], conceptlist=False, plotting=False, outdir=reportfile.name)
+    ifp = open(os.path.join(reportfile.name, "verbalconcepts-list.txt"))
+
+    verbalconcepts = "bear-02\t2\nlive-01\t2\nkill-01\t2\nbark-01\t1\nhave-org-role-91\t4\nbuy-01\t2\nteach-01\t1\nmurder-01\t2\nrepair-01\t3\nwant-11\t1\npay-01\t2\nwant-01\t1\nclick-01\t1\nhyperlink-91\t1\nknow-01\t1\nopen-09\t1\nage-01\t1\nguess-01\t1\noverload-01\t1\ncarry-01\t1\nget-through-12\t1\ncontrast-01\t1\npossible-01\t1\nfind-01\t1\nchance-02\t1\nconnect-01\t1\nhave-degree-91\t1\n"
+    assert ifp.read() == verbalconcepts
+
+    ifp = open(os.path.join(reportfile.name, "nonverbalconcepts-list.txt"))
+    nonverbalconcepts = "multi-sentence\t2\nperson\t7\nname\t16\ncity\t6\nstill\t2\ncat\t2\nmouse\t2\nkitchen\t1\ndate-entity\t2\nnight\t1\ndog\t2\nlittle\t1\nbig\t1\ncountry\t4\ncapital\t2\nchild\t3\napple\t2\nschool\t2\nmonetary-quantity\t2\neuro\t2\npresident\t2\nordinal-entity\t1\nhistory\t1\namr-unknown\t3\nbike\t3\nman\t2\nyou\t1\nhere\t1\nurl-entity\t1\ninformation\t1\nmore\t2\nwednesday\t1\nii\t1\nrestaurant\t1\nand\t2\ntemporal-quantity\t1\nyear\t1\ni\t2\ncapacity\t1\ntower\t1\nstation\t1\nbase\t1\ntotal\t1\nat-all\t1\nsignal\t1\nonly\t1\ninternet\t1\nlarge\t1\n"
+    assert ifp.read() == nonverbalconcepts
+
+    ifp = open(os.path.join(reportfile.name, "relations-list.txt"))
+    relations = ":ARG1\t29\n:name\t16\n:location\t6\n:ARG0\t23\n:mod\t8\n:time\t2\n:dayperiod\t1\n:ARG2\t11\n:quant\t9\n:poss\t2\n:ARG4\t3\n:ARG3\t4\n:unit\t3\n:beneficiary\t1\n:ord\t1\n:value\t2\n:polarity\t7\n:ARG10\t1\n:mode\t1\n:purpose\t1\n:month\t1\n:day\t1\n:year\t1\n:timezone\t1\n:weekday\t1\n:part\t1\n:degree\t2\n"
+    assert ifp.read() == relations
+
+
 def test_amreditor():
     import amreditor
     import io
@@ -1071,3 +1093,19 @@ sentence 2	66.67	75.0	72.73	71.46	5	4	3	4.0
 
     ifp = open(os.path.join(reportfile.name, "report2+.txt"))
     assert ifp.read() == report2
+
+
+def test_reification():
+    import io
+    import reification
+    s2 = io.StringIO()
+    reification.runtest("reification-table.txt", out=s2)
+
+    result = """R orig (l / leave-11 :ARG0 (g / girl) :ARG1-of (c / cause-01 :ARG0 (a / arrive-01 :ARG1 (b / boy))))
+r  new (l / leave-11 :ARG0 (g / girl) :ARG1-of (zzz0 / cause-01 :ARG0 (a / arrive-01 :ARG1 (b / boy))))
+U orig (l / leave-11 :ARG0 (g / girl) :cause (a / arrive-01 :ARG1 (b / boy)))
+u  new (l / leave-11 :ARG0 (g / girl) :cause (a / arrive-01 :ARG1 (b / boy)))
+errors []
+"""
+    #print("QQQ<%s>" % s2.getvalue())
+    assert result == s2.getvalue()

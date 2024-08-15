@@ -1,9 +1,13 @@
 # Changes
 
+## Version 3.4.1
+* new tests
+
 ## Version 3.4.0
 * integrated Smatch++ (https://github.com/flipz357/smatchpp) into `inter_annotator.py` and `server.py`
 * added option `--sortcol` to `inter_annotator.py` to sort colums in TSV report file
 * test extended
+* smatchpp==1.7.0 added to `requirements.txt`
 
 ## Version 3.3.0
 * show ARGn definitions as tooltip when mouse hovers over PropBank concepts

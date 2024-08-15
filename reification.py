@@ -206,18 +206,18 @@ class Reificator:
         print("P: %.1f R: %.1f F: %.1f" % (prec, recall, f1))
 
 
-def test(reificator, U, R):
+def test(reificator, U, R, out=sys.stdout):
     repl = re.compile("\\s+")
-    print("R orig", repl.sub(" ", R))
+    print("R orig", repl.sub(" ", R), file=out)
     r = reificator.reify(U)
-    print("r  new", repl.sub(" ", r))
+    print("r  new", repl.sub(" ", r), file=out)
     #compare(r, R)
     #return
 
-    print("U orig", repl.sub(" ", U))
+    print("U orig", repl.sub(" ", U), file=out)
     u, msg = reificator.dereify(R)
-    print("u  new", repl.sub(" ", u))
-    print("errors", msg)
+    print("u  new", repl.sub(" ", u), file=out)
+    print("errors", msg, file=out)
     #compare(u, U)
 
 
@@ -239,7 +239,7 @@ def getInstance(reiftable=None):
     return moninst
 
 
-def runtest(table):
+def runtest(table, out=sys.stdout):
     ur1 = """(l / leave-11
                 :ARG0 (g / girl)
                 :cause (a / arrive-01
@@ -291,7 +291,7 @@ def runtest(table):
     #print(r)
 
     reificator = getInstance(table)
-    test(reificator, ur1, r1)
+    test(reificator, ur1, r1, out=out)
     #test(reificator, ur3, r3)
     #test(reificator, ur4, r4)
 

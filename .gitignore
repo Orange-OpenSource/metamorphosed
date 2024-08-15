@@ -7,3 +7,7 @@ tmp
 amr3-training-all.txt
 .tox
 .coverage
+VENV
+*verbalconcepts*
+relations-list.txt
+rels.pdf

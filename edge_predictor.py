@@ -51,6 +51,6 @@ class Basic_EdgePredictor:
             return ":op2"
 
         if self.verbre.search(source_concept):
-            return ":ARGn"
+            return ":ARG0"
         # not able to predict
         return "todo"
