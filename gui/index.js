@@ -166,7 +166,7 @@ function getServerInfo() {
 
 		    if (data.sentences) {
 			sentencelist = data.sentences;
-			for (var i =0; i<data.sentences.length; ++i) {
+			for (var i=0; i<data.sentences.length; ++i) {
 			    var optionstring = data.sentences[i][0] + ": " + data.sentences[i][1];
 			    if (optionstring.length > 150) {
 				optionstring = optionstring.substring(optionstring, 150) + "...";
@@ -338,9 +338,9 @@ function info(event) {
     if (readonly) {
 	return;
     }
-    if (node.id.startsWith("node ")) {
+    if (node.id.startsWith("node#")) {
 	// edit node
-	modconceptvar = node.id.split(" ")[1];
+	modconceptvar = node.id.split("#")[1];
 	if (lastclickededge != null) {
 	    // we take the last clicked edge and connect to the now clicked instance
 	    $(".editmode").hide();
@@ -370,7 +370,7 @@ function info(event) {
 	    // we modify an instance/class node
 	    $(".modal").hide();
 	    //$("#modconcept").show();
-	    const conceptname = node.id.split(" ")[2]; //event.target.parentNode.id.split(" ")[2];
+	    const conceptname = node.id.split("#")[2]; //event.target.parentNode.id.split("#")[2];
 	    lastclickednode = modconceptvar;
 
 	    $("#modifiedconcept").val(conceptname);
@@ -444,17 +444,17 @@ function info(event) {
 				     node.children[chosenrel].setAttribute("class", "");
 				 }
 			     });
-    } else if (node.id.startsWith("literal ")) {
+    } else if (node.id.startsWith("literal#")) {
 	// edit literal
 	$(".modal").hide();
 	//$("#modlit").show();
 	//console.log("ZZZZ", event.target.parentNode.id.split(" "));
-	const elems = node.id.split(" ");
+	const elems = node.id.split("#");
 	const toto = elems.slice(3);
-	const literalname = toto.join(" ");
+	const literalname = toto.join("#");
 	//const literalname = event.target.parentNode.id.split(" ")[3];
-	litid = node.id.split(" ")[1];
-	litedge = node.id.split(" ")[2];
+	litid = node.id.split("#")[1];
+	litedge = node.id.split("#")[2];
 	$("#modifiedliteral").val(literalname.replaceAll('"', ''));
 	
 	// open edit modal

@@ -274,7 +274,7 @@ class AMRProcessor:
                     kwargs["tooltip"] = "\n".join(lines)
 
                 graph.node("%s" % s, label="%s/%s" % (s, o), shape="box",
-                           id="node %s %s" % (s, o),
+                           id="node#%s#%s" % (s, o),
                            #URL=branch[0],
                            #fillcolor=ibg,
                            #style="filled",
@@ -297,7 +297,7 @@ class AMRProcessor:
                     kwargs["style"] = "filled"
 
                     graph.node(onodeid, label="%s" % (o),
-                               id="literal %s %s %s" % (s, p, o),
+                               id="literal#%s#%s#%s" % (s, p, o),
                                #style="filled",
                                color=orangecolors.get("EN"),
                                #fillcolor=orangecolors.get("EN"),

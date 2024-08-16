@@ -67,7 +67,7 @@ class AMRsentence:
             if c:
                 self.comments.append(c)
 
-    def write(self, ofp, onlyheader=False):
+    def write(self, ofp=sys.stdout, onlyheader=False):
         if self.id:
             if self.idrest:
                 print("# ::id %s ::%s" % (self.id, "::".join(self.idrest)), file=ofp)
