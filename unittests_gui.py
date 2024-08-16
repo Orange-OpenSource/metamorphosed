@@ -50,7 +50,8 @@ from server import AMR_Edit_Server
 #  -k test_edit_modliteral (filters tests which do not match argument)
 
 
-PORT=4568
+PORT = 4568
+
 
 # launched only once
 @pytest.fixture(scope="session")
@@ -85,13 +86,8 @@ def client(app2):
 
 def test_gui(client):
     client, datadir = client
-    gt = selenium_test.GUITest(port=PORT)
+    gt = selenium_test.GUITest(port=PORT, browser="chrome", headless=True)
     gt.runtests()
-
-    print("ZZZZ", datadir)
-    #ifp = open(os.path.join(datadir.name, "testamr.txt.2"))
-    #contents = ifp.read()
-    #print("contents", contents)
 
     doc = amrdoc.AMRdoc(os.path.join(datadir.name, "testamr.txt.2"))
     result = doc.sentences[0].amr
@@ -116,5 +112,7 @@ def test_gui(client):
              :op1 "Tir"
              :op2 "na"
              :op3 "nOg"))'''
+
+    time.sleep(1)
     # we did only modify the first sentence
     assert ref == result

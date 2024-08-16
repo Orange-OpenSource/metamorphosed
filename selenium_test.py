@@ -13,14 +13,24 @@ from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+
 class GUITest:
-    def __init__(self, host="localhost", port=4567):
-        # self.driverService = Service('/snap/bin/geckodriver')
-        # self.driver = webdriver.Firefox(service=driverService)
-        options = webdriver.ChromeOptions()
-        options.add_argument("--disable-search-engine-choice-screen")
-        options.add_argument("--window-size=1420,900")
-        self.driver = webdriver.Chrome(options=options)
+    def __init__(self, host="localhost", port=4567, browser="chrome", headless=False):
+        if browser == "chrome":
+            options = webdriver.ChromeOptions()
+            options.add_argument("--disable-search-engine-choice-screen")
+            if headless:
+                options.add_argument("--headless=new")
+            else:
+                options.add_argument("--window-size=1420,900")
+            self.driver = webdriver.Chrome(options=options)
+        else:
+            # not all tests working with firefox
+            driverService = Service('/snap/bin/geckodriver')
+            options = webdriver.firefox.options.Options()
+            if headless:
+                options.add_argument("-headless")
+            self.driver = webdriver.Firefox(options=options, service=driverService)
         self.driver.get("http://%s:%d" % (host, port))
         self.wait = WebDriverWait(self.driver, 20)
         print("init OK")
@@ -35,7 +45,7 @@ class GUITest:
         # add concept
         field = self.driver.find_element(By.ID, "concept")
         field.clear()
-        field.send_keys("house"+ Keys.RETURN)
+        field.send_keys("house" + Keys.RETURN)
 
         time.sleep(2)
         print("concept 'house' added")
@@ -51,19 +61,28 @@ class GUITest:
         button = self.driver.find_element(By.ID, "addname")
         button.click()
         print("named added")
-        
-        ActionChains(self.driver).scroll_by_amount(1000, 1000).perform()
-        print("scrolled")
+
+        # not needed
+        #ActionChains(self.driver).scroll_by_amount(1000, 1000).perform()
+        #print("scrolled")
 
     def linkconcept(self):
         # only works with Chrome
+        ActionChains(self.driver).scroll_by_amount(1000, 1000).perform()
+        print("scrolled")
+
         b = self.wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="node#l#live-01"]')))
-        b.click()
+
+        ac = ActionChains(self.driver)
+        ac.move_to_element_with_offset(b, 0, -20).click().perform()
+        #b.click()
         time.sleep(2)
 
         b = self.wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="node#h#house"]')))
-        b.click()
+        ac.move_to_element_with_offset(b, 0, 20).click().perform()
+        #b.click()
         print("concept linked")
+        time.sleep(1)
 
     def settop(self):
         # set new top
@@ -77,12 +96,17 @@ class GUITest:
         # change starting point of edge
         # edge
         b = self.wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="edge#p#n#:name"]')))
-        b.click()
+        ac = ActionChains(self.driver)
+        ac.move_to_element_with_offset(b, 0, 5).click().perform()
+        #b.click()
         time.sleep(2)
 
         # new start
         b = self.wait.until(EC.element_to_be_clickable((By.ID, 'node#b#bear-02')))
-        b.click()
+        ac = ActionChains(self.driver)
+        ac.move_to_element_with_offset(b, 0, 5).click().perform()
+        #b.click()
+
         time.sleep(2)
 
     def addliteral(self):
@@ -108,6 +132,8 @@ class GUITest:
         # safefile
         x = self.driver.find_element(By.ID, "save")
         x.click()
+        print("file saved")
+        time.sleep(2)
 
     def runtests(self):
         self.readsentence()
@@ -121,6 +147,8 @@ class GUITest:
 
 
 if __name__ == "__main__":
+    input("start metamorphosed on port %d and enter to continue... " % 4567)
+
     gt = GUITest()
     gt.runtests()
 
