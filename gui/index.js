@@ -358,6 +358,7 @@ function info(event) {
 	    lastclickededge = null;
 	    runcommand(params);
 	} else if (lastclickednode != null) {
+	    // we've clicked on an edge
 	    var params = {
 		"start": lastclickednode,
 		"end": modconceptvar,
@@ -396,7 +397,8 @@ function info(event) {
 	}
     } else if (node.id.startsWith("edge#")) {
 	if (lastclickedElement != null) {
-	    lastclickedElement.removeAttribute("class");
+	    //lastclickedElement.removeAttribute("class"); // removes all classes
+	    lastclickedElement.classList.remove("boxhighlight");
 	    lastclickednode = null;
 	    lastclickededge = null;
 	    $(".modal").hide();
@@ -440,7 +442,7 @@ function info(event) {
 				 lastclickededge = null;
 				 $("#edgesetmodal").hide();
 				 if (chosenrel > -1) {
-				     console.log("aaaaa", node.children[chosenrel]);
+				     //console.log("aaaaa", chosenrel, node.children[chosenrel]);
 				     node.children[chosenrel].setAttribute("class", "");
 				 }
 			     });

@@ -1,5 +1,41 @@
 #!/usr/bin/env python3
 
+# This library is under the 3-Clause BSD License
+#
+# Copyright (c) 2022-2024,  Orange
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#    * Redistributions of source code must retain the above copyright
+#      notice, this list of conditions and the following disclaimer.
+#
+#    * Redistributions in binary form must reproduce the above copyright
+#      notice, this list of conditions and the following disclaimer in the
+#      documentation and/or other materials provided with the distribution.
+#
+#    * Neither the name of Orange nor the
+#      names of its contributors may be used to endorse or promote products
+#      derived from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL ORANGE BE LIABLE FOR ANY
+# DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+# ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# SPDX-License-Identifier: BSD-3-Clause
+# Software Name: MetAMoRphosED AMR-Editor
+# Author: Johannes Heinecke
+
+# tests GUI with Chrome
+# TODO: largely perfectible, does not work on Firefox yet
+
 import time
 
 from selenium import webdriver
@@ -7,7 +43,6 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 
 from selenium.webdriver.firefox.service import Service
-#from selenium.webdriver.common.actions import Actions
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.ui import WebDriverWait
@@ -96,16 +131,17 @@ class GUITest:
         # change starting point of edge
         # edge
         b = self.wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="edge#p#n#:name"]')))
-        ac = ActionChains(self.driver)
-        ac.move_to_element_with_offset(b, 0, 5).click().perform()
-        #b.click()
+        #b = self.wait.until(EC.element_to_be_clickable((By.XPATH, '//*[text()="????"]')))
+        #ac = ActionChains(self.driver)
+        #ac.move_to_element_with_offset(b, 0, 5).click().perform()
+        b.click()
         time.sleep(2)
 
         # new start
         b = self.wait.until(EC.element_to_be_clickable((By.ID, 'node#b#bear-02')))
-        ac = ActionChains(self.driver)
-        ac.move_to_element_with_offset(b, 0, 5).click().perform()
-        #b.click()
+        #ac = ActionChains(self.driver)
+        #ac.move_to_element_with_offset(b, 0, 5).click().perform()
+        b.click()
 
         time.sleep(2)
 

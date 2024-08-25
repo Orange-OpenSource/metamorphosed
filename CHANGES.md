@@ -1,7 +1,9 @@
 # Changes
 
 ## Version 3.4.1
+* error in edge click corrected
 * new tests
+* experimental tests with selenium added (currently Chrome only)
 
 ## Version 3.4.0
 * integrated Smatch++ (https://github.com/flipz357/smatchpp) into `inter_annotator.py` and `server.py`
