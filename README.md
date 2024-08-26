@@ -184,12 +184,14 @@ The objects of all predicates `:quant` must match `\d+`, i.e. an integer
 
 ## Validate AMR files
 
+The script `amrdoc.py` can check whether concepts (with an suffixe line `-01`) are well defined in PropBank and that all used `:ARGn` relations are define for the given concept. If a liste of valid relations in given, it will detect relations in the AMR file which are not defined.
 
 ```
 amrdoc.py --validate \
 	--rels <relations.txt> \
 	--pbframes <propbank-frames-dir> \
 	--constraintes <constraints.yml> \
+	amrfile.txt
 ```
 
 if necessary, adapt a copy of `constraints.yml` to your needs.
