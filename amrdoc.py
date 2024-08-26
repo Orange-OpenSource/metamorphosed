@@ -221,7 +221,7 @@ class AMRdoc:
                     comments = []
                     self.sentences.append(asent)
                     newid = asent.id # we do not want to overwrite an ID, event if it's a duplicate
-                    if asent.id in self.ids:
+                    if asent.id is not None and asent.id in self.ids:
                         if asent.id not in duplicated:
                             duplicated[asent.id] = 1
                         else:
