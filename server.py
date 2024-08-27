@@ -178,13 +178,13 @@ class AMR_Edit_Server:
         @app.route('/info', methods=["GET"])
         def info():
             withdata = self.checkParameter(request, 'withdata', 'boolean', isOptional=True, defaultValue=False)
+            self.validParameters(request, ["withdata"])
+
             dico = {"cmdline": " ".join(sys.argv),
                     "pwd": os.getcwd(),
                     "hostname": socket.gethostname(),
                     "filename": filename, "numsent": len(self.amrdoc.sentences),
                     "propbank_frames": pbframes,
-                    #"relations": sorted(self.amr_rels.relations),
-                    #"concepts": sorted(self.amr_concepts.relations),
                     "readonly": self.readonly,
                     "version": amreditor.VERSION,
                     "apiversion": APIVERSION
@@ -271,7 +271,8 @@ class AMR_Edit_Server:
                            "modcomment",
                            "reify", "dereify",
                            "newtop"]
-            self.findinvalidparameters(request, validparams)
+            #self.findinvalidparameters(request, validparams)
+            self.validParameters(request, set(validparams))
 
             print("COMMAND:", end=" ")
             for v in validparams:
@@ -406,6 +407,9 @@ class AMR_Edit_Server:
             regex = self.checkParameter(request, 'regex', 'string', isOptional=False, defaultValue=None)
             compare = self.checkParameter(request, 'compare', 'string', isOptional=True, defaultValue=None)
 
+            validparams = ["num", "what", "regex", "compare"]
+            self.validParameters(request, set(validparams))
+
             okt = None
             oka = None
             if what == "findtextnext":
@@ -471,6 +475,9 @@ class AMR_Edit_Server:
             sentnum = self.checkParameter(request, 'num', 'integer', isOptional=False, defaultValue=None)
             history = self.checkParameter(request, 'history', 'string', isOptional=False, defaultValue=None)
 
+            validparams = ["num", "history"]
+            self.validParameters(request, set(validparams))
+
             #print("hUNDOS: %d" % (len(self.undos)))
             #print("hREDOS: %d" % (len(self.redos)))
 
@@ -520,6 +527,9 @@ class AMR_Edit_Server:
             direction = self.checkParameter(request, 'direction', 'string', isOptional=False, defaultValue=None)
             compare = self.checkParameter(request, 'compare', 'string', isOptional=True, defaultValue=None)
 
+            validparams = ["num", "direction", "compare"]
+            self.validParameters(request, set(validparams))
+
             if direction == "preceding":
                 if sentnum > 1:
                     sentnum -= 1
@@ -538,6 +548,9 @@ class AMR_Edit_Server:
             sentnum = self.checkParameter(request, 'num', 'integer', isOptional=False, defaultValue=None)
             compare = self.checkParameter(request, 'compare', 'string', isOptional=True, defaultValue=None)
 
+            validparams = ["num", "compare"]
+            self.validParameters(request, set(validparams))
+
             if sentnum < 1 or sentnum > len(self.amrdoc.sentences):
                 dico = {"error": "invalid sentence number: must be between 1 and %d" % len(self.amrdoc.sentences)}
                 return Response("%s\n" % json.dumps(dico),
@@ -547,8 +560,22 @@ class AMR_Edit_Server:
 
         @app.route('/graphs/<filename>', methods=["GET"])
         def downloadgraphs(filename: str):
+            # filename necessary in GUI, but we also use the same. Check whether it does not contain strange stuff
             dataformat = self.checkParameter(request, 'format', 'string', isOptional=True, defaultValue="svg")
             pages = self.checkParameter(request, 'sentences', 'string', isOptional=True, defaultValue=None)
+
+            if not re.match(r"^[A-Za-z0-9_]+\.zip$", filename):
+                dico = {"error": "invalid export filename. Must end in .zip: <%s>" % filename}
+                return Response("%s\n" % json.dumps(dico),
+                                400, mimetype="application/json")
+
+            validargs = set(["format", "sentences"])
+            self.validParameters(request, validargs)
+
+            #if validargs != validargs.union(request.values.keys()):
+            #    dico = {"error": "invalid parameters: <%s>" % request.values.keys()}
+            #    return Response("%s\n" % json.dumps(dico),
+            #                    400, mimetype="application/json")
 
             def parse_pages(page_string):
                 page_string2 = re.sub("[^0-9, -]", "", page_string)
@@ -593,6 +620,9 @@ class AMR_Edit_Server:
         @app.route('/save', methods=["GET"])
         def save():
             sentnum = self.checkParameter(request, 'num', 'integer', isOptional=True, defaultValue=1)
+
+            validargs = set(["num"])
+            self.validParameters(request, validargs)
 
             self.save()
 
@@ -766,11 +796,19 @@ class AMR_Edit_Server:
             self.savefile(self.filename, self.fileversion)
             # print("saved as %s.%s" % (self.filename, version))
 
-    def findinvalidparameters(self, request, validlist):
-        for k, v in request.values.items():
-            #print("kkk", k,v)
-            if k not in validlist:
-                raise ServerException("invalid parameter '%s'" % k)
+#    def findinvalidparameters(self, request, validlist):
+#        for k, v in request.values.items():
+#            #print("kkk", k,v)
+#            if k not in validlist:
+#                raise ServerException("invalid parameter '%s'" % k)
+
+    def validParameters(self, request, validparams):
+        for paramName in request.files:
+            if paramName not in validparams:
+                raise ServerException("invalid file parameter '%s'" % paramName)
+        for paramName in request.values:
+            if paramName not in validparams:
+                raise ServerException("invalid parameter '%s'" % paramName)
 
     def checkParameter(self, request, paramName, paramType, isOptional=False, defaultValue=None):
         # needed for curl -F txt=@file.txt

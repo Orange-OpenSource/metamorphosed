@@ -1,5 +1,8 @@
 # Changes
 
+## Version 3.4.2
+* reject more invalid HTTP requests
+
 ## Version 3.4.1
 * error in edge click corrected
 * new tests

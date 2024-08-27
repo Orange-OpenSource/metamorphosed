@@ -166,7 +166,7 @@ def test_info(client):
     response = client.get("/version")
     res = json.loads(response.data)
     #print("res", res, file=sys.stderr)
-    assert res == {'name': 'AMR Editor', 'version': '3.4.1', 'apiversion': '1.5.0'}
+    assert res == {'name': 'AMR Editor', 'version': '3.4.2', 'apiversion': '1.5.0'}
 
     response = client.get("/info", query_string={"withdata": True})
     res = json.loads(response.data)
@@ -737,6 +737,31 @@ def test_bad_api_usage(client):
     assert response.status_code == 400
     res = json.loads(response.text)
     assert res == {"error": "invalid search parameter 'findanyerror'"}
+
+    response = client.get("/graphs/bad filename.pop")
+    assert response.status_code == 400
+    res = json.loads(response.text)
+    assert res == {"error": "invalid export filename. Must end in .zip: <bad filename.pop>"}
+
+    response = client.get("/graphs/filename.zip", query_string={"anything": "whatever"})
+    assert response.status_code == 400
+    res = json.loads(response.text)
+    assert res == {"error": "invalid parameter 'anything'"}
+
+    response = client.get("/edit", query_string={"num": 3, "reify": ":location <>  be-located-at-91", "badparam": 1})
+    assert response.status_code == 400
+    res = json.loads(response.text)
+    assert res == {"error": "invalid parameter 'badparam'"}
+
+    response = client.get("/search", query_string={"num": 4, "what": "findcommentprec", "badparam": 1, "regex": "s[aeiou]cond"})
+    assert response.status_code == 400
+    res = json.loads(response.text)
+    assert res == {"error": "invalid parameter 'badparam'"}
+
+    response = client.get("/read", query_string={"num": 11, "badparam": 1})
+    assert response.status_code == 400
+    res = json.loads(response.text)
+    assert res == {"error": "invalid parameter 'badparam'"}
 
 
 def test_reify(client):
