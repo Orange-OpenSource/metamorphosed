@@ -33,7 +33,7 @@
 # Software Name: MetAMoRphosED AMR-Editor
 # Author: Johannes Heinecke
 
-# version 3.4.2 as of 27th August 2024
+# version 3.5.0 as of 27th August 2024
 
 import re
 import readline
@@ -43,8 +43,9 @@ from graphviz import Digraph
 
 import graph
 from reification import getInstance
+import amr_comparison
 
-VERSION = "3.4.2"
+VERSION = "3.5.0"
 
 # terminology
 # instance  a / ...
@@ -146,6 +147,45 @@ class AMRProcessor:
             rtc = re.finditer(regex, self.lastpm)
             if rtc:
                 return rtc
+        return []
+
+    # TODO
+    def findsubgraph(self, subgraph, smatchpp=False):
+        # returns True if the subgraph is part of graph
+        try:
+            res = amr_comparison.compare(self.lastpm, subgraph, runs=1, use_smatchpp=smatchpp, align=True)
+            psg = penman.decode(subgraph)
+            subgraph_variables = psg.variables()
+            #print("====", self.lastpm)
+            #print(res.instances1OK)
+            #print(res.instances2OK)
+            #print(res.rel1OK)
+            #print(res.rel2OK)
+            #print(psg.edges())
+            #print(psg.attributes())
+
+            if subgraph_variables == res.instances2OK:
+                # all variables of the subgraph are matched
+                # now check whether literals also match: all edges and attributes of subgraph musst be in
+                for s, p, o in psg.edges():
+                    if (s, p, o) not in res.rel2OK:
+                        #print("edge", s,p,o, "missing")
+                        return []
+                for s, p, o in psg.attributes():
+                    if (s, p, o) not in res.rel2OK:
+                        #print("attr", s,p,o, "missing")
+                        return []
+
+                # find first concept of subgraph in graph (for highlighting)
+                firstinstance = psg.instances()[0]
+                firstconcept = firstinstance[2]
+                rtc = re.finditer(firstconcept, self.lastpm)
+                return rtc
+        except Exception as e:
+            # no valid PENMAN, take subgraph as a regex...
+            print("AMR Search error: %s" % e)
+            return self.findamr(subgraph)
+
         return []
 
     def readpenman(self, amr):
@@ -621,3 +661,7 @@ if __name__ == "__main__":
         aa.process(line)
         aa.show()
         line = input(">> ")
+
+    aa = AMRProcessor(inserver=False)
+    aa.readpenman("(c / contrast-01   :ARG1 (p / possible-01      :polarity -   :ARG1 (t / think-01  :ARG0 (i / i))))")
+    aa.show()

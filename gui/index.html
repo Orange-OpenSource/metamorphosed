@@ -126,7 +126,7 @@
                 <table>
                     <tr>
                         <td>Id:</td>
-                        <td><input class="textfield" placeholder="regex" title="" type="text" id="idsearch" value="">
+                        <td><input class="textfield" placeholder="regex" title="search for sentence ID" type="text" id="idsearch" value="">
                             <button class="findbutton mybutton" id="findidprec" title="find preceding occurrence">&lt;&lt;</button>
                             <button class="findbutton mybutton" id="findidnext" title="find next occurrence">&gt;&gt;</button>
                         </td>
@@ -135,7 +135,7 @@
 
                     <tr>
                         <td>Text:</td>
-                        <td><input class="textfield" placeholder="regex" title="" type="text" id="textsearch" value="">
+                        <td><input class="textfield" placeholder="regex" title="search in sentences" type="text" id="textsearch" value="">
                             <button class="findbutton mybutton" id="findtextprec" title="find preceding occurrence">&lt;&lt;</button>
                             <button class="findbutton mybutton" id="findtextnext" title="find next occurrence">&gt;&gt;</button>
                         </td>
@@ -144,14 +144,16 @@
 
                     <tr>
                         <td>AMR:</td>
-                        <td><input class="amrfield" placeholder="regex" title="??" type="text" id="amrsearch" value="">
+                        <td><input class="amrfield" placeholder="regex/PENMAN" title="if the string is a PENMAN graph
+we look for graphs which contain the PENMAN graph.
+Else the input is interpreted as regular expression" type="text" id="amrsearch" value="">
                             <button class="findbutton mybutton" id="findamrprec" title="find preceding occurrence">&lt;&lt;</button>
                             <button class="findbutton mybutton" id="findamrnext" title="find next occurrence">&gt;&gt;</button>
                         </td>
                     </tr>
                     <tr>
                         <td>comments:</td>
-                        <td><input class="amrfield" placeholder="regex" title="??" type="text" id="commentsearch" value="">
+                        <td><input class="amrfield" placeholder="regex" title="search for comments" type="text" id="commentsearch" value="">
                             <button class="findbutton mybutton" id="findcommentprec" title="find preceding occurrence">&lt;&lt;</button>
                             <button class="findbutton mybutton" id="findcommentnext" title="find next occurrence">&gt;&gt;</button>
                         </td>

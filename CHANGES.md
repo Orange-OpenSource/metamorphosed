@@ -1,5 +1,10 @@
 # Changes
 
+## Version 3.5.0
+* search function AMR improved: if the search string is a valid PENMAN graph, it will search for graphs which contain the given graph
+* documention and HTML tooltips updated
+* new tests
+
 ## Version 3.4.2
 * reject more invalid HTTP requests
 

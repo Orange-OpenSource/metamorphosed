@@ -10,7 +10,7 @@ by LDC (https://catalog.ldc.upenn.edu/LDC2020T02)
 * _metAMoRphosED_ provides a script to calculate inter-annotator agreement (see section [Inter-annotator agreement](#inter-annotator-agreement))
 
 
-Current version 3.4.2 (see [CHANGES.md](CHANGES.md))
+Current version 3.5.0 (see [CHANGES.md](CHANGES.md))
 
 ## TL;DR
 if you are updating from versions up to 3.30, please install an additional package:
@@ -240,8 +240,18 @@ In oder to attach an edge to another starting instance, just click first on the 
 
 ## Search, further info
 
-On the bottom of the main screen propbank definitions for all used concepts is displayed. Clicking on `-` minimizes the sentence/PENMAN/graphics windows.
-Basic search is available in the search field
+On the bottom of the main screen propbank definitions for all used concepts is displayed. 
+Basic search is available in the search field. THE AMR-search field accepts two kinds of input
+* a valid PENMAN graph: the search will find AMR graphs which contain the given PENMAN graph. So searching for `(e / eat-01 :ARG1 ( c / cheese ))` will find a graph like 
+```
+(v1 / eat-01 
+  :ARG0 ( v2 / mouse )
+  :ARG1 ( v3 / cheese ))
+```
+* a regular expression: if the input is not a valid PENMAN graph, it is interpreted as a regular expression
+* For ID, Text and comment search, the input is always interpreted as a regular expression
+
+Clicking on `-` minimizes the sentence/PENMAN/graphics windows:
 
 ![Minimized sentence/PENMAN/graphics](doc/minimized.png)
 
@@ -314,7 +324,7 @@ If you specify a second AMR file using the option `--compare <amr file>`, _metAM
 
 ![AMR file comparison ](doc/comparison.png)
 
-It is possible to search in the text, PENAMN and comments as in the edit mode. However, editing is not possible.
+It is possible to search in the text, PENMAN and comments as in the edit mode. However, editing is not possible.
 
 To compare several files (for instance the annotations of multiple annotators), specify one of the files using the `-f <amr file 1>` option, and all other with  `--compare <amr file 2> <amr file 3> <amr file 4>`.
 _metAMoRphosED_ switches automatically in multifile mode. In order to see the difference (ans Smatch) between two files for the displayed sentence choose the two files to compare with the `comparisons`-selection bar

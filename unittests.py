@@ -86,6 +86,31 @@ def app():
 
 
 # start server just for one test
+# needed for tests with SmatchPP
+@pytest.fixture()
+def app2():
+    aes = AMR_Edit_Server(4568,
+                          "testamr.txt",
+                          None, #"propbank-frames/frames/",
+                          None, #"relations.txt",
+                          None, #"concepts.txt",
+                          None, #"constraints.yml",
+                          False, # readonly
+                          None, # author
+                          None, #"reification-table.txt"
+                          smatchpp=True,
+                          )
+    app = aes.app
+    number_of_sentences = len(aes.aps)
+
+    # other setup can go here
+
+    yield app
+
+    # clean up / reset resources here
+
+
+# start server just for one test
 @pytest.fixture()
 def app_once():
     #app = create_app()
@@ -150,6 +175,11 @@ def client_once(app_once):
 
 
 @pytest.fixture()
+def client2(app2):
+    return app2.test_client()
+
+
+@pytest.fixture()
 def client_git(app_git):
     app, repo = app_git
     #return app_git.test_client()
@@ -166,7 +196,7 @@ def test_info(client):
     response = client.get("/version")
     res = json.loads(response.data)
     #print("res", res, file=sys.stderr)
-    assert res == {'name': 'AMR Editor', 'version': '3.4.2', 'apiversion': '1.5.0'}
+    assert res == {'name': 'AMR Editor', 'version': '3.5.0', 'apiversion': '1.5.0'}
 
     response = client.get("/info", query_string={"withdata": True})
     res = json.loads(response.data)
@@ -585,6 +615,42 @@ def test_search_amr(client):
     res = json.loads(response.data)
     #print("res", res)
     assert res["num"] == 12
+
+    response = client.get("/search", query_string={"num": 1, "what": "findamrnext", "regex": "(k / kill-01)"})
+    res = json.loads(response.data)
+    #print("res", res)
+    assert res["num"] == 2
+
+    response = client.get("/search", query_string={"num": 1, "what": "findamrnext", "regex": "(a / kill-01 :location (x / kitchen))"})
+    res = json.loads(response.data)
+    assert res["num"] == 3
+
+    response = client.get("/search", query_string={"num": 3, "what": "findamrnext", "regex": '(c33 / country :name (n6 / name :op1 "Germany"))'})
+    res = json.loads(response.data)
+    assert res["num"] == 21
+
+    response = client.get("/search", query_string={"num": 21, "what": "findamrprec", "regex": '(z1 / dog :mod (z2 / big))'})
+    res = json.loads(response.data)
+    assert res["num"] == 4
+
+
+def test_search_amr_smatchpp(client2):
+    response = client2.get("/search", query_string={"num": 1, "what": "findamrnext", "regex": "(k / kill-01)"})
+    res = json.loads(response.data)
+    #print("res", res)
+    assert res["num"] == 2
+
+    response = client2.get("/search", query_string={"num": 1, "what": "findamrnext", "regex": "(a / kill-01 :location (x / kitchen))"})
+    res = json.loads(response.data)
+    assert res["num"] == 3
+
+    response = client2.get("/search", query_string={"num": 3, "what": "findamrnext", "regex": '(c33 / country :name (n6 / name :op1 "Germany"))'})
+    res = json.loads(response.data)
+    assert res["num"] == 21
+
+    response = client2.get("/search", query_string={"num": 21, "what": "findamrprec", "regex": '(z1 / dog :mod (z2 / big))'})
+    res = json.loads(response.data)
+    assert res["num"] == 4
 
 
 def test_search_comment(client):

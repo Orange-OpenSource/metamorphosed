@@ -81,6 +81,7 @@ class AMR_Edit_Server:
         self.author = author
         self.reificator = None
         self.do_git = do_git
+        self.smatchpp = smatchpp
 
         self.readonly = readonly
         if compare is not None:
@@ -432,8 +433,8 @@ class AMR_Edit_Server:
                         break
             elif what == "findamrnext":
                 for x in range(sentnum + 1, len(self.amrdoc.sentences) + 1):
-                    #oka = list(self.amrdoc.sentences[x].findamr(regex))
-                    oka = list(self.aps[x].findamr(regex))
+                    #oka = list(self.aps[x].findamr(regex))
+                    oka = list(self.aps[x].findsubgraph(regex, smatchpp=self.smatchpp))
                     if oka:
                         sentnum = x
                         break
@@ -458,8 +459,9 @@ class AMR_Edit_Server:
 
             elif what == "findamrprec":
                 for x in range(sentnum - 1, 0, -1):
-                    oka = list(self.aps[x].findamr(regex))
                     #oka = list(self.amrdoc.sentences[x].findamr(regex))
+                    #oka = list(self.aps[x].findamr(regex))
+                    oka = list(self.aps[x].findsubgraph(regex, smatchpp=self.smatchpp))
                     if oka:
                         sentnum = x
                         break
@@ -745,7 +747,7 @@ class AMR_Edit_Server:
                 seconddoc, secondaps = self.otheramrdocs[second_to_compare]
                 secondsent = seconddoc.sentences[sentnum - 1]
 
-                compres = amr_comparison.compare(firstsent.amr, secondsent.amr, use_smatchpp=smatchpp, align=True)
+                compres = amr_comparison.compare(firstsent.amr, secondsent.amr, use_smatchpp=self.smatchpp, align=True)
 
                 if first_to_compare == -1:
                     # update display of first document
