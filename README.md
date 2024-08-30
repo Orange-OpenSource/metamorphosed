@@ -433,7 +433,8 @@ sentence inter-annotator agreement Smatch F1: 58.86 differences: 4.4167
 
 # Reference
 
-* Johannes Heinecke (2023) metAMoRphosED: a graphical editor for Abstract Meaning Representation. In ISA19 at International Workshop on Computational Semantics. Nancy
+* Johannes Heinecke (2023) <a href="https://aclanthology.org/2023.isa-1.4/">metAMoRphosED: a graphical editor for Abstract Meaning
+  Representation</a>. In ISA19 at International Workshop on Computational Semantics. Nancy
 
 ```
 @inproceedings{heinecke2023,
