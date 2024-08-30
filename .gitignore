@@ -11,3 +11,6 @@ VENV
 *verbalconcepts*
 relations-list.txt
 rels.pdf
+build/
+metamorphosed.egg-info/
+dist/
