@@ -46,7 +46,7 @@ import zipfile
 import git
 import pytest
 
-from server import AMR_Edit_Server
+from metamorphosed import AMR_Edit_Server
 
 # run (pytest-6.2.3)
 #   pytest unittests.py -vv -s
@@ -196,7 +196,7 @@ def test_info(client):
     response = client.get("/version")
     res = json.loads(response.data)
     #print("res", res, file=sys.stderr)
-    assert res == {'name': 'AMR Editor', 'version': '3.5.0', 'apiversion': '1.5.0'}
+    assert res == {'name': 'AMR Editor', 'version': '3.6.0', 'apiversion': '1.5.0'}
 
     response = client.get("/info", query_string={"withdata": True})
     res = json.loads(response.data)
@@ -908,7 +908,7 @@ def test_compare_read(client_once):
 
 
 def test_smatchpm():
-    from smatch_pm import Smatch
+    from metamorphosed.smatch_pm import Smatch
     sm = Smatch(verbose=True, veryVerbose=True, single_score=False)
 
     floatdisplay = "%%.%df" % 5
@@ -970,10 +970,10 @@ def test_amrdoc():
     #    "TESTING": True,
     #})
 
-    import amrdoc
-    import AMR_relations
-    import propbank_frames
-    import relations_constraints
+    import metamorphosed.amrdoc as amrdoc
+    import metamorphosed.AMR_relations as AMR_relations
+    import metamorphosed.propbank_frames as propbank_frames
+    import metamorphosed.relations_constraints as relations_constraints
 
     validators = []
     validators.append(AMR_relations.Relations("relations.txt"))
@@ -1039,7 +1039,7 @@ def test_amrdoc():
 
 
 def test_amrdoc_stats():
-    import amrdoc
+    import metamorphosed.amrdoc as amrdoc
     ad = amrdoc.AMRdoc("coverageamr.txt")
     reportfile = tempfile.TemporaryDirectory()
     amrdoc.stats([ad], conceptlist=False, plotting=False, outdir=reportfile.name)
@@ -1058,8 +1058,8 @@ def test_amrdoc_stats():
 
 
 def test_amreditor():
-    import amreditor
     import io
+    import metamorphosed.amreditor as amreditor
     aa = amreditor.AMRProcessor()
     #for l in tr:
     #    aa.process(l)
@@ -1188,7 +1188,7 @@ sentence 2	66.67	75.0	72.73	71.46	5	4	3	4.0
 
 def test_reification():
     import io
-    import reification
+    import metamorphosed.reification as reification
     s2 = io.StringIO()
     reification.runtest("reification-table.txt", out=s2)
 

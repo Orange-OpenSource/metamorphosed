@@ -124,7 +124,7 @@ Needs AMR data like
 To start the server, run 
 
 ```
-<install-path>/amr-editor/coref/corefserver.py \
+<install-path>/coref/corefserver.py \
 	--xml <listof xml files> \
 	--amrfiles <list of amr files containing the sentences referenced in the xml files> \
         [--port 4567]

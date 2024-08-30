@@ -56,7 +56,7 @@ import sys
 
 import penman
 
-import amrdoc
+import metamorphosed.amrdoc as amrdoc
 
 # silence penman
 import logging

@@ -41,11 +41,11 @@ import readline
 import penman
 from graphviz import Digraph
 
-import graph
-from reification import getInstance
-import amr_comparison
+import metamorphosed.graph as graph
+from metamorphosed.reification import getInstance
+import metamorphosed.amr_comparison as amr_comparison
 
-VERSION = "3.5.0"
+VERSION = "3.6.0"
 
 # terminology
 # instance  a / ...

@@ -51,8 +51,8 @@
 
 import sys
 
-import amrdoc
-import amr_comparison
+import metamorphosed.amrdoc as amrdoc
+import metamorphosed.amr_comparison as amr_comparison
 
 
 class IAA:

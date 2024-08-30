@@ -54,7 +54,7 @@ VERSION = "1.6"
 # hurts E402. TODO change somehow
 parent = pathlib.Path(os.path.abspath(__file__)).parent.parent
 sys.path.append(str(parent))
-import amrdoc
+import metamorphosed.amrdoc as amrdoc
 
 # TODO:
 #   annotate aucomatically all instances of an given context which have the same :wiki relation

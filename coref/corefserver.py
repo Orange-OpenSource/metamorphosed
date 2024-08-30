@@ -44,7 +44,7 @@ import sys
 import corefeditor
 from flask import Flask, Response, jsonify, render_template, request
 
-import gitinterface
+import metamorphosed.gitinterface as gitinterface
 
 parent = pathlib.Path(os.path.abspath(__file__)).parent.parent
 sys.path.append(str(parent))
@@ -74,10 +74,11 @@ class CorefServer:
                             "\nPlease rename Backup file first" % (", ".join(ko), ", ".join(ko2)))
 
         mydir = os.path.abspath(os.path.dirname(__file__))
+        print("zzzz", "%s/../metamorphosed/gui" % mydir)
         app = Flask(__name__,
                     static_url_path='',
-                    static_folder="%s/../gui" % mydir,
-                    template_folder="%s/../gui" % mydir)
+                    static_folder="%s/../metamorphosed/gui" % mydir,
+                    template_folder="%s/../metamorphosed/gui" % mydir)
         app.config['TEMPLATES_AUTO_RELOAD'] = True # needed to reload index.html
         self.app = app
 

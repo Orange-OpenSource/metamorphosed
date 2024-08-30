@@ -36,8 +36,9 @@
 
 # utilities to compare AMR graphes using either Smatch or SmatchPP
 
-from smatch_pm import Smatch
 from smatchpp import Smatchpp, solvers, data_helpers
+
+from metamorphosed.smatch_pm import Smatch
 
 
 class CompResult:

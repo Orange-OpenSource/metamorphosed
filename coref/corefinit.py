@@ -41,7 +41,7 @@ import sys
 
 import penman
 
-import amrdoc
+import metamorphosed.amrdoc as amrdoc
 
 parent = pathlib.Path(os.path.abspath(__file__)).parent.parent
 sys.path.append(str(parent))
