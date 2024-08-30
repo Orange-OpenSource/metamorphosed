@@ -13,7 +13,7 @@ by LDC (https://catalog.ldc.upenn.edu/LDC2020T02)
 Current version 3.5.0 (see [CHANGES.md](CHANGES.md))
 
 ## TL;DR
-if you are updating from versions up to 3.30, please install an additional package:
+if you are updating from versions up to 3.3.0, please install an additional package:
 ```
 pip install smatchpp==1.7.0
 ```
