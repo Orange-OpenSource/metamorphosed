@@ -144,9 +144,12 @@
 
                     <tr>
                         <td>AMR:</td>
-                        <td><input class="amrfield" placeholder="regex/PENMAN" title="if the string is a PENMAN graph
+                        <td><!--input class="amrfield" placeholder="regex/PENMAN" title="if the string is a PENMAN graph
 we look for graphs which contain the PENMAN graph.
-Else the input is interpreted as regular expression" type="text" id="amrsearch" value="">
+Else the input is interpreted as regular expression" type="text" id="amrsearch"value=""-->
+                            <textarea class="amrsearcharea" title="if the string is a PENMAN graph
+we look for graphs which contain the PENMAN graph.
+Else the input is interpreted as regular expression" placeholder="regex/PENMAN" type="text" rows="2" id="amrsearch" value=""></textarea>
                             <button class="findbutton mybutton" id="findamrprec" title="find preceding occurrence">&lt;&lt;</button>
                             <button class="findbutton mybutton" id="findamrnext" title="find next occurrence">&gt;&gt;</button>
                         </td>

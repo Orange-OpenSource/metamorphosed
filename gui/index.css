@@ -81,15 +81,21 @@ h4 {
   color: #ff7900;
 }
 
-textArea {
+/*textArea {
   text-align: justify;
-  /*font-family: Sans, Arial, Helvetica;*/
-  width: 500px;
-  height: 180px;
-}
+}*/
 
 .pnarea {
   font-family: "DejaVu Sans Mono", FreeMono, Mono;
+  width: 500px;
+  height: 180px;
+
+}
+.amrsearcharea {
+  /*font-family: "DejaVu Sans Mono", FreeMono, Mono; */
+  width: 180px;
+  border-radius: 5px;
+  border: solid 1px #959595;
 }
 
 .mybutton { 
@@ -222,7 +228,6 @@ input {
 .literalfield,
 .textfield,
 .amrfield {
-  width: 12em;
   vertical-align: middle;
   border-radius: 5px;
   border: solid 1px #959595;
@@ -242,6 +247,7 @@ input {
  }
 
 .conceptfield {
+  width: 12em;
   background-color: #b8ebd6;
 }
 
@@ -253,7 +259,7 @@ input {
 
 .textfield,
 .amrfield {
-  width: 18em;
+  width: 180px;
   vertical-align: middle;
   border-radius: 5px;
   border: solid 1px #959595;
