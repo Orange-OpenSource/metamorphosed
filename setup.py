@@ -1,9 +1,11 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 # read the contents of your README file
 from pathlib import Path
 this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text()
+
+print("zzzzzzz", find_packages(include=["metamorphosed", "coref"]))
 
 setup(
     name="metamorphosed",
@@ -13,7 +15,7 @@ setup(
     author="Johannes Heinecke",
     author_email="johannes.heinecke@orange.com",
     license="BSD3-Clause License",
-    packages=["metamorphosed", "coref"],
+    packages=find_packages(include=["metamorphosed", "coref"]),
     long_description=long_description,
     long_description_content_type="text/markdown",
     python_requires=">=3.10",
@@ -25,12 +27,26 @@ setup(
                       "Penman==1.3.0",
                       "GitPython==3.1.42",
                       "PyYAML==6.0.1",
+                      "requests==2.32.3",
                       "smatchpp==1.7.0"],
 
     classifiers=["License :: OSI Approved :: BSD 3-Clause License",
                  "Topic :: Text Processing :: Linguistic",
                  "Programming Language :: Python :: 3.10"],
-    scripts=["server.py"],
-    package_data={"metamorphosed": ["*"],
-                  "coref": ["*"]}
+    scripts=["metamorphosed_server.py"],
+    include_package_data=True,
+    #package_data={"metamorphosed": ["metamorphosed/gui/*.html",
+    #                                "metamorphosed/gui/*.js",
+    #                                "metamorphosed/gui/*.css",
+    #                                "metamorphosed/gui/img/*",
+    #                                ]}
     )
+
+#import requests
+#def installjq(url, fn):
+#    r = requests.get(url)
+#    f = open(fn, "wb")
+#    f.write(r.content)
+#    f.close()
+#
+#installjq("https://code.jquery.com/jquery-3.6.0.min.js", "jquery-3.6.0.min.js")

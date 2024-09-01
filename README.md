@@ -86,7 +86,7 @@ tox
 ## run
 
 ```
-<install-path>/server.py -f <amr-file> \
+<install-path>/metamorphosed_server.py -f <amr-file> \
 	[-p <port>] \
 	[--relations <relations.txt>]
 	[--concepts <concepts.txt>]
@@ -315,7 +315,7 @@ args:
 start _metamorphosed_ with the option `--edge_predictor` (or `-E`):
 
 ```
-./server.py --edge_predictor mypredictor.yml [other options]
+./metamorphosed_server.py --edge_predictor mypredictor.yml [other options]
 ```
 
 # AMR file comparison

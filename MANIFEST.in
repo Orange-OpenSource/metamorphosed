@@ -2,4 +2,8 @@
 # impact the binary distribution (bdist_wheel). To add data files to the binary
 # distribution add package_data in setup.py
 
-include metamorphosed/gui/*
+# include metamorphosed/gui/*
+include metamorphosed/gui/*.html
+include metamorphosed/gui/*.js
+include metamorphosed/gui/*.css
+include metamorphosed/gui/img/*
