@@ -45,7 +45,7 @@ import penman
 import logging
 logging.getLogger('penman').setLevel(logging.ERROR)
 
-from exception import ServerException
+from metamorphosed.exception import ServerException
 
 ONESPACE = re.compile("[ \n\t]+")
 

@@ -922,4 +922,3 @@ class AMR_Edit_Server:
 
             EdgePredictor = getattr(mymodule, conf["classname"])
             self.edge_predictor = EdgePredictor(args)
-
