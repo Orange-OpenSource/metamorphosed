@@ -45,6 +45,7 @@ import penman
 import logging
 logging.getLogger('penman').setLevel(logging.ERROR)
 
+from exception import ServerException
 
 ONESPACE = re.compile("[ \n\t]+")
 
@@ -145,24 +146,36 @@ class AMRsentence:
     def findtext(self, regex):
         if self.text:
             #rtc = re.search(regex, self.text, re.IGNORECASE)
-            rtc = re.finditer(regex, self.text, re.IGNORECASE)
-            if rtc:
-                return rtc
+            try:
+                rtc = re.finditer(regex, self.text, re.IGNORECASE)
+                if rtc:
+                    return rtc
+            except Exception as e:
+                raise ServerException('bad regular expression "%s": %s' % (regex, e))
+
         return [] #False
 
     def findcomment(self, regex):
         if self.comments:
-            for c in self.comments:
-                rtc = list(re.finditer(regex, c, re.IGNORECASE))
-                if rtc:
-                    return rtc
+            try:
+                for c in self.comments:
+                    rtc = list(re.finditer(regex, c, re.IGNORECASE))
+                    if rtc:
+                        return rtc
+            except Exception as e:
+                raise ServerException('bad regular expression "%s": %s' % (regex, e))
+
         return [] #False
 
     def findid(self, regex):
         if self.id:
-            rtc = re.search(regex, self.id, re.IGNORECASE)
-            if rtc:
-                return True
+            try:
+                rtc = re.search(regex, self.id, re.IGNORECASE)
+                if rtc:
+                    return True
+            except Exception as e:
+                raise ServerException('bad regular expression "%s": %s' % (regex, e))
+
         return False
 
 #    def findamr(self, regex):

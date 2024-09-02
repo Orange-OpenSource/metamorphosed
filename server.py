@@ -57,6 +57,7 @@ import relations_constraints
 
 import amr_comparison
 from edge_predictor import Basic_EdgePredictor as EdgePredictor
+from exception import ServerException
 
 # TODO
 # detect errors
@@ -413,6 +414,7 @@ class AMR_Edit_Server:
 
             okt = None
             oka = None
+
             if what == "findtextnext":
                 for x in range(sentnum, len(self.amrdoc.sentences)):
                     okt = list(self.amrdoc.sentences[x].findtext(regex))
@@ -639,6 +641,12 @@ class AMR_Edit_Server:
         def handle_invalid_usage(error):
             response = jsonify({"error": error.value}) #jsonify(error.to_dict())
             response.status_code = 400 #error.status_code
+            return response
+
+        @app.errorhandler(Exception)
+        def handle_other_error(error):
+            response = jsonify({"error": str(error)})
+            response.status_code = 404
             return response
 
         def invalidamr(ap, pm, cursentence, sentnum):
@@ -917,12 +925,12 @@ class AMR_Edit_Server:
             self.edge_predictor = EdgePredictor(args)
 
 
-class ServerException(Exception):
-    def __init__(self, value):
-        self.value = value
-
-    def __str__(self):
-        return repr(self.value)
+#class ServerException(Exception):
+#    def __init__(self, value):
+#        self.value = value
+#
+#    def __str__(self):
+#        return repr(self.value)
 
 
 if __name__ == "__main__":
