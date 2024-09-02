@@ -33,7 +33,7 @@
 # Software Name: MetAMoRphosED AMR-Editor
 # Author: Johannes Heinecke
 
-# version 3.5.0 as of 27th August 2024
+# version 3.6.0 as of 2nd September 2024
 
 import re
 import readline

@@ -1,5 +1,8 @@
 # Changes
 
+## Version 3.5.1
+* better capture of regex errors in find functions
+
 ## Version 3.5.0
 * search function AMR improved: if the search string is a valid PENMAN graph, it will search for graphs which contain the given graph
 * documention and HTML tooltips updated
