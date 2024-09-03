@@ -1,11 +1,39 @@
 from setuptools import setup, find_packages
+from setuptools.command.install import install
+import requests
+import zipfile
 
 # read the contents of your README file
 from pathlib import Path
 this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text()
 
-print("zzzzzzz", find_packages(include=["metamorphosed", "coref"]))
+#print("zzzzzzz", find_packages(include=["metamorphosed", "coref"]))
+
+# installs jquery etc. once metamorphosed is installed
+class postinstall(install):
+    def run(self):
+        install.run(self)
+        guipath = os.path.join(self.install_libbase, self.config_vars.get("dist_name"), "gui", "lib")
+        os.makedirs(guipath, exist_ok=True)
+
+        self.installjq("https://code.jquery.com/jquery-3.6.0.min.js", os.path.join(guipath, "jquery-3.6.0.min.js"))
+        self.installjq("https://code.jquery.com/jquery-3.6.0.min.js", os.path.join(guipath, "jquery-3.6.0.min.js"))
+        self.installjq("https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.2/jquery.modal.min.js", os.path.join(guipath, "jquery.modal-0.9.2.min.js"))
+        self.installjq("https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.2/jquery.modal.min.css", os.path.join(guipath, "jquery.modal-0.9.2.min.css"))
+        self.installjq("https://jqueryui.com/resources/download/jquery-ui-1.13.2.zip", os.path.join(guipath, "query-ui-1.13.2.zip"))
+        self.unzip(os.path.join(guipath, "query-ui-1.13.2.zip"), guipath)
+
+    def installjq(self, url, fn):
+        r = requests.get(url)
+        f = open(fn, "wb")
+        f.write(r.content)
+        f.close()
+
+    def unzip(self, fn, outdir):
+        with zipfile.ZipFile(fn, 'r') as zip_ref:
+            zip_ref.extractall(outdir)
+
 
 setup(
     name="metamorphosed",
@@ -35,6 +63,7 @@ setup(
                  "Programming Language :: Python :: 3.10"],
     scripts=["metamorphosed_server.py"],
     include_package_data=True,
+    cmdclass={ "install": postinstall},
     #package_data={"metamorphosed": ["metamorphosed/gui/*.html",
     #                                "metamorphosed/gui/*.js",
     #                                "metamorphosed/gui/*.css",
@@ -42,11 +71,3 @@ setup(
     #                                ]}
     )
 
-#import requests
-#def installjq(url, fn):
-#    r = requests.get(url)
-#    f = open(fn, "wb")
-#    f.write(r.content)
-#    f.close()
-#
-#installjq("https://code.jquery.com/jquery-3.6.0.min.js", "jquery-3.6.0.min.js")
