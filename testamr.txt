@@ -1,21 +1,21 @@
 # ::id sentence 1 ::date 2023-03-23T13:56:55 ::annotator JH
 # ::snt Naomie Harris was born in London. Naomie Harris still lives in London.
-# ::save-date Mon Sep 06, 1976
+# ::save-date Tue Sep 03, 2024 15:40 
 (m / multi-sentence
-    :snt1 (b / bear-02
-        :ARG1 (p / person
-            :name (n / name
-                :op1 "Naomie"
-                :op2 "Harris")
-            :wiki "Q156586")
-        :location (c / city
-            :name (n2 / name
-                :op1 "London")
-            :wiki "Q84"))
-    :snt2 (l / live-01
-        :ARG0 p
-        :location c
-        :mod (s / still)))
+   :snt1 (b / bear-02
+            :ARG1 (p / person
+                     :name (n / name
+                              :op1 "Naomie"
+                              :op2 "Harris")
+                     :wiki "Q156586")
+            :location (c / city
+                         :name (n2 / name
+                                   :op1 "London")
+                         :wiki "Q84")
+            :location c)
+   :snt2 (l / live-01
+            :ARG0 p
+            :mod (s / still)))
 
 # ::id sentence 2
 # ::snt The cat killed the mouse
