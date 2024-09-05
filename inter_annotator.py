@@ -225,8 +225,7 @@ class IAA:
                 print("                          (diffs): %s" % ([float("%.2f" % (x)) for x in diffresults]), file=ofp)
             print("annotator pair inter-annotator agreement Smatch F1: %.2f differences: %.4f" % (100 * mean, dmean), file=ofp)
 
-
-if __name__ == "__main__":
+def main()
     import argparse
 
     parser = argparse.ArgumentParser(description="inter-annotator agreement")
@@ -243,3 +242,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
     iaa = IAA(args.files, debug=args.debug, first=args.first, last=args.last)
     iaa.eval(micro=args.sentences, runs=args.runs, ofp=sys.stdout, report=args.report, smatchpp=args.smatchpp, sortcolumn=args.sortcol)
+
+if __name__ == "__main__":
+    main()
