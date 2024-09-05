@@ -196,7 +196,7 @@ def test_info(client):
     response = client.get("/version")
     res = json.loads(response.data)
     #print("res", res, file=sys.stderr)
-    assert res == {'name': 'AMR Editor', 'version': '3.6.0', 'apiversion': '1.5.0'}
+    assert res == {'name': 'AMR Editor', 'version': '3.6.0', 'apiversion': '1.6.0'}
 
     response = client.get("/info", query_string={"withdata": True})
     res = json.loads(response.data)
@@ -356,20 +356,20 @@ def test_edit_prec1(client):
 
 def test_edit_addinstance(client):
     response = client.get("/read", query_string={"num": 6})
-    response = client.get("/edit", query_string={"num": 6, "addconcept": "rise-01"})
+    response = client.get("/edit", query_string={"num": 6, "prevmod": 0, "addconcept": "rise-01"})
     res = json.loads(response.data)
-    #print("res", json.dumps(res, indent=2))
+    #print("resBBB", json.dumps(res, indent=2))
     assert res["warning"] is None
     assert res["penman"] == "(r / rise-01)"
     #assert 1 == 2
 
     # needed for coverage test (count variables)
-    response = client.get("/edit", query_string={"num": 8, "addconcept": "cry-01"})
+    response = client.get("/edit", query_string={"num": 8, "prevmod": 0, "addconcept": "cry-01"})
 
 
 def test_edit_addinstance_wrong_roleset(client):
     response = client.get("/read", query_string={"num": 6})
-    response = client.get("/edit", query_string={"num": 6, "addconcept": "rise-06"})
+    response = client.get("/edit", query_string={"num": 6, "prevmod": 1, "addconcept": "rise-06"})
     res = json.loads(response.data)
     #print("res", json.dumps(res, indent=2))
     assert res["warning"] == ["«rise-06» is not a defined propbank roleset",
@@ -380,9 +380,9 @@ def test_edit_addinstance_wrong_roleset(client):
 def test_edit_addedge_with_concepts(client):
     response = client.get("/read", query_string={"num": 17})
     response = client.get("/edit", query_string={"num": 17, "start": "//go-02", "label": "ARG0", "end": "//man"})
-    response = client.get("/edit", query_string={"num": 17, "start": "//go-02", "label": "ARG4", "end": "/work-01"})
+    response = client.get("/edit", query_string={"num": 17, "prevmod": 1, "start": "//go-02", "label": "ARG4", "end": "/work-01"})
     # predict edge
-    response = client.get("/edit", query_string={"num": 17, "start": "w",
+    response = client.get("/edit", query_string={"num": 17, "prevmod": 2, "start": "w",
                                                  "label": "todo", #"ARG0",
                                                  "end": "//man"})
     res = json.loads(response.data)
@@ -403,7 +403,7 @@ def test_edit_modconcept(client):
 
 
 def test_edit_addname(client):
-    response = client.get("/edit", query_string={"num": 4, "addname": "Little Dog", "nameof": "d"})
+    response = client.get("/edit", query_string={"num": 4, "prevmod": 1, "addname": "Little Dog", "nameof": "d"})
     res = json.loads(response.data)
     print("res", json.dumps(res["penman"], indent=2))
     assert res["penman"] == "(b / bark-02\n   :ARG0 (d / dog\n            :mod (l / little)\n            :name (n / name\n                     :op1 \"Little\"\n                     :op2 \"Dog\"))\n   :ARG2 (d2 / dog\n             :mod (b2 / big)))"
@@ -420,7 +420,7 @@ def test_edit_modconcept_wrong_concept(client):
 
 def test_edit_modedge_wrong_edge(client):
     response = client.get("/read", query_string={"num": 18})
-    response = client.get("/edit", query_string={"num": 18, "modedge_start": "o", "modedge_end": "r", "newedge": ":ARG111"})
+    response = client.get("/edit", query_string={"num": 18, "prevmod": 1, "modedge_start": "o", "modedge_end": "r", "newedge": ":ARG111"})
     res = json.loads(response.data)
 
     #print("res", json.dumps(res, indent=2))
@@ -476,7 +476,7 @@ def test_edit_settop(client):
     #print("res", json.dumps(res, indent=2))
     assert res["penman"] == "(t / teach-01\n   :ARG0 (p / person)\n   :ARG1 (h / history))"
 
-    response = client.get("/edit", query_string={"num": 10, "newtop": "p"})
+    response = client.get("/edit", query_string={"num": 10, "prevmod": 1, "newtop": "p"})
     res = json.loads(response.data)
     #print("res", json.dumps(res, indent=2))
     assert res["penman"] == "(p / person\n   :ARG0-of (t / teach-01\n               :ARG1 (h / history)))"
@@ -484,7 +484,7 @@ def test_edit_settop(client):
 
 def test_edit_settop2(client):
     response = client.get("/read", query_string={"num": 10})
-    response = client.get("/edit", query_string={"num": 10, "newtop": "xx"})
+    response = client.get("/edit", query_string={"num": 10, "prevmod": 2, "newtop": "xx"})
     res = json.loads(response.data)
     #print("res", json.dumps(res, indent=2))
     assert res["penman"] == "(p / person\n   :ARG0-of (t / teach-01\n               :ARG1 (h / history)))"
@@ -493,14 +493,14 @@ def test_edit_settop2(client):
 
 def test_edit_move_relation_start(client):
     response = client.get("/read", query_string={"num": 5})
-    response = client.get("/edit", query_string={"num": 5, "modedge_start": "c2", "modedge_end": "n2", "modedge_newstart": "h", "newedge": "not_used"})
+    response = client.get("/edit", query_string={"num": 5, "prevmod": 1, "modedge_start": "c2", "modedge_end": "n2", "modedge_newstart": "h", "newedge": "not_used"})
     res = json.loads(response.data)
     #print("res", json.dumps(res, indent=2))
     assert res["penman"] == '(h / have-org-role-91\n   :ARG0 (c / city\n            :name (n / name\n                     :op1 "Cardiff")\n            :wiki "Q10690")\n   :ARG1 (c2 / country\n             :wiki "Q25")\n   :ARG2 (c3 / capital)\n   :not_used (n2 / name\n                 :op1 "Wales"))'
 
 
 def test_edit_move_relation_wrong_start(client):
-    response = client.get("/edit", query_string={"num": 5, "modedge_start": "c2", "modedge_end": "n2", "modedge_newstart": "hhh", "newedge": "also_not_used"})
+    response = client.get("/edit", query_string={"num": 5, "prevmod": 1, "modedge_start": "c2", "modedge_end": "n2", "modedge_newstart": "hhh", "newedge": "also_not_used"})
     res = json.loads(response.data)
     print("res", json.dumps(res["warning"], indent=2))
     assert res["warning"] == ["new source instance « hhh » does not exist",
@@ -509,7 +509,7 @@ def test_edit_move_relation_wrong_start(client):
 
 def test_edit_delliteral(client):
     response = client.get("/read", query_string={"num": 21})
-    response = client.get("/edit", query_string={"num": 21, "delliteral": "Q183", "literalid": "c2", "literaledge": ":wiki"})
+    response = client.get("/edit", query_string={"num": 21, "prevmod": 1, "delliteral": "Q183", "literalid": "c2", "literaledge": ":wiki"})
     res = json.loads(response.data)
     #print("res", res)
     assert res["penman"] == '(h / have-org-role-91\n   :ARG0 (c / city\n            :name (n / name\n                     :op1 "Berlin")\n            :wiki "Q64")\n   :ARG1 (c2 / country\n             :name (n2 / name\n                       :op1 "Germany"))\n   :ARG2 (c3 / capital))'
@@ -521,7 +521,7 @@ def test_edit_delliteral(client):
 
 def test_edit_modliteral(client):
     response = client.get("/read", query_string={"num": 21})
-    response = client.get("/edit", query_string={"num": 21, "literalid": "c", "literaledge": ":wiki", "newliteral": "Q64AA"})
+    response = client.get("/edit", query_string={"num": 21, "prevmod": 1, "literalid": "c", "literaledge": ":wiki", "newliteral": "Q64AA"})
     res = json.loads(response.data)
     #print("res", json.dumps(res, indent=2))
     assert res["penman"] == '(h / have-org-role-91\n   :ARG0 (c / city\n            :name (n / name\n                     :op1 "Berlin")\n            :wiki "Q64AA")\n   :ARG1 (c2 / country\n             :name (n2 / name\n                       :op1 "Germany"))\n   :ARG2 (c3 / capital))'
@@ -531,14 +531,14 @@ def test_edit_modliteral(client):
 
 def test_edit_addliteral(client):
     response = client.get("/read", query_string={"num": 14})
-    response = client.get("/edit", query_string={"num": 14, "literalof": "b", "relationforliteral": "quant", "newliteral": 5})
+    response = client.get("/edit", query_string={"num": 14, "prevmod": 1, "literalof": "b", "relationforliteral": "quant", "newliteral": 5})
     res = json.loads(response.data)
     #print("res", json.dumps(res, indent=2))
     assert res["penman"] == "(bbb / want-01\n     :polarity -\n     :ARG0 (m / man\n              :ARG0-of (r / repair-01\n                          :ARG1 (b / bike\n                                   :quant 5)))\n     :ARG1 (p / pay-01\n              :ARG2 m))"
 
     #"(k / kill-01\n   :ARG0 (c / cat\n            :quant 5)\n   :ARG1 (m / mouse))"
 
-    response = client.get("/edit", query_string={"num": 2, "literalof": "m", "relationforliteral": "tag", "newliteral": "My Mouse"})
+    response = client.get("/edit", query_string={"num": 2, "prevmod": 1, "literalof": "m", "relationforliteral": "tag", "newliteral": "My Mouse"})
     res = json.loads(response.data)
     #print("res", json.dumps(res, indent=2))
     assert res["penman"] == "(k / kill-01\n   :ARG0 (c / cat)\n   :ARG2 (m / mouse\n            :tag \"My Mouse\"))"
@@ -560,7 +560,7 @@ def test_read_num_too_big(client):
 
 def test_duplicate_edge(client):
     response = client.get("/edit", query_string={"num": 23, "start": "k", "label": "ARG0", "end": "a"})
-    response = client.get("/edit", query_string={"num": 23, "start": "a", "label": "ARG0", "end": "k"})
+    response = client.get("/edit", query_string={"num": 23, "prevmod": 1, "start": "a", "label": "ARG0", "end": "k"})
     res = json.loads(response.data)
     print("res", res["penman"])
     assert res["warning"] == ['more than one relation between « k » and « a » (:ARG0)',
@@ -690,32 +690,35 @@ def test_get_disconnected_amr(client):
 
 def test_edit_amr_undo_redo(client):
     response = client.get("/read", query_string={"num": 6})
-    response = client.get("/edit", query_string={"num": 6, "modpenman": "( rr /   rise-01)"})
     res = json.loads(response.data)
-    #print("res", json.dumps(res, indent=2))
+    prevmod = res["prevmod"]
+
+    response = client.get("/edit", query_string={"num": 6, "prevmod": prevmod+1, "modpenman": "( rr /   rise-01)"})
+    res = json.loads(response.data)
+    print("res1", json.dumps(res, indent=2))
     assert "(rr / rise-01)" == res["penman"]
 
-    response = client.get("/edit", query_string={"num": 6, "modpenman": "(r / rise-01  :location (e / east))"})
+    response = client.get("/edit", query_string={"num": 6, "prevmod": prevmod+2, "modpenman": "(r / rise-01  :location (e / east))"})
     res = json.loads(response.data)
-    #print("res", json.dumps(res, indent=2))
+    print("res2", json.dumps(res, indent=2))
     assert "(r / rise-01\n   :location (e / east))" == res["penman"]
 
-    response = client.get("/edit", query_string={"num": 6, "addconcept": "sun"})
-    response = client.get("/edit", query_string={"num": 6, "start": "r", "end": "s", "label": "ARG0"})
+    response = client.get("/edit", query_string={"num": 6, "prevmod": 4, "addconcept": "sun"})
+    response = client.get("/edit", query_string={"num": 6, "prevmod": 5, "start": "r", "end": "s", "label": "ARG0"})
     res = json.loads(response.data)
-    #print("res", json.dumps(res, indent=2))
+    print("res3", json.dumps(res, indent=2))
     assert "(r / rise-01\n   :location (e / east)\n   :ARG0 (s / sun))" == res["penman"]
 
     response = client.get("/history", query_string={"num": 6, "history": "undo"})
     response = client.get("/history", query_string={"num": 6, "history": "undo"})
     res = json.loads(response.data)
-    #print("res", json.dumps(res, indent=2))
+    print("res4", json.dumps(res, indent=2))
     assert "(r / rise-01\n   :location (e / east))" == res["penman"]
 
     response = client.get("/history", query_string={"num": 6, "history": "redo"})
     response = client.get("/history", query_string={"num": 6, "history": "redo"})
     res = json.loads(response.data)
-    #print("res", json.dumps(res["penman"], indent=2))
+    print("res5", json.dumps(res["penman"], indent=2))
     assert "(r / rise-01\n   :location (e / east)\n   :ARG0 (s / sun))" == res["penman"]
 
 
@@ -743,13 +746,13 @@ def test_read_date_aftermod(client):
     #response = client.get("/read", query_string={"num": 1})
     #res = json.loads(response.data)
     currentdate = time.strftime("%a %b %d, %Y %H:%M", time.localtime(time.time()))
-    response = client.get("/edit", query_string={"num": 1, "newtop": "p"})
+    response = client.get("/edit", query_string={"num": 1, "prevmod": 1, "newtop": "p"})
     res = json.loads(response.data)
     #print("res1", res["lastchanged"])
     assert res["lastchanged"] == currentdate
 
     currentdate = time.strftime("%a %b %d, %Y %H:%M", time.localtime(time.time()))
-    response = client.get("/edit", query_string={"num": 2, "newtop": "c"})
+    response = client.get("/edit", query_string={"num": 2, "prevmod": 2, "newtop": "c"})
     res = json.loads(response.data)
     #print("res2", res["lastchanged"])
     assert res["lastchanged"] == currentdate
@@ -757,7 +760,7 @@ def test_read_date_aftermod(client):
 
 def test_edit_deledge_notexist(client):
     response = client.get("/read", query_string={"num": 11})
-    response = client.get("/edit", query_string={"num": 11, "deledge_start": "k", "deledge_end": "p", "deledge": ":ARG1111"})
+    response = client.get("/edit", query_string={"num": 11, "prevmod": 1, "deledge_start": "k", "deledge_end": "p", "deledge": ":ARG1111"})
     res = json.loads(response.data)
     #print("res", json.dumps(res, indent=2))
     assert res["penman"] == '(k / murder-01\n   :ARG0 (a / amr-unknown)\n   :ARG1 (p / person\n            :name (n / name\n                     :op1 "JFK")\n            :wiki "Q9696"))'
@@ -840,7 +843,7 @@ def test_reify(client):
 
 def test_dereify(client):
     response = client.get("/read", query_string={"num": 3})
-    response = client.get("/edit", query_string={"num": 3, "dereify": ":location <>  be-located-at-91"})
+    response = client.get("/edit", query_string={"num": 3, "prevmod": 1, "dereify": ":location <>  be-located-at-91"})
     res = json.loads(response.data)
     #print("res2", json.dumps(res["penman"], indent=2))
     assert res["penman"] == '(k / kill-01\n   :ARG0 (c / cat)\n   :ARG1 (m / mouse)\n   :location (k2 / kitchen)\n   :time (d / date-entity\n            :dayperiod (n / night)))'
@@ -849,12 +852,14 @@ def test_dereify(client):
 # depends on two preceding tests, fails if these fail too
 def test_reify_dereify_additional_edge(client):
     response = client.get("/read", query_string={"num": 3})
-    response = client.get("/edit", query_string={"num": 3, "reify": ":location <>  be-located-at-91"})
-    response = client.get("/edit", query_string={"num": 3, "addconcept": "fast"})
-    response = client.get("/edit", query_string={"num": 3, "start": "zzz0", "label": "manner", "end": "//fast"})
-    response = client.get("/edit", query_string={"num": 3, "dereify": ":location <>  be-located-at-91"})
     res = json.loads(response.data)
-    #print("res", json.dumps(res, indent=2))
+    prevmod = res["prevmod"]
+    response = client.get("/edit", query_string={"num": 3, "prevmod": prevmod, "reify": ":location <>  be-located-at-91"})
+    response = client.get("/edit", query_string={"num": 3, "prevmod": prevmod+1, "addconcept": "fast"})
+    response = client.get("/edit", query_string={"num": 3, "prevmod": prevmod+2, "start": "zzz0", "label": "manner", "end": "//fast"})
+    response = client.get("/edit", query_string={"num": 3, "prevmod": prevmod+3, "dereify": ":location <>  be-located-at-91"})
+    res = json.loads(response.data)
+    print("res", json.dumps(res, indent=2))
 
     assert res["penman"] == '(k / kill-01\n   :ARG0 (c / cat)\n   :ARG1 (m / mouse)\n   :ARG1-of (zzz0 / be-located-at-91\n                  :ARG2 (k2 / kitchen)\n                  :manner (f / fast))\n   :time (d / date-entity\n            :dayperiod (n / night)))'
     assert res["warning"] == ["information loss: cannot attache edge \u00ab zzz0 :manner f \u00bb after dereification. Please modify graph.",
@@ -865,13 +870,15 @@ def test_reify_dereify_additional_edge(client):
 
 def test_reify_dereify_missing_ARG(client):
     response = client.get("/read", query_string={"num": 3})
-    response = client.get("/edit", query_string={"num": 3, "reify": ":location <>  be-located-at-91"})
-    response = client.get("/edit", query_string={"num": 3, "delinstance": "f"})
-    response = client.get("/edit", query_string={"num": 3,
+    res = json.loads(response.data)
+    prevmod = res["prevmod"]
+    response = client.get("/edit", query_string={"num": 3, "prevmod": prevmod, "reify": ":location <>  be-located-at-91"})
+    response = client.get("/edit", query_string={"num": 3, "prevmod": prevmod+1, "delinstance": "f"})
+    response = client.get("/edit", query_string={"num": 3, "prevmod": prevmod+2,
                                                  "modedge_start": "zzz0",
                                                  "modedge_end": "k2",
                                                  "newedge": ":koARG2"})
-    response = client.get("/edit", query_string={"num": 3, "dereify": ":location <>  be-located-at-91"})
+    response = client.get("/edit", query_string={"num": 3, "prevmod": prevmod+3, "dereify": ":location <>  be-located-at-91"})
     res = json.loads(response.data)
     #print("res", json.dumps(res, indent=2))
     assert res["warning"] == [

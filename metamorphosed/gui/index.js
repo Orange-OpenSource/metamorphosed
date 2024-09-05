@@ -312,6 +312,7 @@ var litedge = "";
 var lastclickededge = null;
 var lastclickednode = null;
 var lastclickedElement = null;
+var prevmod = 0;
 
 function getAncestor(element) {
     //console.log("element id:", element.id, "class:", element.getAttribute("class"));
@@ -482,6 +483,7 @@ function info(event) {
 
 function runcommand(params) {
 	params["num"] = currentsentnum;
+	params["prevmod"] = prevmod;
 	//URL_BASE = 'http://' + window.location.host + '/edit';
 	URL_BASE = 'edit';
 	$("#resultat").empty(); // vider le div
@@ -538,7 +540,8 @@ function formatAMR(data) {
 		       });
 	}
 
-	readonly = data.readonly;
+    readonly = data.readonly;
+    prevmod = data.prevmod;
 	if (readonly) {
 	    $("#editing").hide();
 	    $("#save").hide();
@@ -1118,6 +1121,7 @@ $(document).ready(function () {
 			return;
 		}
 		params["num"] = currentsentnum;
+		params["prevmod"] = prevmod;
 		if (sentenceloaded == true) {
 		$.ajax({
 			url: URL_BASE,

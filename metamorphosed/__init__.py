@@ -66,7 +66,7 @@ from metamorphosed.exception import ServerException
 # find an example in AMR data
 # call an AMRserver for an (empty) sentence ? rather not
 
-APIVERSION = "1.5.0"
+APIVERSION = "1.6.0"
 
 
 class AMR_Edit_Server:
@@ -212,6 +212,7 @@ class AMR_Edit_Server:
         @app.route('/edit', methods=["GET", "POST"])
         def modify():
             sentnum = self.checkParameter(request, 'num', 'integer', isOptional=False)
+            prevmod = self.checkParameter(request, 'prevmod', 'integer', isOptional=True, defaultValue=0)
             cmd = self.checkParameter(request, 'cmd', 'string', isOptional=True, defaultValue=None)
             addconcept = self.checkParameter(request, 'addconcept', 'string', isOptional=True, defaultValue=None)
             addname = self.checkParameter(request, 'addname', 'string', isOptional=True, defaultValue=None)
@@ -271,16 +272,16 @@ class AMR_Edit_Server:
                            "modpenman",
                            "modcomment",
                            "reify", "dereify",
-                           "newtop"]
+                           "newtop",
+                           "prevmod"]
+
             #self.findinvalidparameters(request, validparams)
             self.validParameters(request, set(validparams))
-
             print("COMMAND:", end=" ")
             for v in validparams:
                 if v != "num" and eval(v) is not None:
                     print('%s: "%s"' % (v, eval(v)), end=" ")
             print()
-
             ap = self.aps.get(int(sentnum))
 
             if not ap.isparsed:
@@ -294,6 +295,9 @@ class AMR_Edit_Server:
 
             #print("ZZZZ", self.aps, ap, sentnum)
             rtc = None
+            print("AP PREVMOD:", ap.previous_modification, "CLIENT:", prevmod, "TOO LATE", ap.previous_modification > prevmod)
+            if ap.previous_modification > prevmod:
+                raise ServerException("The sentence has beend edit by another user. Please reload sentence")
 
             self.undos.append((sentnum, ap.lastpm))
             #print("AP: %s" % ap.lastpm)
@@ -304,7 +308,7 @@ class AMR_Edit_Server:
             #    print("hhh   %s %s" % (n, " ## ".join(pm).replace("\n", "")))
             #    #print("hhh   %s %s" % (n, pm))
 
-            ap.modified = True # set rather by ap.-functions ??
+            ap.modified = True # TODO: set rather by ap.-functions ??
             cursentence.date = time.strftime("%a %b %d, %Y %H:%M", time.localtime(time.time()))
 
             if cmd:
@@ -345,6 +349,7 @@ class AMR_Edit_Server:
             elif modpenman:
                 newap = amreditor.AMRProcessor()
                 newap.readpenman(modpenman)
+                newap.previous_modification = ap.previous_modification
                 if not newap.valid:
                     return invalidamr(newap,
                                       modpenman,
@@ -388,6 +393,8 @@ class AMR_Edit_Server:
             lastchanged = cursentence.date
             if not lastchanged:
                 lastchanged = cursentence.savedateorig
+            ap.previous_modification += 1
+            print("AUGMENT", cursentence.id, ap.previous_modification)
             dico = {"warning": warnings, "framedoc": framedoc, "readonly": self.readonly,
                     "penman": pm, "svg": svg.decode("utf8") if svg else "",
                     "filename": filename, "numsent": len(self.amrdoc.sentences),
@@ -398,7 +405,8 @@ class AMR_Edit_Server:
                     "lastchanged": lastchanged,
                     "variables": sorted(list(set(ap.vars.keys()))),
                     "undos": len(self.undos),
-                    "redos": len(self.redos)}
+                    "redos": len(self.redos),
+                    "prevmod": ap.previous_modification}
             return Response("%s\n" % json.dumps(dico), 200, mimetype="application/json")
 
         @app.route('/search', methods=["GET"])
@@ -738,7 +746,8 @@ class AMR_Edit_Server:
                     "lastchanged": lastchanged,
                     "variables": sorted(list(set(ap.vars.keys()))),
                     "undos": len(self.undos),
-                    "redos": len(self.redos)}
+                    "redos": len(self.redos),
+                    "prevmod": ap.previous_modification}
             if self.otheramrdocs:
                 others = []
                 first_to_compare, second_to_compare = compare.split(",")

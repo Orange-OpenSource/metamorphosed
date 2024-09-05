@@ -105,6 +105,7 @@ class AMRProcessor:
         self.valid = True
         self.isparsed = False
         self.modified = False
+        self.previous_modification = 0 # sent to client and must be still the same when client answers. If not another client was faster. In this cas we refuse the anwser of the first client who came to late
 
     def __str__(self):
         return self.lastpm
