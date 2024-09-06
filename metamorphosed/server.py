@@ -38,6 +38,7 @@ import sys
 
 from metamorphosed import AMR_Edit_Server
 
+
 def server():
     parser = argparse.ArgumentParser()
 
@@ -60,19 +61,19 @@ def server():
     else:
         args = parser.parse_args()
         try:
-            aes = metamorphosed.AMR_Edit_Server(args.port, args.file, args.pbframes,
-                                                args.relations, args.concepts,
-                                                args.constraints, args.readonly,
-                                                author=args.author,
-                                                reifications=args.reifications,
-                                                predictor=args.edge_predictor,
-                                                do_git=args.git,
-                                                compare=args.compare,
-                                                smatchpp=args.smatchpp)
+            aes = AMR_Edit_Server(args.port, args.file, args.pbframes,
+                                  args.relations, args.concepts,
+                                  args.constraints, args.readonly,
+                                  author=args.author,
+                                  reifications=args.reifications,
+                                  predictor=args.edge_predictor,
+                                  do_git=args.git,
+                                  compare=args.compare,
+                                  smatchpp=args.smatchpp)
             aes.start()
         except Exception as e:
             print(e, file=sys.stderr)
 
+
 if __name__ == "__main__":
     server()
-

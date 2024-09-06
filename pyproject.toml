@@ -36,7 +36,7 @@ dependencies = [
 
 [project.scripts]
 metamorphosed_server = "metamorphosed.__main__:server"
-iaa = "inter_annotator:main"
+#iaa = "inter_annotator:main"
 
 
 [tool.setuptools.packages.find]

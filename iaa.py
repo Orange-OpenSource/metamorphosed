@@ -3,5 +3,3 @@
 from metamorphosed.inter_annotator import main
 
 main()
-
-

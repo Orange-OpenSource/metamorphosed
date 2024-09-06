@@ -693,12 +693,12 @@ def test_edit_amr_undo_redo(client):
     res = json.loads(response.data)
     prevmod = res["prevmod"]
 
-    response = client.get("/edit", query_string={"num": 6, "prevmod": prevmod+1, "modpenman": "( rr /   rise-01)"})
+    response = client.get("/edit", query_string={"num": 6, "prevmod": prevmod + 1, "modpenman": "( rr /   rise-01)"})
     res = json.loads(response.data)
     print("res1", json.dumps(res, indent=2))
     assert "(rr / rise-01)" == res["penman"]
 
-    response = client.get("/edit", query_string={"num": 6, "prevmod": prevmod+2, "modpenman": "(r / rise-01  :location (e / east))"})
+    response = client.get("/edit", query_string={"num": 6, "prevmod": prevmod + 2, "modpenman": "(r / rise-01  :location (e / east))"})
     res = json.loads(response.data)
     print("res2", json.dumps(res, indent=2))
     assert "(r / rise-01\n   :location (e / east))" == res["penman"]
@@ -855,9 +855,9 @@ def test_reify_dereify_additional_edge(client):
     res = json.loads(response.data)
     prevmod = res["prevmod"]
     response = client.get("/edit", query_string={"num": 3, "prevmod": prevmod, "reify": ":location <>  be-located-at-91"})
-    response = client.get("/edit", query_string={"num": 3, "prevmod": prevmod+1, "addconcept": "fast"})
-    response = client.get("/edit", query_string={"num": 3, "prevmod": prevmod+2, "start": "zzz0", "label": "manner", "end": "//fast"})
-    response = client.get("/edit", query_string={"num": 3, "prevmod": prevmod+3, "dereify": ":location <>  be-located-at-91"})
+    response = client.get("/edit", query_string={"num": 3, "prevmod": prevmod + 1, "addconcept": "fast"})
+    response = client.get("/edit", query_string={"num": 3, "prevmod": prevmod + 2, "start": "zzz0", "label": "manner", "end": "//fast"})
+    response = client.get("/edit", query_string={"num": 3, "prevmod": prevmod + 3, "dereify": ":location <>  be-located-at-91"})
     res = json.loads(response.data)
     print("res", json.dumps(res, indent=2))
 
@@ -873,12 +873,12 @@ def test_reify_dereify_missing_ARG(client):
     res = json.loads(response.data)
     prevmod = res["prevmod"]
     response = client.get("/edit", query_string={"num": 3, "prevmod": prevmod, "reify": ":location <>  be-located-at-91"})
-    response = client.get("/edit", query_string={"num": 3, "prevmod": prevmod+1, "delinstance": "f"})
-    response = client.get("/edit", query_string={"num": 3, "prevmod": prevmod+2,
+    response = client.get("/edit", query_string={"num": 3, "prevmod": prevmod + 1, "delinstance": "f"})
+    response = client.get("/edit", query_string={"num": 3, "prevmod": prevmod + 2,
                                                  "modedge_start": "zzz0",
                                                  "modedge_end": "k2",
                                                  "newedge": ":koARG2"})
-    response = client.get("/edit", query_string={"num": 3, "prevmod": prevmod+3, "dereify": ":location <>  be-located-at-91"})
+    response = client.get("/edit", query_string={"num": 3, "prevmod": prevmod + 3, "dereify": ":location <>  be-located-at-91"})
     res = json.loads(response.data)
     #print("res", json.dumps(res, indent=2))
     assert res["warning"] == [
@@ -1081,7 +1081,7 @@ def test_amreditor():
 
 def test_iaa():
     import io
-    import inter_annotator as inter_annotator
+    import metamorphosed.inter_annotator as inter_annotator
     reportfile = tempfile.TemporaryDirectory()
     #print("AAAA", reportfile.name, dir(reportfile))
     iaa = inter_annotator.IAA(["test/comptest_annot1.txt", "test/comptest_annot3.txt", "test/comptest_annot4.txt"], debug=True)
@@ -1138,7 +1138,7 @@ sentence 3	40.0	22.22	40.0	34.07	5	6	6	5.67
 
 def test_iaa_smatchpp():
     import io
-    import inter_annotator
+    import metamorphosed.inter_annotator as inter_annotator
     reportfile = tempfile.TemporaryDirectory()
     #print("AAAA", reportfile.name, dir(reportfile))
     iaa = inter_annotator.IAA(["test/comptest_annot1.txt", "test/comptest_annot3.txt", "test/comptest_annot4.txt"], debug=True)
