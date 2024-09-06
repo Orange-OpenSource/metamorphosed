@@ -35,12 +35,16 @@ dependencies = [
 ]
 
 [project.scripts]
-metamorphosed_server = "metamorphosed.__main__:server"
-#iaa = "inter_annotator:main"
+metamorphosed_server = "metamorphosed.server:main"
+iaa = "metamorphosed.inter_annotator:main"
+validate = "metamorphosed.amrdoc:main"
 
 
 [tool.setuptools.packages.find]
-include = ["metamorphosed", "coref"]
+include = ["metamorphosed", "metamorphosed.gui", "metamorphosed.gui.img", "coref"]
+
+#[tool.setuptools.package-data]
+#data = ["*.txt", "*.yml"]
 
 [project.urls]
 Homepage = "https://github.com/Orange-Opensource/metamorphosed.git"

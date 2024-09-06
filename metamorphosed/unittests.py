@@ -68,12 +68,12 @@ def app():
     aes = AMR_Edit_Server(4568,
                           "test/testamr.txt",
                           "propbank-frames/frames/",
-                          "data/relations.txt",
-                          "data/concepts.txt",
-                          "data/constraints.yml",
+                          "metamorphosed/data/relations.txt",
+                          "metamorphosed/data/concepts.txt",
+                          "metamorphosed/data/constraints.yml",
                           False, # readonly
                           None, # author
-                          "data/reification-table.txt"
+                          "metamorphosed/data/reification-table.txt"
                           )
     app = aes.app
     number_of_sentences = len(aes.aps)
@@ -120,12 +120,12 @@ def app_once():
     aes = AMR_Edit_Server(4568,
                           "test/comptest_gold.txt",
                           None, #"propbank-frames/frames/",
-                          "data/relations.txt",
+                          "metamorphosed/data/relations.txt",
                           None, #"concepts.txt",
                           None, # "constraints.yml",
                           False, # readonly
                           None, # author
-                          "data/reification-table.txt",
+                          "metamorphosed/data/reification-table.txt",
                           False, # do_git
                           compare=["test/comptest_sys.txt"]
                           )
@@ -983,9 +983,9 @@ def test_amrdoc():
     import metamorphosed.relations_constraints as relations_constraints
 
     validators = []
-    validators.append(AMR_relations.Relations("data/relations.txt"))
+    validators.append(AMR_relations.Relations("metamorphosed/data/relations.txt"))
     validators.append(propbank_frames.PropBankFrames("propbank-frames/frames/"))
-    validators.append(relations_constraints.Constraints("data/constraints.yml"))
+    validators.append(relations_constraints.Constraints("metamorphosed/data/constraints.yml"))
 
     ad = amrdoc.AMRdoc("coverageamr.txt")
     msgs = ad.validate(validators)

@@ -2,6 +2,5 @@
 
 import metamorphosed.server
 
-metamorphosed.server.server()
+metamorphosed.server.main()
 
-#print(dir(metamorphosed.server))

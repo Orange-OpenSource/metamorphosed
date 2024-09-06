@@ -39,8 +39,8 @@ import sys
 from metamorphosed import AMR_Edit_Server
 
 
-def server():
-    parser = argparse.ArgumentParser()
+def main():
+    parser = argparse.ArgumentParser("metAMoRphosED: the Abstract Meaning Representation Editor")
 
     parser.add_argument("--port", "-p", default=4567, type=int, help="port to use")
     parser.add_argument("--file", "-f", required=True, help="AMR file to edit")
@@ -76,4 +76,4 @@ def server():
 
 
 if __name__ == "__main__":
-    server()
+    main()

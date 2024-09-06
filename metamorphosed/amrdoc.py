@@ -516,10 +516,10 @@ def stats(ads, conceptlist, plotting=True, outdir="."):
         graph(others, "nonverbalconcepts.pdf", meano, medo)
 
 
-if __name__ == "__main__":
+def main():
     import argparse
 
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser("AMRdoc validation")
 
     parser.add_argument("--file", "-f", required=True, nargs="+", help="AMR file to read")
     parser.add_argument("--rels", "-R", default=None, help="list of valid AMR-relations (simple text file)")
@@ -566,3 +566,7 @@ if __name__ == "__main__":
         if args.concepts > 0:
             for x in relations_between_concepts(ads, depth=args.concepts):
                 print(x)
+
+
+if __name__ == "__main__":
+    main()

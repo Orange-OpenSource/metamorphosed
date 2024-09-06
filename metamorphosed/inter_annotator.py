@@ -240,9 +240,12 @@ def main():
     parser.add_argument('--last', type=int, default=0, help='stop after sentences n')
     parser.add_argument('--sortcol', type=int, default=None, help='sort data in report file on column (needs --report)')
 
-    args = parser.parse_args()
-    iaa = IAA(args.files, debug=args.debug, first=args.first, last=args.last)
-    iaa.eval(micro=args.sentences, runs=args.runs, ofp=sys.stdout, report=args.report, smatchpp=args.smatchpp, sortcolumn=args.sortcol)
+    if len(sys.argv) < 2:
+        parser.print_help()
+    else:
+        args = parser.parse_args()
+        iaa = IAA(args.files, debug=args.debug, first=args.first, last=args.last)
+        iaa.eval(micro=args.sentences, runs=args.runs, ofp=sys.stdout, report=args.report, smatchpp=args.smatchpp, sortcolumn=args.sortcol)
 
 
 if __name__ == "__main__":
