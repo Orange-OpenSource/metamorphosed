@@ -858,6 +858,7 @@ $(document).ready(function () {
 		params = { "history": this.id }
 
 		params["num"] = currentsentnum;
+		params["prevmod"] = prevmod;
 		$.ajax({
 			url: URL_BASE,
 			type: 'GET',

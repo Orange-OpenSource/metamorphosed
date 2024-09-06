@@ -714,20 +714,20 @@ def test_edit_amr_undo_redo(client):
     print("res2", json.dumps(res, indent=2))
     assert "(r / rise-01\n   :location (e / east))" == res["penman"]
 
-    response = client.get("/edit", query_string={"num": 6, "prevmod": 4, "addconcept": "sun"})
-    response = client.get("/edit", query_string={"num": 6, "prevmod": 5, "start": "r", "end": "s", "label": "ARG0"})
+    response = client.get("/edit", query_string={"num": 6, "prevmod": prevmod + 3, "addconcept": "sun"})
+    response = client.get("/edit", query_string={"num": 6, "prevmod": prevmod + 4, "start": "r", "end": "s", "label": "ARG0"})
     res = json.loads(response.data)
     print("res3", json.dumps(res, indent=2))
     assert "(r / rise-01\n   :location (e / east)\n   :ARG0 (s / sun))" == res["penman"]
 
-    response = client.get("/history", query_string={"num": 6, "history": "undo"})
-    response = client.get("/history", query_string={"num": 6, "history": "undo"})
+    response = client.get("/history", query_string={"num": 6, "prevmod": prevmod + 5, "history": "undo"})
+    response = client.get("/history", query_string={"num": 6, "prevmod": prevmod + 6, "history": "undo"})
     res = json.loads(response.data)
     print("res4", json.dumps(res, indent=2))
     assert "(r / rise-01\n   :location (e / east))" == res["penman"]
 
-    response = client.get("/history", query_string={"num": 6, "history": "redo"})
-    response = client.get("/history", query_string={"num": 6, "history": "redo"})
+    response = client.get("/history", query_string={"num": 6, "prevmod": prevmod + 7, "history": "redo"})
+    response = client.get("/history", query_string={"num": 6, "prevmod": prevmod + 8, "history": "redo"})
     res = json.loads(response.data)
     print("res5", json.dumps(res["penman"], indent=2))
     assert "(r / rise-01\n   :location (e / east)\n   :ARG0 (s / sun))" == res["penman"]
@@ -735,7 +735,7 @@ def test_edit_amr_undo_redo(client):
 
 def test_edit_comment(client):
     #response = client.get("/read", query_string={"num": 6})
-    response = client.get("/edit", query_string={"num": 6, "modcomment": "adding a comment\n\nwith an empty line in between\n\n"})
+    response = client.get("/edit", query_string={"num": 6, "prevmod": 6, "modcomment": "adding a comment\n\nwith an empty line in between\n\n"})
     res = json.loads(response.data)
     print("res", json.dumps(res, indent=2))
     assert res["warning"] is None

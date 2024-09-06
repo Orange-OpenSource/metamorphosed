@@ -297,7 +297,7 @@ class AMR_Edit_Server:
             rtc = None
             print("AP PREVMOD:", ap.previous_modification, "CLIENT:", prevmod, "TOO LATE", ap.previous_modification > prevmod)
             if ap.previous_modification > prevmod:
-                raise ServerException("The sentence has beend edit by another user. Please reload sentence")
+                raise ServerException("The sentence has been edit by another user. Please reload sentence")
 
             self.undos.append((sentnum, ap.lastpm))
             #print("AP: %s" % ap.lastpm)
@@ -485,8 +485,9 @@ class AMR_Edit_Server:
         def history():
             sentnum = self.checkParameter(request, 'num', 'integer', isOptional=False, defaultValue=None)
             history = self.checkParameter(request, 'history', 'string', isOptional=False, defaultValue=None)
+            prevmod = self.checkParameter(request, 'prevmod', 'integer', isOptional=True, defaultValue=0)
 
-            validparams = ["num", "history"]
+            validparams = ["num", "history", "prevmod"]
             self.validParameters(request, set(validparams))
 
             #print("hUNDOS: %d" % (len(self.undos)))
@@ -494,6 +495,12 @@ class AMR_Edit_Server:
 
             #for n,pm in self.states:
             #    print("HHH   sentnum:%s pm:%s" % (n, " ## ".join(pm).replace("\n", "")))
+
+            # TODO
+            apcurrent = self.aps[sentnum]
+            print("AP PREVMOD:", apcurrent.previous_modification, "CLIENT:", prevmod, "TOO LATE", apcurrent.previous_modification > prevmod)
+            if apcurrent.previous_modification > prevmod:
+                raise ServerException("The sentence has been edit by another user. Please reload sentence")
 
             if history == "undo":
                 if len(self.undos) > 0:
@@ -509,6 +516,7 @@ class AMR_Edit_Server:
                     ap = amreditor.AMRProcessor()
                     self.aps[sentnum] = ap
                     ap.readpenman(pm)
+                    ap.previous_modification = apcurrent.previous_modification
                     ap.show()
                     print("AP", ap)
 
@@ -526,6 +534,7 @@ class AMR_Edit_Server:
                     ap = amreditor.AMRProcessor()
                     self.aps[sentnum] = ap
                     ap.readpenman(pm)
+                    ap.previous_modification = apcurrent.previous_modification
                     ap.show()
                     print("AP", ap)
 
