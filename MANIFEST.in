@@ -8,4 +8,4 @@ include metamorphosed/gui/*.js
 include metamorphosed/gui/*.css
 include metamorphosed/gui/img/*
 include metamorphosed/data/*.txt
-include metamorphosed/data/*.yaml
+include metamorphosed/data/*.yml

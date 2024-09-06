@@ -33,6 +33,7 @@ pushd propbank-frames/frames;
   git checkout ad2bafa4c9c9c58cc1bc89;
   wget https://raw.githubusercontent.com/propbank/propbank-frames/development/frames/AMR-UMR-91-rolesets.xml
 popd
+./metamorphosed/installJQ.py
 ```
 
 ### Mac
@@ -43,11 +44,13 @@ source VENV/bin/activate
 pip install -r requirements.txt
 git submodule update --init
 pushd propbank-frames;  git checkout ad2bafa4c9c9c58cc1bc89; popd
+./metamorphosed/installJQ.py
 ```
 
 Note: For the PropBank frames, we need currently this intermediary version since the main and release-v3.4.1 branches 
 do not contain the definition of roles like `be-located-at-91`.
 
+The script `./metamorphosed/installJQ.py` installs the following into `metamorphosed/gui/lib`
 also needed: 
 * graphviz (see above `sudo apt install graphviz`)
 * https://code.jquery.com/jquery-3.6.0.min.js
@@ -55,18 +58,6 @@ also needed:
 * https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.2/jquery.modal.min.css
 * https://jqueryui.com/resources/download/jquery-ui-1.13.2.zip
 
-the latter three must be installed in `gui/lib` via the following commands
-
-```
-mkdir -p gui/lib
-wget https://code.jquery.com/jquery-3.6.0.min.js -O gui/lib/jquery-3.6.0.min.js
-wget https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.2/jquery.modal.min.js -O gui/lib/jquery.modal-0.9.2.min.js
-wget https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.2/jquery.modal.min.css -O gui/lib/jquery.modal-0.9.2.min.css
-wget https://jqueryui.com/resources/download/jquery-ui-1.13.2.zip -O gui/lib/jquery-ui-1.13.2.zip
-pushd gui/lib/
-unzip jquery-ui-1.13.2.zip
-popd
-```
 
 
 ## tests
@@ -187,7 +178,7 @@ The objects of all predicates `:quant` must match `\d+`, i.e. an integer
 The script `amrdoc.py` can check whether concepts (with an suffixe line `-01`) are well defined in PropBank and that all used `:ARGn` relations are define for the given concept. If a liste of valid relations in given, it will detect relations in the AMR file which are not defined.
 
 ```
-amrdoc.py --validate \
+./validate.py --validate \
 	--rels <relations.txt> \
 	--pbframes <propbank-frames-dir> \
 	--constraintes <constraints.yml> \
@@ -357,8 +348,8 @@ Whereas the default is faster, SmatchPP is using a different Solver (ILP instead
 * ILP provides verifiable and optimal results.
 
 ```
-usage: inter_annotator.py [-h] --files FILES [FILES ...] [--sentences] [--debug] [--runs RUNS] [--first FIRST] [--last LAST] [--smatchpp]
-                          [--report REPORT] [--sortcol SORTCOL]
+usage: iaa.py [-h] --files FILES [FILES ...] [--sentences] [--debug] [--runs RUNS] [--first FIRST] [--last LAST] [--smatchpp]
+              [--report REPORT] [--sortcol SORTCOL]
 
 inter-annotator agreement
 
@@ -379,7 +370,7 @@ options:
 
 For instance the for 3 test files provided the IAA can be calculated by
 ```
-inter_annotator.py -f comptest_annot1.txt comptest_annot3.txt comptest_annot4.txt -d
+./iaa.py -f metamorphosed/data/comptest_annot1.txt metamorphosed/data/comptest_annot3.txt metamorphosed/data/comptest_annot4.txt -d
 ```
 
 which results in:

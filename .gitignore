@@ -14,3 +14,4 @@ rels.pdf
 build/
 metamorphosed.egg-info/
 dist/
+*.zip

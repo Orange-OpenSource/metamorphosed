@@ -57,6 +57,11 @@ from metamorphosed import AMR_Edit_Server
 #      https://stackoverflow.com/questions/17801300/how-to-run-a-method-before-all-tests-in-all-classes
 
 
+mydir = os.path.dirname(__file__)
+
+PROPBANK_PRESENT = os.path.isdir("propbank-frames/frames/")
+
+
 # launched only once
 @pytest.fixture(scope="session")
 def app():
@@ -66,14 +71,14 @@ def app():
     #})
 
     aes = AMR_Edit_Server(4568,
-                          "test/testamr.txt",
+                          mydir + "/data/testamr.txt",
                           "propbank-frames/frames/",
-                          "metamorphosed/data/relations.txt",
-                          "metamorphosed/data/concepts.txt",
-                          "metamorphosed/data/constraints.yml",
+                          mydir + "/data/relations.txt",
+                          mydir + "/data/concepts.txt",
+                          mydir + "/data/constraints.yml",
                           False, # readonly
                           None, # author
-                          "metamorphosed/data/reification-table.txt"
+                          mydir + "/data/reification-table.txt"
                           )
     app = aes.app
     number_of_sentences = len(aes.aps)
@@ -90,7 +95,7 @@ def app():
 @pytest.fixture()
 def app2():
     aes = AMR_Edit_Server(4568,
-                          "test/testamr.txt",
+                          mydir + "/data/testamr.txt",
                           None, #"propbank-frames/frames/",
                           None, #"relations.txt",
                           None, #"concepts.txt",
@@ -118,16 +123,16 @@ def app_once():
     #    "TESTING": True,
     #})
     aes = AMR_Edit_Server(4568,
-                          "test/comptest_gold.txt",
+                          mydir + "/data/comptest_gold.txt",
                           None, #"propbank-frames/frames/",
-                          "metamorphosed/data/relations.txt",
+                          mydir + "/data/relations.txt",
                           None, #"concepts.txt",
                           None, # "constraints.yml",
                           False, # readonly
                           None, # author
-                          "metamorphosed/data/reification-table.txt",
+                          mydir + "/data/reification-table.txt",
                           False, # do_git
-                          compare=["test/comptest_sys.txt"]
+                          compare=[mydir + "/data/comptest_sys.txt"]
                           )
     app = aes.app
 
@@ -142,7 +147,7 @@ def app_once():
 def app_git():
     datadir = tempfile.TemporaryDirectory()
     print("temporary test directory", datadir)
-    shutil.copyfile("test/testamr.txt", datadir.name + "/testamr.txt")
+    shutil.copyfile(mydir + "/data/testamr.txt", datadir.name + "/testamr.txt")
     repo = git.Repo.init(datadir.name)
     repo.git.add(datadir.name + "/testamr.txt")
     repo.git.commit("-m", "initial")
@@ -232,6 +237,7 @@ def test_info(client):
                                    ':subset ↔ include-91']
 
 
+@pytest.mark.skipif(PROPBANK_PRESENT is False, reason="cannot find propbank-frames/frames")
 def test_exportgraphs(client):
     # must be run before other tests modify the graphs
     # get SVG files
@@ -284,13 +290,14 @@ def test_exportgraphs(client):
     #    break
 
 
+@pytest.mark.skipif(PROPBANK_PRESENT is False, reason="cannot find propbank-frames/frames")
 def test_read(client):
     response = client.get("/read", query_string={"num": 9})
     res = json.loads(response.data)
     #print("res", res, file=sys.stderr)
     assert res["penman"] == '(h / have-org-role-91\n   :ARG0 (p / person\n            :name (n / name\n                     :op4 "Barack"\n                     :op2 "Hussein"\n                     :op3 "Obama"))\n   :ARG1 (c / country\n            :name (n2 / name\n                      :op2 "United"\n                      :op2 "States"))\n   :ARG2 (p2 / president\n             :ord (o / ordinal-entity\n                     :value 44)))'
     assert '<h2>have-org-role</h2>\n<h3>have-org-role.91:' in res["framedoc"]
-    assert res['filename'] == 'test/testamr.txt'
+    assert res['filename'].endswith('metamorphosed/data/testamr.txt')
     assert res['warning'] == ['more than one relation label « :op2 » start at instance « n2 »', 'incoherent :opNN numbering for instance « n »: 4, 2, 3', 'incoherent :opNN numbering for instance « n2 »: 2, 2']
 
 
@@ -367,6 +374,7 @@ def test_edit_addinstance(client):
     response = client.get("/edit", query_string={"num": 8, "prevmod": 0, "addconcept": "cry-01"})
 
 
+@pytest.mark.skipif(PROPBANK_PRESENT is False, reason="cannot find propbank-frames/frames")
 def test_edit_addinstance_wrong_roleset(client):
     response = client.get("/read", query_string={"num": 6})
     response = client.get("/edit", query_string={"num": 6, "prevmod": 1, "addconcept": "rise-06"})
@@ -392,6 +400,7 @@ def test_edit_addedge_with_concepts(client):
     #assert 1 == 2
 
 
+@pytest.mark.skipif(PROPBANK_PRESENT is False, reason="cannot find propbank-frames/frames")
 def test_edit_modconcept(client):
     response = client.get("/read", query_string={"num": 4})
     response = client.get("/edit", query_string={"num": 4, "modconcept": "b", "newconcept": "bark-02"})
@@ -402,6 +411,7 @@ def test_edit_modconcept(client):
     #assert 1 == 2
 
 
+@pytest.mark.skipif(PROPBANK_PRESENT is False, reason="depends on skipped test test_edit_modconcept")
 def test_edit_addname(client):
     response = client.get("/edit", query_string={"num": 4, "prevmod": 1, "addname": "Little Dog", "nameof": "d"})
     res = json.loads(response.data)
@@ -418,6 +428,7 @@ def test_edit_modconcept_wrong_concept(client):
     #assert 1 == 2
 
 
+@pytest.mark.skipif(PROPBANK_PRESENT is False, reason="cannot find propbank-frames/frames")
 def test_edit_modedge_wrong_edge(client):
     response = client.get("/read", query_string={"num": 18})
     response = client.get("/edit", query_string={"num": 18, "prevmod": 1, "modedge_start": "o", "modedge_end": "r", "newedge": ":ARG111"})
@@ -920,8 +931,8 @@ def test_smatchpm():
 
     floatdisplay = "%%.%df" % 5
     f = []
-    for i, sid1, sid2, numdiffs, (precision, recall, best_f_score) in sm.score_amr_pairs("test/comptest_gold.txt",
-                                                                                         "test/comptest_sys.txt",
+    for i, sid1, sid2, numdiffs, (precision, recall, best_f_score) in sm.score_amr_pairs(mydir + "/data/comptest_gold.txt",
+                                                                                         mydir + "/data/comptest_sys.txt",
                                                                                          justinstance=False,
                                                                                          justattribute=False,
                                                                                          justrelation=False):
@@ -938,8 +949,8 @@ def ls(dn):
 def test_nogit_back_exists():
     datadir = tempfile.TemporaryDirectory()
     print("temporary test directory", datadir)
-    shutil.copyfile("test/testamr.txt", datadir.name + "/testamr.txt")
-    shutil.copyfile("test/testamr.txt", datadir.name + "/testamr.txt.2")
+    shutil.copyfile(mydir + "/data/testamr.txt", datadir.name + "/testamr.txt")
+    shutil.copyfile(mydir + "/data/testamr.txt", datadir.name + "/testamr.txt.2")
 
     ls(datadir.name)
 
@@ -971,6 +982,7 @@ def test_edit_addinstance_git(client_git):
     assert "commit: metamorphosed AMR editor: 6 of " in repo.head.log()[-1].message
 
 
+@pytest.mark.skipif(PROPBANK_PRESENT is False, reason="cannot find propbank-frames/frames")
 def test_amrdoc():
     #app = create_app()
     #app.config.update({
@@ -983,11 +995,11 @@ def test_amrdoc():
     import metamorphosed.relations_constraints as relations_constraints
 
     validators = []
-    validators.append(AMR_relations.Relations("metamorphosed/data/relations.txt"))
+    validators.append(AMR_relations.Relations(mydir + "/data/relations.txt"))
     validators.append(propbank_frames.PropBankFrames("propbank-frames/frames/"))
-    validators.append(relations_constraints.Constraints("metamorphosed/data/constraints.yml"))
+    validators.append(relations_constraints.Constraints(mydir + "/data/constraints.yml"))
 
-    ad = amrdoc.AMRdoc("coverageamr.txt")
+    ad = amrdoc.AMRdoc(mydir + "/data/coverageamr.txt")
     msgs = ad.validate(validators)
     assert msgs == ["invalid relation ':ARG10'",
                     '«want-11» is not a defined propbank roleset',
@@ -1047,7 +1059,7 @@ def test_amrdoc():
 
 def test_amrdoc_stats():
     import metamorphosed.amrdoc as amrdoc
-    ad = amrdoc.AMRdoc("coverageamr.txt")
+    ad = amrdoc.AMRdoc(mydir + "/data/coverageamr.txt")
     reportfile = tempfile.TemporaryDirectory()
     amrdoc.stats([ad], conceptlist=False, plotting=False, outdir=reportfile.name)
     ifp = open(os.path.join(reportfile.name, "verbalconcepts-list.txt"))
@@ -1084,7 +1096,7 @@ def test_iaa():
     import metamorphosed.inter_annotator as inter_annotator
     reportfile = tempfile.TemporaryDirectory()
     #print("AAAA", reportfile.name, dir(reportfile))
-    iaa = inter_annotator.IAA(["test/comptest_annot1.txt", "test/comptest_annot3.txt", "test/comptest_annot4.txt"], debug=True)
+    iaa = inter_annotator.IAA([mydir + "/data/comptest_annot1.txt", mydir + "/data/comptest_annot3.txt", mydir + "/data/comptest_annot4.txt"], debug=True)
     s1 = io.StringIO()
     iaa.eval(micro=True, runs=1, ofp=s1, report=os.path.join(reportfile.name, "report1.txt"), sortcolumn=5)
     #print("<<%s>>" % s1.getvalue())
@@ -1141,7 +1153,7 @@ def test_iaa_smatchpp():
     import metamorphosed.inter_annotator as inter_annotator
     reportfile = tempfile.TemporaryDirectory()
     #print("AAAA", reportfile.name, dir(reportfile))
-    iaa = inter_annotator.IAA(["test/comptest_annot1.txt", "test/comptest_annot3.txt", "test/comptest_annot4.txt"], debug=True)
+    iaa = inter_annotator.IAA([mydir + "/data/comptest_annot1.txt", mydir + "/data/comptest_annot3.txt", mydir + "/data/comptest_annot4.txt"], debug=True)
     s1 = io.StringIO()
     iaa.eval(micro=True, runs=1, ofp=s1, report=os.path.join(reportfile.name, "report1+.txt"), smatchpp=True, sortcolumn=10)
     #print("<<%s>>" % s1.getvalue())
