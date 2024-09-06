@@ -66,14 +66,14 @@ def app():
     #})
 
     aes = AMR_Edit_Server(4568,
-                          "testamr.txt",
+                          "test/testamr.txt",
                           "propbank-frames/frames/",
-                          "relations.txt",
-                          "concepts.txt",
-                          "constraints.yml",
+                          "data/relations.txt",
+                          "data/concepts.txt",
+                          "data/constraints.yml",
                           False, # readonly
                           None, # author
-                          "reification-table.txt"
+                          "data/reification-table.txt"
                           )
     app = aes.app
     number_of_sentences = len(aes.aps)
@@ -90,7 +90,7 @@ def app():
 @pytest.fixture()
 def app2():
     aes = AMR_Edit_Server(4568,
-                          "testamr.txt",
+                          "test/testamr.txt",
                           None, #"propbank-frames/frames/",
                           None, #"relations.txt",
                           None, #"concepts.txt",
@@ -118,16 +118,16 @@ def app_once():
     #    "TESTING": True,
     #})
     aes = AMR_Edit_Server(4568,
-                          "comptest_gold.txt",
+                          "test/comptest_gold.txt",
                           None, #"propbank-frames/frames/",
-                          "relations.txt",
+                          "data/relations.txt",
                           None, #"concepts.txt",
                           None, # "constraints.yml",
                           False, # readonly
                           None, # author
-                          "reification-table.txt",
+                          "data/reification-table.txt",
                           False, # do_git
-                          compare=["comptest_sys.txt"]
+                          compare=["test/comptest_sys.txt"]
                           )
     app = aes.app
 
@@ -142,7 +142,7 @@ def app_once():
 def app_git():
     datadir = tempfile.TemporaryDirectory()
     print("temporary test directory", datadir)
-    shutil.copyfile("testamr.txt", datadir.name + "/testamr.txt")
+    shutil.copyfile("test/testamr.txt", datadir.name + "/testamr.txt")
     repo = git.Repo.init(datadir.name)
     repo.git.add(datadir.name + "/testamr.txt")
     repo.git.commit("-m", "initial")
@@ -290,7 +290,7 @@ def test_read(client):
     #print("res", res, file=sys.stderr)
     assert res["penman"] == '(h / have-org-role-91\n   :ARG0 (p / person\n            :name (n / name\n                     :op4 "Barack"\n                     :op2 "Hussein"\n                     :op3 "Obama"))\n   :ARG1 (c / country\n            :name (n2 / name\n                      :op2 "United"\n                      :op2 "States"))\n   :ARG2 (p2 / president\n             :ord (o / ordinal-entity\n                     :value 44)))'
     assert '<h2>have-org-role</h2>\n<h3>have-org-role.91:' in res["framedoc"]
-    assert res['filename'] == 'testamr.txt'
+    assert res['filename'] == 'test/testamr.txt'
     assert res['warning'] == ['more than one relation label « :op2 » start at instance « n2 »', 'incoherent :opNN numbering for instance « n »: 4, 2, 3', 'incoherent :opNN numbering for instance « n2 »: 2, 2']
 
 
@@ -920,8 +920,8 @@ def test_smatchpm():
 
     floatdisplay = "%%.%df" % 5
     f = []
-    for i, sid1, sid2, numdiffs, (precision, recall, best_f_score) in sm.score_amr_pairs("comptest_gold.txt",
-                                                                                         "comptest_sys.txt",
+    for i, sid1, sid2, numdiffs, (precision, recall, best_f_score) in sm.score_amr_pairs("test/comptest_gold.txt",
+                                                                                         "test/comptest_sys.txt",
                                                                                          justinstance=False,
                                                                                          justattribute=False,
                                                                                          justrelation=False):
@@ -938,8 +938,8 @@ def ls(dn):
 def test_nogit_back_exists():
     datadir = tempfile.TemporaryDirectory()
     print("temporary test directory", datadir)
-    shutil.copyfile("testamr.txt", datadir.name + "/testamr.txt")
-    shutil.copyfile("testamr.txt", datadir.name + "/testamr.txt.2")
+    shutil.copyfile("test/testamr.txt", datadir.name + "/testamr.txt")
+    shutil.copyfile("test/testamr.txt", datadir.name + "/testamr.txt.2")
 
     ls(datadir.name)
 
@@ -983,9 +983,9 @@ def test_amrdoc():
     import metamorphosed.relations_constraints as relations_constraints
 
     validators = []
-    validators.append(AMR_relations.Relations("relations.txt"))
+    validators.append(AMR_relations.Relations("data/relations.txt"))
     validators.append(propbank_frames.PropBankFrames("propbank-frames/frames/"))
-    validators.append(relations_constraints.Constraints("constraints.yml"))
+    validators.append(relations_constraints.Constraints("data/constraints.yml"))
 
     ad = amrdoc.AMRdoc("coverageamr.txt")
     msgs = ad.validate(validators)
@@ -1081,10 +1081,10 @@ def test_amreditor():
 
 def test_iaa():
     import io
-    import inter_annotator
+    import inter_annotator as inter_annotator
     reportfile = tempfile.TemporaryDirectory()
     #print("AAAA", reportfile.name, dir(reportfile))
-    iaa = inter_annotator.IAA(["comptest_annot1.txt", "comptest_annot3.txt", "comptest_annot4.txt"], debug=True)
+    iaa = inter_annotator.IAA(["test/comptest_annot1.txt", "test/comptest_annot3.txt", "test/comptest_annot4.txt"], debug=True)
     s1 = io.StringIO()
     iaa.eval(micro=True, runs=1, ofp=s1, report=os.path.join(reportfile.name, "report1.txt"), sortcolumn=5)
     #print("<<%s>>" % s1.getvalue())
@@ -1141,7 +1141,7 @@ def test_iaa_smatchpp():
     import inter_annotator
     reportfile = tempfile.TemporaryDirectory()
     #print("AAAA", reportfile.name, dir(reportfile))
-    iaa = inter_annotator.IAA(["comptest_annot1.txt", "comptest_annot3.txt", "comptest_annot4.txt"], debug=True)
+    iaa = inter_annotator.IAA(["test/comptest_annot1.txt", "test/comptest_annot3.txt", "test/comptest_annot4.txt"], debug=True)
     s1 = io.StringIO()
     iaa.eval(micro=True, runs=1, ofp=s1, report=os.path.join(reportfile.name, "report1+.txt"), smatchpp=True, sortcolumn=10)
     #print("<<%s>>" % s1.getvalue())

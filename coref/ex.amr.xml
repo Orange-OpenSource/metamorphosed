@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE msamr SYSTEM "msamr.dtd">
+
+<document>
+   <sentences annotator="" docid="bolt-eng-DF-199-192783-6849434" end="" site="" sourcetype="" start="" threadid="">
+      <amr id="DF-199-192783-684_9434.1" order="0" post="p1" speaker="unk" su="1"/>
+      <amr id="DF-199-192783-684_9434.2" order="1" post="p1" speaker="unk" su="2"/>
+      <amr id="DF-199-192783-684_9434.3" order="2" post="p1" speaker="unk" su="3"/>
+      <amr id="DF-199-192783-684_9434.4" order="3" post="p2" speaker="unk" su="1"/>
+      <amr id="DF-199-192783-684_9434.5" order="4" post="p2" speaker="unk" su="2"/>
+   </sentences>
+   <relations>
+      <identity>
+         <identchain relationid="rel-0">
+            <mention concept="it" id="DF-199-192783-684_9434.2" variable="i"/>
+            <implicitrole argument="ARG2" id="DF-199-192783-684_9434.4" parentconcept="risk-01" parentvariable="r2"/>
+         </identchain>
+         <identchain relationid="rel-1">
+            <mention concept="person" id="DF-199-192783-684_9434.2" variable="p3">George_W._Bush</mention>
+            <mention concept="he" id="DF-199-192783-684_9434.4" variable="h"/>
+            <mention concept="person" id="DF-199-192783-684_9434.5" variable="p"/>
+            <implicitrole argument="ARG0" id="DF-199-192783-684_9434.4" parentconcept="risk-01" parentvariable="r2"/>
+         </identchain>
+         <identchain relationid="rel-2">
+            <mention concept="you" id="DF-199-192783-684_9434.2" variable="y"/>
+            <mention concept="you" id="DF-199-192783-684_9434.1" variable="y"/>
+         </identchain>
+      </identity>
+      <singletons/>
+      <bridging/>
+   </relations>
+</document>
