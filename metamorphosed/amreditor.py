@@ -279,7 +279,7 @@ class AMRProcessor:
                 insts.append(k)
         return insts
 
-    def dot(self, highlightinstances=None, highlightrelations=None, format="svg"):
+    def dot(self, highlightinstances=None, highlightrelations=None, format="svg", inverse_of=False):
         # highlight instances and relations NOT in highlightinstances and highlightrelations
         graph_attr = {#'rankdir':'LR'
         }
@@ -291,6 +291,11 @@ class AMRProcessor:
 
         graph = Digraph('amr_graph', format=format, graph_attr=graph_attr)
         for s, p, o in self.triples:
+            if inverse_of and p.endswith("-of"):
+                tmp = o
+                o = s
+                s = tmp
+                p = p[:-3]
             kwargs = kwargsinit.copy()
 
             if p == ":instance":
@@ -359,7 +364,7 @@ class AMRProcessor:
     def show(self, highlightinstances=None, highlightrelations=None, format="svg"):
         if self.inserver:
             if not self.valid:
-                return self.lastpm, None
+                return self.lastpm, None, None
 
             try:
                 pm = penman.encode(penman.Graph(self.triples, top=self.top))
@@ -369,13 +374,14 @@ class AMRProcessor:
                 #self.lastsvg = a.graph.pipe()
                 self.readpenman(pm)
                 self.lastsvg = self.dot(highlightinstances, highlightrelations, format=format)
+                self.lastsvg_canonised = self.dot(highlightinstances, highlightrelations, format=format, inverse_of=True)
                 self.isDisconnected = False
             except penman.exceptions.LayoutError:
                 #a = amr2dot.AMR2DOT(format="svg", font="Lato", instances=False, lr=False, bw=False)
                 #a.buildtriples(self.triples)
                 #self.lastsvg = a.graph.pipe()
                 self.lastsvg = self.dot(format=format)
-
+                self.lastsvg_canonised = self.dot(format=format, inverse_of=True)
                 noninst = []
                 for tr in self.triples:
                     noninst.append(tr)
@@ -398,7 +404,7 @@ class AMRProcessor:
                 else:
                     self.isDisconnected = False
 
-            return "%s" % self.lastpm, self.lastsvg
+            return "%s" % self.lastpm, self.lastsvg, self.lastsvg_canonised
         else:
             try:
                 pm = penman.encode(penman.Graph(self.triples, top=self.top))
@@ -519,22 +525,40 @@ class AMRProcessor:
             self.vars[var] = newconcept
 
     def modedge(self, modedge_start, modedge_end, newedge):
+        # change label of edge
         for tr in self.triples:
+            #print("MOD-EDGE", tr, modedge_start, modedge_end, newedge)
             if tr[0] == modedge_start and tr[2] == modedge_end:
                 pos = self.triples.index(tr)
                 self.triples.remove(tr)
                 self.triples.insert(pos, (tr[0], newedge, tr[2]))
                 break
+            elif tr[2] == modedge_start and tr[0] == modedge_end:
+                pos = self.triples.index(tr)
+                self.triples.remove(tr)
+                self.triples.insert(pos, (tr[2], newedge, tr[0]))
+                break
 
     def moveedge(self, modedge_start, modedge_end, newedge, newstart):
+        # change start point of edge
         if newstart not in self.vars:
             return "new source instance « %s » does not exist" % newstart
 
+        
         for tr in self.triples:
+            #print("MOVE-EDGE", tr, modedge_start, modedge_end, newedge, newstart)
             if tr[0] == modedge_start and tr[2] == modedge_end:
                 pos = self.triples.index(tr)
                 self.triples.remove(tr)
                 self.triples.insert(pos, (newstart, newedge, tr[2]))
+                break
+            if tr[2] == modedge_start and tr[0] == modedge_end:
+                # can create confusion. 
+                #if tr[1].endswith("-of"):
+                #    return 'deactivate  « reverse "-of" » to modify the head this relation'
+                pos = self.triples.index(tr)
+                self.triples.remove(tr)
+                self.triples.insert(pos, (newstart, tr[1], tr[0]))
                 break
         return None
 

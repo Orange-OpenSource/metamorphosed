@@ -95,7 +95,7 @@ use our internet browser as GUI: https://localhost:<port>
 
 * The `relations.txt` file must contain all the relations which are valid in the AMR graphs, the editor will show a warning for each relation found in a graph which is not mentioned in this file. The relations will also used for autocompletion
 * If `--concepts concepts.txt` is given, the concepts will be used for autocompletion.
-* The option `--reifications` loads a table with relations which can be reified ([reification-able.txt](reification-able.txt))
+* The option `--reifications` loads a table with relations which can be reified ([metamorphosed/data/reification-able.txt](reification-able.txt))
 * `propbank-frames-dir` is the `frames` directory within the directory where `https://github.com/propbank/propbank-frames` has been cloned
 * If the edited file is under git version control, every click on `save` will create a git commit. In order to use a different user name, specify the user with `--author 'Name <mail@example.com>'`
 * `constraints.yml` a file which defines predicate and object constraints (i.e. no other predicate and object is allowed in a given context. E.g.
@@ -274,11 +274,11 @@ Choose format and numbers of sentences for which you want the graphic exported (
 
 When creating a new edge (relation) between two instances, _metamorphosed_ tries to guess the most likely label for this relation. The implementation is very simple, if the target instance is of type `name` the guessed relation is `:name`, if the concept of the source instance is `name`, `and` or `or`, the guessed relation is `:op2`, else if the source relations ends with `-01` etc, the guessed relations is `:ARGn`. In moste cases this has to be correct. 
 However you can implement or more sophisticated classifier, trained on any data whic is available to you and use your classifier. To do so,
-Subclass the class `Basic_EdgePredictor` in [edge_predictor.py](edge_predictor.py) and implement your classifier. You must redefine the method
+Subclass the class `Basic_EdgePredictor` in [metamorphosed/edge_predictor.py](edge_predictor.py) and implement your classifier. You must redefine the method
 `predict(self, source_concept, target_concept):`. For instance:
 
 ```
-from edge_predictor import Basic_EdgePredictor
+from metamorphosed.edge_predictor import Basic_EdgePredictor
 
 class Perfect_EdgePredictor(Basic_EdgePredictor):
     def __init__(self, arglist):
@@ -396,7 +396,7 @@ annotator pair inter-annotator agreement Smatch F1: 58.86 differences: 4.4167
 Using the option `-s` loops on annotator pairs
 
 ```
-inter_annotator.py -f comptest_annot1.txt comptest_annot3.txt comptest_annot4.txt -d -s
+./iaa.py -f comptest_annot1.txt comptest_annot3.txt comptest_annot4.txt -d -s
 ```
 
 

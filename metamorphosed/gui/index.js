@@ -42,7 +42,8 @@ var readonly = false;
 var sentenceloaded = false;
 var relationlist = [];
 var conceptlist = [];
-var sentencelist = []
+var sentencelist = [];
+var lastdata = null;
 
 /** get information from relation extraction server */
 function getServerInfo() {
@@ -529,6 +530,7 @@ function formatAMR(data) {
     sentenceloaded = true;
     currentsentnum = $("#sentnum").val();
 
+    console.log("EZEZEZ", $("#reverse_of").is(":checked"));
 
     if (data.warning) {
 		// display warnings
@@ -649,7 +651,11 @@ function formatAMR(data) {
 	$('#g2resultat').append('<div class="svggraph" id="svggraph_' + currentsentnum + '">');
 	$('#svggraph_' + currentsentnum).append('<div id="innersvggraph_' + currentsentnum + '">');
 
-	$('#innersvggraph_' + currentsentnum).append(data.svg.replace(/<svg /, '<svg onmousedown="info(event);" '));
+	if ($("#reverse_of").is(":checked")) {
+	    $('#innersvggraph_' + currentsentnum).append(data.svg_canon.replace(/<svg /, '<svg onmousedown="info(event);" '));
+	} else {
+	    $('#innersvggraph_' + currentsentnum).append(data.svg.replace(/<svg /, '<svg onmousedown="info(event);" '));
+	}
 
 	if ('#innersvggraph_' + currentsentnum in visible_divselectors && visible_divselectors['#innersvggraph_' + currentsentnum] == false) {
 		ToggleDiv('#innersvggraph_' + currentsentnum, "#togglesvggraph");
@@ -673,7 +679,7 @@ function formatAMR(data) {
 	} else {
 		$("#redo").prop("disabled", true);
 	}
-
+	lastdata = data;
 }
 
 
@@ -896,11 +902,6 @@ $(document).ready(function () {
 			}
 		});
 	});
-
-
-
-
-
 
 
 
@@ -1173,6 +1174,7 @@ $(document).ready(function () {
 	      }
 	});
 
+
 	$(".QQexportbutton").click(function () {
 		URL_BASE = 'graphs';
 		//console.log("AZAZA", $("#pdfgraph").is(":checked"), $('input:radio[name=graphformat]:checked').val());
@@ -1294,14 +1296,11 @@ $(document).ready(function () {
 	});
 
 
+	$(".mycheck").click(function () {
+	    console.log("AAA", this.id, this.checked, $("#reverse_of").is(":checked"));
+	    $("#resultat").empty(); // vider le div
+	    formatAMR(lastdata);				
+	});
 
-
-	/*    $("#vider").click(function () {
-			  //$('#enhdeprelEdit').modal('hide');
-			  $("#texte").val("");
-			  //$("#frameinfo").empty();
-			  $("#resultat").empty();
-			  $(window).scrollTop(0);
-			  }); */
 
 });

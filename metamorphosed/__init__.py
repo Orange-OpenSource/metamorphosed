@@ -374,7 +374,7 @@ class AMR_Edit_Server:
                 # creates an http status code 400
                 raise ServerException("No edit valid operation given")
 
-            pm, svg = ap.show()
+            pm, svg, svg_canon = ap.show()
 
             framedoc = None
             framedocs = self.pbframes.getdoc(ap.triples)
@@ -395,8 +395,12 @@ class AMR_Edit_Server:
                 lastchanged = cursentence.savedateorig
             ap.previous_modification += 1
             print("AUGMENT", cursentence.id, ap.previous_modification)
-            dico = {"warning": warnings, "framedoc": framedoc, "readonly": self.readonly,
-                    "penman": pm, "svg": svg.decode("utf8") if svg else "",
+            dico = {"warning": warnings,
+                    "framedoc": framedoc,
+                    "readonly": self.readonly,
+                    "penman": pm,
+                    "svg": svg.decode("utf8") if svg else "",
+                    "svg_canon": svg_canon.decode("utf8") if svg_canon else "",
                     "filename": filename, "numsent": len(self.amrdoc.sentences),
                     "num": sentnum,
                     "text": cursentence.text,
@@ -630,7 +634,7 @@ class AMR_Edit_Server:
                     ap = self.aps[x]
                     if not ap.isparsed:
                         ap.readpenman(ap.lastpm)
-                    pm, svg = ap.show(format=dataformat)
+                    pm, svg, svg_canon = ap.show(format=dataformat)
                     if svg:
                         zip_file.writestr("%d.%s" % (ix, dataformat), svg)
                     #print("FILE", ix, svg[:100] if svg else svg)
@@ -685,9 +689,14 @@ class AMR_Edit_Server:
                          ap.parsererror["offset"],
                          text)
                         ]
-            dico = {"penman": pm, "svg": "",
-                    "warning": warnings, "framedoc": "", "readonly": self.readonly,
-                    "filename": filename, "numsent": len(self.amrdoc.sentences),
+            dico = {"penman": pm,
+                    "svg": "",
+                    "svg_canon": "",
+                    "warning": warnings,
+                    "framedoc": "",
+                    "readonly": self.readonly,
+                    "filename": filename,
+                    "numsent": len(self.amrdoc.sentences),
                     "num": sentnum,
                     "text": cursentence.text,
                     "comments": "\n".join(cursentence.comments),
@@ -710,7 +719,7 @@ class AMR_Edit_Server:
                 if not ap.isparsed:
                     ap.readpenman(cursentence.amr)
 
-            pm, svg = ap.show()
+            pm, svg, svg_canon = ap.show()
             if not ap.valid:
                 return invalidamr(ap, pm, cursentence, sentnum)
 
@@ -745,9 +754,14 @@ class AMR_Edit_Server:
             if not lastchanged:
                 lastchanged = cursentence.savedateorig
 
-            dico = {"penman": pm, "svg": svg.decode("utf8"),
-                    "warning": warnings, "framedoc": framedoc, "readonly": self.readonly,
-                    "filename": filename, "numsent": len(self.amrdoc.sentences),
+            dico = {"penman": pm,
+                    "svg": svg.decode("utf8"),
+                    "svg_canon": svg_canon.decode("utf8"),
+                    "warning": warnings,
+                    "framedoc": framedoc,
+                    "readonly": self.readonly,
+                    "filename": filename,
+                    "numsent": len(self.amrdoc.sentences),
                     "num": sentnum,
                     "text": sentencetext, #cursentence.text,
                     "comments": "\n".join(cursentence.comments),
@@ -777,7 +791,7 @@ class AMR_Edit_Server:
                 if first_to_compare == -1:
                     # update display of first document
                     # highlight instances and relations NOT in highlightinstances and highlightrelations
-                    cpm, csvg = ap.show(highlightinstances=compres.instances1OK, highlightrelations=compres.rel1OK)
+                    cpm, csvg, csvg_canon = ap.show(highlightinstances=compres.instances1OK, highlightrelations=compres.rel1OK)
                     dico["svg"] = csvg.decode("utf8")
 
                 for ix, (doc, aps) in enumerate(self.otheramrdocs):
@@ -793,11 +807,11 @@ class AMR_Edit_Server:
 
                     # show differences of chosen pair
                     if ix == first_to_compare:
-                        cpm, csvg = cap.show(highlightinstances=compres.instances1OK, highlightrelations=compres.rel1OK)
+                        cpm, csvg, csvg_canon = cap.show(highlightinstances=compres.instances1OK, highlightrelations=compres.rel1OK)
                     elif ix == second_to_compare:
-                        cpm, csvg = cap.show(highlightinstances=compres.instances2OK, highlightrelations=compres.rel2OK)
+                        cpm, csvg, csvg_canon = cap.show(highlightinstances=compres.instances2OK, highlightrelations=compres.rel2OK)
                     else:
-                        cpm, csvg = cap.show()
+                        cpm, csvg, csvg_canon = cap.show()
 
                     dico2 = {}
                     dico2["filename"] = doc.fn
