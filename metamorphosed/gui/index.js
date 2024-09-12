@@ -43,7 +43,8 @@ var sentenceloaded = false;
 var relationlist = [];
 var conceptlist = [];
 var sentencelist = [];
-var lastdata = null;
+var lastdata = null; // to redisplay an unchanged sentence without asking the server
+var reverseof = false;
 
 /** get information from relation extraction server */
 function getServerInfo() {
@@ -415,12 +416,10 @@ function info(event) {
 	// get polygon child of current 
 	var chosenrel = -1;
 	for (var i = 0; i < node.children.length; i++) {
-	    //console.log("TTTT", i, event.target.parentNode.children[i].tagName);
 	    if (node.children[i].tagName == "polygon") {
 		node.children[i].setAttribute("class", "node boxhighlight");
 		lastclickededge = node.id;
 		chosenrel = i;
-		//console.log("HIER");
 	    }
 	};
 
@@ -444,10 +443,10 @@ function info(event) {
 				 lastclickededge = null;
 				 $("#edgesetmodal").hide();
 				 if (chosenrel > -1) {
-				     //console.log("aaaaa", chosenrel, node.children[chosenrel]);
 				     node.children[chosenrel].setAttribute("class", "");
 				 }
 			     });
+
     } else if (node.id.startsWith("literal#")) {
 	// edit literal
 	$(".modal").hide();
@@ -529,8 +528,6 @@ function formatAMR(data) {
 
     sentenceloaded = true;
     currentsentnum = $("#sentnum").val();
-
-    console.log("EZEZEZ", $("#reverse_of").is(":checked"));
 
     if (data.warning) {
 		// display warnings
@@ -651,7 +648,7 @@ function formatAMR(data) {
 	$('#g2resultat').append('<div class="svggraph" id="svggraph_' + currentsentnum + '">');
 	$('#svggraph_' + currentsentnum).append('<div id="innersvggraph_' + currentsentnum + '">');
 
-	if ($("#reverse_of").is(":checked")) {
+	if (reverseof) {
 	    $('#innersvggraph_' + currentsentnum).append(data.svg_canon.replace(/<svg /, '<svg onmousedown="info(event);" '));
 	} else {
 	    $('#innersvggraph_' + currentsentnum).append(data.svg.replace(/<svg /, '<svg onmousedown="info(event);" '));
@@ -858,8 +855,7 @@ $(document).ready(function () {
 		//URL_BASE = 'http://' + window.location.host + '/history';
 		URL_BASE = 'history';
 		$("#resultat").empty(); // vider le div
-		//var command = "dog"; //$("#command").val();
-		//console.log("EEEEE", this.id);
+
 		var params = {};
 		params = { "history": this.id }
 
@@ -913,13 +909,6 @@ $(document).ready(function () {
 
 		$("#resultat").empty(); // vider le div
 		var params = {};
-		/*if (this.id == "next") {
-			params = {"direction": "next"}
-		}
-		else if (this.id == "preceding") {
-			params = {"direction": "preceding"}
-		}
-		*/
 		params["direction"] = this.id;
 		params["num"] = currentsentnum;
 		$.ajax({
@@ -1103,16 +1092,14 @@ $(document).ready(function () {
 			//if (i % 200 == 0) console.log("filtering", i);
 			var idfilter = $('#sidfilter').val();
 			var textfilter = $('#textfilter').val();
-			//console.log("FILTER", idfilter, textfilter, sentencelist[i][0].search(idfilter));
+
 			// use .search() instead of .indexOf() for regex (very slow for long sentence lists)
 			if ((idfilter == "" || sentencelist[i][0].indexOf(idfilter) > -1)
 			    && (textfilter == "" || sentencelist[i][1].indexOf(textfilter) > -1)) {
-			    //console.log("FILTER OK", sentencelist[i]);
 			    var optionstring = sentencelist[i][0] + ": " + sentencelist[i][1];
 			    if (optionstring.length > 150) {
 				optionstring = optionstring.substring(optionstring, 150) + "...";
 			    }
-
 
 			    $('#sentencelist').append('<option value="' + (i+1) +'">' + optionstring);
 			}
@@ -1297,9 +1284,17 @@ $(document).ready(function () {
 
 
 	$(".mycheck").click(function () {
-	    console.log("AAA", this.id, this.checked, $("#reverse_of").is(":checked"));
-	    $("#resultat").empty(); // vider le div
-	    formatAMR(lastdata);				
+	    if (this.id === "reverse_of") {
+		if (!reverseof) {
+		    $(this).addClass('active');
+		} else {
+		    $(this).removeClass('active');
+            }
+		reverseof = !reverseof;
+
+		$("#resultat").empty(); // vider le div
+		formatAMR(lastdata);
+	    }
 	});
 
 

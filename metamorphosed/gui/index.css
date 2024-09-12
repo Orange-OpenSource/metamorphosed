@@ -102,6 +102,52 @@ h4 {
   font-family: "Be Vietnam Pro", Urbanist, Syne, Poppins, Lato, Ubuntu, DejaVu Sans, Arial, Helvetica, Sans;
 } 
 
+/* inspired by https://designmodo.com/3d-css3-button/ */
+.mycheck {
+    display: inline-block;
+    text-decoration: none;
+
+    /* top right bottom left */
+    qqpadding: 5px 5px 5px 5px;
+    border: 1px solid #959595;
+
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+
+    background-image: -webkit-gradient(
+        linear,
+        left bottom,
+        left top,
+        color-stop(0, rgb(217,217,217)),
+        color-stop(1, rgb(252,252,252))
+        );
+}
+
+.mycheck.active {
+    background-image: -webkit-gradient(
+        linear,
+        left bottom,
+        left top,
+        color-stop(0, rgb(224, 116, 13)),
+        color-stop(1, rgb(252, 145, 14))
+        );
+
+}
+
+
+.mycheck:hover {
+    background-image: -webkit-gradient(
+        linear,
+        left bottom,
+        left top,
+        color-stop(0, rgba(200, 200, 200)),
+        color-stop(1, rgba(200, 200, 200))
+        );
+    color: #222;
+}
+
+
 
 .logo2 img { 
    vertical-align: middle;
