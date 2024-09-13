@@ -55,6 +55,7 @@ import metamorphosed.propbank_frames as propbank_frames
 import metamorphosed.reification as reification
 import metamorphosed.relations_constraints as relations_constraints
 import metamorphosed.amr_comparison as amr_comparison
+from metamorphosed.relations_doc import RelDoc
 from metamorphosed.edge_predictor import Basic_EdgePredictor as EdgePredictor
 from metamorphosed.exception import ServerException
 
@@ -71,7 +72,7 @@ APIVERSION = "1.6.0"
 
 class AMR_Edit_Server:
     def __init__(self, port, filename, pbframes, rels, concepts, constraints,
-                 readonly, author=None, reifications=None,
+                 readonly, author=None, reifications=None, relationsdoc=None,
                  predictor=None,
                  do_git=True, compare=None, smatchpp=False):
         self.port = port
@@ -96,6 +97,10 @@ class AMR_Edit_Server:
             bak_filename = filename + "." + self.fileversion
             if os.path.exists(bak_filename):
                 raise Exception("Edited file <%s> not under git version control. Backup file <%s> exists already.\nPlease rename Backup file first" % (filename, bak_filename))
+
+        self.relationsdoc = None
+        if relationsdoc:
+            self.relationsdoc = RelDoc(relationsdoc)
 
         # initial version of Penman graph
         self.initstates = []
@@ -381,6 +386,12 @@ class AMR_Edit_Server:
             if len(framedocs):
                 framedoc = "\n".join(framedocs)
 
+            reldoc = None
+            if self.relationsdoc:
+                docs = self.relationsdoc.getdoc(ap.triples)
+                if len(docs):
+                    reldoc = docs
+
             warnings = []
             if isinstance(rtc, list):
                 warnings.extend(rtc)
@@ -397,6 +408,7 @@ class AMR_Edit_Server:
             print("AUGMENT", cursentence.id, ap.previous_modification)
             dico = {"warning": warnings,
                     "framedoc": framedoc,
+                    "reldoc": reldoc,
                     "readonly": self.readonly,
                     "penman": pm,
                     "svg": svg.decode("utf8") if svg else "",
@@ -750,6 +762,12 @@ class AMR_Edit_Server:
             if len(framedocs):
                 framedoc = "\n".join(framedocs)
 
+            reldoc = None
+            if self.relationsdoc:
+                docs = self.relationsdoc.getdoc(ap.triples)
+                if len(docs):
+                    reldoc = docs
+
             lastchanged = cursentence.date
             if not lastchanged:
                 lastchanged = cursentence.savedateorig
@@ -759,6 +777,7 @@ class AMR_Edit_Server:
                     "svg_canon": svg_canon.decode("utf8"),
                     "warning": warnings,
                     "framedoc": framedoc,
+                    "reldoc": reldoc,
                     "readonly": self.readonly,
                     "filename": filename,
                     "numsent": len(self.amrdoc.sentences),

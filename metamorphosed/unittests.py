@@ -70,15 +70,16 @@ def app():
     #    "TESTING": True,
     #})
 
-    aes = AMR_Edit_Server(4568,
-                          mydir + "/data/testamr.txt",
-                          "propbank-frames/frames/",
-                          mydir + "/data/relations.txt",
-                          mydir + "/data/concepts.txt",
-                          mydir + "/data/constraints.yml",
-                          False, # readonly
-                          None, # author
-                          mydir + "/data/reification-table.txt"
+    aes = AMR_Edit_Server(port=4568,
+                          filename=mydir + "/data/testamr.txt",
+                          pbframes="propbank-frames/frames/",
+                          rels=mydir + "/data/relations.txt",
+                          concepts=mydir + "/data/concepts.txt",
+                          constraints=mydir + "/data/constraints.yml",
+                          readonly=False,
+                          author=None,
+                          reifications=mydir + "/data/reification-table.txt",
+                          relationsdoc=mydir + "/data/relations-doc.json"
                           )
     app = aes.app
     number_of_sentences = len(aes.aps)

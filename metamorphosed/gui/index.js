@@ -299,7 +299,6 @@ function unhighlight() {
 	});
 }
 
-
 //const wdq = new RegExp('.*(Q[0-9]+).*');
 
 // needed to modify nodes and edges
@@ -661,9 +660,16 @@ function formatAMR(data) {
 	$('#svggraph_' + currentsentnum).append('<a id="semgraph_' + currentsentnum + '" download="graph.svg" type="image/svg+xml"><button class="mybutton">download image</button></a>');
 	downloadSVG('innersvggraph_' + currentsentnum, 'semgraph_' + currentsentnum, currentsentnum);
 
-	if (data.framedoc) {
-		$("#resultat").append('<div class="text" id="framedoc_' + currentsentnum + '">');
+	if (data.framedoc || data.reldoc) {
+	    $("#resultat").append('<div class="documentation" id="doc_' + currentsentnum + '">');
+	    if (data.framedoc) {
+		$('#doc_' + currentsentnum).append('<div class="text" id="framedoc_' + currentsentnum + '">');
 		$('#framedoc_' + currentsentnum).append(data.framedoc);
+	    }
+	    if (data.reldoc) {
+		$('#doc_' + currentsentnum).append('<div class="textr" id="reldoc_' + currentsentnum + '">');
+		$('#reldoc_' + currentsentnum).append(data.reldoc);
+	    }
 	}
 
 	if (data.undos > 0) {

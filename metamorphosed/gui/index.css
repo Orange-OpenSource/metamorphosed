@@ -209,11 +209,31 @@ input {
   padding: 10px 10px 10px 10px;
 }
 
+.documentation {
+  display: flex;
+  flex-direction: row;
+}
+
+.amrpenman {
+  white-space: pre-wrap;
+  font-family: "DejaVu Sans Mono", FreeMono, Mono;
+  font-size: 90%;
+}
+
 .text {
   border-radius: 10px;
   border: solid 1px #d6d6d6;
   margin: 10px 10px 10px 10px;
   padding: 10px 10px 10px 10px;
+  width: 60%;
+}
+
+.textr {
+  border-radius: 10px;
+  border: solid 1px #d6d6d6;
+  margin: 10px 10px 10px 10px;
+  padding: 10px 10px 10px 10px;
+  width: 40%;
 }
 
 .error {

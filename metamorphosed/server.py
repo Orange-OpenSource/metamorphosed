@@ -41,6 +41,7 @@ from metamorphosed import AMR_Edit_Server
 
 mydir = os.path.dirname(__file__)
 
+
 def main():
     parser = argparse.ArgumentParser("metAMoRphosED: the Abstract Meaning Representation Editor")
 
@@ -49,6 +50,7 @@ def main():
     parser.add_argument("--compare", nargs="+", help="AMR file of additional annotators")
     parser.add_argument("--author", help="author (for git), use format 'Name <mail@example.com>', if absent current user+mail is used")
     parser.add_argument("--relations", "-R", default=mydir + "/data/relations.txt", help="list of valid AMR-relations (simple text file with list of all valid relations)")
+    parser.add_argument("--relationsdoc", default=mydir + "/data/relations-doc.json", help="examples for valid AMR-relations (json file)")
     parser.add_argument("--concepts", "-C", default=None, help="list of valid AMR-concepts (simple text file with list of all valid concepts)")
     parser.add_argument("--pbframes", "-P", default=None, help="Propbank frameset documentation (directory with xml files)")
     parser.add_argument("--constraints", "-c", default=None, help="constraints for subjects and predicates (yaml file)")
@@ -64,10 +66,12 @@ def main():
         args = parser.parse_args()
         try:
             aes = AMR_Edit_Server(args.port, args.file, args.pbframes,
-                                  args.relations, args.concepts,
+                                  args.relations,
+                                  args.concepts,
                                   args.constraints, args.readonly,
                                   author=args.author,
                                   reifications=args.reifications,
+                                  relationsdoc=args.relationsdoc,
                                   predictor=args.edge_predictor,
                                   do_git=args.git,
                                   compare=args.compare,

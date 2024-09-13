@@ -544,7 +544,6 @@ class AMRProcessor:
         if newstart not in self.vars:
             return "new source instance « %s » does not exist" % newstart
 
-        
         for tr in self.triples:
             #print("MOVE-EDGE", tr, modedge_start, modedge_end, newedge, newstart)
             if tr[0] == modedge_start and tr[2] == modedge_end:
@@ -553,7 +552,7 @@ class AMRProcessor:
                 self.triples.insert(pos, (newstart, newedge, tr[2]))
                 break
             if tr[2] == modedge_start and tr[0] == modedge_end:
-                # can create confusion. 
+                # can create confusion.
                 #if tr[1].endswith("-of"):
                 #    return 'deactivate  « reverse "-of" » to modify the head this relation'
                 pos = self.triples.index(tr)
