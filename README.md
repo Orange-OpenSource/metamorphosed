@@ -93,9 +93,9 @@ tox
 use our internet browser as GUI: https://localhost:<port>
 
 
-* The `relations.txt` file must contain all the relations which are valid in the AMR graphs, the editor will show a warning for each relation found in a graph which is not mentioned in this file. The relations will also used for autocompletion
+* The `relations.txt` file must contain all the relations which are valid in the AMR graphs, the editor will show a warning for each relation found in a graph which is not mentioned in this file. The relations will also used for autocompletion. The file [metamorphosed/data/relations.txt](relations.txt) is used as default value
 * If `--concepts concepts.txt` is given, the concepts will be used for autocompletion.
-* The option `--reifications` loads a table with relations which can be reified ([metamorphosed/data/reification-able.txt](reification-able.txt))
+* The option `--reifications` loads a table with relations which can be reified (default: [metamorphosed/data/reification-able.txt](reification-able.txt))
 * `propbank-frames-dir` is the `frames` directory within the directory where `https://github.com/propbank/propbank-frames` has been cloned
 * If the edited file is under git version control, every click on `save` will create a git commit. In order to use a different user name, specify the user with `--author 'Name <mail@example.com>'`
 * `constraints.yml` a file which defines predicate and object constraints (i.e. no other predicate and object is allowed in a given context. E.g.
