@@ -183,8 +183,7 @@ function getServerInfo() {
 			});
 		    }
 
-
-		    if (data.reifications) {
+		    if (!readonly && data.reifications) {
 			$.each(data.reifications,
 			       function (key, value) {
 				   //console.log("AAA", key, value);

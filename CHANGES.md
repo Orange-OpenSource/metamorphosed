@@ -1,5 +1,14 @@
 # Changes
 
+## Version 4.0.0
+
+* code oriented in a package (`__init__.py`)
+* new help: display the definitions or AMR relations (if existing), with option `--relationsdoc`
+* validation data is loaded by default (options `--reifications`, `--relations`, `--relationsdoc` for which the needed files are included)
+* server is ow started with `./metamorphosed_server.py ...`
+* preparation to install with `pip install .` (to be documented)
+* tests updated
+
 ## Version 3.5.1
 * better capture of regex errors in find functions
 
