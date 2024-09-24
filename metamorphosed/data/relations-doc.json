@@ -471,7 +471,7 @@
   ":direction": [
     "We use the role <font color=\"red\">:direction</font> for directions of the compass such as <font color=\"blue\">north</font> and <font color=\"blue\">south</font>,",
     "as well as for <font color=\"blue\">up</font> and <font color=\"blue\">down</font>, <font color=\"blue\">left</font> and <font color=\"blue\">right</font>, <font color=\"blue\">back</font> and <font color=\"blue\">forth</font>, and <font color=\"blue\">towards</font> a place.",
-    "When an argument is a :source</a> or a <a href=\"destination.html\">:destination,",
+    "When an argument is a :source</a> or a <a href=\"destination.html\">:destination</a>,",
     "we do <b>not</b> also mark it as a direction.",
     "<p>",
     "<b>Example:</b>  He drove <font color=\"blue\">west</font>, from Houston to Austin .<br>",
