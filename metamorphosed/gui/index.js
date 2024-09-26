@@ -1219,6 +1219,79 @@ $(document).ready(function () {
 
 
 
+	$(".searchfield").keyup(function (event) {
+	      if (event.keyCode === 13) {
+		URL_BASE = 'search';
+		$("#resultat").empty(); // vider le div
+		//var command = "dog"; //$("#command").val();
+		console.log("EEEEE", this.id);
+		var params = {};
+		if (this.id == "textsearch") {
+			params = {
+				"what": "findtextnext",
+				"regex": $("#textsearch").val()
+			}
+		} else if (this.id == "idsearch") {
+			params = {
+				"what": "findidnext",
+				"regex": $("#idsearch").val()
+			}
+		} else if (this.id == "amrsearch") {
+			params = {
+				"what": "findamrnext",
+				"regex": $("#amrsearch").val()
+			}
+		} else if (this.id == "commentsearch") {
+			params = {
+			    "what": "findcommentnext",
+				"regex": $("#commentsearch").val()
+			}
+		} else {
+			return;
+		}
+		params["num"] = currentsentnum;
+		$.ajax({
+			url: URL_BASE,
+			type: 'GET',
+			data: params,
+			//headers: {
+			//    'Content-type': 'text/plain',
+			//},
+			statusCode: {
+				204: function () {
+					alert('No input text');
+				},
+				//400: function () {
+				//                    alert('Bad query');
+				//		},
+				//		500: function () {
+				//		    alert("Error on '" + URL_BASE + "' " + data);
+				//		}
+			},
+
+			success: function (data) {
+				//console.log("SUCCESS ", data);
+				$("#sentnum").val(data.num);
+				currentsentnum = data.num;
+
+				formatAMR(data);
+			},
+			error: function (data) {
+				// do something else
+				console.log("ERREUR ", data);
+				$("#resultat").append('<div class="error" id="error">');
+				//$('#error').append(data.responseJSON.error);
+				if (data.responseJSON == undefined) {
+				    $('#error').append("serveur not responding");
+				} else {
+				    $('#error').append(data.responseJSON.error);
+				}
+			}
+		    });
+	      }
+	});
+
+
 
 	$(".findbutton").click(function () {
 	        //URL_BASE = 'http://' + window.location.host + '/search';
