@@ -124,11 +124,11 @@
         <div class="grouping">
            <button class="toggleresult searchbuttonpos" id="togglesearch">&#8210;</button>
 	      <div id="searchfunctions">
-                <h3>Search</h3>
+                <h3>Search <button class="mybutton" id="clearsearch" title="clean search fields">clear</button></h3>
                 <table>
                     <tr>
                         <td>Id:</td>
-                        <td><input class="textfield" placeholder="regex" title="search for sentence ID" type="text" id="idsearch" value="">
+                        <td><input class="textfield searchfield" placeholder="regex" title="search for sentence ID" type="text" id="idsearch" value="">
                             <button class="findbutton mybutton" id="findidprec" title="find preceding occurrence">&lt;&lt;</button>
                             <button class="findbutton mybutton" id="findidnext" title="find next occurrence">&gt;&gt;</button>
                         </td>
@@ -137,7 +137,7 @@
 
                     <tr>
                         <td>Text:</td>
-                        <td><input class="textfield" placeholder="regex" title="search in sentences" type="text" id="textsearch" value="">
+                        <td><input class="textfield searchfield" placeholder="regex" title="search in sentences" type="text" id="textsearch" value="">
                             <button class="findbutton mybutton" id="findtextprec" title="find preceding occurrence">&lt;&lt;</button>
                             <button class="findbutton mybutton" id="findtextnext" title="find next occurrence">&gt;&gt;</button>
                         </td>
@@ -149,7 +149,7 @@
                         <td><!--input class="amrfield" placeholder="regex/PENMAN" title="if the string is a PENMAN graph
 we look for graphs which contain the PENMAN graph.
 Else the input is interpreted as regular expression" type="text" id="amrsearch"value=""-->
-                            <textarea class="amrsearcharea" title="if the string is a PENMAN graph
+                            <textarea class="amrsearcharea searchfield" title="if the string is a PENMAN graph
 we look for graphs which contain the PENMAN graph.
 Else the input is interpreted as regular expression" placeholder="regex/PENMAN" type="text" rows="2" id="amrsearch" value=""></textarea>
                             <button class="findbutton mybutton" id="findamrprec" title="find preceding occurrence">&lt;&lt;</button>
@@ -158,7 +158,7 @@ Else the input is interpreted as regular expression" placeholder="regex/PENMAN" 
                     </tr>
                     <tr>
                         <td>comments:</td>
-                        <td><input class="amrfield" placeholder="regex" title="search for comments" type="text" id="commentsearch" value="">
+                        <td><input class="amrfield searchfield" placeholder="regex" title="search for comments" type="text" id="commentsearch" value="">
                             <button class="findbutton mybutton" id="findcommentprec" title="find preceding occurrence">&lt;&lt;</button>
                             <button class="findbutton mybutton" id="findcommentnext" title="find next occurrence">&gt;&gt;</button>
                         </td>

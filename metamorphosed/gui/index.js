@@ -1167,6 +1167,11 @@ $(document).ready(function () {
 	});
 
 
+	$("#clearsearch").click(function () {
+	    $(".searchfield").val("");
+	});
+
+
 	$(".QQexportbutton").click(function () {
 		URL_BASE = 'graphs';
 		//console.log("AZAZA", $("#pdfgraph").is(":checked"), $('input:radio[name=graphformat]:checked').val());
