@@ -1223,28 +1223,27 @@ $(document).ready(function () {
 	      if (event.keyCode === 13) {
 		URL_BASE = 'search';
 		$("#resultat").empty(); // vider le div
-		//var command = "dog"; //$("#command").val();
-		console.log("EEEEE", this.id);
+
 		var params = {};
 		if (this.id == "textsearch") {
 			params = {
-				"what": "findtextnext",
-				"regex": $("#textsearch").val()
+			    "what": "findtextnext",
+			    "regex": $("#textsearch").val()
 			}
 		} else if (this.id == "idsearch") {
 			params = {
-				"what": "findidnext",
-				"regex": $("#idsearch").val()
+			    "what": "findidnext",
+			    "regex": $("#idsearch").val()
 			}
 		} else if (this.id == "amrsearch") {
 			params = {
-				"what": "findamrnext",
-				"regex": $("#amrsearch").val()
+			    "what": "findamrnext",
+			    "regex": $("#amrsearch").val()
 			}
 		} else if (this.id == "commentsearch") {
 			params = {
 			    "what": "findcommentnext",
-				"regex": $("#commentsearch").val()
+			    "regex": $("#commentsearch").val()
 			}
 		} else {
 			return;
@@ -1258,9 +1257,9 @@ $(document).ready(function () {
 			//    'Content-type': 'text/plain',
 			//},
 			statusCode: {
-				204: function () {
-					alert('No input text');
-				},
+			    204: function () {
+				alert('No input text');
+			    },
 				//400: function () {
 				//                    alert('Bad query');
 				//		},
@@ -1270,62 +1269,57 @@ $(document).ready(function () {
 			},
 
 			success: function (data) {
-				//console.log("SUCCESS ", data);
-				$("#sentnum").val(data.num);
-				currentsentnum = data.num;
-
-				formatAMR(data);
+			    //console.log("SUCCESS ", data);
+			    $("#sentnum").val(data.num);
+			    currentsentnum = data.num;
+			    formatAMR(data);
 			},
 			error: function (data) {
-				// do something else
-				console.log("ERREUR ", data);
-				$("#resultat").append('<div class="error" id="error">');
-				//$('#error').append(data.responseJSON.error);
-				if (data.responseJSON == undefined) {
-				    $('#error').append("serveur not responding");
-				} else {
-				    $('#error').append(data.responseJSON.error);
-				}
+			    // do something else
+			    console.log("ERREUR ", data);
+			    $("#resultat").append('<div class="error" id="error">');
+			    //$('#error').append(data.responseJSON.error);
+			    if (data.responseJSON == undefined) {
+				$('#error').append("serveur not responding");
+			    } else {
+				$('#error').append(data.responseJSON.error);
+			    }
 			}
 		    });
 	      }
 	});
 
-
-
 	$(".findbutton").click(function () {
 	        //URL_BASE = 'http://' + window.location.host + '/search';
 		URL_BASE = 'search';
 		$("#resultat").empty(); // vider le div
-		//var command = "dog"; //$("#command").val();
-		//console.log("EEEEE", this.id);
 		var params = {};
 		if (this.id == "findtextnext" || this.id == "findtextprec") {
-			params = {
-				"what": this.id,
-				"regex": $("#textsearch").val()
-			}
+		    params = {
+			"what": this.id,
+			"regex": $("#textsearch").val()
+		    }
 		} else if (this.id == "findidnext" || this.id == "findidprec") {
-			params = {
-				"what": this.id,
-				"regex": $("#idsearch").val()
-			}
+		    params = {
+			"what": this.id,
+			"regex": $("#idsearch").val()
+		    }
 		} else if (this.id == "findamrnext" || this.id == "findamrprec") {
-			params = {
-				"what": this.id,
-				"regex": $("#amrsearch").val()
-			}
+		    params = {
+			"what": this.id,
+			"regex": $("#amrsearch").val()
+		    }
 		} else if (this.id == "findcommentnext" || this.id == "findcommentprec") {
-			params = {
-				"what": this.id,
-				"regex": $("#commentsearch").val()
-			}
+		    params = {
+			"what": this.id,
+			"regex": $("#commentsearch").val()
+		    }
 		} else {
-			return;
+		    return;
 		}
 		params["num"] = currentsentnum;
 		$.ajax({
-			url: URL_BASE,
+		    url: URL_BASE,
 			type: 'GET',
 			//data: {"cmd": command},
 			data: params,
