@@ -1,7 +1,10 @@
 # Changes
 
-## Version 4.0.0
+## Version 4.1.0
+* AMR search improved: search accepts subgraphs with wildcards
+* new tests
 
+## Version 4.0.0
 * code oriented in a package (`__init__.py`)
 * new help: display the definitions or AMR relations (if existing), with option `--relationsdoc`
 * validation data is loaded by default (options `--reifications`, `--relations`, `--relationsdoc` for which the needed files are included)

@@ -11,27 +11,26 @@ from rdflib import Graph, URIRef, Literal
 from rdflib.namespace import XSD
 
 
-ISINT = re.compile("^[+-]?[0-9]+$")
-ISFLOAT = re.compile("^[+-]?[0-9]+\.[0-9]+$")
+ISINT = re.compile(r"^[+-]?[0-9]+$")
+ISFLOAT = re.compile(r"^[+-]?[0-9]+\.[0-9]+$")
 
 
 class SubGraphRDF:
-    def __init__(self, graph,
-                 subgraph, subgraph_parsed=None):
-        #gr = penman.decode(graph)
-        #subgr = penman.decode(subgraph)
+    def __init__(self, subgraph):
         self.prefix = "http://metamorphosed"
-        self.graph = graph
-        self.subgraph = subgraph
-        if subgraph_parsed:
-            self.query_triples, self.sg_conceptset = subgraph_parsed
 
-    def cmp(self):
-        self.query_triples, sg_conceptset, _ = self.amr2rdf(self.subgraph)
+        self.subgraph = subgraph
+        if subgraph:
+            self.query_triples, self.sg_conceptset, _ = self.amr2rdf(self.subgraph)
+
+    def cmp(self, graph):
+        debug = False
+        self.graph = graph
         #print("QT", self.query_triples.serialize(format="nt"))
-        for sc_c in sg_conceptset:
+        for sc_c in self.sg_conceptset:
             if sc_c != "*" and sc_c not in self.graph:
-                print("MISSING CONCEPTS <%s>" % sc_c)
+                if debug:
+                    print("MISSING CONCEPTS <%s>" % sc_c)
                 return None
 
         self.rdfgraph, conceptset, self.instances = self.amr2rdf(self.graph)
@@ -43,15 +42,16 @@ class SubGraphRDF:
         #print(dir(rdfgraph))
 
         self.querytext = self.query(self.query_triples)
-        #print("QUERY", self.querytext)
+        if debug:
+            print("QUERY", self.querytext)
         qres = self.rdfgraph.query(self.querytext)
         #print("ZZ", dir(qres),
         #      qres.bindings,
         #      qres.serialize("json"))
 
-        print("BINDINGS:", json.dumps(qres.bindings, indent=2))
+        if debug:
+            print("BINDINGS:", json.dumps(qres.bindings, indent=2))
         return qres.bindings
-
 
     def amr2rdf(self, amr):
         # the graph is the RDF store, the subgraph the query
@@ -84,28 +84,31 @@ class SubGraphRDF:
 
         wildcardcounter = 1
         # transform the AMR into an RDF representation
-        for s,p,o in edges:
+        for s, p, o in edges:
             if debug:
                 print("EDGE", s, p, o)
 
-            if not s in triples:
-                triples[s] = [(p,o)]
+            if s not in triples:
+                triples[s] = [(p, o)]
             else:
-                triples[s].append((p,o))
+                triples[s].append((p, o))
 
-            if not o in triples_inv:
+            if o not in triples_inv:
                 triples_inv[o] = [(p + "-of", s)]
             else:
                 triples_inv[o].append((p + "-of", s))
 
-
-
             subj = URIRef(self.prefix + "/var/" + s)
-            pred = URIRef(self.prefix + "/pred/" + p[1:])
+            if p == ":*":
+                pred = URIRef(self.prefix + "/var/wc%d" % wildcardcounter)
+                wildcardcounter += 1
+
+            else:
+                pred = URIRef(self.prefix + "/pred/" + p[1:])
             obj = URIRef(self.prefix + "/var/" + o)
             rdfgraph.add((subj, pred, obj))
 
-        for s,p,o in ginstances:
+        for s, p, o in ginstances:
             if debug:
                 print("INST", s, p, o)
             if not s or not o:
@@ -121,29 +124,28 @@ class SubGraphRDF:
             rdfgraph.add((subj, pred, obj))
             instances[s] = o
 
-        for s,p,o in attributes:
+        for s, p, o in attributes:
             if debug:
                 print("ATTR", s, p, o)
             if not s or not o:
                 continue
 
-            if not s in triples:
-                triples[s] = [(p,o)]
+            if s not in triples:
+                triples[s] = [(p, o)]
             else:
-                triples[s].append((p,o))
+                triples[s].append((p, o))
 
-            if not o in triples_inv:
+            if o not in triples_inv:
                 triples_inv[o] = [(p + "-of", s)]
             else:
                 triples_inv[o].append((p + "-of", s))
 
-
             subj = URIRef(self.prefix + "/var/" + s)
             pred = URIRef(self.prefix + "/pred/" + p[1:])
             if o[0] == '"':
-                obj =  Literal(o[1:-1], datatype=XSD.string)
+                obj = Literal(o[1:-1], datatype=XSD.string)
             elif o[0] == '-':
-                obj =  Literal(o, datatype=XSD.string)
+                obj = Literal(o, datatype=XSD.string)
             else:
                 if ISFLOAT.match(o):
                     obj = Literal(o, datatype=XSD.float)
@@ -163,18 +165,28 @@ class SubGraphRDF:
 
     def query(self, query_triples):
         sparqllines = []
+        varlen = len(self.prefix + "/var/")
+
         for stmt in query_triples:
             #print("STMT", stmt)
             s = None
+            p = "<%s>" % stmt[1]
             o = "<%s>" % stmt[2]
-            varlen = len(self.prefix + "/var/")
+
+            # variable in subject position
             if stmt[0].startswith(self.prefix + "/var/"):
                 s = "?%s" % stmt[0][varlen:]
+
+            # variable in predicate position
+            if stmt[1].startswith(self.prefix + "/var/"):
+                p = "?%s" % stmt[1][varlen:]
+
+            # variable in object position
             if isinstance(stmt[2], Literal):
                 o = '"%s"' % stmt[2]
             elif stmt[2].startswith(self.prefix + "/var/"):
                 o = "?%s" % stmt[2][varlen:]
-            sparqllines.append("%s <%s> %s ." % (s, stmt[1], o))
+            sparqllines.append("%s %s %s ." % (s, p, o))
 
         query = "select distinct * where {\n  %s\n}" % ("\n  ".join(sparqllines))
         return query
@@ -219,7 +231,7 @@ if __name__ == "__main__":
     :polarity -
     :ARG0 (d / dog)
     :ARG1 c))"""
-    
+
     sg1 = """(zs / see-01
     :polarity -
     :ARG0 (zc / *)
@@ -235,8 +247,13 @@ if __name__ == "__main__":
             :wiki "Q9696"))"""
 
     sg2 = "( x / murder-01 :ARG1 ( k / person))"
+    sg2 = "( x / murder-01 :* ( k / person))"
+    #sg2 = "( x / murder-01 :ARG1 ( k / *))"
 
     #pg = penman.decode(g1)
     #g1 = list(pg.triples)
-    sg = SubGraphRDF(g2, sg2)
-    sg.cmp()
+    sg = SubGraphRDF(sg2)
+    bindings = sg.cmp(g2)
+    for b in bindings:
+        for v in b:
+            print(v, b[v])

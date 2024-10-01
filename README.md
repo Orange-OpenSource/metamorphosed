@@ -9,7 +9,7 @@ by LDC (https://catalog.ldc.upenn.edu/LDC2020T02)
 * _metAMoRphosED_ allows to download the displayed graphs as SVG or to export all graphs in either SVG, PDF or PNG format
 * _metAMoRphosED_ provides a script to calculate inter-annotator agreement (see section [Inter-annotator agreement](#inter-annotator-agreement))
 
-Current version 4.0.0 (see [CHANGES.md](CHANGES.md))
+Current version 4.1.0 (see [CHANGES.md](CHANGES.md))
 
 ## TL;DR
 * if your updating from version up to 4.0.0: the file `server.py` has been renamed to `metamorphosed_server.py`
@@ -239,6 +239,27 @@ Basic search is available in the search field. THE AMR-search field accepts two 
   :ARG0 ( v2 / mouse )
   :ARG1 ( v3 / cheese ))
 ```
+
+It is possible to use wildcards to match any concepts or relations; so searching for `(e / give-01 :* ( c / * ))` will find graphs like
+
+```
+(v1 / give-01
+  :ARG0 ( v2 / man )
+  ...)
+```
+
+```
+(v1 / give-01
+  :ARG1 ( v2 / book )
+  ...)
+```
+
+```
+(v1 / give-01
+  :ARG2 ( v2 / child )
+  ...)
+```
+
 * a regular expression: if the input is not a valid PENMAN graph, it is interpreted as a regular expression
 * For ID, Text and comment search, the input is always interpreted as a regular expression
 

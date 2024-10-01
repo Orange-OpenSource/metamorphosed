@@ -45,7 +45,7 @@ from graphviz import Digraph
 import metamorphosed.graph as graph
 from metamorphosed.reification import getInstance
 import metamorphosed.amr_comparison as amr_comparison
-from metamorphosed.findsubgraph import SubGraphRDF
+
 
 VERSION = "4.1.0"
 
@@ -152,35 +152,23 @@ class AMRProcessor:
                 return rtc
         return []
 
-    # TODO
-    def findsubgraph(self, subgraph, smatchpp=False):
-        try:
-            sg_rdf = SubGraphRDF(#self.triples,
-                                 self.lastpm,
-                                 subgraph)
-            bindinglist = sg_rdf.cmp()
-            if not bindinglist:
-                return []
-            inst2concept = {}
-            for s, _, o in sg_rdf.instances:
-                inst2concept[s] = o
-            
-            concepts = []
-            for bindings in bindinglist:
-                #print("ZZZZ", bindings)
-                for _, graphvar in bindings.items():
-                    gvar = graphvar.split("/")[-1]
-                    concepts.append(inst2concept.get(gvar, "null"))
+    def findsubgraph(self, sg_rdf):
+        bindinglist = sg_rdf.cmp(self.lastpm)
+        if not bindinglist:
+            return []
+        inst2concept = {}
+        for s, _, o in sg_rdf.instances:
+            inst2concept[s] = o
 
-            rtc = re.finditer("|".join(concepts), self.lastpm)
-            return rtc
-            
-        except Exception as e:
-            # no valid PENMAN, take subgraph as a regex...
-            print("AMR Search error: %s" % e, file=sys.stderr)
-            return self.findamr(subgraph)
+        concepts = []
+        for bindings in bindinglist:
+            #print("ZZZZ", bindings)
+            for _, graphvar in bindings.items():
+                gvar = graphvar.split("/")[-1]
+                concepts.append(inst2concept.get(gvar, "null"))
 
-        return []
+        rtc = re.finditer("|".join(concepts), self.lastpm)
+        return rtc
 
     def ooofindsubgraph(self, subgraph, smatchpp=False):
         # returns True if the subgraph is part of graph

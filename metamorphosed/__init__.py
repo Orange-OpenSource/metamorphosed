@@ -58,6 +58,7 @@ import metamorphosed.amr_comparison as amr_comparison
 from metamorphosed.relations_doc import RelDoc
 from metamorphosed.edge_predictor import Basic_EdgePredictor as EdgePredictor
 from metamorphosed.exception import ServerException
+from metamorphosed.findsubgraph import SubGraphRDF
 
 # TODO
 # detect errors
@@ -457,11 +458,21 @@ class AMR_Edit_Server:
                         sentnum = x + 1
                         break
             elif what == "findamrnext":
+                try:
+                    sg_rdf = SubGraphRDF(regex)
+                except Exception as e:
+                    # no valid PENMAN, take subgraph as a regex...
+                    # print("AMR Search error: %s" % e, file=sys.stderr)
+                    sg_rdf = None
+
                 for x in range(sentnum + 1, len(self.amrdoc.sentences) + 1):
-                    print("ZZZZ", x, regex)
-                    #oka = list(self.aps[x].findamr(regex))
-                    oka = list(self.aps[x].findsubgraph(regex, smatchpp=self.smatchpp))
-                    #print("OKA", oka)
+                    if sg_rdf:
+                        # oka = list(self.aps[x].findamr(regex))
+                        # oka = list(self.aps[x].findsubgraph(regex, smatchpp=self.smatchpp))
+                        oka = list(self.aps[x].findsubgraph(sg_rdf))
+                        # print("OKA", oka)
+                    else:
+                        oka = list(self.aps[x].findamr(regex))
                     if oka:
                         sentnum = x
                         break
@@ -485,10 +496,19 @@ class AMR_Edit_Server:
                         break
 
             elif what == "findamrprec":
+                try:
+                    sg_rdf = SubGraphRDF(regex)
+                except Exception as e:
+                    # no valid PENMAN, take subgraph as a regex...
+                    # print("AMR Search error: %s" % e, file=sys.stderr)
+                    sg_rdf = None
+
                 for x in range(sentnum - 1, 0, -1):
-                    #oka = list(self.amrdoc.sentences[x].findamr(regex))
-                    #oka = list(self.aps[x].findamr(regex))
-                    oka = list(self.aps[x].findsubgraph(regex, smatchpp=self.smatchpp))
+                    if sg_rdf:
+                        oka = list(self.aps[x].findsubgraph(sg_rdf))
+                        # print("OKA", oka)
+                    else:
+                        oka = list(self.aps[x].findamr(regex))
                     if oka:
                         sentnum = x
                         break

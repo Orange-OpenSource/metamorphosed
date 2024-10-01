@@ -49,7 +49,7 @@ import pytest
 from metamorphosed import AMR_Edit_Server
 
 # run (pytest-6.2.3)
-#   pytest unittests.py -vv -s
+#   pytest metamorphosed/unittests.py -vv -s
 #  -s shows print statements in test
 #  -k test_edit_modliteral (filters tests which do not match argument)
 
@@ -202,7 +202,7 @@ def test_info(client):
     response = client.get("/version")
     res = json.loads(response.data)
     #print("res", res, file=sys.stderr)
-    assert res == {'name': 'AMR Editor', 'version': '4.0.0', 'apiversion': '1.6.0'}
+    assert res == {'name': 'AMR Editor', 'version': '4.1.0', 'apiversion': '1.6.0'}
 
     response = client.get("/info", query_string={"withdata": True})
     res = json.loads(response.data)
@@ -622,6 +622,21 @@ def test_search_amr(client):
     res = json.loads(response.data)
     #print("res", res)
     assert res["num"] == 1
+
+    response = client.get("/search", query_string={"num": 2, "what": "findamrnext", "regex": "( s /overload-01 :* (c / * :mod (f / *)))"})
+    res = json.loads(response.data)
+    #print("res", res)
+    assert res["num"] == 20
+
+    response = client.get("/search", query_string={"num": 22, "what": "findamrprec", "regex": "( s / kill-01 :* (k / kitchen))"})
+    res = json.loads(response.data)
+    #print("res", res)
+    assert res["num"] == 3
+
+    response = client.get("/search", query_string={"num": 22, "what": "findamrprec", "regex": "itchen"})
+    res = json.loads(response.data)
+    #print("res", res)
+    assert res["num"] == 3
 
     response = client.get("/search", query_string={"num": 12, "what": "findamrprec", "regex": ":not_there"})
     res = json.loads(response.data)
