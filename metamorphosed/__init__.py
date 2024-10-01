@@ -458,8 +458,10 @@ class AMR_Edit_Server:
                         break
             elif what == "findamrnext":
                 for x in range(sentnum + 1, len(self.amrdoc.sentences) + 1):
+                    print("ZZZZ", x, regex)
                     #oka = list(self.aps[x].findamr(regex))
                     oka = list(self.aps[x].findsubgraph(regex, smatchpp=self.smatchpp))
+                    #print("OKA", oka)
                     if oka:
                         sentnum = x
                         break

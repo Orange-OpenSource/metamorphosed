@@ -33,10 +33,11 @@
 # Software Name: MetAMoRphosED AMR-Editor
 # Author: Johannes Heinecke
 
-# version 4.0.0 as of 2nd September 2024
+# version 4.1.0 as of 2nd September 2024
 
 import re
 import readline
+import sys
 
 import penman
 from graphviz import Digraph
@@ -44,8 +45,9 @@ from graphviz import Digraph
 import metamorphosed.graph as graph
 from metamorphosed.reification import getInstance
 import metamorphosed.amr_comparison as amr_comparison
+from metamorphosed.findsubgraph import SubGraphRDF
 
-VERSION = "4.0.0"
+VERSION = "4.1.0"
 
 # terminology
 # instance  a / ...
@@ -152,6 +154,35 @@ class AMRProcessor:
 
     # TODO
     def findsubgraph(self, subgraph, smatchpp=False):
+        try:
+            sg_rdf = SubGraphRDF(#self.triples,
+                                 self.lastpm,
+                                 subgraph)
+            bindinglist = sg_rdf.cmp()
+            if not bindinglist:
+                return []
+            inst2concept = {}
+            for s, _, o in sg_rdf.instances:
+                inst2concept[s] = o
+            
+            concepts = []
+            for bindings in bindinglist:
+                #print("ZZZZ", bindings)
+                for _, graphvar in bindings.items():
+                    gvar = graphvar.split("/")[-1]
+                    concepts.append(inst2concept.get(gvar, "null"))
+
+            rtc = re.finditer("|".join(concepts), self.lastpm)
+            return rtc
+            
+        except Exception as e:
+            # no valid PENMAN, take subgraph as a regex...
+            print("AMR Search error: %s" % e, file=sys.stderr)
+            return self.findamr(subgraph)
+
+        return []
+
+    def ooofindsubgraph(self, subgraph, smatchpp=False):
         # returns True if the subgraph is part of graph
         try:
             res = amr_comparison.compare(self.lastpm, subgraph, runs=1, use_smatchpp=smatchpp, align=True)
