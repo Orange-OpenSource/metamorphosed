@@ -60,6 +60,8 @@ from metamorphosed.edge_predictor import Basic_EdgePredictor as EdgePredictor
 from metamorphosed.exception import ServerException
 from metamorphosed.findsubgraph import SubGraphRDF
 
+import metamorphosed.installJQ as iJQ
+
 # TODO
 # detect errors
 #  * a1 :rel a1
@@ -141,6 +143,11 @@ class AMR_Edit_Server:
         self.redos = []
 
         mydir = os.path.abspath(os.path.dirname(__file__))
+
+        installOK = iJQ.checkLibraries()
+        if not installOK:
+            print("*** Javascript libraries missing. Run %s/installJQ.py or install manually as described in README.ld" % mydir, file=sys.stderr)
+            sys.exit(1)
 
         self.isInt = re.compile(r"^\d+$")
         self.isFloat = re.compile(r"^\d*\.?\d+$")

@@ -1230,17 +1230,20 @@ $(document).ready(function () {
 			    "what": "findtextnext",
 			    "regex": $("#textsearch").val()
 			}
-		} else if (this.id == "idsearch") {
+		}
+		else if (this.id == "idsearch") {
 			params = {
 			    "what": "findidnext",
 			    "regex": $("#idsearch").val()
 			}
-		} else if (this.id == "amrsearch") {
-			params = {
-			    "what": "findamrnext",
-			    "regex": $("#amrsearch").val()
-			}
-		} else if (this.id == "commentsearch") {
+		}
+		//else if (this.id == "amrsearch") {
+		//	params = {
+		//	    "what": "findamrnext",
+		//	    "regex": $("#amrsearch").val()
+		//	}
+		//}
+		else if (this.id == "commentsearch") {
 			params = {
 			    "what": "findcommentnext",
 			    "regex": $("#commentsearch").val()
