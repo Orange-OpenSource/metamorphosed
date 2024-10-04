@@ -1,0 +1,62 @@
+# ::id sentence1
+# ::snt The Macedonian army advanced as far as the pass of Thermopylae.
+(a / advance-01
+    :ARG1 (a2 / army
+        :mod (c / country
+            :name (n / name
+                :op1 "Macedonia")))
+    :extent (f / far
+        :ARG2-of (h / have-degree-91
+            :ARG1 a2
+            :ARG3 (e / equal)
+            :ARG4 (p / pass
+                :name (n2 / name
+                    :op1 "Thermopylae")))))
+
+# ::id sentence2
+# ::snt Thermopylae which divides Greece in two parts.
+# ::coref n2,n p,c
+(d / divide-02
+    :ARG0 (c / city
+        :name (n / name
+            :op1 "Thermopylae"))
+    :ARG1 (c2 / country
+        :name (n2 / name
+            :op1 "Greece"))
+    :ARG2 (p / part
+        :quant 2))
+
+# ::id sentence3
+# ::snt but it did not attempt to take it
+# ::coref a2,ii p,ii2
+(c / contrast-01
+    :ARG2 (a / attempt-01
+        :polarity -
+        :ARG0 (ii / it)
+        :ARG1 (t / take-01
+            :ARG0 ii
+            :ARG1 (ii2 / it))))
+
+# ::id sentence4
+# ::snt because it was strongly guarded by a joint force of Athenians, Spartans, and Achaeans.
+# ::coref p,ii
+(c / cause-01
+    :ARG0 (g / guard-01
+        :ARG0 (f / force
+            :mod (j / joint)
+            :consist-of (a / and
+                :op1 (p / person
+                    :mod (c2 / country
+                        :name (n / name
+                            :op1 "Athens")))
+                :op2 (p2 / person
+                    :mod (c3 / country
+                        :name (n2 / name
+                            :op1 "Sparta")))
+                :op3 (p3 / person
+                    :mod (c4 / country
+                        :name (n3 / name
+                            :op1 "Achaea")))))
+        :ARG1 (ii / it)
+        :ARG1-of (s / strong-02)))
+

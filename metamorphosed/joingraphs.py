@@ -38,16 +38,21 @@
 
 import penman
 import metamorphosed.amreditor as amreditor
+import metamorphosed.amrdoc as amrdoc
 
 # PYTHONPATH=metamorphosed python3 joingraphs.py
 
 
 # join two graphs into one, and merge instances indicated in corefs
 def joingraphs(graph1, graph2, corefs, top=None):
+    print(graph1)
+    print(graph2)
+
     if isinstance(graph1, str):
         graph1 = penman.decode(graph1)
     if isinstance(graph2, str):
         graph2 = penman.decode(graph2)
+
 
     # un dict with variables and concepts of graphs
     g1_concepts = {} # var: concept
@@ -83,24 +88,47 @@ def joingraphs(graph1, graph2, corefs, top=None):
         finaltriples.append((s, p, o))
         finaltriples_no_duplicates.add((s, p, o))
 
+    oldnew = {} #var-gr2: newvar-gr2  # variables of graphe2 which must be renamed
     for s, p, o in graph2.triples:
         # ignore the instances mentioned in coref
         if p == ":instance" and s in v2match:
             continue
         if s in v2match:
             s = v2match[s]
+        elif s in oldnew:
+            s = oldnew[s]
         elif s in g1_vars:
-            s = s + "_2"
+            #s = s + "_2"
+            i = 1
+            while True:
+                i += 1
+                s2 = "%s%d" % (s[0],i)
+                if s2 not in g1_vars:
+                    oldnew[s] = s2
+                    s = s2
+                    break
+
         if o in v2match:
             o = v2match[o]
+        elif o in oldnew:
+            o = oldnew[o]
         elif o in g1_vars:
-            o = o + "_2"
+            #o = o + "_2"
+            i = 2
+            while True:
+                i += 1
+                o2 = "%s%d" % (o[0], i)
+                if o2 not in g1_vars:
+                    oldnew[o] = o2
+                    o = o2
+                    break
+
         if (s, p, o) not in finaltriples_no_duplicates:
             finaltriples.append((s, p, o))
             finaltriples_no_duplicates.add((s, p, o))
 
-    #for tr in finaltriples:
-    #    print(tr)
+    for i,tr in enumerate(finaltriples, 1):
+        print(i,tr)
     ngr = penman.Graph(finaltriples, top=top)
     #ntree = penman.configure(ngr)
     #ntree.reset_variables(fmt="{prefix}{j}")
@@ -108,9 +136,28 @@ def joingraphs(graph1, graph2, corefs, top=None):
     #print("\n1:\n", npm)
 
     npm = penman.encode(penman.Graph(finaltriples, top=top))
-    #print("\n2:\n", npm)
+    print("\n2:\n", npm)
     return str(npm)
 
+
+def testfile(filename):
+    doc = amrdoc.AMRdoc(filename)
+
+    lastsent = None
+    for sent in doc.sentences:
+        if not lastsent:
+            lastsent = sent.amr
+            continue
+        corefs = []
+        for c in sent.comments:
+            if c.startswith("::coref"):
+                elems = c.split()
+                for coref in elems[1:]:
+                    corefs.append(coref.split(","))
+                break
+        jg = joingraphs(lastsent, sent.amr, corefs)
+        show(jg)
+        lastsent = jg
 
 def show(pm):
     ae = amreditor.AMRProcessor(inserver=False)
@@ -118,6 +165,8 @@ def show(pm):
     ae.reinitvars()
     pdf = ae.dot(format="svg")
     #print(ae.varletters)
+    for i,tr in enumerate(ae.triples, 1):
+        print("   ", i, tr)
     ofp = open("jg.svg", "w")
     print(pdf.decode("utf8"), file=ofp)
     ofp.close()
@@ -202,13 +251,17 @@ def test():
     show(jg)
 
 
-if __name__ == "__main__":
+def main():
+    import os
     import sys
 
-
     if len(sys.argv) > 1:
-        test()
+        if os.path.isfile(sys.argv[1]):
+            testfile(sys.argv[1])
+        else:
+            test()
     else:
+        # simple interactive test
         g1 = []
         print("GRAPH 1")
         while True:
