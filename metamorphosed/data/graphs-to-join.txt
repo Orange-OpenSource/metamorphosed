@@ -40,6 +40,7 @@
 # ::id sentence4
 # ::snt because it was strongly guarded by a joint force of Athenians, Spartans, and Achaeans.
 # ::coref p,ii
+## ::top ac2
 (c / cause-01
     :ARG0 (g / guard-01
         :ARG0 (f / force
