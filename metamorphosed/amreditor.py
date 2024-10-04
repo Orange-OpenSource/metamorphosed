@@ -275,6 +275,9 @@ class AMRProcessor:
                                 "offset": "?",
                                 "message": e,
                                 "text": e}
+        #print(self.varletters)
+        #print(self.vars)
+        #self.reinitvars()
 
     def newvar(self, concept):
         #return "v%d" % len(self.vars)
@@ -289,6 +292,45 @@ class AMRProcessor:
             var = "%c%d" % (letter, i)
             self.varletters[letter].add(var)
             return var
+
+    def reinitvars(self):
+        self.varletters = {} # variable: {concepts}
+        self.vars = {} # var: concept
+        self.oldvars = set()
+        oldnew = {} # oldvar: newvar
+
+        for s, p, o in self.triples:
+            # get all instances to sse al variables
+            if p == ":instance":
+                self.oldvars.add(s)
+                newletter = o[0]
+                if newletter == "i":
+                    # avoir an instance "i" (can be confused with concept "I")
+                    newletter = "ii"
+
+                if newletter not in self.varletters:
+                    # first variable starting with this letter
+                    self.varletters[newletter] = set([newletter])
+                    self.vars[newletter] = o
+                    oldnew[s] = newletter
+                else:
+                    # we have seen this letter
+                    newvar = newletter + str(len(self.varletters[newletter])+1)
+                    self.varletters[newletter].add(newvar)
+                    oldnew[s] = newvar
+                    self.vars[newvar] = o
+
+        # update variables in triples
+        newtriples = []
+        for s, p, o in self.triples:
+            #if s in self.oldvars:
+            #    s = oldnew.get(s)
+            #if o in self.oldvars:
+            #    o = oldnew.get(o)
+            s = oldnew.get(s, s)
+            o = oldnew.get(o, o)
+            newtriples.append((s, p, o))
+        self.triples = newtriples
 
     def getvars(self, concept):
         # find all instances of a given concept
