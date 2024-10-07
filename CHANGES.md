@@ -1,5 +1,9 @@
 # Changes
 
+## Version 4.2.0
+* new edit mode: add graph, a simple possibility to join two graphs (via defined coreferent instances)
+* new tests
+
 ## Version 4.1.0
 * AMR search improved: search accepts subgraphs with wildcards
 * new tests

@@ -265,6 +265,21 @@
             :op1 "JFK")
         :wiki "Q9696"))
 
+# ::id sentence 24
+# ::snt The Macedonian army advanced as far as the pass of Thermopylae.
+(a / advance-01
+    :ARG1 (a2 / army
+        :mod (c / country
+            :name (n / name
+                :op1 "Macedonia")))
+    :extent (f / far
+        :ARG2-of (h / have-degree-91
+            :ARG1 a2
+            :ARG3 (e / equal)
+            :ARG4 (p / pass
+                :name (n2 / name
+                    :op1 "Thermopylae")))))
+
 # ::id sentence last (must be last)
 # ::snt Is Joe Biden the US president?
 (h / have-org-role-91

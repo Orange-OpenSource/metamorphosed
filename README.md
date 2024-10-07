@@ -1,6 +1,7 @@
 # metAMoRphosED: the AMR editor
 
 * _metAMoRphosED_ is a graphical editor to edit Abstract Meaning Representations graphs (in PENMAN) format easily. _metAMoRphosED_ displays the graph in a graphical format and allows adding/deleting instances, edges, attributes and comments in a simple way.
+* _metAMoRphosED_ makes it possible to add a graph to an existing graph.
 * _metAMoRphosED_ reads and writes AMR-files as proposed by the principal AMR site (https://amr.isi.edu/) and used in the AMr corpora proposed there and
 by LDC (https://catalog.ldc.upenn.edu/LDC2020T02)
 * _metAMoRphosED_ runs as a local Web server, an internet browser must be used to navigate through the sentences and modifiy them. If the edited file is under git version control, every modification is automatically commited to the local repository.
@@ -9,7 +10,7 @@ by LDC (https://catalog.ldc.upenn.edu/LDC2020T02)
 * _metAMoRphosED_ allows to download the displayed graphs as SVG or to export all graphs in either SVG, PDF or PNG format
 * _metAMoRphosED_ provides a script to calculate inter-annotator agreement (see section [Inter-annotator agreement](#inter-annotator-agreement))
 
-Current version 4.1.0 (see [CHANGES.md](CHANGES.md))
+Current version 4.2.0 (see [CHANGES.md](CHANGES.md))
 
 ## TL;DR
 * if your updating from version up to 4.0.0: the file `server.py` has been renamed to `metamorphosed_server.py`
@@ -20,7 +21,7 @@ pip install smatchpp==1.7.0
 
 ## installation
 
-### Linux 
+### Linux
 python 3.10
 
 ```
@@ -47,11 +48,11 @@ pushd propbank-frames;  git checkout ad2bafa4c9c9c58cc1bc89; popd
 ./metamorphosed/installJQ.py
 ```
 
-Note: For the PropBank frames, we need currently this intermediary version since the main and release-v3.4.1 branches 
+Note: For the PropBank frames, we need currently this intermediary version since the main and release-v3.4.1 branches
 do not contain the definition of roles like `be-located-at-91`.
 
 The script `./metamorphosed/installJQ.py` installs the following into `metamorphosed/gui/lib`
-also needed: 
+also needed:
 * graphviz (see above `sudo apt install graphviz`)
 * https://code.jquery.com/jquery-3.6.0.min.js
 * https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.2/jquery.modal.min.js
@@ -229,13 +230,29 @@ In order to modify or delete an existing instance or edge, click the instance/ed
 In oder to attach an edge to another starting instance, just click first on the edge which start point is to be modified (the arrow head turns yellow) and click to the instance/concept note which is the new starting point.
 **Note**: literal nodes cannot be the starting point of an edge.
 
+### Adding a graph to the current graph
+
+This functionality allows to merge an AMR-graph and the current graph by specifiying the instances of both graphs which are coreferent.
+For instance if the editor shows the following graph:
+
+<img src="doc/basegraph.png" alt="Merge graph with another"/>
+
+Click the button `open edit window` add the second graph (in PENMAN format), and specify the instances of the current graph which should be
+identical to instances of the second graph.
+Here `p` (from `(p / pass)`) of the current graph and  `c` (from `(c / pass)`) of the second graph (as well as `n` and `n`) are identical instances.
+Matching instances must be separated by a `/`, multiple matches are separated by a space.
+
+<img src="doc/addgraph.png" alt="Merge graph with another: Menu"/>
+
+then click the `apply` button to see the result.
+
 ## Search, further info
 
-On the bottom of the main screen propbank definitions for all used concepts is displayed. 
+On the bottom of the main screen propbank definitions for all used concepts is displayed.
 Basic search is available in the search field. THE AMR-search field accepts two kinds of input
-* a valid PENMAN graph: the search will find AMR graphs which contain the given PENMAN graph. So searching for `(e / eat-01 :ARG1 ( c / cheese ))` will find a graph like 
+* a valid PENMAN graph: the search will find AMR graphs which contain the given PENMAN graph. So searching for `(e / eat-01 :ARG1 ( c / cheese ))` will find a graph like
 ```
-(v1 / eat-01 
+(v1 / eat-01
   :ARG0 ( v2 / mouse )
   :ARG1 ( v3 / cheese ))
 ```
@@ -293,7 +310,7 @@ Choose format and numbers of sentences for which you want the graphic exported (
 
 (still Beta)
 
-When creating a new edge (relation) between two instances, _metamorphosed_ tries to guess the most likely label for this relation. The implementation is very simple, if the target instance is of type `name` the guessed relation is `:name`, if the concept of the source instance is `name`, `and` or `or`, the guessed relation is `:op2`, else if the source relations ends with `-01` etc, the guessed relations is `:ARGn`. In moste cases this has to be correct. 
+When creating a new edge (relation) between two instances, _metamorphosed_ tries to guess the most likely label for this relation. The implementation is very simple, if the target instance is of type `name` the guessed relation is `:name`, if the concept of the source instance is `name`, `and` or `or`, the guessed relation is `:op2`, else if the source relations ends with `-01` etc, the guessed relations is `:ARGn`. In moste cases this has to be correct.
 However you can implement or more sophisticated classifier, trained on any data whic is available to you and use your classifier. To do so,
 Subclass the class `Basic_EdgePredictor` in [metamorphosed/edge_predictor.py](edge_predictor.py) and implement your classifier. You must redefine the method
 `predict(self, source_concept, target_concept):`. For instance:

@@ -202,7 +202,7 @@ def test_info(client):
     response = client.get("/version")
     res = json.loads(response.data)
     #print("res", res, file=sys.stderr)
-    assert res == {'name': 'AMR Editor', 'version': '4.1.0', 'apiversion': '1.6.0'}
+    assert res == {'name': 'AMR Editor', 'version': '4.2.0', 'apiversion': '1.7.0'}
 
     response = client.get("/info", query_string={"withdata": True})
     res = json.loads(response.data)
@@ -251,7 +251,7 @@ def test_exportgraphs(client):
     #    #print(zfp.read(x.filename))
     #    #break
 
-    assert len(zfp.infolist()) == 23
+    assert len(zfp.infolist()) == 24
     fobj = zfp.infolist()[0]
     assert fobj.filename == "1.svg"
     assert fobj.file_size == 11040
@@ -263,7 +263,7 @@ def test_exportgraphs(client):
     fp = io.BytesIO(response.data)
     #print("res", response.data)
     zfp = zipfile.ZipFile(fp, "r")
-    assert len(zfp.infolist()) == 23
+    assert len(zfp.infolist()) == 24
     fobj = zfp.infolist()[10]
     #print(fobj)
     assert fobj.filename == "11.pdf"
@@ -276,7 +276,7 @@ def test_exportgraphs(client):
     fp = io.BytesIO(response.data)
     #print("res", response.data)
     zfp = zipfile.ZipFile(fp, "r")
-    assert len(zfp.infolist()) == 23
+    assert len(zfp.infolist()) == 24
     fobj = zfp.infolist()[11]
     #print(fobj)
     assert fobj.filename == "12.png"
@@ -335,7 +335,7 @@ def test_edit_last(client):
     res = json.loads(response.data)
     #print("res", json.dumps(res, indent=2))
     assert "(h / have-org-role-91\n   :ARG0 (p / person\n            :name (n / name\n                     :op1 \"Joe\"\n" in res["penman"]
-    assert res["num"] == 24
+    assert res["num"] == 25
 
 
 def test_edit_next(client):
@@ -567,7 +567,7 @@ def test_read_num_too_big(client):
     response = client.get("/read", query_string={"num": 100})
     res = json.loads(response.data)
     #print("res", res)
-    assert res["error"] == "invalid sentence number: must be between 1 and 24"
+    assert res["error"] == "invalid sentence number: must be between 1 and 25"
 
 
 def test_duplicate_edge(client):
@@ -807,7 +807,7 @@ def test_bad_api_usage(client):
     response = client.get("/read", query_string={"num": 0})
     assert response.status_code == 400
     res = json.loads(response.text)
-    assert res == {'error': 'invalid sentence number: must be between 1 and 24'}
+    assert res == {'error': 'invalid sentence number: must be between 1 and 25'}
 
     response = client.get("/edit", query_string={"num": 3, "reifyxx": ":location <>  be-located-at-91"})
     assert response.status_code == 400
@@ -817,7 +817,7 @@ def test_bad_api_usage(client):
     response = client.get("/edit", query_string={"num": 333, "reify": ":location <>  be-located-at-91"})
     assert response.status_code == 400
     res = json.loads(response.text)
-    assert res == {'error': 'invalid sentence number: must be between 1 and 24'}
+    assert res == {'error': 'invalid sentence number: must be between 1 and 25'}
 
     response = client.get("/edit", query_string={"num": 3})
     assert response.status_code == 400
@@ -858,6 +858,66 @@ def test_bad_api_usage(client):
     assert response.status_code == 400
     res = json.loads(response.text)
     assert res == {"error": "invalid parameter 'badparam'"}
+
+
+def test_joingraph(client):
+    response = client.get("/read", query_string={"num": 24})
+    response = client.get("/edit", query_string={"num": 24, "addgraph": '''(d / divide-02
+    :ARG0 (c / city
+        :name (n / name
+            :op1 "Thermopylae"))
+    :ARG1 (c2 / country
+        :name (n2 / name
+            :op1 "Greece"))
+    :ARG2 (p / part
+        :quant 2))''',
+                                                 "mappings": 'n2/n p/c'})
+    res = json.loads(response.data)
+    #print("res", res["penman"])
+    assert res["penman"] == "(a / advance-01\n   :ARG1 (a2 / army\n             :mod (c / country\n                     :name (n / name\n                              :op1 \"Macedonia\")))\n   :extent (f / far\n              :ARG2-of (h / have-degree-91\n                          :ARG1 a2\n                          :ARG3 (e / equal)\n                          :ARG4 (p / pass\n                                   :name (n2 / name\n                                             :op1 \"Thermopylae\")\n                                   :ARG0-of (d / divide-02\n                                               :ARG1 (c2 / country\n                                                         :name (n3 / name\n                                                                   :op1 \"Greece\"))\n                                               :ARG2 (p2 / part\n                                                         :quant 2))))))"
+
+
+def test_joingraph_bad(client):
+    response = client.get("/read", query_string={"num": 3})
+    # missing mappings
+    response = client.get("/edit", query_string={"num": 3, "addgraph": "(x / kill :mode ( q/ quickly))"})
+    assert response.status_code == 400
+    res = json.loads(response.text)
+    #print("res", res)
+    assert res == {"error": "Missing variable mappings. use 'v1/v2 ...'"}
+
+    # bad graph
+    response = client.get("/edit", query_string={"num": 3, "addgraph": "(x / kill :mode ( q/ quickly)", "mappings": "k/x"})
+    assert response.status_code == 400
+    res = json.loads(response.text)
+    assert res == {"error": 'Cannot join graphs: \n  line 1\n    (x / kill :mode ( q/ quickly)\n                                 ^\nDecodeError: Unexpected end of input'}
+
+    # bad mappings
+    response = client.get("/edit", query_string={"num": 3, "addgraph": "(x / kill :mode ( q/ quickly))", "mappings": "kiiii/x"})
+    assert response.status_code == 400
+    res = json.loads(response.text)
+    assert res == {"error": "Cannot join graphs: 'Graph1 does not have an instance: kiiii'"}
+
+    response = client.get("/edit", query_string={"num": 3, "addgraph": "(x / kill :mode ( q/ quickly))", "mappings": "k/lll"})
+    assert response.status_code == 400
+    res = json.loads(response.text)
+    assert res == {"error": "Cannot join graphs: 'Graph2 does not have an instance: lll'"}
+
+    # bad mappings format
+    response = client.get("/edit", query_string={"num": 3, "addgraph": "(x / kill :mode ( q/ quickly))", "mappings": "k,x"})
+    assert response.status_code == 400
+    res = json.loads(response.text)
+    assert res == {"error": "Bad format for mappings. use 'a/b ...': k,x"}
+
+    response = client.get("/edit", query_string={"num": 3, "addgraph": "(x / kill :mode ( q/ quickly))", "mappings": "k/"})
+    assert response.status_code == 400
+    res = json.loads(response.text)
+    assert res == {"error": "Cannot join graphs: 'Graph2 does not have an instance: '"}
+
+    response = client.get("/edit", query_string={"num": 3, "addgraph": "(x / kill :mode ( q/ quickly))", "mappings": "k"})
+    assert response.status_code == 400
+    res = json.loads(response.text)
+    assert res == {"error": "Bad format for mappings. use 'a/b ...': k"}
 
 
 def test_reify(client):

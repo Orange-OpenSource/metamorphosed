@@ -33,7 +33,7 @@
 # Software Name: MetAMoRphosED AMR-Editor
 # Author: Johannes Heinecke
 
-# version 4.1.0 as of 2nd September 2024
+# version 4.2.0 as of 7th October 2024
 
 import re
 import readline
@@ -47,7 +47,7 @@ from metamorphosed.reification import getInstance
 import metamorphosed.amr_comparison as amr_comparison
 
 
-VERSION = "4.1.0"
+VERSION = "4.2.0"
 
 # terminology
 # instance  a / ...
@@ -293,7 +293,7 @@ class AMRProcessor:
             self.varletters[letter].add(var)
             return var
 
-    def reinitvars(self):
+    def NOTYETreinitvars(self):
         self.varletters = {} # variable: {concepts}
         self.vars = {} # var: concept
         self.oldvars = set()
@@ -315,7 +315,7 @@ class AMRProcessor:
                     oldnew[s] = newletter
                 else:
                     # we have seen this letter
-                    newvar = newletter + str(len(self.varletters[newletter])+1)
+                    newvar = newletter + str(len(self.varletters[newletter]) + 1)
                     self.varletters[newletter].add(newvar)
                     oldnew[s] = newvar
                     self.vars[newvar] = o

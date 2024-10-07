@@ -955,6 +955,20 @@ $(document).ready(function () {
 		});
 	});
 
+	$("#canceladdgraph").click(function(){
+				       //$("#conceptsetmodal").fadeOut();
+				       $("#addgraphmodal").hide();
+				   });
+
+
+	/* open modal */
+	$(".openbutton").click(function () {
+	    if (this.id == "addgraph") {
+	   console.log("eeee", this.id);
+		$("#addgraphmodal").show();
+		$("#addgraphmodal").draggable();
+	    }
+      });
 
 	/* modify the AMR graph by clicking on buttons of the addbutton-class */
 	$(".addbutton").click(function () {
@@ -1109,7 +1123,13 @@ $(document).ready(function () {
 			    $('#sentencelist').append('<option value="' + (i+1) +'">' + optionstring);
 			}
 		    }
-
+		}
+		else if (this.id == "modifyaddgraph") {
+		    $(".editmode").hide();
+		    $("#commands").show();
+		    params = { "addgraph": $("#addedgraph").val(),
+			       "mappings": $("#conceptmappings").val()
+		    }
 
 		} else {
 			return;

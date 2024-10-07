@@ -678,6 +678,12 @@ td.framealiastable {
   width: 90%;
 }
 
+#addgraphmodal {
+  top: 20%;
+  max-width: 50%;
+  width: 50%;
+}
+
 #sentencelist {
   width: 100%;
  }

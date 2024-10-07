@@ -59,6 +59,7 @@ from metamorphosed.relations_doc import RelDoc
 from metamorphosed.edge_predictor import Basic_EdgePredictor as EdgePredictor
 from metamorphosed.exception import ServerException
 from metamorphosed.findsubgraph import SubGraphRDF
+import metamorphosed.joingraphs as joingraphs
 
 import metamorphosed.installJQ as iJQ
 
@@ -70,7 +71,7 @@ import metamorphosed.installJQ as iJQ
 # find an example in AMR data
 # call an AMRserver for an (empty) sentence ? rather not
 
-APIVERSION = "1.6.0"
+APIVERSION = "1.7.0"
 
 
 class AMR_Edit_Server:
@@ -264,6 +265,8 @@ class AMR_Edit_Server:
             modcomment = self.checkParameter(request, 'modcomment', 'string', isOptional=True, defaultValue=None)
             reify = self.checkParameter(request, 'reify', 'string', isOptional=True, defaultValue=None)
             dereify = self.checkParameter(request, 'dereify', 'string', isOptional=True, defaultValue=None)
+            addgraph = self.checkParameter(request, 'addgraph', 'string', isOptional=True, defaultValue=None)
+            mappings = self.checkParameter(request, 'mappings', 'string', isOptional=True, defaultValue=None)
 
             if sentnum < 1 or sentnum > len(self.amrdoc.sentences):
                 # creates an http status code 400
@@ -286,7 +289,8 @@ class AMR_Edit_Server:
                            "modcomment",
                            "reify", "dereify",
                            "newtop",
-                           "prevmod"]
+                           "prevmod",
+                           "addgraph", "mappings"]
 
             #self.findinvalidparameters(request, validparams)
             self.validParameters(request, set(validparams))
@@ -383,6 +387,35 @@ class AMR_Edit_Server:
                 ap.reify(reify)
             elif dereify:
                 rtc = ap.dereify(dereify)
+            elif addgraph:
+                if not mappings or not mappings.strip():
+                    raise ServerException("Missing variable mappings. use 'v1/v2 ...'")
+                corefs = []
+                if mappings:
+                    for elems in mappings.split():
+                        mapping = elems.split("/")
+                        if len(mapping) != 2:
+                            raise ServerException("Bad format for mappings. use 'a/b ...': %s" % elems)
+                        corefs.append((mapping[0], mapping[1]))
+
+                newap = amreditor.AMRProcessor()
+                try:
+                    pm = joingraphs.joingraphs(ap.lastpm, addgraph, corefs, top=None)
+                    newap.readpenman(pm)
+                    newap.previous_modification = ap.previous_modification
+                except Exception as e:
+                    raise ServerException("Cannot join graphs: %s" % e)
+                if not newap.valid:
+                    return invalidamr(newap,
+                                      modpenman,
+                                      self.amrdoc.sentences[sentnum - 1],
+                                      sentnum)
+                else:
+                    newap.show() # to create penman
+                    self.aps[sentnum] = newap
+                    ap = newap
+                    ap.modified = True # set rather by ap.-functions ??
+
             else:
                 # creates an http status code 400
                 raise ServerException("No edit valid operation given")

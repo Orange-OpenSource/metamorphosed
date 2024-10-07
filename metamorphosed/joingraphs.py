@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-#!/usr/bin/env python3
-
 # This library is under the 3-Clause BSD License
 #
 # Copyright (c) 2024,  Orange
@@ -39,20 +37,18 @@
 import penman
 import metamorphosed.amreditor as amreditor
 import metamorphosed.amrdoc as amrdoc
-
-# PYTHONPATH=metamorphosed python3 joingraphs.py
+from metamorphosed.exception import ServerException
 
 
 # join two graphs into one, and merge instances indicated in corefs
 def joingraphs(graph1, graph2, corefs, top=None):
-    print("G1", graph1)
-    print("G2", graph2)
+    #print("G1", graph1)
+    #print("G2", graph2)
 
     if isinstance(graph1, str):
         graph1 = penman.decode(graph1)
     if isinstance(graph2, str):
         graph2 = penman.decode(graph2)
-
 
     # un dict with variables and concepts of graphs
     g1_concepts = {} # var: concept
@@ -68,11 +64,13 @@ def joingraphs(graph1, graph2, corefs, top=None):
         #v1 = "a" + v1
         #v2 = "b" + v2
         if v1 not in g1_concepts:
-            print("%s not in graph1" % v1)
+            #print("%s not in graph1" % v1)
+            raise ServerException("Graph1 does not have an instance: %s" % v1)
             # raise Exception
             continue
         if v2 not in g2_concepts:
-            print("%s not in graph2" % v2)
+            #print("%s not in graph2" % v2)
+            raise ServerException("Graph2 does not have an instance: %s" % v2)
             # raise Exception
             continue
         if g1_concepts[v1] != g2_concepts[v2]:
@@ -122,11 +120,11 @@ def joingraphs(graph1, graph2, corefs, top=None):
     ntree = penman.configure(ngr)
     ntree.reset_variables(fmt="{prefix}{j}")
     npm = penman.format(ntree)
-    print("\n1:\n", npm)
+    #print("\n1:\n", npm)
 
     #npm = penman.encode(penman.Graph(finaltriples, top=top))
     #print("\n2:\n", npm)
-    #return str(npm)
+    return str(npm)
 
 
 def testfile(filename):
@@ -147,13 +145,15 @@ def testfile(filename):
             elif c.startswith("::top"):
                 top = c.split()[-1]
         jg = joingraphs(lastsent, sent.amr, corefs, top)
+        print(jg)
         show(jg)
         lastsent = jg
+
 
 def show(pm):
     ae = amreditor.AMRProcessor(inserver=False)
     ae.readpenman(pm)
-    ae.reinitvars()
+    #ae.reinitvars()
     pdf = ae.dot(format="svg")
     #print(ae.varletters)
     #for i,tr in enumerate(ae.triples, 1):

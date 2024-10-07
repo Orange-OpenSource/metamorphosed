@@ -112,6 +112,10 @@
                     </td>
                 </tr>
                 <tr>
+                    <td>F)</td> <td>add partial graph</td>
+	            <td><button class="openbutton mybutton" id="addgraph">open edit window</button></td>
+                </tr>
+                <tr>
                     <td colspan="3"><button class="cleanbutton mybutton" id="cleanfields">clean all</button></td </tr>
             </table>
         </div>
@@ -337,6 +341,20 @@ Else the input is interpreted as regular expression" placeholder="regex/PENMAN" 
            <button class="addbutton mybutton" id="modifysentencelist">apply</button>
            </p>
            <select class="allsentences" name="sent1" id="sentencelist"></select>
+           <br />
+       </div>
+    </div>
+
+    <!-- add graph edit -->
+    <div class="modal editmode" id="addgraphmodal">
+       <div class="grouping noborder" id="addgraphmod">
+           <button class="cancelmodal" id="canceladdgraph">&times;</button>
+           <h3>Add graph</h3>
+	      <textarea cols="70" rows="15" id="addedgraph"></textarea>
+           <p/>
+	      concept mappings: <input title="concepts which are coreferent between main graph and added graph" type="text"  id="conceptmappings" size="20" value="">
+           <p/>
+           <button class="addbutton mybutton" id="modifyaddgraph">apply</button>
            <br />
        </div>
     </div>
