@@ -1022,6 +1022,11 @@ $(document).ready(function () {
 		else if (this.id == "settop") {
 			params = { "newtop": $("#topnode").val() }
 		}
+		else if (this.id == "setinstancetop") {
+			$(".editmode").hide();
+			$("#commands").show();
+			params = { "newtop": $("#conceptinstance").text() }
+		}
 		else if (this.id == "delinstance") {
 			$(".editmode").hide();
 			$("#commands").show();

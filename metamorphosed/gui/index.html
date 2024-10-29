@@ -24,7 +24,7 @@
 
 <body>
     <img src="img/metamorphosed+.png" width="500px">
-    <p/>
+    <p />
     <!--h1 id="mainheader">Abstract Meaning Representation - Editor <span id="version"></span></h1-->
 
 
@@ -52,7 +52,8 @@
             <h3>Add concepts/edges/names</h3>
             <table>
                 <tr>
-                    <td>A)</td> <td>add a new instance for concept:</td>
+                    <td>A)</td>
+                    <td>add a new instance for concept:</td>
                     <td><input class="conceptfield" placeholder="concept" title="concept to be instantiated" type="text"
                             id="concept" value="">
                         <button class="addbutton mybutton" id="addconcept">add</button>
@@ -60,7 +61,8 @@
                 </tr>
 
                 <tr>
-                    <td>B)</td> <td>add new relation between instances: </td>
+                    <td>B)</td>
+                    <td>add new relation between instances: </td>
                     <td><!--input class="varfield" placeholder="source instance"
                             title="variable of instance from which relation starts" type="text" id="startvar" value=""-->
                         <select class="validvars" name="varb1" id="startvar"></select>
@@ -75,7 +77,8 @@
                 </tr>
 
                 <tr>
-                    <td>C)</td> <td>set a new top:</td>
+                    <td>C)</td>
+                    <td>set a new top:</td>
                     <td><!--input class="varfield" placeholder="instance" title="instance which is in top position"
                             type="text" id="topnode" value=""-->
                         <select class="validvars" name="varc1" id="topnode"></select>
@@ -88,7 +91,8 @@
                 </tr-->
 
                 <tr>
-                    <td>D)</td> <td>add new relation and literal:</td>
+                    <td>D)</td>
+                    <td>add new relation and literal:</td>
                     <td><!--input class="varfield" placeholder="instance" title="instance to attach the relation to"
                             type="text" id="literalof" value=""-->
                         <select class="validvars" name="vard1" id="literalof"></select>
@@ -101,7 +105,8 @@
                 </tr>
 
                 <tr>
-                    <td>E)</td> <td>add new <span class="code">:name</span>-relation for instance: </td>
+                    <td>E)</td>
+                    <td>add new <span class="code">:name</span>-relation for instance: </td>
                     <td><!--input class="varfield" placeholder="instance" title="instance to attach the name to"
                             type="text" id="nameof" value=""-->
                         <select class="validvars" name="vare1" id="nameof"></select>
@@ -112,8 +117,9 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>F)</td> <td>add partial graph</td>
-	            <td><button class="openbutton mybutton" id="addgraph">open edit window</button></td>
+                    <td>F)</td>
+                    <td>add partial graph</td>
+                    <td><button class="openbutton mybutton" id="addgraph">open edit window</button></td>
                 </tr>
                 <tr>
                     <td colspan="3"><button class="cleanbutton mybutton" id="cleanfields">clean all</button></td </tr>
@@ -126,24 +132,30 @@
 
 
         <div class="grouping">
-           <button class="toggleresult searchbuttonpos" id="togglesearch">&#8210;</button>
-	      <div id="searchfunctions">
+            <button class="toggleresult searchbuttonpos" id="togglesearch">&#8210;</button>
+            <div id="searchfunctions">
                 <h3>Search <button class="mybutton" id="clearsearch" title="clean search fields">clear</button></h3>
                 <table>
                     <tr>
                         <td>Id:</td>
-                        <td><input class="textfield searchfield" placeholder="regex" title="search for sentence ID" type="text" id="idsearch" value="">
-                            <button class="findbutton mybutton" id="findidprec" title="find preceding occurrence">&lt;&lt;</button>
-                            <button class="findbutton mybutton" id="findidnext" title="find next occurrence">&gt;&gt;</button>
+                        <td><input class="textfield searchfield" placeholder="regex" title="search for sentence ID"
+                                type="text" id="idsearch" value="">
+                            <button class="findbutton mybutton" id="findidprec"
+                                title="find preceding occurrence">&lt;&lt;</button>
+                            <button class="findbutton mybutton" id="findidnext"
+                                title="find next occurrence">&gt;&gt;</button>
                         </td>
                         </td>
                     </tr>
 
                     <tr>
                         <td>Text:</td>
-                        <td><input class="textfield searchfield" placeholder="regex" title="search in sentences" type="text" id="textsearch" value="">
-                            <button class="findbutton mybutton" id="findtextprec" title="find preceding occurrence">&lt;&lt;</button>
-                            <button class="findbutton mybutton" id="findtextnext" title="find next occurrence">&gt;&gt;</button>
+                        <td><input class="textfield searchfield" placeholder="regex" title="search in sentences"
+                                type="text" id="textsearch" value="">
+                            <button class="findbutton mybutton" id="findtextprec"
+                                title="find preceding occurrence">&lt;&lt;</button>
+                            <button class="findbutton mybutton" id="findtextnext"
+                                title="find next occurrence">&gt;&gt;</button>
                         </td>
                         </td>
                     </tr>
@@ -155,61 +167,69 @@ we look for graphs which contain the PENMAN graph.
 Else the input is interpreted as regular expression" type="text" id="amrsearch"value=""-->
                             <textarea class="amrsearcharea searchfield" title="if the string is a PENMAN graph
 we look for graphs which contain the PENMAN graph.
-Else the input is interpreted as regular expression" placeholder="regex/PENMAN" type="text" rows="2" id="amrsearch" value=""></textarea>
-                            <button class="findbutton mybutton" id="findamrprec" title="find preceding occurrence">&lt;&lt;</button>
-                            <button class="findbutton mybutton" id="findamrnext" title="find next occurrence">&gt;&gt;</button>
+Else the input is interpreted as regular expression" placeholder="regex/PENMAN" type="text" rows="2" id="amrsearch"
+                                value=""></textarea>
+                            <button class="findbutton mybutton" id="findamrprec"
+                                title="find preceding occurrence">&lt;&lt;</button>
+                            <button class="findbutton mybutton" id="findamrnext"
+                                title="find next occurrence">&gt;&gt;</button>
                         </td>
                     </tr>
                     <tr>
                         <td>comments:</td>
-                        <td><input class="amrfield searchfield" placeholder="regex" title="search for comments" type="text" id="commentsearch" value="">
-                            <button class="findbutton mybutton" id="findcommentprec" title="find preceding occurrence">&lt;&lt;</button>
-                            <button class="findbutton mybutton" id="findcommentnext" title="find next occurrence">&gt;&gt;</button>
+                        <td><input class="amrfield searchfield" placeholder="regex" title="search for comments"
+                                type="text" id="commentsearch" value="">
+                            <button class="findbutton mybutton" id="findcommentprec"
+                                title="find preceding occurrence">&lt;&lt;</button>
+                            <button class="findbutton mybutton" id="findcommentnext"
+                                title="find next occurrence">&gt;&gt;</button>
                         </td>
                     </tr>
                 </table>
-	        <div id="reifygroup">
-  	           <div class="reifyelem">
-                     <h3>Reification</h3>
-                     <select class="reifrelations" name="reify" id="reifylist"></select>
-                     <button class="addbutton mybutton" id="reifygraph" title="reify given relation">reify</button>
-                     <button class="addbutton mybutton" id="dereifygraph" title="dereify given concept (if possible)">unreify</button>
-                   </div>
+                <div id="reifygroup">
+                    <div class="reifyelem">
+                        <h3>Reification</h3>
+                        <select class="reifrelations" name="reify" id="reifylist"></select>
+                        <button class="addbutton mybutton" id="reifygraph" title="reify given relation">reify</button>
+                        <button class="addbutton mybutton" id="dereifygraph"
+                            title="dereify given concept (if possible)">unreify</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <p />
-	<div class="modal QQeditmode" id="svgexport">
-	  <div class="grouping noborder" id="modconcept">
+    <div class="modal QQeditmode" id="svgexport">
+        <div class="grouping noborder" id="modconcept">
             <button class="cancelmodal" id="cancelsvgexport">&times;</button>
-	    <h2>export all AMR graphs</h2>
-	    <legend>choose output format</legend>
-	    <div>
-	      <input type="radio" id="pdfgraph" name="graphformat" value="pdf" checked />
-		<label for="pdfgraph">pdf</label>
-	    </div>
-	    <div>
-	      <input type="radio" id="pnggraph" name="graphformat" value="png" />
-		<label for="pnggraph">png</label>
-	    </div>
-	    <div>
-	      <input type="radio" id="svggraph" name="graphformat"  value="svg" />
-		<label for="svggraph">svg</label>
-	    </div>
-	    <p/>
+            <h2>export all AMR graphs</h2>
+            <legend>choose output format</legend>
+            <div>
+                <input type="radio" id="pdfgraph" name="graphformat" value="pdf" checked />
+                <label for="pdfgraph">pdf</label>
+            </div>
+            <div>
+                <input type="radio" id="pnggraph" name="graphformat" value="png" />
+                <label for="pnggraph">png</label>
+            </div>
+            <div>
+                <input type="radio" id="svggraph" name="graphformat" value="svg" />
+                <label for="svggraph">svg</label>
+            </div>
+            <p />
 
-	    list of graphs to be exposted <input class="textfield" placeholder=""
-                            title="numbers of the sentences for which a visualised graph is exported" type="text"
-                            id="sentnumlist" value="">
-		<p/>
+            list of graphs to be exposted <input class="textfield" placeholder=""
+                title="numbers of the sentences for which a visualised graph is exported" type="text" id="sentnumlist"
+                value="">
+            <p />
 
-	      <a href="/graphs/amrgraphs.zip?format=png" id="exporthref" onclick="updateExportFormat()" type="application/zip"><button class="mybutton" id="runsvgexport">export graphs</button></a>
+            <a href="/graphs/amrgraphs.zip?format=png" id="exporthref" onclick="updateExportFormat()"
+                type="application/zip"><button class="mybutton" id="runsvgexport">export graphs</button></a>
 
-	  </div>
-	</div>
-	
+        </div>
+    </div>
+
 
     <div id="helptext" class="helptext" style="display:none">
         <h2>Help</h2>
@@ -217,14 +237,15 @@ Else the input is interpreted as regular expression" placeholder="regex/PENMAN" 
         Type the concept in line (A) and click <span class="knopf">add</span>
         <h3>Add a new relation between instances</h3>
         Add source- and target instance and relation name in line (B) and click <span class="knopf">add</span> or
-        click on source-instance and than on the target-instance. A new <span class="code">:todo</span> relation is added which must be modified in a second step
+        click on source-instance and than on the target-instance. A new <span class="code">:todo</span> relation is
+        added which must be modified in a second step
         <h3>Make another instance top instance</h3>
         set instance in line (C)and click <span class="knopf">set</span>
         <h3>Add a literal (like a number) and a relation (like <span class="code">:quant</span>)</h3>
         fill fields in line (D) and click <span class="knopf">add</span>
         <h3>Add name to an instance</h3>
-        Add instance which will get <span class="code">:name</span> node and <span class="code">:op</span>-linked strings and name in line (E) and click <span
-            class="knopf">add</span>
+        Add instance which will get <span class="code">:name</span> node and <span class="code">:op</span>-linked
+        strings and name in line (E) and click <span class="knopf">add</span>
         <h3>Modify concept</h3>
         Click the concept in the graph, edit concept and click <span class="knopf">update</span> in the «Modify Concept»
         window
@@ -241,9 +262,10 @@ Else the input is interpreted as regular expression" placeholder="regex/PENMAN" 
 
         <h2>About</h2>
         <span class="logo2"><img src="img/metamorphosed+.png" width="16%"></span>
-        version <span id="version2"></span> (API version: <span id="apiversion"></span>)<br/>
+        version <span id="version2"></span> (API version: <span id="apiversion"></span>)<br />
         Author: Johannes Heinecke.
-        Copyright © 2022-2024 by Orange. This software is published under the <a target="_blank" href="https://opensource.org/licenses/BSD-3-Clause">3-Clause BSD License</a>.
+        Copyright © 2022-2024 by Orange. This software is published under the <a target="_blank"
+            href="https://opensource.org/licenses/BSD-3-Clause">3-Clause BSD License</a>.
 
         <h2>This instance</h2>
         Started on <span class="code" id="hostname"></span>
@@ -278,26 +300,34 @@ Else the input is interpreted as regular expression" placeholder="regex/PENMAN" 
         <div class="grouping noborder" id="modconcept">
             <button class="cancelmodal" id="cancelmc">&times;</button>
             <h3>Modify concept for instance &ldquo;<span id="conceptinstance"></span>&rdquo;</h3>
-            Change concept <input class="conceptfield" title="modify concept name" type="text" id="modifiedconcept"
-                value="">
-            <button class="addbutton mybutton" id="modifyconcept">update</button>
-            <button class="addbutton mybutton" id="delinstance">delete instance</button>
-            <br />
-            <!--button class="canceleditmode" id="cancelmc">cancel</button-->
-
-            add new relation and literal:
-            <input class="edgefield" placeholder="relation"
-                title="name of the relation to be inserted (like :quant or :polarity)" type="text"
-                id="relationforliteral2" value="">
-            <input class="literalfield" placeholder="literal (without quotes)" title="literal (without quotes)"
-                type="text" id="newliteral2" value="">
-            <button class="addbutton mybutton" id="addliteral2">add</button>
-            <br />
-
-            add new <span class="code">:name</span>-relation for instance:
-            <input class="literalfield" placeholder="name (without quotes)"
-                title="new name to be inserted together with an instance of name" type="text" id="name2" value="">
-            <button class="addbutton mybutton" id="addname2">add</button>
+            <ul>
+                <li>Change concept <input class="conceptfield" title="modify concept name" type="text" id="modifiedconcept"
+                        value="">
+                    <button class="addbutton mybutton" id="modifyconcept">update</button>
+                    <button class="addbutton mybutton" id="delinstance">delete instance</button>
+                </li>
+            
+                <!--button class="canceleditmode" id="cancelmc">cancel</button-->
+            
+                <li> new relation and literal:
+                    <input class="edgefield" placeholder="relation"
+                        title="name of the relation to be inserted (like :quant or :polarity)" type="text" id="relationforliteral2"
+                        value="">
+                    <input class="literalfield" placeholder="literal (without quotes)" title="literal (without quotes)" type="text"
+                        id="newliteral2" value="">
+                    <button class="addbutton mybutton" id="addliteral2">add</button>
+                </li>
+            
+                <li>add new <span class="code">:name</span>-relation for instance:
+                    <input class="literalfield" placeholder="name (without quotes)"
+                        title="new name to be inserted together with an instance of name" type="text" id="name2" value="">
+                    <button class="addbutton mybutton" id="addname2">add</button>
+                </li>
+            
+            
+                <li>make this instance top of the graph <button class="addbutton mybutton" id="setinstancetop">set
+                        top</button></li>
+            </ul>
         </div>
     </div>
 
@@ -306,59 +336,62 @@ Else the input is interpreted as regular expression" placeholder="regex/PENMAN" 
         <div class="grouping noborder" id="modedge">
             <button class="cancelmodal" id="cancelme">&times;</button>
             <h3>Modify relation &ldquo;<span id="relationfrom"></span> &ndash; <span id="relationto"></span>&rdquo;</h3>
-            <input class="edgefield" title="modify relation name" type="text" id="modifiededge" value="">
-            <button class="addbutton mybutton" id="modifyedge">update</button>
-            <button class="addbutton mybutton" id="deledge">delete</button>
+            <ul>
+                <li><input class="edgefield" title="modify relation name" type="text" id="modifiededge" value="">
+                <button class="addbutton mybutton" id="modifyedge">update</button>
+                <button class="addbutton mybutton" id="deledge">delete</button></li>
+            
 
-            <br /><!--input class="varfield" placeholder="instance" title="modify relation start" type="text"
-                id="newsource" value=""-->
-                  <select class="validvars" name="varmr" id="newsource"></select>
-            <button class="addbutton mybutton" id="moveedge">use as new head</button>
-            <br />
+                <li><select class="validvars" name="varmr" id="newsource"></select>
+                <button class="addbutton mybutton" id="moveedge">use as new head</button></li>
+            
+            </ul>
         </div>
     </div>
 
     <!-- literal name edit -->
     <div class="modal editmode" id="literalsetmodal">
-       <div class="grouping noborder" id="modlit">
-           <button class="cancelmodal" id="cancelml">&times;</button>
-           <h3>Modify literal</h3>
-           <input class="literalfield" title="modify literal (quotes are added automatically if needed)" type="text"
-               id="modifiedliteral" value="">
-           <button class="addbutton mybutton" id="modifyliteral">update</button>
-           <button class="addbutton mybutton" id="delliteral">delete literal</button>
-           <br />
-       </div>
+        <div class="grouping noborder" id="modlit">
+            <button class="cancelmodal" id="cancelml">&times;</button>
+            <h3>Modify literal</h3>
+            <input class="literalfield" title="modify literal (quotes are added automatically if needed)" type="text"
+                id="modifiedliteral" value="">
+            <button class="addbutton mybutton" id="modifyliteral">update</button>
+            <button class="addbutton mybutton" id="delliteral">delete literal</button>
+            <br />
+        </div>
     </div>
 
     <!-- sentence list -->
     <div class="modal editmode" id="sentmodal">
-       <div class="grouping noborder" id="sentencelistmod">
-           <button class="cancelmodal" id="cancelsentlist">&times;</button>
-           <h3>Choose sentence</h3>
-           sentence id filter: <input title="filter sentence ids" type="text"  id="sidfilter" size="20" value="">
-           sentence text filter: <input title="filter sentence text" type="text"  id="textfilter" size="20" value="">
-           <button class="addbutton mybutton" id="modifysentencelist">apply</button>
-           </p>
-           <select class="allsentences" name="sent1" id="sentencelist"></select>
-           <br />
-       </div>
+        <div class="grouping noborder" id="sentencelistmod">
+            <button class="cancelmodal" id="cancelsentlist">&times;</button>
+            <h3>Choose sentence</h3>
+            sentence id filter: <input title="filter sentence ids" type="text" id="sidfilter" size="20" value="">
+            sentence text filter: <input title="filter sentence text" type="text" id="textfilter" size="20" value="">
+            <button class="addbutton mybutton" id="modifysentencelist">apply</button>
+            </p>
+            <select class="allsentences" name="sent1" id="sentencelist"></select>
+            <br />
+        </div>
     </div>
 
     <!-- add graph edit -->
     <div class="modal editmode" id="addgraphmodal">
-       <div class="grouping noborder" id="addgraphmod">
-           <button class="cancelmodal" id="canceladdgraph">&times;</button>
-           <h3>Add graph</h3>
-	      <textarea cols="70" rows="15" id="addedgraph"></textarea>
-           <p/>
-	      concept mappings: <input title="concepts which are coreferent between main graph and added graph" type="text"  id="conceptmappings" size="20" value="">
-           <p/>
-           <button class="addbutton mybutton" id="modifyaddgraph">apply</button>
-           <br />
-       </div>
+        <div class="grouping noborder" id="addgraphmod">
+            <button class="cancelmodal" id="canceladdgraph">&times;</button>
+            <h3>Add graph</h3>
+            <textarea cols="70" rows="15" id="addedgraph"></textarea>
+            <p />
+            concept mappings: <input title="concepts which are coreferent between main graph and added graph"
+                type="text" id="conceptmappings" size="20" value="">
+            <p />
+            <button class="addbutton mybutton" id="modifyaddgraph">apply</button>
+            <br />
+        </div>
     </div>
 
 
 </body>
+
 </html>

@@ -2,6 +2,7 @@
 
 ## Version 4.2.0
 * new edit mode: add graph, a simple possibility to join two graphs (via defined coreferent instances)
+* set top from instance modify popup
 * new tests
 
 ## Version 4.1.0

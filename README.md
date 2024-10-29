@@ -13,10 +13,13 @@ by LDC (https://catalog.ldc.upenn.edu/LDC2020T02)
 Current version 4.2.0 (see [CHANGES.md](CHANGES.md))
 
 ## TL;DR
-* if your updating from version up to 4.0.0: the file `server.py` has been renamed to `metamorphosed_server.py`
-* if you are updating from versions up to 3.3.0, please install an additional package:
+* if your updating from version up to 4.0.0: the file `server.py` has been renamed to `metamorphosed_server.py`, also install the additional packages:
 ```
-pip install smatchpp==1.7.0
+pip install rdflib==7.0.0 oxrdflib==0.3.7
+```
+* if you are updating from versions up to 3.3.0, please install an additional packages:
+```
+pip install smatchpp==1.7.0 rdflib==7.0.0 oxrdflib==0.3.7
 ```
 
 ## installation
