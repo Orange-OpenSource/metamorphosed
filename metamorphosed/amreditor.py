@@ -33,7 +33,7 @@
 # Software Name: MetAMoRphosED AMR-Editor
 # Author: Johannes Heinecke
 
-# version 4.2.0 as of 7th October 2024
+# version 4.3.0 as of 7th November 2024
 
 import re
 import readline
@@ -47,7 +47,7 @@ from metamorphosed.reification import getInstance
 import metamorphosed.amr_comparison as amr_comparison
 
 
-VERSION = "4.2.0"
+VERSION = "4.3.0"
 
 # terminology
 # instance  a / ...
@@ -351,6 +351,7 @@ class AMRProcessor:
             }
 
         graph = Digraph('amr_graph', format=format, graph_attr=graph_attr)
+        firstseen = False
         for s, p, o in self.triples:
             if inverse_of and p.endswith("-of"):
                 tmp = o
@@ -365,6 +366,10 @@ class AMRProcessor:
                     kwargs = {"fontname": "Lato",  #"Lato Black",
                               "style": "filled",
                               "fillcolor": "#ff7900"} #orangecolors.get(":snt1")}
+                if not firstseen:
+                    # mark the topnode
+                    kwargs["fontname"] = "Lato Black"
+                    firstseen = True
 
                 if AMRProcessor.pbframes:
                     argdoc = AMRProcessor.pbframes.getargdoc(o)

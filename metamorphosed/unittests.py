@@ -202,7 +202,7 @@ def test_info(client):
     response = client.get("/version")
     res = json.loads(response.data)
     #print("res", res, file=sys.stderr)
-    assert res == {'name': 'AMR Editor', 'version': '4.2.0', 'apiversion': '1.7.0'}
+    assert res == {'name': 'AMR Editor', 'version': '4.3.0', 'apiversion': '1.7.0'}
 
     response = client.get("/info", query_string={"withdata": True})
     res = json.loads(response.data)
@@ -254,7 +254,7 @@ def test_exportgraphs(client):
     assert len(zfp.infolist()) == 24
     fobj = zfp.infolist()[0]
     assert fobj.filename == "1.svg"
-    assert fobj.file_size == 11040
+    assert fobj.file_size == 11046
     contents = zfp.read(fobj.filename)
     assert b'<svg width="418pt" height="392pt"' in contents
 
@@ -267,7 +267,7 @@ def test_exportgraphs(client):
     fobj = zfp.infolist()[10]
     #print(fobj)
     assert fobj.filename == "11.pdf"
-    assert fobj.file_size == 9306
+    assert fobj.file_size == 13940
     contents = zfp.read(fobj.filename)
     assert contents.startswith(b'%PDF-1.5\n%\xb5\xed\xae\xfb\n4')
 
@@ -280,10 +280,10 @@ def test_exportgraphs(client):
     fobj = zfp.infolist()[11]
     #print(fobj)
     assert fobj.filename == "12.png"
-    assert fobj.file_size == 21430
+    assert fobj.file_size == 22346
     contents = zfp.read(fobj.filename)
     #print(contents)
-    assert contents.startswith(b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x01\xae\x00\x00\x01#\x08\x06\x00\x00\x00j')
+    assert contents.startswith(b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x01\xb0\x00\x00\x01#\x08\x06\x00\x00\x00S')
 
     #for x in zfp.infolist():
     #    print(x.filename, x.file_size)

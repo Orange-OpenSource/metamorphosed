@@ -1,5 +1,8 @@
 # Changes
 
+## Version 4.3.0
+* show top-node in bold font
+
 ## Version 4.2.0
 * new edit mode: add graph, a simple possibility to join two graphs (via defined coreferent instances)
 * set top from instance modify popup
