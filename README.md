@@ -1,19 +1,19 @@
 # metAMoRphosED: the AMR editor
 
-* _metAMoRphosED_ is a graphical editor to edit Abstract Meaning Representations graphs (in PENMAN) format easily. _metAMoRphosED_ displays the graph in a graphical format and allows adding/deleting instances, edges, attributes and comments in a simple way.
+* _metAMoRphosED_ is a graphical editor for easily editing Abstract Meaning Representations (AMRs) graphs. _metAMoRphosED_ displays the graph in a graphical format and allows adding/deleting instances, edges, attributes and comments in a simple way.
 * _metAMoRphosED_ makes it possible to add a graph to an existing graph.
-* _metAMoRphosED_ reads and writes AMR-files as proposed by the principal AMR site (https://amr.isi.edu/) and used in the AMr corpora proposed there and
-by LDC (https://catalog.ldc.upenn.edu/LDC2020T02)
-* _metAMoRphosED_ runs as a local Web server, an internet browser must be used to navigate through the sentences and modifiy them. If the edited file is under git version control, every modification is automatically commited to the local repository.
-* _metAMoRphosED_ can be started in comparison mode in order to compare two AMR files (e.g. a gold file and a system file, see section [AMR file comparison](#amr-file-comparison))
-* _metAMoRphosED_ provides to annotate coreferences in AMR graphs of sentences from a single text. See [coref/README.md](coref/README.md) for more information
-* _metAMoRphosED_ allows to download the displayed graphs as SVG or to export all graphs in either SVG, PDF or PNG format
-* _metAMoRphosED_ provides a script to calculate inter-annotator agreement (see section [Inter-annotator agreement](#inter-annotator-agreement))
+* _metAMoRphosED_ reads and writes AMR-files in(to) "PENMAN" format. For examples of this format, visit the [AMR guidelines](https://github.com/amrisi/amr-guidelines) and the corpora released by
+by LDC (https://catalog.ldc.upenn.edu/LDC2020T02).
+* _metAMoRphosED_ runs as a local Web server, an internet browser must be used to navigate through the sentences and modifiy them. If the edited file is under git version control, every modification is automatically committed to the local repository.
+* _metAMoRphosED_ can be started in comparison mode in order to compare two AMR files (e.g. a gold file and a predicted file, see section [AMR file comparison](#amr-file-comparison)).
+* _metAMoRphosED_ allows text-grounded annotatation of coreferences in AMR graphs. See [coref/README.md](coref/README.md) for more information.
+* _metAMoRphosED_ allows download of the displayed graphs as SVG or export of all graphs in either SVG, PDF or PNG format.
+* _metAMoRphosED_ provides a script to calculate inter-annotator agreement (see section [Inter-annotator agreement](#inter-annotator-agreement)).
 
 Current version 4.3.0 (see [CHANGES.md](CHANGES.md))
 
 ## TL;DR
-* if your updating from version up to 4.0.0: the file `server.py` has been renamed to `metamorphosed_server.py`, also install the additional packages:
+* if you're updating from version up to 4.0.0: the file `server.py` has been renamed to `metamorphosed_server.py`, also install the additional packages:
 ```
 pip install rdflib==7.0.0 oxrdflib==0.3.7
 ```
@@ -94,15 +94,15 @@ tox
         [--smatchpp]
 ```
 
-use our internet browser as GUI: https://localhost:<port>
+Use our internet browser as GUI: https://localhost:<port>
 
 
-* The `relations.txt` file must contain all the relations which are valid in the AMR graphs, the editor will show a warning for each relation found in a graph which is not mentioned in this file. The relations will also used for autocompletion. The file [metamorphosed/data/relations.txt](relations.txt) is used as default value
+* The `relations.txt` file must contain all the relations which are valid in the AMR graphs, the editor will show a warning for each relation found in a graph which is not mentioned in this file. The relations will also be used for autocompletion. The file [metamorphosed/data/relations.txt](relations.txt) is used as default value.
 * If `--concepts concepts.txt` is given, the concepts will be used for autocompletion.
 * The option `--reifications` loads a table with relations which can be reified (default: [metamorphosed/data/reification-able.txt](reification-able.txt))
-* `propbank-frames-dir` is the `frames` directory within the directory where `https://github.com/propbank/propbank-frames` has been cloned
-* If the edited file is under git version control, every click on `save` will create a git commit. In order to use a different user name, specify the user with `--author 'Name <mail@example.com>'`
-* `constraints.yml` a file which defines predicate and object constraints (i.e. no other predicate and object is allowed in a given context. E.g.
+* `propbank-frames-dir` is the `frames` directory within the directory where `https://github.com/propbank/propbank-frames` has been cloned.
+* If the edited file is under git version control, every click on `save` will create a git commit. In order to use a different user name, specify the user with `--author 'Name <mail@example.com>'`.
+* `constraints.yml` a file which defines predicate and object constraints (i.e. no other predicate and object is allowed in a given context. E.g.:
 
 ```
 subjects:
@@ -173,13 +173,13 @@ means that the predicate `:wiki` (starting at any subject) must have a string li
 The objects of all predicates `:quant` must match `\d+`, i.e. an integer
 
 
-**Note:** `relations.txt` and `constraints.yml` must not be modified in order not to break the unitary tests. Please use a personalised file.
+**Note:** `relations.txt` and `constraints.yml` must not be modified in order to not break the unitary tests. Please use a personalised file.
 
 
 
 ## Validate AMR files
 
-The script `amrdoc.py` can check whether concepts (with an suffixe line `-01`) are well defined in PropBank and that all used `:ARGn` relations are define for the given concept. If a liste of valid relations in given, it will detect relations in the AMR file which are not defined.
+The script `amrdoc.py` can check whether concepts (with an suffixe line `-01`) are well defined in PropBank and that all used `:ARGn` relations are defined for a given concept. If a list of valid relations in given, it will detect relations in the AMR file which are not defined.
 
 ```
 ./validate.py --validate \
@@ -189,11 +189,11 @@ The script `amrdoc.py` can check whether concepts (with an suffixe line `-01`) a
 	amrfile.txt
 ```
 
-if necessary, adapt a copy of `constraints.yml` to your needs.
+If necessary, adapt a copy of `constraints.yml` to your needs.
 
 # Editing
 
-Start the server with an AMR file. The file must have the same format as the official AMR distribution
+Start the server with an AMR file. The file must have the same format as the official AMR distribution, e.g.:
 
 ```
 # ::id a sentence id
@@ -204,7 +204,7 @@ Start the server with an AMR file. The file must have the same format as the off
 ...
 ```
 
-After a sentence an empty line must follow. If you start annotating new sentence, the initial PENMAN format must be at least en empty pair of parentheses: `()`
+After a sentence an empty line must follow. If you start annotating new sentence, the initial PENMAN format must be at least an empty pair of parentheses: `()`
 
 Once the server is up and running click on one of the navigation buttons to load a sentence (`first`, `preceding`, `next`, `last`)
 or enter a sentence number and lick `read sentence`. The sentence is shown in PENMAN format and in a graphical visualisation.
@@ -236,7 +236,7 @@ In oder to attach an edge to another starting instance, just click first on the 
 ### Adding a graph to the current graph
 
 This functionality allows to merge an AMR-graph and the current graph by specifiying the instances of both graphs which are coreferent.
-For instance if the editor shows the following graph:
+For instance, if the editor shows the following graph:
 
 <img src="doc/basegraph.png" alt="Merge graph with another"/>
 
@@ -280,15 +280,15 @@ It is possible to use wildcards to match any concepts or relations; so searching
   ...)
 ```
 
-* a regular expression: if the input is not a valid PENMAN graph, it is interpreted as a regular expression
-* For ID, Text and comment search, the input is always interpreted as a regular expression
+* a regular expression: if the input is not a valid PENMAN graph, it is interpreted as a regular expression.
+* For ID, Text and comment search, the input is always interpreted as a regular expression.
 
 Clicking on `-` minimizes the sentence/PENMAN/graphics windows:
 
 ![Minimized sentence/PENMAN/graphics](doc/minimized.png)
 
 The `sentence list` button opens a list of all sentences to choose a particular one.
-If the edited file is very large, filters can be applied to shorten the list (which may take too much time to load if not filtered)
+If the edited file is very large, filters can be applied to shorten the list (which may take too much time to load if not filtered).
 
 ![Sentence list](doc/sentencelist.png)
 
@@ -314,7 +314,7 @@ Choose format and numbers of sentences for which you want the graphic exported (
 (still Beta)
 
 When creating a new edge (relation) between two instances, _metamorphosed_ tries to guess the most likely label for this relation. The implementation is very simple, if the target instance is of type `name` the guessed relation is `:name`, if the concept of the source instance is `name`, `and` or `or`, the guessed relation is `:op2`, else if the source relations ends with `-01` etc, the guessed relations is `:ARGn`. In moste cases this has to be correct.
-However you can implement or more sophisticated classifier, trained on any data whic is available to you and use your classifier. To do so,
+However you can implement a more sophisticated classifier, trained on any data which is available to you and use your classifier. To do so,
 Subclass the class `Basic_EdgePredictor` in [metamorphosed/edge_predictor.py](edge_predictor.py) and implement your classifier. You must redefine the method
 `predict(self, source_concept, target_concept):`. For instance:
 
@@ -359,7 +359,7 @@ If you specify a second AMR file using the option `--compare <amr file>`, _metAM
 It is possible to search in the text, PENMAN and comments as in the edit mode. However, editing is not possible.
 
 To compare several files (for instance the annotations of multiple annotators), specify one of the files using the `-f <amr file 1>` option, and all other with  `--compare <amr file 2> <amr file 3> <amr file 4>`.
-_metAMoRphosED_ switches automatically in multifile mode. In order to see the difference (ans Smatch) between two files for the displayed sentence choose the two files to compare with the `comparisons`-selection bar
+_metAMoRphosED_ switches automatically in multifile mode. In order to see the difference (and Smatch) between the two files for the displayed sentence choose the two files to compare with the `comparisons`-selection bar
 
 ![AMR file comparison ](doc/comparison-multiple-files.png)
 
@@ -367,11 +367,10 @@ _metAMoRphosED_ switches automatically in multifile mode. In order to see the di
 
 see [coref/README.md](coref/README.md)
 
-
 # Inter-annotator agreement
 
 _metAMoRphosED_ comes with a script which allows to calculate an inter-annotator agreement (IAA) score on 2 or more files containing the same sentences. The metrics used are Smatch F1
-or the number if differences between two graphs (each concept or relation which is different or absent in one of the graphs is counted)
+or the number of differences between two graphs (each concept or relation which is different or absent in one of the graphs is counted).
 
 The IAA is calculated either by
 * for each sentence:
@@ -383,7 +382,7 @@ or
    * calculate the score for each sentence and keep the average
    * calculate the average of the score obtained for annotator pair
 
-By default Smatch is used. the option `--smatchpp`) switches to SmatchPP (https://github.com/flipz357/smatchpp)
+By default Smatch is used. The option `--smatchpp` switches to SmatchPP (https://github.com/flipz357/smatchpp)
 Whereas the default is faster, SmatchPP is using a different Solver (ILP instead of Smatch's HillClimber).
 * ILP always gives the same result (even for more complicated matches)
 * ILP provides verifiable and optimal results.
@@ -409,7 +408,7 @@ options:
   --sortcol SORTCOL     sort data in report file on column (needs --report)
 ```
 
-For instance the for 3 test files provided the IAA can be calculated by
+For instance for the 3 test files provided the IAA can be calculated by
 ```
 ./iaa.py -f metamorphosed/data/comptest_annot1.txt metamorphosed/data/comptest_annot3.txt metamorphosed/data/comptest_annot4.txt -d
 ```
@@ -460,13 +459,13 @@ sentence inter-annotator agreement Smatch F1: 58.86 differences: 4.4167
 
 # License
 
-* This software is under the [3-Clause BSD License](LICENSE)
+* This software is under the [3-Clause BSD License](LICENSE).
 
 
 # Reference
 
 * Johannes Heinecke (2023) <a href="https://aclanthology.org/2023.isa-1.4/">metAMoRphosED: a graphical editor for Abstract Meaning
-  Representation</a>. In ISA19 at International Workshop on Computational Semantics. Nancy
+  Representation</a>. In ISA19 at International Workshop on Computational Semantics. Nancy. France. Association for Computational Linguistics.
 
 ```
 @inproceedings{heinecke2023,
