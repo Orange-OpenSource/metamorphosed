@@ -1,6 +1,6 @@
 # metAMoRphosED: the AMR editor
 
-* _metAMoRphosED_ is a graphical editor for easily editing Abstract Meaning Representations graphs (AMRs). _metAMoRphosED_ displays the graph in a graphical format and allows adding/deleting instances, edges, attributes and comments in a simple way.
+* _metAMoRphosED_ is a graphical editor for easily editing Abstract Meaning Representation graphs (AMRs). _metAMoRphosED_ displays the graph in a graphical format and allows adding/deleting instances, edges, attributes and comments in a simple way.
 * _metAMoRphosED_ makes it possible to add a graph to an existing graph.
 * _metAMoRphosED_ reads and writes AMR-files in(to) "PENMAN" format. For examples of this format, visit the [AMR guidelines](https://github.com/amrisi/amr-guidelines) and the corpora released by
 by LDC (https://catalog.ldc.upenn.edu/LDC2020T02).
