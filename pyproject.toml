@@ -60,3 +60,10 @@ version = {attr = "metamorphosed.amreditor.VERSION"}
 #include = [
 #    "/metamorphosed",
 #]
+
+[tool.poetry]
+name = "metamorphosed"
+version = "4.3.0"
+description = "editor for Abstract Meaning Representation files"
+authors = ["Johannes Heinecke <johannes.heinecke@orange.fr>"]
+readme = "README.md"
