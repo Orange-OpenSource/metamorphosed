@@ -265,7 +265,6 @@ def test_exportgraphs(client):
     zfp = zipfile.ZipFile(fp, "r")
     assert len(zfp.infolist()) == 24
     fobj = zfp.infolist()[10]
-    print("ZZZZZZZ", dir(fobj))
     assert fobj.filename == "11.pdf"
     assert fobj.file_size in [13940, 13940]
     #assert fobj.file_size == 14028 #13940
