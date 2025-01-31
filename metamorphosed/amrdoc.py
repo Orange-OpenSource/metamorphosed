@@ -79,7 +79,10 @@ class AMRsentence:
             print("# ::snt %s" % self.text, file=ofp)
 
         if self.date:
-            print("# ::save-date %s %s" % (self.date, self.savedaterest), file=ofp)
+            if self.savedaterest:
+                print("# ::save-date %s %s" % (self.date, self.savedaterest), file=ofp)
+            else:
+                print("# ::save-date %s" % (self.date), file=ofp)
         elif self.savedateorig:
             print("# ::save-date %s" % self.savedateorig, file=ofp)
         for c in self.comments:
