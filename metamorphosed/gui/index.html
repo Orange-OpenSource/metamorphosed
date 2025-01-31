@@ -381,9 +381,11 @@ Else the input is interpreted as regular expression" placeholder="regex/PENMAN" 
         <div class="grouping noborder" id="addgraphmod">
             <button class="cancelmodal" id="canceladdgraph">&times;</button>
             <h3>Add graph</h3>
-            <textarea cols="70" rows="15" id="addedgraph"></textarea>
+            <textarea cols="70" rows="15" placeholder="( e / eat-01 
+   :ARG0 ... )" id="addedgraph"></textarea>
             <p />
-            concept mappings: <input title="concepts which are coreferent between main graph and added graph"
+            concept mappings: <input title="instances which are coreferent between main graph and added graph (variable names)"
+                placeholder="v/v2 w/w2" 
                 type="text" id="conceptmappings" size="20" value="">
             <p />
             <button class="addbutton mybutton" id="modifyaddgraph">apply</button>
