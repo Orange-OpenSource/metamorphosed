@@ -639,7 +639,7 @@ function formatAMR(data) {
 	$("#g2resultat").append('<button class="toggleresult" id="togglesvggraph" >&#8210;</button>');
 	$("#togglesvggraph").click(function () {
 		//console.log("RRR", this.id);
-		ToggleDiv('#innersvggraph_' + currentsentnum, "#togglesvggraph");
+		ToggleDiv('#svggraph_' + currentsentnum, "#togglesvggraph");
 	});
 
 	// svg graph in an inner div
@@ -653,7 +653,7 @@ function formatAMR(data) {
 	}
 
 	if ('#innersvggraph_' + currentsentnum in visible_divselectors && visible_divselectors['#innersvggraph_' + currentsentnum] == false) {
-		ToggleDiv('#innersvggraph_' + currentsentnum, "#togglesvggraph");
+		ToggleDiv('#svggraph_' + currentsentnum, "#togglesvggraph");
 	}
 
 	$('#svggraph_' + currentsentnum).append('<a id="semgraph_' + currentsentnum + '" download="graph.svg" type="image/svg+xml"><button class="mybutton">download image</button></a>');

@@ -47,7 +47,7 @@ from metamorphosed.reification import getInstance
 import metamorphosed.amr_comparison as amr_comparison
 
 
-VERSION = "4.3.0"
+VERSION = "4.3.1"
 
 # terminology
 # instance  a / ...

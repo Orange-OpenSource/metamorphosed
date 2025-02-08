@@ -223,9 +223,9 @@ input {
 .text {
   border-radius: 10px;
   border: solid 1px #d6d6d6;
-  margin: 10px 10px 10px 10px;
+  margin: 10px 10px 20px 10px;
   padding: 10px 10px 10px 10px;
-  width: 60%;
+  /*width: 60%; */
 }
 
 .textr {
@@ -392,8 +392,8 @@ input {
   color: rgb(100, 100, 100);
   border: 1px solid #d6d6d6;
   border-radius: 50%;
-  width: 25px;
-  height: 25px;
+  width: 31px;
+  height: 31px;
   top: 0;
   left: 0;
   margin-top: -10px;

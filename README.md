@@ -10,7 +10,7 @@ by LDC (https://catalog.ldc.upenn.edu/LDC2020T02)
 * _metAMoRphosED_ allows to download the displayed graphs as SVG or to export all graphs in either SVG, PDF or PNG format
 * _metAMoRphosED_ provides a script to calculate inter-annotator agreement (see section [Inter-annotator agreement](#inter-annotator-agreement))
 
-Current version 4.3.0 (see [CHANGES.md](CHANGES.md))
+Current version 4.3.1 (see [CHANGES.md](CHANGES.md))
 
 ## TL;DR
 * if your updating from version up to 4.0.0: the file `server.py` has been renamed to `metamorphosed_server.py`, also install the additional packages:

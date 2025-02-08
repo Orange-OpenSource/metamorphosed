@@ -1,5 +1,8 @@
 # Changes
 
+## Version 4.3.1
+* minor layout changes
+
 ## Version 4.3.0
 * show top-node in bold font
 
