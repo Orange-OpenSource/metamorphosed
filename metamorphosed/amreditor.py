@@ -2,7 +2,7 @@
 
 # This library is under the 3-Clause BSD License
 #
-# Copyright (c) 2022-2024,  Orange
+# Copyright (c) 2022-2025,  Orange
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 # Software Name: MetAMoRphosED AMR-Editor
 # Author: Johannes Heinecke
 
-# version 4.3.0 as of 7th November 2024
+# version 4.4.0 as of 12th February 2025
 
 import re
 import readline
@@ -47,7 +47,7 @@ from metamorphosed.reification import getInstance
 import metamorphosed.amr_comparison as amr_comparison
 
 
-VERSION = "4.3.1"
+VERSION = "4.4.0"
 
 # terminology
 # instance  a / ...
@@ -103,6 +103,7 @@ class AMRProcessor:
         self.inserver = inserver # we are in an server instance
         self.isDisconnected = False
         self.isNumber = re.compile(r"^[+-]?\d*\.?\d+$")
+        self.isValidVar = re.compile(r"^[a-z][A-Za-z0-9_]*$")
         self.lastpm = None
         self.valid = True
         self.isparsed = False
@@ -352,8 +353,9 @@ class AMRProcessor:
 
         graph = Digraph('amr_graph', format=format, graph_attr=graph_attr)
         firstseen = False
+        ct_literal = 0
         for s, p, o in self.triples:
-            if inverse_of and p.endswith("-of"):
+            if inverse_of and p.endswith("-of") and not p.startswith(":consist"):
                 tmp = o
                 o = s
                 s = tmp
@@ -404,7 +406,8 @@ class AMRProcessor:
 
                 if o not in self.vars:
                     oo = o.replace('"', 'DQUOTE').replace(':', 'COLON').replace('\\', 'BSLASH')
-                    onodeid = "%s_%s" % (s, oo)
+                    onodeid = "%s_%s_%s" % (s, ct_literal, oo)
+                    ct_literal += 1
                     kwargs["fillcolor"] = orangecolors.get("EN")
                     kwargs["style"] = "filled"
 
@@ -556,6 +559,34 @@ class AMRProcessor:
                 self.readpenman(npm)
 
         return msgs
+
+    def renamevar(self, oldname, newname):
+        if newname in self.vars:
+            return ["variable '%s' already used in graph" % newname]
+        if ord(newname[0]) < 97 or ord(newname[0]) > 122:
+            return ["new variable '%s' must start with a...z" % newname]
+        mo = self.isValidVar.match(newname)
+        if not mo:
+            return ["new variable '%s' invalid. Must match '%s'" % (newname, self.isValidVar.pattern)]
+        if oldname not in self.vars:
+            return ["variable '%s' notin graph" % oldname]
+
+        newvars = {}
+        for k, v in self.vars.items():
+            if k == oldname:
+                k = newname
+            newvars[k] = v
+        self.vars = newvars
+
+        newtriples = [] 
+        for s, p, o in self.triples:
+            if s == oldname:
+                s = newname
+            if p != ":instance":
+                if o == oldname:
+                    o = newname
+            newtriples.append((s, p, o))
+        self.triples = newtriples
 
     def addconcept(self, concept):
         var = self.newvar(concept)

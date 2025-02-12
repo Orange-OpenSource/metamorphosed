@@ -280,6 +280,19 @@
                 :name (n2 / name
                     :op1 "Thermopylae")))))
 
+# ::id sentence 25
+# ::snt e ate two apples on February 2nd 2022
+(e / eat-01
+    :ARG0 (h / person
+            :name (n / name
+                :op1 "e"))
+    :ARG1 (a / apple
+        :quant 2)
+    :time (d / date-entity
+        :day 2
+        :month 2
+        :year 2022))
+
 # ::id sentence last (must be last)
 # ::snt Is Joe Biden the US president?
 (h / have-org-role-91

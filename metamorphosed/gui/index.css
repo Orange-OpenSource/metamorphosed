@@ -1,7 +1,7 @@
 /*
  This library is under the 3-Clause BSD License
 
- Copyright (c) 2022-2023,  Orange
+ Copyright (c) 2022-2025,  Orange
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -228,7 +228,15 @@ input {
   /*width: 60%; */
 }
 
-.textr {
+.doctext {
+  border-radius: 10px;
+  border: solid 1px #d6d6d6;
+  margin: 10px 10px 10px 10px;
+  padding: 10px 10px 10px 10px;
+  width: 60%;
+}
+
+.doctextr {
   border-radius: 10px;
   border: solid 1px #d6d6d6;
   margin: 10px 10px 10px 10px;
@@ -341,6 +349,10 @@ input {
   padding-left: 3px;
   background-color: #ffe8f7;
 
+}
+
+#conceptmappings {
+  background-color: #ffe8f7;
 }
 
 .grouping {

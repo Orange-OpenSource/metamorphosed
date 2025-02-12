@@ -39,12 +39,11 @@
     <button class="history mybutton" id="redo" disabled>redo</button>
     <button class="mycheck mybutton" id="reverse_of" title="show '-of' relations reversed">"-of" reversed</button>
     <!-- reverse "-of": <input type="checkbox" class="mycheck" id="QQreverse_of"-->
-    filename: <span id="filename"></span> (<span id="numsent"></span> sentences) <button class="save mybutton"
-        id="save">&#x1F4BE; save file</button>
     &nbsp;&nbsp;<button class="mybutton" id="choosesentence">sentence list</button>
     &nbsp;&nbsp;<button class="mybutton" id="togglehelp">toggle help</button>
     &nbsp;&nbsp;<button class="mybutton" id="saveallSVG">export visualised graphs</button>
-
+    <br>
+    <button class="save mybutton" id="save">&#x1F4BE; save file</button> filename: <span id="filename"></span> (<span id="numsent"></span> sentences)
     <p />
 
     <div class="editmode" id="commands">
@@ -122,7 +121,19 @@
                     <td><button class="openbutton mybutton" id="addgraph">open edit window</button></td>
                 </tr>
                 <tr>
-                    <td colspan="3"><button class="cleanbutton mybutton" id="cleanfields">clean all</button></td </tr>
+                    <td>G)</td>
+                    <td>rename variable:</td>
+                    <td>
+                        <select class="validvars" name="varg1" id="var_to_rename"></select>
+                        <input class="varfield" placeholder="variable" title="new name for the given variable"
+                        type="text" id="newvarname" value="">
+                        <button class="addbutton mybutton" id="renamevar">rename</button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="3"><button class="cleanbutton mybutton" id="cleanfields">clean all</button></td>
+                </tr>
             </table>
         </div>
 

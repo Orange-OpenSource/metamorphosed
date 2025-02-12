@@ -2,7 +2,7 @@
 
 # This library is under the 3-Clause BSD License
 #
-# Copyright (c) 2022-2024,  Orange
+# Copyright (c) 2022-2025,  Orange
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -202,7 +202,7 @@ def test_info(client):
     response = client.get("/version")
     res = json.loads(response.data)
     #print("res", res, file=sys.stderr)
-    assert res == {'name': 'AMR Editor', 'version': '4.3.1', 'apiversion': '1.7.0'}
+    assert res == {'name': 'AMR Editor', 'version': '4.4.0', 'apiversion': '1.8.0'}
 
     response = client.get("/info", query_string={"withdata": True})
     res = json.loads(response.data)
@@ -251,10 +251,10 @@ def test_exportgraphs(client):
     #    #print(zfp.read(x.filename))
     #    #break
 
-    assert len(zfp.infolist()) == 24
+    assert len(zfp.infolist()) == 25
     fobj = zfp.infolist()[0]
     assert fobj.filename == "1.svg"
-    assert fobj.file_size == 11046
+    assert fobj.file_size == 11086 #11046
     contents = zfp.read(fobj.filename)
     assert b'<svg width="418pt" height="392pt"' in contents
 
@@ -263,7 +263,7 @@ def test_exportgraphs(client):
     fp = io.BytesIO(response.data)
     #print("res", response.data)
     zfp = zipfile.ZipFile(fp, "r")
-    assert len(zfp.infolist()) == 24
+    assert len(zfp.infolist()) == 25
     fobj = zfp.infolist()[10]
     assert fobj.filename == "11.pdf"
     assert fobj.file_size in [14028, 13940]
@@ -276,7 +276,7 @@ def test_exportgraphs(client):
     fp = io.BytesIO(response.data)
     #print("res", response.data)
     zfp = zipfile.ZipFile(fp, "r")
-    assert len(zfp.infolist()) == 24
+    assert len(zfp.infolist()) == 25
     fobj = zfp.infolist()[11]
     #print(fobj)
     assert fobj.filename == "12.png"
@@ -335,7 +335,7 @@ def test_edit_last(client):
     res = json.loads(response.data)
     #print("res", json.dumps(res, indent=2))
     assert "(h / have-org-role-91\n   :ARG0 (p / person\n            :name (n / name\n                     :op1 \"Joe\"\n" in res["penman"]
-    assert res["num"] == 25
+    assert res["num"] == 26
 
 
 def test_edit_next(client):
@@ -567,7 +567,7 @@ def test_read_num_too_big(client):
     response = client.get("/read", query_string={"num": 100})
     res = json.loads(response.data)
     #print("res", res)
-    assert res["error"] == "invalid sentence number: must be between 1 and 25"
+    assert res["error"] == "invalid sentence number: must be between 1 and 26"
 
 
 def test_duplicate_edge(client):
@@ -807,7 +807,7 @@ def test_bad_api_usage(client):
     response = client.get("/read", query_string={"num": 0})
     assert response.status_code == 400
     res = json.loads(response.text)
-    assert res == {'error': 'invalid sentence number: must be between 1 and 25'}
+    assert res == {'error': 'invalid sentence number: must be between 1 and 26'}
 
     response = client.get("/edit", query_string={"num": 3, "reifyxx": ":location <>  be-located-at-91"})
     assert response.status_code == 400
@@ -817,7 +817,7 @@ def test_bad_api_usage(client):
     response = client.get("/edit", query_string={"num": 333, "reify": ":location <>  be-located-at-91"})
     assert response.status_code == 400
     res = json.loads(response.text)
-    assert res == {'error': 'invalid sentence number: must be between 1 and 25'}
+    assert res == {'error': 'invalid sentence number: must be between 1 and 26'}
 
     response = client.get("/edit", query_string={"num": 3})
     assert response.status_code == 400
@@ -934,6 +934,30 @@ def test_dereify(client):
     res = json.loads(response.data)
     #print("res2", json.dumps(res["penman"], indent=2))
     assert res["penman"] == '(k / kill-01\n   :ARG0 (c / cat)\n   :ARG1 (m / mouse)\n   :location (k2 / kitchen)\n   :time (d / date-entity\n            :dayperiod (n / night)))'
+
+
+
+def test_renamevar(client):
+    response = client.get("/read", query_string={"num": 25})
+    response = client.get("/edit", query_string={"num": 25, "oldvarname": "a", "newvarname": "aaa"})
+    res = json.loads(response.data)
+    #print("res2", json.dumps(res["penman"], indent=2))
+    assert res["penman"] == '(e / eat-01\n   :ARG0 (h / person\n            :name (n / name\n                     :op1 "e"))\n   :ARG1 (aaa / apple\n              :quant 2)\n   :time (d / date-entity\n            :day 2\n            :month 2\n            :year 2022))'
+
+
+def test_renamevar_exsting_or_bad_var(client):
+    response = client.get("/read", query_string={"num": 25})
+    res = json.loads(response.data)
+    prevmod = res["prevmod"]
+    response = client.get("/edit", query_string={"num": 25, "prevmod": prevmod, "oldvarname": "e", "newvarname": "d"})
+    res = json.loads(response.data)
+    #print("res2", json.dumps(res, indent=2))
+    assert res["warning"][0] == "variable 'd' already used in graph"
+
+    response = client.get("/edit", query_string={"num": 25, "prevmod": prevmod + 1, "oldvarname": "e", "newvarname": "d,//"})
+    res = json.loads(response.data)
+    #print("res2", json.dumps(res, indent=2))
+    assert res["warning"][0] == "new variable 'd,//' invalid. Must match '^[a-z][A-Za-z0-9_]*$'"
 
 
 # depends on two preceding tests, fails if these fail too

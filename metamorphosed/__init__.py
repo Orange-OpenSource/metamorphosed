@@ -71,7 +71,7 @@ import metamorphosed.installJQ as iJQ
 # find an example in AMR data
 # call an AMRserver for an (empty) sentence ? rather not
 
-APIVERSION = "1.7.0"
+APIVERSION = "1.8.0"
 
 
 class AMR_Edit_Server:
@@ -268,6 +268,9 @@ class AMR_Edit_Server:
             addgraph = self.checkParameter(request, 'addgraph', 'string', isOptional=True, defaultValue=None)
             mappings = self.checkParameter(request, 'mappings', 'string', isOptional=True, defaultValue=None)
 
+            oldvarname = self.checkParameter(request, 'oldvarname', 'string', isOptional=True, defaultValue=None)
+            newvarname = self.checkParameter(request, 'newvarname', 'string', isOptional=True, defaultValue=None)
+
             if sentnum < 1 or sentnum > len(self.amrdoc.sentences):
                 # creates an http status code 400
                 raise ServerException("invalid sentence number: must be between 1 and %d" % len(self.amrdoc.sentences))
@@ -290,7 +293,8 @@ class AMR_Edit_Server:
                            "reify", "dereify",
                            "newtop",
                            "prevmod",
-                           "addgraph", "mappings"]
+                           "addgraph", "mappings",
+                           "newvarname", "oldvarname"]
 
             #self.findinvalidparameters(request, validparams)
             self.validParameters(request, set(validparams))
@@ -387,6 +391,8 @@ class AMR_Edit_Server:
                 ap.reify(reify)
             elif dereify:
                 rtc = ap.dereify(dereify)
+            elif oldvarname and newvarname:
+                rtc = ap.renamevar(oldvarname, newvarname)
             elif addgraph:
                 if not mappings or not mappings.strip():
                     raise ServerException("Missing variable mappings. use 'v1/v2 ...'")

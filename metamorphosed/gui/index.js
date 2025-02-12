@@ -1,7 +1,7 @@
 /*
  This library is under the 3-Clause BSD License
 
- Copyright (c) 2022-2024,  Orange
+ Copyright (c) 2022-2025,  Orange
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -662,11 +662,11 @@ function formatAMR(data) {
 	if (data.framedoc || data.reldoc) {
 	    $("#resultat").append('<div class="documentation" id="doc_' + currentsentnum + '">');
 	    if (data.framedoc) {
-		$('#doc_' + currentsentnum).append('<div class="text" id="framedoc_' + currentsentnum + '">');
+		$('#doc_' + currentsentnum).append('<div class="doctext" id="framedoc_' + currentsentnum + '">');
 		$('#framedoc_' + currentsentnum).append(data.framedoc);
 	    }
 	    if (data.reldoc) {
-		$('#doc_' + currentsentnum).append('<div class="textr" id="reldoc_' + currentsentnum + '">');
+		$('#doc_' + currentsentnum).append('<div class="doctextr" id="reldoc_' + currentsentnum + '">');
 		$('#reldoc_' + currentsentnum).append(data.reldoc);
 	    }
 	}
@@ -714,6 +714,12 @@ $(document).ready(function () {
 		//console.log("zzzz", event);
 		if (event.keyCode === 13) {
 			$("#settop").click();
+		}
+	});
+	$("#newvarname").keyup(function (event) {
+		//console.log("zzzz", event);
+		if (event.keyCode === 13) {
+			$("#renamevar").click();
 		}
 	});
 	$("#sentnum").keyup(function (event) {
@@ -1021,6 +1027,12 @@ $(document).ready(function () {
 		}
 		else if (this.id == "settop") {
 			params = { "newtop": $("#topnode").val() }
+		}
+		else if (this.id == "renamevar") {
+			params = {
+				"oldvarname": $("#var_to_rename").val(),
+                "newvarname": $("#newvarname").val(),
+			 }
 		}
 		else if (this.id == "setinstancetop") {
 			$(".editmode").hide();
