@@ -733,7 +733,6 @@ td.framealiastable {
 
 }
 
-
 .ui-autocomplete.ui-widget {
     /*font-family: sans; */
     font-family:  Urbanist, "Be Vietnam Pro";
@@ -750,3 +749,12 @@ td.framealiastable {
   overflow-x: hidden;
 }
 
+.tablehoriz {
+  display: inline-block;
+  *display: inline;
+  vertical-align: top;
+}
+
+.cmpval {
+  text-align: right;
+}

@@ -1,21 +1,21 @@
 /*
  This library is under the 3-Clause BSD License
 
- Copyright (c) 2022-2024,  Orange
+ Copyright (c) 2022-2025,  Orange
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
  modification, are permitted provided that the following conditions are met:
-    * Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.
+	* Redistributions of source code must retain the above copyright
+	  notice, this list of conditions and the following disclaimer.
  
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
+	* Redistributions in binary form must reproduce the above copyright
+	  notice, this list of conditions and the following disclaimer in the
+	  documentation and/or other materials provided with the distribution.
  
-    * Neither the name of Orange nor the
-      names of its contributors may be used to endorse or promote products
-      derived from this software without specific prior written permission.
+	* Neither the name of Orange nor the
+	  names of its contributors may be used to endorse or promote products
+	  derived from this software without specific prior written permission.
  
  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -49,13 +49,13 @@ function getServerInfo() {
 	//var urlbase = 'http://' + window.location.host + ':' + $("#port").val() + '/';
 	//URL_BASE = 'http://' + window.location.hostname + ':' + $("#port").val() + '/info';
 	//URL_BASE = 'http://' + window.location.host + '/info';
-        URL_BASE = 'info';
+	URL_BASE = 'info';
 
 
 	$.ajax({
 		url: URL_BASE,
 		type: 'GET',
- 	        data: {"withdata": true},
+		data: { "withdata": true },
 		headers: {
 			'Content-type': 'text/plain'
 
@@ -82,55 +82,55 @@ function getServerInfo() {
 			//		$('#td_k_' + key).append(key);
 			//		$('#td_v_' + key).append(value);
 			//	});
-		    readonly = data.readonly;
-		    if (readonly) {
-			$("#editing").hide();
-			$("#save").hide();
-			$("#mainheader").html($("#mainheader").html() + " (read-only)");
-		    }
-		    $("#numberofsent").html(data.numsent);
-	
-		    //console.log("BBB", data);
-		    if (data.otherfilenames.length > 1) {
-			$('.comparisons').empty();
-			data.otherfilenames.splice(0, 0, data.filename);
-			//console.log("BBB", data.otherfilenames);
-			$.each(data.comparisons,
-			       function (key, value) {
-				   //console.log("AAA", key, value[0], value[1]);
-				   $('.comparisons').append('<option value="' + value +'">' + data.otherfilenames[value[0]-1] + " / "  + data.otherfilenames[value[1]-1]);
-			       });
-			$(".onlytwo").hide();
-			$(".several").show();
-		    } else {
-			$("#leftfn").html(data.filename);
-			$("#rightfn").html(data.otherfilenames[0]);
-			$(".onlytwo").show();
-			$(".several").hide();
-			$('.comparisons').append('<option value="1,2">1,2');
-		    }
+			readonly = data.readonly;
+			if (readonly) {
+				$("#editing").hide();
+				$("#save").hide();
+				$("#mainheader").html($("#mainheader").html() + " (read-only)");
+			}
+			$("#numberofsent").html(data.numsent);
 
-		    console.log("AAA", $('.comparisons').val());
-		    $("#version").empty();
-		    $("#version").append(data.version);
-		    $("#version2").empty();
-		    $("#version2").append(data.version);
-		    $("#apiversion").empty();
-		    $("#apiversion").append(data.apiversion);
+			console.log("BBB", data);
+			if (data.otherfilenames.length > 1) {
+				$('.comparisons').empty();
+				data.otherfilenames.splice(0, 0, data.filename);
+				//console.log("BBB", data.comparisons);
+				$.each(data.comparisons,
+					function (key, value) {
+						console.log("AAAbb", key, value[0], value[1]);
+						$('.comparisons').append('<option value="' + value + '">' + data.otherfilenames[value[0] - 1] + " / " + data.otherfilenames[value[1] - 1]);
+					});
+				$(".onlytwo").hide();
+				$(".several").show();
+			} else {
+				$("#leftfn").html(data.filename);
+				$("#rightfn").html(data.otherfilenames[0]);
+				$(".onlytwo").show();
+				$(".several").hide();
+				$('.comparisons').append('<option value="1,2">1,2');
+			}
 
-		    $("#hostname").empty();
-		    $("#hostname").append(data.hostname);
-		    $("#dir").empty();
-		    $("#dir").append(data.pwd);
-		    $("#cmdl").empty();
-		    $("#cmdl").append(data.cmdline.replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
+			console.log("AAA", $('.comparisons').val());
+			$("#version").empty();
+			$("#version").append(data.version);
+			$("#version2").empty();
+			$("#version2").append(data.version);
+			$("#apiversion").empty();
+			$("#apiversion").append(data.apiversion);
 
-		    /*
-		    if (data.relations) {
+			$("#hostname").empty();
+			$("#hostname").append(data.hostname);
+			$("#dir").empty();
+			$("#dir").append(data.pwd);
+			$("#cmdl").empty();
+			$("#cmdl").append(data.cmdline.replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
+
+			/*
+			if (data.relations) {
 			relationlist = data.relations;
 			// autocomplete for the fields where relations can be set
 			$(function () {
-			      $("#edgelabel").autocomplete({
+				  $("#edgelabel").autocomplete({
 				  source: relationlist,
 					  // https://www.plus2net.com/jquery/msg-demo/autocomplete-position.php
 					  position: {my: "left top", at: "left bottom"}
@@ -138,7 +138,7 @@ function getServerInfo() {
 			  });
 
 			$(function () {
-			      $("#relationforliteral").autocomplete({
+				  $("#relationforliteral").autocomplete({
 				  source: relationlist,
 					  // https://www.plus2net.com/jquery/msg-demo/autocomplete-position.php
 					  position: {my: "left top", at: "left bottom"}
@@ -146,7 +146,7 @@ function getServerInfo() {
 			  });
 
 			$(function () {
-			      $("#modifiededge").autocomplete({
+				  $("#modifiededge").autocomplete({
 				  source: relationlist,
 					  // https://www.plus2net.com/jquery/msg-demo/autocomplete-position.php
 					  position: {my: "left top", at: "left bottom"},
@@ -154,26 +154,26 @@ function getServerInfo() {
 				  });
 			  });
 			$(function () {
-			      $("#relationforliteral2").autocomplete({
+				  $("#relationforliteral2").autocomplete({
 				  source: relationlist,
 					  // https://www.plus2net.com/jquery/msg-demo/autocomplete-position.php
 					  position: {my: "left top", at: "left bottom"},
 				  appendTo: "#modconcept"
 				  });
 			  });
-		    }
+			}
 
-		    if (data.concepts) {
+			if (data.concepts) {
 			conceptlist = data.concepts
 			$(function () {
-			      $("#concept").autocomplete({
+				  $("#concept").autocomplete({
 				  source: conceptlist,
 					  // https://www.plus2net.com/jquery/msg-demo/autocomplete-position.php
 					  position: {my: "left top", at: "left bottom"}
 				  });
 			  });
 			$(function () {
-			      $("#modifiedconcept").autocomplete({
+				  $("#modifiedconcept").autocomplete({
 				  source: conceptlist,
 					  // https://www.plus2net.com/jquery/msg-demo/autocomplete-position.php
 					  position: {my: "left top", at: "left bottom"},
@@ -182,22 +182,22 @@ function getServerInfo() {
 			  });
 			  }*/
 
-		    if (data.sentences) {
-			sentencelist = data.sentences;
-			for (var i =0; i<data.sentences.length; ++i) {
-			    var optionstring = data.sentences[i][0] + ": " + data.sentences[i][1];
-			    if (optionstring.length > 150) {
-				optionstring = optionstring.substring(optionstring, 150) + "...";
-			    }
-			    $('#sentencelist').append('<option value="' + (i+1) +'">' + optionstring);
-			}
+			if (data.sentences) {
+				sentencelist = data.sentences;
+				for (var i = 0; i < data.sentences.length; ++i) {
+					var optionstring = data.sentences[i][0] + ": " + data.sentences[i][1];
+					if (optionstring.length > 150) {
+						optionstring = optionstring.substring(optionstring, 150) + "...";
+					}
+					$('#sentencelist').append('<option value="' + (i + 1) + '">' + optionstring);
+				}
 
-			$("#sentencelist").change(function() {
-                           $("#sentnum").val($(this).val());
-                           $("#lire").click();
-                           $("#sentmodal").hide();
-			});
-		    }
+				$("#sentencelist").change(function () {
+					$("#sentnum").val($(this).val());
+					$("#lire").click();
+					$("#sentmodal").hide();
+				});
+			}
 		},
 		error: function (data) {
 			// do something else
@@ -231,8 +231,8 @@ function downloadSVG(svgelem, ident, filename) {
 var visible_divselectors = {};
 
 function getcompval(obj) {
-    // reload sentence when changing pair to be compared
-    $("#lire").click();
+	// reload sentence when changing pair to be compared
+	$("#lire").click();
 }
 
 function ToggleDiv(selector, togglebutton) {
@@ -256,10 +256,10 @@ function ToggleComments() {
 	} else {
 		$("#commentmodal").show();
 		$("#commentmodal").draggable();
-			$("#cancelcomments").click(function(){
-				//$("#conceptsetmodal").fadeOut();
-				$("#commentmodal").hide();
-			});			
+		$("#cancelcomments").click(function () {
+			//$("#conceptsetmodal").fadeOut();
+			$("#commentmodal").hide();
+		});
 
 	}
 }
@@ -270,10 +270,10 @@ function ShowSentences() {
 	} else {
 		$("#sentmodal").show();
 		$("#sentmodal").draggable();
-			$("#cancelsentlist").click(function(){
-				//$("#conceptsetmodal").fadeOut();
-				$("#sentmodal").hide();
-			});			
+		$("#cancelsentlist").click(function () {
+			//$("#conceptsetmodal").fadeOut();
+			$("#sentmodal").hide();
+		});
 	}
 }
 
@@ -310,15 +310,15 @@ function info(event) {
 }
 /*
 function info(event) {
-    //console.log("EEEE", event);
-    //console.log("EEEF", event.target.parentNode.id);
-    //console.log("EEEG", event.target.parentNode.children[1]);
+	//console.log("EEEE", event);
+	//console.log("EEEF", event.target.parentNode.id);
+	//console.log("EEEG", event.target.parentNode.children[1]);
 	node = event.target.textContent;
 
 	unhighlight();
 
 	if (readonly) {
-	    return;
+		return;
 	}
 	if (event.target.parentNode.id.startsWith("node ")) {
 		// edit node
@@ -341,7 +341,7 @@ function info(event) {
 			lastclickededge = null;
 			runcommand(params);
 		} else if (lastclickednode != null) {
-		    	var params = {
+				var params = {
 				"start": lastclickednode,
 				"end": modconceptvar,
 				"label": "todo"
@@ -380,12 +380,12 @@ function info(event) {
 		
 
 	} else if (event.target.parentNode.id.startsWith("edge#")) {
-	    if (lastclickedElement != null) {
+		if (lastclickedElement != null) {
 		lastclickedElement.removeAttribute("class");
 		lastclickednode = null;
 		lastclickededge = null;
 		$(".modal").hide();
-	    }
+		}
 
 		// we modify an edge
 		$(".modal").hide();
@@ -415,7 +415,7 @@ function info(event) {
 		$("#relationto").append(modedge_end);
 		$("#newsource").val("");
 
-          	// open edit modal
+				// open edit modal
 		$("#edgesetmodal").css("top", event.pageY + "px");
 		$("#edgesetmodal").css("left", event.pageX + "px");
 		$("#edgesetmodal").show();
@@ -435,7 +435,7 @@ function info(event) {
 		$(".modal").hide();
 		//$("#modlit").show();
 		//console.log("ZZZZ", event.target.parentNode.id.split(" "));
-                const elems = event.target.parentNode.id.split(" ");
+				const elems = event.target.parentNode.id.split(" ");
 		const toto = elems.slice(3);
 		const literalname = toto.join(" ");
 		//const literalname = event.target.parentNode.id.split(" ")[3];
@@ -453,13 +453,13 @@ function info(event) {
 			$("#literalsetmodal").hide();
 		});	
 	} else {
-	    // even if a node is selected, unselect it
-	    if (lastclickedElement != null) {
+		// even if a node is selected, unselect it
+		if (lastclickedElement != null) {
 		lastclickedElement.removeAttribute("class");
 		lastclickednode = null;
 		lastclickededge = null;
 		$(".modal").hide();
-	    }
+		}
 
 	}
 }
@@ -495,9 +495,9 @@ function runcommand(params) {
 			$("#resultat").append('<div class="error" id="error">');
 			//$('#error').append(data.responseJSON.error);
 			if (data.responseJSON == undefined) {
-			    $('#error').append("serveur not responding");
+				$('#error').append("serveur not responding");
 			} else {
-			    $('#error').append(data.responseJSON.error);
+				$('#error').append(data.responseJSON.error);
 			}
 		}
 	});
@@ -557,30 +557,30 @@ function formatOne(number, svg, penman, fn) {
 
 
 function formatAMR(data) {
-    lastclickededge = null;
-    lastclickednode = null;
-    lastclickedElement = null;
+	lastclickededge = null;
+	lastclickednode = null;
+	lastclickedElement = null;
 
-    sentenceloaded = true;
-    currentsentnum = $("#sentnum").val();
-    if (data.warning) {
+	sentenceloaded = true;
+	currentsentnum = $("#sentnum").val();
+	if (data.warning) {
 		// display warnings
 		$("#resultat").append('<div class="error" id="errordiv">');
 		$("#errordiv").append('<ul id="error">');
 		$.each(data.warning,
 			function (key, value) {
 				$('#error').append('<li>' + value);
-		       });
+			});
 	}
 
 	readonly = data.readonly;
 	if (readonly) {
-	    $("#editing").hide();
-	    $("#save").hide();
+		$("#editing").hide();
+		$("#save").hide();
 	}
 
 	// set valid variables to <select> tags
-	
+
 	// toggle button to hide/show the sentence id and the sentence
 	$("#resultat").append('<button class="toggleresult" id="togglesentence" >&#8210;</button>');
 	$("#togglesentence").click(function () {
@@ -594,43 +594,55 @@ function formatAMR(data) {
 
 	var lastchanged = "";
 	if (data.lastchanged) {
-	    lastchanged = " (" + data.lastchanged + ")";
+		lastchanged = " (" + data.lastchanged + ")";
 	}
-	$('#innertext_' + currentsentnum).append("<h4>" + data.sentid +lastchanged);
-        var escapedtext = data.text; //.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+	$('#innertext_' + currentsentnum).append("<h4>" + data.sentid + lastchanged);
+	var escapedtext = data.text; //.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 	$('#innertext_' + currentsentnum).append(escapedtext);
 	$('#smatch').html(data.smatch);
 
 	if (data.smatch < 100) {
-	    $(".smatch").css("color", "red"); //"#ffb4e6");
+		$(".smatch").css("color", "red"); //"#ffb4e6");
 	} else {
-	    $(".smatch").css("color", "#0a6e31");
+		$(".smatch").css("color", "#0a6e31");
 	}
 
 	$('#nummatching').html(data.bestmatch);
 	$('#numleft').html(data.left_triplenum);
 	$('#numright').html(data.right_triplenum);
 
+	$("#compres").empty();
+	$('#compres').append('<table id="allcomparisons"><tr><th>first</th> <th>second</th> <th>Smatch</th> <th>matching</th> <th>triples first</th> <th>triples second</th></tr></table>');
+	$.each(data.comp_results,
+		function (key, value) {
+			$('#allcomparisons').append('<tr class="cmprow" id="ctr_' + key + '">');
+			$.each(value,
+				function (key2, val2) {
+					$('#ctr_' + key).append('<td class="cmpval" id="ctd_k_' + key2 + '">' + val2);
+				});
+		});
+
+
+
 	if ('#innertext_' + currentsentnum in visible_divselectors && visible_divselectors['#innertext_' + currentsentnum] == false) {
 		ToggleDiv('#innertext_' + currentsentnum, "#togglesentence");
 	}
-
 
 	$('#showcomments').empty();
 	$('#showcomments').append("<h4>comments 1");
 	$('#showcomments').append('<pre id="precomment_A' + currentsentnum + '">');
 	$('#precomment_A' + currentsentnum).append(data.comments);
-	
+
 
 	$("#resultat").append('<div id="doubleresultat">');
 	formatOne("A", data.svg, data.penman, data.filename);
 
 	for (let i = 0; i < data.others.length; i++) {
-	    //console.log(data.others[i]);
-	    formatOne("B"+i, data.others[i].svg, data.others[i].penman, data.others[i].filename);
-	    $('#showcomments').append("<h4>comments " + (2+i));
-	    $('#showcomments').append('<pre id="precomment_B' + i + '_' + currentsentnum + '">');
-	    $('#precomment_B'  + i + '_' + currentsentnum).append(data.others[i].comments);
+		//console.log(data.others[i]);
+		formatOne("B" + i, data.others[i].svg, data.others[i].penman, data.others[i].filename);
+		$('#showcomments').append("<h4>comments " + (2 + i));
+		$('#showcomments').append('<pre id="precomment_B' + i + '_' + currentsentnum + '">');
+		$('#precomment_B' + i + '_' + currentsentnum).append(data.others[i].comments);
 	}
 
 	if (data.framedoc) {
@@ -664,18 +676,19 @@ $(document).ready(function () {
 
 	$("#lire").click(function () {
 		if (!readonly) {
-		    $(".editmode").hide();
-		    $("#commands").show();
+			$(".editmode").hide();
+			$("#commands").show();
 		}
 		//URL_BASE = 'http://' + window.location.host + '/read';
 		URL_BASE = 'read';
 		$("#resultat").empty(); // vider le div
 		$.ajax({
-		    url: URL_BASE, // + "json", //+'/foo/fii?fuu=...',
-			    type: 'GET',
-			    data: { "num": $("#sentnum").val(),
+			url: URL_BASE, // + "json", //+'/foo/fii?fuu=...',
+			type: 'GET',
+			data: {
+				"num": $("#sentnum").val(),
 				"compare": $(".comparisons").val(),
-				},
+			},
 			//headers: {
 			//    'Content-type': 'text/plain',
 			//},
@@ -696,9 +709,9 @@ $(document).ready(function () {
 				$("#resultat").append('<div class="error" id="error">');
 				//$('#error').append(data.responseJSON.error);
 				if (data.responseJSON == undefined) {
-				    $('#error').append("serveur not responding");
+					$('#error').append("serveur not responding");
 				} else {
-				    $('#error').append(data.responseJSON.error);
+					$('#error').append(data.responseJSON.error);
 				}
 			}
 		});
@@ -749,9 +762,9 @@ $(document).ready(function () {
 				console.log("ERREUR ", data);
 				$("#resultat").append('<div class="error" id="error">');
 				if (data.responseJSON == undefined) {
-				    $('#error').append("serveur not responding");
+					$('#error').append("serveur not responding");
 				} else {
-				    $('#error').append(data.responseJSON.error);
+					$('#error').append(data.responseJSON.error);
 				}
 			}
 		});
@@ -761,7 +774,7 @@ $(document).ready(function () {
 	/* modify the AMR graph by clicking on buttons of the addbutton-class */
 	/*
 	$(".addbutton").click(function () {
-	    //URL_BASE = 'http://' + window.location.host + '/edit';
+		//URL_BASE = 'http://' + window.location.host + '/edit';
 		URL_BASE = 'edit';
 		$("#resultat").empty(); // vider le div
 		//var command = "dog"; //$("#command").val();
@@ -894,26 +907,26 @@ $(document).ready(function () {
 			params = { "dereify": concept_to_dereify }
 		}
 		else if (this.id == "modifysentencelist") {
-		    // apply sentence list filters
-		    $('#sentencelist').empty();
-		    for (var i = 0; i<sentencelist.length; ++i) {
+			// apply sentence list filters
+			$('#sentencelist').empty();
+			for (var i = 0; i<sentencelist.length; ++i) {
 			//if (i % 200 == 0) console.log("filtering", i);
 			var idfilter = $('#sidfilter').val();
 			var textfilter = $('#textfilter').val();
 			//console.log("FILTER", idfilter, textfilter, sentencelist[i][0].search(idfilter));
 			// use .search() instead of .indexOf() for regex (very slow for long sentence lists)
 			if ((idfilter == "" || sentencelist[i][0].indexOf(idfilter) > -1)
-			    && (textfilter == "" || sentencelist[i][1].indexOf(textfilter) > -1)) {
-			    //console.log("FILTER OK", sentencelist[i]);
-			    var optionstring = sentencelist[i][0] + ": " + sentencelist[i][1];
-			    if (optionstring.length > 150) {
+				&& (textfilter == "" || sentencelist[i][1].indexOf(textfilter) > -1)) {
+				//console.log("FILTER OK", sentencelist[i]);
+				var optionstring = sentencelist[i][0] + ": " + sentencelist[i][1];
+				if (optionstring.length > 150) {
 				optionstring = optionstring.substring(optionstring, 150) + "...";
-			    }
+				}
 
 
-			    $('#sentencelist').append('<option value="' + (i+1) +'">' + optionstring);
+				$('#sentencelist').append('<option value="' + (i+1) +'">' + optionstring);
 			}
-		    }
+			}
 
 
 		} else {
@@ -951,9 +964,9 @@ $(document).ready(function () {
 				console.log("ERREUR ", data);
 				$("#resultat").append('<div class="error" id="error">');
 				if (data.responseJSON == undefined) {
-				    $('#error').append("serveur not responding");
+					$('#error').append("serveur not responding");
 				} else {
-				    $('#error').append(data.responseJSON.error);
+					$('#error').append(data.responseJSON.error);
 				}
 
 			}
@@ -962,16 +975,16 @@ $(document).ready(function () {
 	});*/
 
 	$(".cleanbutton").click(function () {
-	      if (this.id == "cleanfields") {
-		    $(".varfield").val("");
-		    $(".conceptfield").val("");
-		    $(".literalfield").val("");
-		    $(".edgefield").val("");
-	      }
+		if (this.id == "cleanfields") {
+			$(".varfield").val("");
+			$(".conceptfield").val("");
+			$(".literalfield").val("");
+			$(".edgefield").val("");
+		}
 	});
 
 	$(".findbutton").click(function () {
-	        //URL_BASE = 'http://' + window.location.host + '/search';
+		//URL_BASE = 'http://' + window.location.host + '/search';
 		URL_BASE = 'search';
 		$("#resultat").empty(); // vider le div
 		//var command = "dog"; //$("#command").val();
@@ -1036,9 +1049,9 @@ $(document).ready(function () {
 				$("#resultat").append('<div class="error" id="error">');
 				//$('#error').append(data.responseJSON.error);
 				if (data.responseJSON == undefined) {
-				    $('#error').append("serveur not responding");
+					$('#error').append("serveur not responding");
 				} else {
-				    $('#error').append(data.responseJSON.error);
+					$('#error').append(data.responseJSON.error);
 				}
 			}
 		});

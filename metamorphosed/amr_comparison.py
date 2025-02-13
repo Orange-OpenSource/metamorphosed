@@ -45,7 +45,7 @@ class CompResult:
     def __init__(self):
         self.p = 0
         self.r = 0
-        self.f = 0
+        self.f1 = 0
         self.number_of_diffs = 0
         self.best_match_num = 0
         self.gold_triple_num = 0
@@ -54,6 +54,9 @@ class CompResult:
         self.rel1OK = set()
         self.instances2OK = set()
         self.rel2OK = set()
+
+    def __repr__(self):
+        return "F:%.2f goldtriples: %d testtriples: %d matchettriples: %d" % (self.f1, self.gold_triple_num, self.test_triple_num, self.best_match_num )
 
 
 def compare(s1, s2, runs=1, use_smatchpp=False, align=False):

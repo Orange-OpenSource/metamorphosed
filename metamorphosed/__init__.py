@@ -790,7 +790,7 @@ class AMR_Edit_Server:
                     }
             return Response("%s\n" % json.dumps(dico), 200, mimetype="application/json")
 
-        def prepare_newpage(sentnum, oktext=None, okamr=None, compare=None): #, iscompare=False):
+        def prepare_newpage(sentnum, oktext=None, okamr=None, compare=None):
             # sentnum uses 1 ... length
             # self.amrdoc.sentences is a list: 0 length-1
             cursentence = self.amrdoc.sentences[sentnum - 1]
@@ -807,7 +807,6 @@ class AMR_Edit_Server:
             if not ap.valid:
                 return invalidamr(ap, pm, cursentence, sentnum)
 
-            #iscompare = self.comparefilename is not None
             iscompare = compare is not None
             if okamr and not iscompare:
                 # rerun search, because ap has reformated the original penman (possibly different indentation)
@@ -879,6 +878,17 @@ class AMR_Edit_Server:
 
                 compres = amr_comparison.compare(firstsent.amr, secondsent.amr, use_smatchpp=self.smatchpp, align=True)
 
+                # compare all with all
+                variations = [cursentence]
+                for doc, _ in self.otheramrdocs:
+                    variations.append(doc.sentences[sentnum - 1])
+
+                comparisons = []
+                for first in range(len(variations)-1):
+                    for second in range(first+1, len(variations)):
+                        compres2 = amr_comparison.compare(variations[first].amr, variations[second].amr, use_smatchpp=self.smatchpp, align=True)
+                        comparisons.append((first, second, "%.2f" % (compres2.f1 * 100), compres2.gold_triple_num, compres2.test_triple_num, compres2.best_match_num))
+
                 if first_to_compare == -1:
                     # update display of first document
                     # highlight instances and relations NOT in highlightinstances and highlightrelations
@@ -915,6 +925,7 @@ class AMR_Edit_Server:
                 dico["bestmatch"] = compres.best_match_num
                 dico["left_triplenum"] = compres.test_triple_num
                 dico["right_triplenum"] = compres.gold_triple_num
+                dico["comp_results"] = comparisons
 
             return Response("%s\n" % json.dumps(dico), 200, mimetype="application/json")
 
