@@ -3,6 +3,7 @@
 ## Version 4.4.0
 * use different nodes for identical literals in visualizations
 * function to modify a variable
+* export visualized graphs: option to highlight concepts
 * new tests
 
 ## Version 4.3.1

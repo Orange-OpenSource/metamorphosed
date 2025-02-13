@@ -86,8 +86,20 @@ orangecolors = {
     ":op3": "#595959",
     ":op4": "#595959",
     ":value": "#595959",
+    ":todo": "#ff1111",
+    ":rel": "#ff1111",
     "EN": "#ffe5cc",
     }
+
+colorlist = [
+    "#ffe5cc", #    "charteOrangeBright"
+    "#fff6b6", #    "charteYellowBright"
+    "#d9c2f0", #    "charteVioletBright"
+    "#ffe8f7", #    "chartePinkBright"
+    "#b8ebd6", #    "charteGreenBright"
+    "#b5e8f7", #    "charteBlueBright"
+    "#d6d6d6", #    "charteGrayBright"
+    ]
 
 ONESPACE = re.compile("[ \n\t]+")
 
@@ -341,8 +353,17 @@ class AMRProcessor:
                 insts.append(k)
         return insts
 
-    def dot(self, highlightinstances=None, highlightrelations=None, format="svg", inverse_of=False):
+    def dot(self, highlightinstances=None, highlightrelations=None, highlightconcepts=None, format="svg", inverse_of=False):
         # highlight instances and relations NOT in highlightinstances and highlightrelations
+        #global orangecolors
+        if highlightconcepts:
+            #orangecolors = {highlightconcepts: "#ff7900"}
+            localorangecolors = {}
+            for ix, c in enumerate(highlightconcepts):
+                localorangecolors[c] = colorlist[ix % len(colorlist)]
+        else:
+            localorangecolors = orangecolors
+
         graph_attr = {#'rankdir':'LR'
         }
         kwargsinit = {
@@ -367,7 +388,11 @@ class AMRProcessor:
                 if highlightinstances and s not in highlightinstances:
                     kwargs = {"fontname": "Lato",  #"Lato Black",
                               "style": "filled",
-                              "fillcolor": "#ff7900"} #orangecolors.get(":snt1")}
+                              "fillcolor": "#ff7900"} #localorangecolors.get(":snt1")}
+                elif highlightconcepts and o in highlightconcepts:
+                    kwargs = {"fontname": "Lato",  #"Lato Black",
+                              "style": "filled",
+                              "fillcolor": localorangecolors.get(o, "white")}
                 if not firstseen:
                     # mark the topnode
                     kwargs["fontname"] = "Lato Black"
@@ -397,7 +422,7 @@ class AMRProcessor:
             else:
                 onodeid = o
                 pp = p
-                kwargs["fontcolor"] = orangecolors.get(p.replace("-of", ""), "black")
+                kwargs["fontcolor"] = localorangecolors.get(p.replace("-of", ""), "black")
                 if highlightrelations and (s, p, o) not in highlightrelations:
                     kwargs["fontname"] = "Lato" # "Lato Black" }
                     kwargs["fontcolor"] = "black"
@@ -408,29 +433,31 @@ class AMRProcessor:
                     oo = o.replace('"', 'DQUOTE').replace(':', 'COLON').replace('\\', 'BSLASH')
                     onodeid = "%s_%s_%s" % (s, ct_literal, oo)
                     ct_literal += 1
-                    kwargs["fillcolor"] = orangecolors.get("EN")
+                    kwargs["fillcolor"] = localorangecolors.get("EN", "#dddddd")
                     kwargs["style"] = "filled"
 
                     graph.node(onodeid, label="%s" % (o),
                                id="literal#%s#%s#%s" % (s, p, o),
                                #style="filled",
-                               color=orangecolors.get("EN"),
+                               color=localorangecolors.get("EN", "#dddddd"),
                                #fillcolor=orangecolors.get("EN"),
                                #URL=branch[0],
                                **kwargs)
                 #print("ZZZZ", s,p,o)
 
-                kwargs["fillcolor"] = orangecolors.get(p.replace("-of", ""), "black")
+                # color of arrow head
+                kwargs["fillcolor"] = localorangecolors.get(p.replace("-of", ""), "black")
 
+                col = localorangecolors.get(p.replace("-of", ""), "black")
                 graph.edge(s, onodeid, label=pp,
                            id="edge#%s#%s#%s" % (s, o, p),
-                           color=orangecolors.get(p.replace("-of", ""), "black"),
+                           color=col,
                            # fontcolor=orangecolors.get(p.replace("-of", ""), "black"),
                            **kwargs)
         # print("DOT source", graph)
         return graph.pipe()
 
-    def show(self, highlightinstances=None, highlightrelations=None, format="svg"):
+    def show(self, highlightinstances=None, highlightrelations=None, highlightconcepts=None, format="svg"):
         if self.inserver:
             if not self.valid:
                 return self.lastpm, None, None
@@ -442,8 +469,8 @@ class AMRProcessor:
                 #a.build(pm)
                 #self.lastsvg = a.graph.pipe()
                 self.readpenman(pm)
-                self.lastsvg = self.dot(highlightinstances, highlightrelations, format=format)
-                self.lastsvg_canonised = self.dot(highlightinstances, highlightrelations, format=format, inverse_of=True)
+                self.lastsvg = self.dot(highlightinstances, highlightrelations, highlightconcepts=highlightconcepts, format=format)
+                self.lastsvg_canonised = self.dot(highlightinstances, highlightrelations, highlightconcepts=highlightconcepts, format=format, inverse_of=True)
                 self.isDisconnected = False
             except penman.exceptions.LayoutError:
                 #a = amr2dot.AMR2DOT(format="svg", font="Lato", instances=False, lr=False, bw=False)
@@ -497,11 +524,12 @@ class AMRProcessor:
             # find multiple edges between same nodes
             if p == ":instance":
                 continue
-            if (s, o) in edges:
-                rtc.append("more than one relation between « %s » and « %s » (%s)" % (s, o, p))
-            if (o, s) in edges:
-                rtc.append("more than one relation between « %s » and « %s » (inverted) (%s)" % (s, o, p))
-            edges.add((s, o))
+            if o in self.vars:
+                if (s, o) in edges:
+                    rtc.append("more than one relation between « %s » and « %s » (%s)" % (s, o, p))
+                if (o, s) in edges:
+                    rtc.append("more than one relation between « %s » and « %s » (inverted) (%s)" % (s, o, p))
+                edges.add((s, o))
 
             # find missing :sntNN or :opNN
             if p.startswith(":snt"):
@@ -578,7 +606,7 @@ class AMRProcessor:
             newvars[k] = v
         self.vars = newvars
 
-        newtriples = [] 
+        newtriples = []
         for s, p, o in self.triples:
             if s == oldname:
                 s = newname

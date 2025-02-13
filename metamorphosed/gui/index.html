@@ -230,6 +230,10 @@ Else the input is interpreted as regular expression" placeholder="regex/PENMAN" 
             </div>
             <p />
 
+            list of concepts to highlight <input class="textfield" placeholder=""
+                title="comma separated list of concepts" type="text" id="conceptlist"
+                value="">
+            <br/>
             list of graphs to be exposted <input class="textfield" placeholder=""
                 title="numbers of the sentences for which a visualised graph is exported" type="text" id="sentnumlist"
                 value="">
@@ -257,6 +261,12 @@ Else the input is interpreted as regular expression" placeholder="regex/PENMAN" 
         <h3>Add name to an instance</h3>
         Add instance which will get <span class="code">:name</span> node and <span class="code">:op</span>-linked
         strings and name in line (E) and click <span class="knopf">add</span>
+        <h3>Add a graph to existing </h3>
+        Click F) <span class="knopf">open edit window</span>,
+        enter a graph in the Add Graph window and specify in the Concept Mapping input field which variable of the existing graph corresponds to which variable in the added graph
+        using the format `a/b` where `a` is the variable of the existing graph, and `b` a variable of the added graph.
+        <h3>Rename variable</h3>
+        Choose a variable G) and specify the new name
         <h3>Modify concept</h3>
         Click the concept in the graph, edit concept and click <span class="knopf">update</span> in the «Modify Concept»
         window

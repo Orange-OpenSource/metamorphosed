@@ -936,7 +936,6 @@ def test_dereify(client):
     assert res["penman"] == '(k / kill-01\n   :ARG0 (c / cat)\n   :ARG1 (m / mouse)\n   :location (k2 / kitchen)\n   :time (d / date-entity\n            :dayperiod (n / night)))'
 
 
-
 def test_renamevar(client):
     response = client.get("/read", query_string={"num": 25})
     response = client.get("/edit", query_string={"num": 25, "oldvarname": "a", "newvarname": "aaa"})

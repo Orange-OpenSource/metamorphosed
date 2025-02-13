@@ -305,7 +305,8 @@ becomes this after reifying `:location`
 ## Graph export
 
 The button `export visualised graphs` opens a menu which allows to download all or a subset of graphs in either SVG, PDF or PNG format.
-Choose format and numbers of sentences for which you want the graphic exported (default: all sentences)
+Choose format and numbers of sentences for which you want the graphic exported (default: all sentences).
+You may choose a (comma separated list) of concepts which will be highlighted in the export visualisations.
 
 ![Reified relation ](doc/export_graphs.png)
 

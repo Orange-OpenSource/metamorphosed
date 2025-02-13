@@ -664,8 +664,9 @@ class AMR_Edit_Server:
 
         @app.route('/graphs/<filename>', methods=["GET"])
         def downloadgraphs(filename: str):
-            # filename necessary in GUI, but we also use the same. Check whether it does not contain strange stuff
+            # filename necessary in GUI, but we always use the same. Check whether it does not contain strange stuff
             dataformat = self.checkParameter(request, 'format', 'string', isOptional=True, defaultValue="svg")
+            highlight_concepts = self.checkParameter(request, 'concepts', 'string', isOptional=True, defaultValue=None)
             pages = self.checkParameter(request, 'sentences', 'string', isOptional=True, defaultValue=None)
 
             if not re.match(r"^[A-Za-z0-9_]+\.zip$", filename):
@@ -673,8 +674,11 @@ class AMR_Edit_Server:
                 return Response("%s\n" % json.dumps(dico),
                                 400, mimetype="application/json")
 
-            validargs = set(["format", "sentences"])
+            validargs = set(["format", "sentences", "concepts"])
             self.validParameters(request, validargs)
+
+            if highlight_concepts:
+                highlight_concepts = [x.strip() for x in highlight_concepts.split(",")]
 
             #if validargs != validargs.union(request.values.keys()):
             #    dico = {"error": "invalid parameters: <%s>" % request.values.keys()}
@@ -714,7 +718,7 @@ class AMR_Edit_Server:
                     ap = self.aps[x]
                     if not ap.isparsed:
                         ap.readpenman(ap.lastpm)
-                    pm, svg, svg_canon = ap.show(format=dataformat)
+                    pm, svg, svg_canon = ap.show(format=dataformat, highlightconcepts=highlight_concepts)
                     if svg:
                         zip_file.writestr("%d.%s" % (ix, dataformat), svg)
                     #print("FILE", ix, svg[:100] if svg else svg)

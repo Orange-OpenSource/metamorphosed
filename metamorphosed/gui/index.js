@@ -266,6 +266,11 @@ function updateExportFormat() {
     //$("#exporthref")[0].href="/graphs/amrgraphs.zip?format=" + obj.value;
     $("#exporthref")[0].href = "/graphs/amrgraphs.zip?format=" + $('input:radio[name=graphformat]:checked').val()
 	+ "&sentences=" + $("#sentnumlist").val().trim();
+
+	var conceptlist = $("#conceptlist").val().trim();
+	if (conceptlist) {
+		$("#exporthref")[0].href += "&concepts=" + conceptlist;
+	}
 }
 
 function ShowSentences() {
