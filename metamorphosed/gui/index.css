@@ -749,12 +749,28 @@ td.framealiastable {
   overflow-x: hidden;
 }
 
+/*
 .tablehoriz {
   display: inline-block;
   *display: inline;
   vertical-align: top;
+}*/
+
+.boldline {
+  background-color: #ffe5cc;
+  font-weight: bold;
 }
 
+.cmprow {
+
+}
 .cmpval {
   text-align: right;
+}
+
+.smatchdifferent {
+  color: red;
+}
+.smatchok {
+  color: rgb(10, 110, 49);
 }

@@ -67,7 +67,6 @@ function getServerInfo() {
 			500: function () {
 				alert('Server not ready yet');
 			}
-
 		},
 		success: function (data) {
 			/** afficher comment le serveur a été lancé */
@@ -88,29 +87,29 @@ function getServerInfo() {
 				$("#save").hide();
 				$("#mainheader").html($("#mainheader").html() + " (read-only)");
 			}
-			$("#numberofsent").html(data.numsent);
+			//$("#numberofsent").html(data.numsent);
 
-			console.log("BBB", data);
-			if (data.otherfilenames.length > 1) {
+			//console.log("BBB", data);
+			if (data.otherfilenames.length > 0) {
 				$('.comparisons').empty();
 				data.otherfilenames.splice(0, 0, data.filename);
 				//console.log("BBB", data.comparisons);
 				$.each(data.comparisons,
 					function (key, value) {
-						console.log("AAAbb", key, value[0], value[1]);
+						//console.log("AAAbb", key, value[0], value[1]);
 						$('.comparisons').append('<option value="' + value + '">' + data.otherfilenames[value[0] - 1] + " / " + data.otherfilenames[value[1] - 1]);
 					});
 				$(".onlytwo").hide();
 				$(".several").show();
-			} else {
+			/*} else {
 				$("#leftfn").html(data.filename);
 				$("#rightfn").html(data.otherfilenames[0]);
 				$(".onlytwo").show();
 				$(".several").hide();
-				$('.comparisons').append('<option value="1,2">1,2');
+				$('.comparisons').append('<option value="1,2">1,2'); */
 			}
 
-			console.log("AAA", $('.comparisons').val());
+			//console.log("AAA", $('.comparisons').val());
 			$("#version").empty();
 			$("#version").append(data.version);
 			$("#version2").empty();
@@ -124,63 +123,6 @@ function getServerInfo() {
 			$("#dir").append(data.pwd);
 			$("#cmdl").empty();
 			$("#cmdl").append(data.cmdline.replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
-
-			/*
-			if (data.relations) {
-			relationlist = data.relations;
-			// autocomplete for the fields where relations can be set
-			$(function () {
-				  $("#edgelabel").autocomplete({
-				  source: relationlist,
-					  // https://www.plus2net.com/jquery/msg-demo/autocomplete-position.php
-					  position: {my: "left top", at: "left bottom"}
-				  });
-			  });
-
-			$(function () {
-				  $("#relationforliteral").autocomplete({
-				  source: relationlist,
-					  // https://www.plus2net.com/jquery/msg-demo/autocomplete-position.php
-					  position: {my: "left top", at: "left bottom"}
-				  });
-			  });
-
-			$(function () {
-				  $("#modifiededge").autocomplete({
-				  source: relationlist,
-					  // https://www.plus2net.com/jquery/msg-demo/autocomplete-position.php
-					  position: {my: "left top", at: "left bottom"},
-					  appendTo: "#modedge" // needed to avoid modal covering completion list
-				  });
-			  });
-			$(function () {
-				  $("#relationforliteral2").autocomplete({
-				  source: relationlist,
-					  // https://www.plus2net.com/jquery/msg-demo/autocomplete-position.php
-					  position: {my: "left top", at: "left bottom"},
-				  appendTo: "#modconcept"
-				  });
-			  });
-			}
-
-			if (data.concepts) {
-			conceptlist = data.concepts
-			$(function () {
-				  $("#concept").autocomplete({
-				  source: conceptlist,
-					  // https://www.plus2net.com/jquery/msg-demo/autocomplete-position.php
-					  position: {my: "left top", at: "left bottom"}
-				  });
-			  });
-			$(function () {
-				  $("#modifiedconcept").autocomplete({
-				  source: conceptlist,
-					  // https://www.plus2net.com/jquery/msg-demo/autocomplete-position.php
-					  position: {my: "left top", at: "left bottom"},
-					  appendTo: "#modconcept" // needed to avoid modal covering completion list
-				  });
-			  });
-			  }*/
 
 			if (data.sentences) {
 				sentencelist = data.sentences;
@@ -199,6 +141,7 @@ function getServerInfo() {
 				});
 			}
 		},
+		
 		error: function (data) {
 			// do something else
 			if (data.status >= 500) {
@@ -235,6 +178,7 @@ function getcompval(obj) {
 	$("#lire").click();
 }
 
+
 function ToggleDiv(selector, togglebutton) {
 	if ($(selector).is(":visible")) {
 		$(selector).hide();
@@ -250,6 +194,7 @@ function ToggleDiv(selector, togglebutton) {
 	}
 }
 
+
 function ToggleComments() {
 	if ($("#commentmodal").is(":visible")) {
 		$("#commentmodal").hide();
@@ -264,6 +209,7 @@ function ToggleComments() {
 	}
 }
 
+
 function ShowSentences() {
 	if ($("#sentmodal").is(":visible")) {
 		$("#sentmodal").hide();
@@ -276,7 +222,6 @@ function ShowSentences() {
 		});
 	}
 }
-
 
 
 function unhighlight() {
@@ -308,201 +253,7 @@ var lastclickedElement = null;
 
 function info(event) {
 }
-/*
-function info(event) {
-	//console.log("EEEE", event);
-	//console.log("EEEF", event.target.parentNode.id);
-	//console.log("EEEG", event.target.parentNode.children[1]);
-	node = event.target.textContent;
 
-	unhighlight();
-
-	if (readonly) {
-		return;
-	}
-	if (event.target.parentNode.id.startsWith("node ")) {
-		// edit node
-		modconceptvar = event.target.parentNode.id.split(" ")[1];
-
-		if (lastclickededge != null) {
-			// we take the last clicked edge and connect to the now clicked instance
-			$(".editmode").hide();
-			$("#commands").show();
-			//console.log("RRR", lastclickededge);
-			var edgestart = lastclickededge.split("#")[1];
-			var edgeend = lastclickededge.split("#")[2];
-			var edgename = lastclickededge.split("#")[3];
-			var params = {
-				"modedge_start": edgestart,
-				"modedge_end": edgeend,
-				"modedge_newstart": modconceptvar,
-				"newedge": edgename
-			}
-			lastclickededge = null;
-			runcommand(params);
-		} else if (lastclickednode != null) {
-				var params = {
-				"start": lastclickednode,
-				"end": modconceptvar,
-				"label": "todo"
-			}
-			lastclickednode = null;
-			runcommand(params);
-			$("#conceptsetmodal").hide();
-		} else {
-			// we modify an instance/class node
-			$(".modal").hide();
-			//$("#modconcept").show();
-			const conceptname = event.target.parentNode.id.split(" ")[2];
-			lastclickednode = modconceptvar;
-
-			$("#modifiedconcept").val(conceptname);
-			$("#conceptinstance").empty();
-			$("#conceptinstance").append(modconceptvar);
-			$("#relationforliteral2").val(modconceptvar);
-			$("#newliteral2").val("");
-			$("#name2").val("");
-
-			// open edit modal
-			//console.log("ffff", event.clientY, event.pageY, event.screenY);
-			$("#conceptsetmodal").css("top", event.pageY + "px");
-			$("#conceptsetmodal").css("left", event.pageX + "px");
-			$("#conceptsetmodal").show();
-			$("#conceptsetmodal").draggable();
-			event.target.parentNode.setAttribute("class", "boxhighlight");
-			lastclickedElement = event.target.parentNode
-			$("#cancelmc").click(function(){
-				//$("#conceptsetmodal").fadeOut();
-				$("#conceptsetmodal").hide();
-			});			
-	
-		}
-		
-
-	} else if (event.target.parentNode.id.startsWith("edge#")) {
-		if (lastclickedElement != null) {
-		lastclickedElement.removeAttribute("class");
-		lastclickednode = null;
-		lastclickededge = null;
-		$(".modal").hide();
-		}
-
-		// we modify an edge
-		$(".modal").hide();
-		//$("#modedge").show();
-		const edgename = event.target.parentNode.id.split("#")[3];
-
-		// get polygon child of current 
-		var chosenrel = -1;
-		for (var i = 0; i < event.target.parentNode.children.length; i++) {
-			//console.log("TTTT", i, event.target.parentNode.children[i].tagName);
-			if (event.target.parentNode.children[i].tagName == "polygon") {
-				event.target.parentNode.children[i].setAttribute("class", "boxhighlight");
-				lastclickededge = event.target.parentNode.id;
-				chosenrel = i;
-				//console.log("HIER");
-			}
-		};
-
-
-		$("#modifiededge").val(edgename)
-		modedge = edgename;
-		modedge_start = event.target.parentNode.id.split("#")[1];
-		modedge_end = event.target.parentNode.id.split("#")[2];
-		$("#relationfrom").empty();
-		$("#relationfrom").append(modedge_start);
-		$("#relationto").empty();
-		$("#relationto").append(modedge_end);
-		$("#newsource").val("");
-
-				// open edit modal
-		$("#edgesetmodal").css("top", event.pageY + "px");
-		$("#edgesetmodal").css("left", event.pageX + "px");
-		$("#edgesetmodal").show();
-		$("#edgesetmodal").draggable();
-
-		$("#cancelme").click(function(){
-			lastclickededge = null;
-			$("#edgesetmodal").hide();
-			if (chosenrel > -1) {
-				console.log("aaaaa", event.target.parentNode.children[chosenrel]);
-				event.target.parentNode.children[chosenrel].setAttribute("class", "");
-			}
-		});			
-	
-	} else if (event.target.parentNode.id.startsWith("literal ")) {
-		// edit literal
-		$(".modal").hide();
-		//$("#modlit").show();
-		//console.log("ZZZZ", event.target.parentNode.id.split(" "));
-				const elems = event.target.parentNode.id.split(" ");
-		const toto = elems.slice(3);
-		const literalname = toto.join(" ");
-		//const literalname = event.target.parentNode.id.split(" ")[3];
-		litid = event.target.parentNode.id.split(" ")[1];
-		litedge = event.target.parentNode.id.split(" ")[2];
-		$("#modifiedliteral").val(literalname.replaceAll('"', ''));
-
-		// open edit modal
-		$("#literalsetmodal").css("top", event.pageY + "px");
-		$("#literalsetmodal").css("left", event.pageX + "px");
-		$("#literalsetmodal").show();
-		$("#literalsetmodal").draggable();
-		
-		$("#cancelml").click(function(){
-			$("#literalsetmodal").hide();
-		});	
-	} else {
-		// even if a node is selected, unselect it
-		if (lastclickedElement != null) {
-		lastclickedElement.removeAttribute("class");
-		lastclickednode = null;
-		lastclickededge = null;
-		$(".modal").hide();
-		}
-
-	}
-}
-
-*/
-
-/*
-function runcommand(params) {
-	params["num"] = currentsentnum;
-	//URL_BASE = 'http://' + window.location.host + '/edit';
-	URL_BASE = 'edit';
-	$("#resultat").empty(); // vider le div
-	$.ajax({
-		url: URL_BASE,
-		type: 'GET',
-		//data: {"cmd": command},
-		data: params,
-		//headers: {
-		//    'Content-type': 'text/plain',
-		//},
-		statusCode: {
-			204: function () {
-				alert('No input text');
-			},
-		},
-		success: function (data) {
-			//console.log("SUCCESS ", data);
-			formatAMR(data);
-		},
-		error: function (data) {
-			// do something else
-			console.log("ERREUR ", data);
-			$("#resultat").append('<div class="error" id="error">');
-			//$('#error').append(data.responseJSON.error);
-			if (data.responseJSON == undefined) {
-				$('#error').append("serveur not responding");
-			} else {
-				$('#error').append(data.responseJSON.error);
-			}
-		}
-	});
-}
-*/
 
 var currentsentnum = 0;
 
@@ -536,14 +287,12 @@ function formatOne(number, svg, penman, fn) {
 	$('#svggraph_' + number + '_' + currentsentnum).append('<a id="semgraph_' + number + '_' + currentsentnum + '" download="graph.svg" type="image/svg+xml"><button class="mybutton">download image</button></a>');
 	downloadSVG('innersvggraph_' + number + '_' + currentsentnum, 'semgraph_' + number + '_' + currentsentnum, "graph_" + number + "_" + currentsentnum + ".svg");
 
-
 	// toggle button to hide/show the penman graph
 	$("#penman_ultat_" + number).append('<button class="toggleresult" id="togglepenman_' + number + '" >&#8210;</button>');
 	$("#togglepenman_" + number).click(function () {
 		//console.log("RRR", currentsentnum, this.id);
 		ToggleDiv('#amr_' + number + '_' + currentsentnum, "#togglepenman_" + number);
 	});
-
 
 	// penman graph in an inner div
 	$("#penman_ultat_" + number).append('<div class="penman" id="penman_' + number + '_' + currentsentnum + '">');
@@ -607,22 +356,33 @@ function formatAMR(data) {
 		$(".smatch").css("color", "#0a6e31");
 	}
 
-	$('#nummatching').html(data.bestmatch);
-	$('#numleft').html(data.left_triplenum);
-	$('#numright').html(data.right_triplenum);
+	//$('#nummatching').html(data.bestmatch);
+	//$('#numleft').html(data.left_triplenum);
+	//$('#numright').html(data.right_triplenum);
 
 	$("#compres").empty();
 	$('#compres').append('<table id="allcomparisons"><tr><th>first</th> <th>second</th> <th>Smatch</th> <th>matching</th> <th>triples first</th> <th>triples second</th></tr></table>');
 	$.each(data.comp_results,
 		function (key, value) {
-			$('#allcomparisons').append('<tr class="cmprow" id="ctr_' + key + '">');
-			$.each(value,
-				function (key2, val2) {
-					$('#ctr_' + key).append('<td class="cmpval" id="ctd_k_' + key2 + '">' + val2);
-				});
+			//console.log("CMP", value);
+			var index = value.index;
+			$('#allcomparisons').append('<tr class="cmprow" id="ctr_' + index + '">');
+
+			var smatchF1 = value.F1;
+
+			var tdclasses = [];
+
+			if (smatchF1 < 100) tdclasses.push("smatchdifferent");
+			else tdclasses.push("smatchok");
+			$('#ctr_' + index).append('<td class="' + tdclasses.join(" ") + '">' + value.fn1);
+			$('#ctr_' + index).append('<td>' + value.fn2);
+			$('#ctr_' + index).append('<td class="cmpval ' + tdclasses.join(" ") + '">' + value.F1);
+			$('#ctr_' + index).append('<td class="cmpval ' + tdclasses.join(" ") + '">' + value.gold_triples);
+			$('#ctr_' + index).append('<td class="cmpval ' + tdclasses.join(" ") + '">' + value.sys_triples);
+			$('#ctr_' + index).append('<td class="cmpval ' + tdclasses.join(" ") + '">' + value.best_match_triples);
 		});
 
-
+	$('#ctr_' + $('#compvars').val().replace(",", "_")).addClass("boldline")
 
 	if ('#innertext_' + currentsentnum in visible_divselectors && visible_divselectors['#innertext_' + currentsentnum] == false) {
 		ToggleDiv('#innertext_' + currentsentnum, "#togglesentence");

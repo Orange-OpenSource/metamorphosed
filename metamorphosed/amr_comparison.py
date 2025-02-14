@@ -56,7 +56,7 @@ class CompResult:
         self.rel2OK = set()
 
     def __repr__(self):
-        return "F:%.2f goldtriples: %d testtriples: %d matchettriples: %d" % (self.f1, self.gold_triple_num, self.test_triple_num, self.best_match_num )
+        return "F:%.2f goldtriples: %d testtriples: %d matchettriples: %d" % (self.f1, self.gold_triple_num, self.test_triple_num, self.best_match_num)
 
 
 def compare(s1, s2, runs=1, use_smatchpp=False, align=False):

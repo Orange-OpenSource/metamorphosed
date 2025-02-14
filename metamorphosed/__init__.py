@@ -880,14 +880,23 @@ class AMR_Edit_Server:
 
                 # compare all with all
                 variations = [cursentence]
+                filenames = [filename]
                 for doc, _ in self.otheramrdocs:
                     variations.append(doc.sentences[sentnum - 1])
+                    filenames.append(doc.fn)
 
                 comparisons = []
-                for first in range(len(variations)-1):
-                    for second in range(first+1, len(variations)):
+                for first in range(len(variations) - 1):
+                    for second in range(first + 1, len(variations)):
                         compres2 = amr_comparison.compare(variations[first].amr, variations[second].amr, use_smatchpp=self.smatchpp, align=True)
-                        comparisons.append((first, second, "%.2f" % (compres2.f1 * 100), compres2.gold_triple_num, compres2.test_triple_num, compres2.best_match_num))
+                        #comparisons.append(("%s_%s" % (first + 1, second + 1), filenames[first], filenames[second], "%.2f" % (compres2.f1 * 100), compres2.gold_triple_num, compres2.test_triple_num, compres2.best_match_num))
+                        comparisons.append({"index": "%s_%s" % (first + 1, second + 1), # needed to highlight the correct line in comparison results
+                                            "fn1": filenames[first],
+                                            "fn2": filenames[second],
+                                            "F1": "%.2f" % (compres2.f1 * 100),
+                                            "gold_triples": compres2.gold_triple_num,
+                                            "sys_triples": compres2.test_triple_num,
+                                            "best_match_triples": compres2.best_match_num})
 
                 if first_to_compare == -1:
                     # update display of first document
