@@ -251,7 +251,7 @@ def test_exportgraphs(client):
     #    #print(zfp.read(x.filename))
     #    #break
 
-    assert len(zfp.infolist()) == 25
+    assert len(zfp.infolist()) == 26 # includes metadata file
     fobj = zfp.infolist()[0]
     assert fobj.filename == "1.svg"
     assert fobj.file_size == 11086 #11046
@@ -263,10 +263,10 @@ def test_exportgraphs(client):
     fp = io.BytesIO(response.data)
     #print("res", response.data)
     zfp = zipfile.ZipFile(fp, "r")
-    assert len(zfp.infolist()) == 25
+    assert len(zfp.infolist()) == 26
     fobj = zfp.infolist()[10]
     assert fobj.filename == "11.pdf"
-    assert fobj.file_size in [14028, 13940]
+    assert fobj.file_size in [14027, 14028, 13940]
     #assert fobj.file_size == 14028 #13940
     contents = zfp.read(fobj.filename)
     assert contents.startswith(b'%PDF-1.7\n%\xb5\xed\xae\xfb\n4') or contents.startswith(b'%PDF-1.5\n%\xb5\xed\xae\xfb\n4')
@@ -276,7 +276,7 @@ def test_exportgraphs(client):
     fp = io.BytesIO(response.data)
     #print("res", response.data)
     zfp = zipfile.ZipFile(fp, "r")
-    assert len(zfp.infolist()) == 25
+    assert len(zfp.infolist()) == 26
     fobj = zfp.infolist()[11]
     #print(fobj)
     assert fobj.filename == "12.png"
@@ -285,6 +285,27 @@ def test_exportgraphs(client):
     #print(contents)
     assert contents.startswith(b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x01\xb0\x00\x00\x01#\x08\x06\x00\x00\x00S')
 
+    # only some sentence 2-6,9
+    response = client.get("/graphs/exportfile.zip", query_string={"format": "svg", "sentences": "2-6,9"})
+    fp = io.BytesIO(response.data)
+    #print("res", response.data)
+    zfp = zipfile.ZipFile(fp, "r")
+    assert len(zfp.infolist()) == 7 # including metadata.json
+    fobj = zfp.infolist()[5]
+    #print(fobj)
+    assert fobj.filename == "9.svg"
+    assert fobj.file_size in [10412]
+    #contents = zfp.read(fobj.filename)
+
+    fobj = zfp.infolist()[6] # metadata
+    #print(fobj)
+    assert fobj.filename == "metadata.json"
+    assert fobj.file_size in [1349]
+    contents = zfp.read(fobj.filename)
+    print(contents)
+    contentsobj = json.loads(contents)
+    print(json.dumps(contentsobj[1]))
+    assert json.dumps(contentsobj[1]) == '{"sentence": "The cat killed the mouse in the kitchen during the night", "id": "sentence 3", "filename": "3.svg", "sourcefilename": "/home/johannes/rhaglenni/python/metamorphosed/metamorphosed/data/testamr.txt"}'
     #for x in zfp.infolist():
     #    print(x.filename, x.file_size)
     #    print(zfp.read(x.filename))

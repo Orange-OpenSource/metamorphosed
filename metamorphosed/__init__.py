@@ -712,6 +712,7 @@ class AMR_Edit_Server:
 
             zip_buffer = io.BytesIO()
             with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED, False) as zip_file:
+                metadata = []
                 for ix, x in enumerate(self.aps, 1):
                     if pages and ix not in pages:
                         continue
@@ -721,7 +722,10 @@ class AMR_Edit_Server:
                     pm, svg, svg_canon = ap.show(format=dataformat, highlightconcepts=highlight_concepts)
                     if svg:
                         zip_file.writestr("%d.%s" % (ix, dataformat), svg)
+                    sent = self.amrdoc.sentences[ix - 1]
+                    metadata.append({"sentence": sent.text, "id": sent.id, "filename": "%d.%s" % (ix, dataformat), "sourcefilename": self.amrdoc.fn})
                     #print("FILE", ix, svg[:100] if svg else svg)
+                zip_file.writestr("metadata.json", json.dumps(metadata, indent=2, ensure_ascii=False))
 
             return Response(zip_buffer.getvalue(), 200, mimetype="application/zip")
 

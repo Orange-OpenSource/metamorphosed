@@ -4,6 +4,7 @@
 * use different nodes for identical literals in visualizations
 * function to modify a variable
 * export visualized graphs: option to highlight concepts
+* add metadata to exported graphs (sentence, source file, etc) in json
 * new tests
 
 ## Version 4.3.1
