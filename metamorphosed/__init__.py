@@ -2,7 +2,7 @@
 
 # This library is under the 3-Clause BSD License
 #
-# Copyright (c) 2022-2024,  Orange
+# Copyright (c) 2022-2025,  Orange
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -71,14 +71,16 @@ import metamorphosed.installJQ as iJQ
 # find an example in AMR data
 # call an AMRserver for an (empty) sentence ? rather not
 
-APIVERSION = "1.8.0"
+APIVERSION = "1.9.0"
 
 
 class AMR_Edit_Server:
     def __init__(self, port, filename, pbframes, rels, concepts, constraints,
                  readonly, author=None, reifications=None, relationsdoc=None,
                  predictor=None,
-                 do_git=True, compare=None, smatchpp=False):
+                 do_git=True, compare=None, smatchpp=False,
+                 preferred=None, # filename where to read/write the preferred graph in comparison mode
+                 ):
         self.port = port
         self.filename = filename
         self.amrdoc = amrdoc.AMRdoc(filename)
@@ -87,11 +89,43 @@ class AMR_Edit_Server:
         self.reificator = None
         self.do_git = do_git
         self.smatchpp = smatchpp
+        self.preferred = None
 
         self.readonly = readonly
+        self.NOT_CHOSEN = "not_chosen" # if changed here, also change in compare.js
         if compare is not None:
             self.readonly = True
             self.do_git = False
+            self.filelist = [self.filename]
+            self.filelist += compare
+            if preferred is not None:
+                self.preferredfile = preferred
+                if os.path.isfile(preferred):
+                    with open(preferred) as ifp:
+                        obj = json.load(ifp)
+                        #print(obj)
+                        if "preferred" not in obj:
+                            raise Exception("bad format for preferred file '%s' does not contain 'preferred'" % (preferred))
+                        if "files" not in obj:
+                            raise Exception("bad format for preferred file '%s' does not contain 'files'" % (preferred))
+                        self.preferred = obj["preferred"]
+                        if (set(self.filelist)) != set(obj["files"]):
+                            raise Exception("files specified preferred file '%s' do not correspond to files given '%s' != '%s'" % (preferred, self.filelist, obj["files"]))
+                        # must be {"pos": position of sentence in file # Attention: must be a stringnot an int ! json.dumps() silently transforms int keys in strings
+                        #             {
+                        #               "sid": sentence id
+                        #               "source": filename with best graph
+                        #             }
+                        #          }
+                        # TODO check with jsonschema
+
+                        # check whether all sources in this file are loaed via --compare
+                        for pos, obj in self.preferred.items():
+                            if obj.get("source") not in self.filelist and obj.get("source") != self.NOT_CHOSEN:
+                                raise Exception("preferred file '%s' contains a source (pos:%s, sid:%s) '%s' not used in this session" % (preferred, pos, obj.get("sid"), obj.get("source")))
+                else:
+                    self.preferred = {}
+                #print("iiiiii", self.preferred)
         else:
             if reifications:
                 self.reificator = reification.getInstance(reifications)
@@ -729,6 +763,20 @@ class AMR_Edit_Server:
 
             return Response(zip_buffer.getvalue(), 200, mimetype="application/zip")
 
+        @app.route('/setpreferred', methods=["GET"])
+        def setpreferred():
+            # only used with --compare and --preferred
+            sentnum = self.checkParameter(request, 'num', 'integer', isOptional=True, defaultValue=1)
+            preferred = self.checkParameter(request, 'preferred', 'string', isOptional=True, defaultValue=-1)
+            compare = self.checkParameter(request, 'compare', 'string', isOptional=True, defaultValue=None)
+            #print("AAAAA", sentnum, preferred, compare )
+            if self.preferred is not None:
+                sent = self.amrdoc.sentences[sentnum - 1]
+                self.preferred[str(sentnum)] = {"sid": sent.id, "source": preferred}
+
+            return prepare_newpage(sentnum, compare=compare)
+            #return Response("%s\n" % json.dumps("OK"), 200, mimetype="application/json")
+
         @app.route('/save', methods=["GET"])
         def save():
             sentnum = self.checkParameter(request, 'num', 'integer', isOptional=True, defaultValue=1)
@@ -751,11 +799,11 @@ class AMR_Edit_Server:
             response.status_code = 400 #error.status_code
             return response
 
-        @app.errorhandler(Exception)
-        def handle_other_error(error):
-            response = jsonify({"error": str(error)})
-            response.status_code = 404
-            return response
+        #@app.errorhandler(Exception)
+        #def handle_other_error(error):
+        #    response = jsonify({"error": str(error)})
+        #    response.status_code = 404
+        #    return response
 
         def invalidamr(ap, pm, cursentence, sentnum):
             # format error in file
@@ -940,6 +988,17 @@ class AMR_Edit_Server:
                 dico["right_triplenum"] = compres.gold_triple_num
                 dico["comp_results"] = comparisons
 
+                if self.preferred:
+                    sentnumstr = str(sentnum) # needs to be a string since the json file (which is written) cannot have int keys
+                    if sentnumstr not in self.preferred:
+                        self.preferred[sentnumstr] = {
+                            "sid": cursentence.id,
+                            "source": self.NOT_CHOSEN
+                            }
+                    dico["preferred"] = self.preferred[sentnumstr]
+                else:
+                    dico["preferred"] = None
+
             return Response("%s\n" % json.dumps(dico), 200, mimetype="application/json")
 
     def start(self):
@@ -951,6 +1010,19 @@ class AMR_Edit_Server:
             print("saving", self.filename)
             self.savefile(self.filename, self.fileversion)
             # print("saved as %s.%s" % (self.filename, version))
+        if self.preferred is not None:
+            # TODO use user filename
+            outfn = self.preferredfile
+            if os.path.isfile(outfn):
+                outfn += ".2"
+            with open(outfn, "w") as ofp:
+                # self.otheramrdocs = [doc,aps]
+                dico = {"files": self.filelist}
+                sortedpreferred = {}
+                for key in sorted(self.preferred, key=int):
+                    sortedpreferred[key] = self.preferred[key]
+                dico["preferred"] = sortedpreferred
+                print(json.dumps(dico, indent=2, ensure_ascii=False), file=ofp)
 
 #    def findinvalidparameters(self, request, validlist):
 #        for k, v in request.values.items():

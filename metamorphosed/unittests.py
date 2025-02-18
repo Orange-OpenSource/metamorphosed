@@ -202,7 +202,7 @@ def test_info(client):
     response = client.get("/version")
     res = json.loads(response.data)
     #print("res", res, file=sys.stderr)
-    assert res == {'name': 'AMR Editor', 'version': '4.4.0', 'apiversion': '1.8.0'}
+    assert res == {'name': 'AMR Editor', 'version': '4.5.0', 'apiversion': '1.9.0'}
 
     response = client.get("/info", query_string={"withdata": True})
     res = json.loads(response.data)
@@ -300,12 +300,13 @@ def test_exportgraphs(client):
     fobj = zfp.infolist()[6] # metadata
     #print(fobj)
     assert fobj.filename == "metadata.json"
-    assert fobj.file_size in [1349]
+    assert fobj.file_size in [1349, 1289]
     contents = zfp.read(fobj.filename)
     print(contents)
     contentsobj = json.loads(contents)
     print(json.dumps(contentsobj[1]))
-    assert json.dumps(contentsobj[1]) == '{"sentence": "The cat killed the mouse in the kitchen during the night", "id": "sentence 3", "filename": "3.svg", "sourcefilename": "/home/johannes/rhaglenni/python/metamorphosed/metamorphosed/data/testamr.txt"}'
+    del contentsobj[1]["sourcefilename"]
+    assert json.dumps(contentsobj[1]) == '{"sentence": "The cat killed the mouse in the kitchen during the night", "id": "sentence 3", "filename": "3.svg"}'
     #for x in zfp.infolist():
     #    print(x.filename, x.file_size)
     #    print(zfp.read(x.filename))

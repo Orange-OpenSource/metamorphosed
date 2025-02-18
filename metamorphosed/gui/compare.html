@@ -89,19 +89,19 @@
             <div id="searchfunctions">
                 <h3>Information</h3>
                 <table class="tablehoriz">
-                    <tr class="several" style="display:none">
+                    <tr class="several">
                         <td>highlight:</td> <td colspan="7" class="info" id="comparefiles">
                         <select class="comparisons" name="comp" id="compvars" onchange="getcompval(this);"></select>
                         </td>
                     </tr>
-                    <tr class="onlytwo" style="display:none">
+                    <!--tr class="onlytwo" style="display:none">
                         <td>Left filename:</td> <td colspan="7" class="info" id="leftfn">
                         <select class="comparisons" name="comp" id="compvars" style="display:none"></select>
                         </td>
                     </tr>
                     <tr class="onlytwo" style="display:none">
                         <td>Right filename:</td> <td colspan="7" class="info" id="rightfn"></td>
-                    </tr>
+                    </tr-->
 
                     <!--tr>
                         <td>sentences:</td> <td colspan="7" class="info" id="numberofsent"></td>
@@ -112,6 +112,15 @@
                         <td>triples left:</td> <td class="info smatch" id="numleft"></td>
                         <td>triples right:</td> <td class="info smatch" id="numright"></td>
 	            </tr-->
+
+                <tr class="several" id="choosepreferred_row" style="display:none">
+                    <td>chose:</td> <td colspan="7" class="info" id="choosepreferred">
+                    <select class="comparisons" name="best" id="preferred" onchange="getpreferred(this);">
+                        <option value="not_chosen">none chosen</option>
+                    </select>
+                    </td>
+                </tr>
+
                 </table>
                 <div class="tablehoriz" id="compres">
 

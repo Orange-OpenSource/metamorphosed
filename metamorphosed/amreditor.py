@@ -33,7 +33,7 @@
 # Software Name: MetAMoRphosED AMR-Editor
 # Author: Johannes Heinecke
 
-# version 4.4.0 as of 12th February 2025
+# version 4.5.0 as of 18th February 2025
 
 import re
 import readline
@@ -47,7 +47,7 @@ from metamorphosed.reification import getInstance
 import metamorphosed.amr_comparison as amr_comparison
 
 
-VERSION = "4.4.0"
+VERSION = "4.5.0"
 
 # terminology
 # instance  a / ...

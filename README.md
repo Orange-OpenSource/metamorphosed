@@ -310,6 +310,8 @@ You may choose a (comma separated list) of concepts which will be highlighted in
 
 ![Reified relation ](doc/export_graphs.png)
 
+The images are downloaded in a .zip file which also contains a `metadata.json` metadata file which contains the sentence id and the text which correspond to the graph.
+
 ## Edge prediction
 
 (still Beta)

@@ -59,6 +59,7 @@ def main():
     parser.add_argument("--nogit", dest="git", default=True, action="store_false", help='no git add/commit, even if file is git controlled (does nevertheless overwrite existing file)')
     parser.add_argument("--edge_predictor", "-E", default=None, help="yml file which defines an Edge Predictor class (filename, Classname and parameters")
     parser.add_argument("--smatchpp", "-S", action='store_true', help='use smatchpp (https://github.com/flipz357/smatchpp) instead of smatch')
+    parser.add_argument("--preferred", default=None, help="json file with preferred graphs (used together which --compare)")
 
     if len(sys.argv) < 2:
         parser.print_help()
@@ -75,7 +76,8 @@ def main():
                                   predictor=args.edge_predictor,
                                   do_git=args.git,
                                   compare=args.compare,
-                                  smatchpp=args.smatchpp)
+                                  smatchpp=args.smatchpp,
+                                  preferred=args.preferred)
             aes.start()
         except Exception as e:
             print(e, file=sys.stderr)

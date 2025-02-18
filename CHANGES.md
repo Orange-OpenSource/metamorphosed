@@ -1,5 +1,8 @@
 # Changes
 
+## Version 4.5.0
+* possiblity to choose best graph in compare mode (to create a AMR file from mulitple annotations)
+
 ## Version 4.4.0
 * use different nodes for identical literals in visualizations
 * function to modify a variable

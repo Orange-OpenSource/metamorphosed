@@ -75,7 +75,7 @@ function getServerInfo() {
 			//$.each(data,
 			//	function (key, value) {
 			//		//console.log("eee ", key, value);
-			//		$('#sitable').append('<tr id="tr_' + key + '">');
+			//		$('#sitable').appreferredpend('<tr id="tr_' + key + '">');
 			//		$('#tr_' + key).append('<td id="td_k_' + key + '">');
 			//		$('#tr_' + key).append('<td id="td_v_' + key + '">');
 			//		$('#td_k_' + key).append(key);
@@ -91,16 +91,21 @@ function getServerInfo() {
 
 			//console.log("BBB", data);
 			if (data.otherfilenames.length > 0) {
-				$('.comparisons').empty();
+				$('#compvars').empty();
 				data.otherfilenames.splice(0, 0, data.filename);
 				//console.log("BBB", data.comparisons);
 				$.each(data.comparisons,
 					function (key, value) {
-						//console.log("AAAbb", key, value[0], value[1]);
-						$('.comparisons').append('<option value="' + value + '">' + data.otherfilenames[value[0] - 1] + " / " + data.otherfilenames[value[1] - 1]);
+						$('#compvars').append('<option value="' + value + '">' + data.otherfilenames[value[0] - 1] + " / " + data.otherfilenames[value[1] - 1]);
 					});
-				$(".onlytwo").hide();
-				$(".several").show();
+
+				$.each(data.otherfilenames,
+						function (key, value) {
+							$('#preferred').append('<option value="' + value + '">' + value);
+						});
+
+				//$(".onlytwo").hide();
+				//$(".several").show();
 			/*} else {
 				$("#leftfn").html(data.filename);
 				$("#rightfn").html(data.otherfilenames[0]);
@@ -176,6 +181,48 @@ var visible_divselectors = {};
 function getcompval(obj) {
 	// reload sentence when changing pair to be compared
 	$("#lire").click();
+}
+
+function getpreferred(obj) {
+	// send filename of best graph to server
+	//$("#lire").click();
+	URL_BASE = 'setpreferred';
+	$("#resultat").empty(); // vider le div
+	$.ajax({
+		url: URL_BASE, // + "json", //+'/foo/fii?fuu=...',
+		type: 'GET',
+		data: {
+			"num": $("#sentnum").val(),
+			"preferred": $("#preferred").val(),
+			"compare": $("#compvars").val()
+		},
+		//headers: {
+		//    'Content-type': 'text/plain',
+		//},
+		statusCode: {
+			204: function () {
+				alert('No input text');
+			},
+		},
+
+		success: function (data) {
+			console.log("SUCCESS ", data);
+			formatAMR(data);
+			currentsentnum = data.num;
+		},
+		error: function (data) {
+			// do something else
+			//console.log("ERREUR ", data);
+			$("#resultat").append('<div class="error" id="error">');
+			//$('#error').append(data.responseJSON.error);
+			if (data.responseJSON == undefined) {
+				$('#error').append("serveur not responding");
+			} else {
+				$('#error').append(data.responseJSON.error);
+			}
+		}
+	});
+
 }
 
 
@@ -383,7 +430,11 @@ function formatAMR(data) {
 		});
 
 	$('#ctr_' + $('#compvars').val().replace(",", "_")).addClass("boldline")
-
+    //console.log("PPPPPP", data.preferred.source);
+	if (data.preferred) {
+		$('#preferred').val(data.preferred.source);
+	}
+	$('#choosepreferred_row').show();
 	if ('#innertext_' + currentsentnum in visible_divselectors && visible_divselectors['#innertext_' + currentsentnum] == false) {
 		ToggleDiv('#innertext_' + currentsentnum, "#togglesentence");
 	}
@@ -447,7 +498,7 @@ $(document).ready(function () {
 			type: 'GET',
 			data: {
 				"num": $("#sentnum").val(),
-				"compare": $(".comparisons").val(),
+				"compare": $("#compvars").val()
 			},
 			//headers: {
 			//    'Content-type': 'text/plain',
@@ -496,7 +547,7 @@ $(document).ready(function () {
 		params["direction"] = this.id;
 		params["num"] = currentsentnum;
 		//params["compare"] = true;
-		params["compare"] = $(".comparisons").val();
+		params["compare"] = $("#compvars").val();
 		$.ajax({
 			url: URL_BASE,
 			type: 'GET',
