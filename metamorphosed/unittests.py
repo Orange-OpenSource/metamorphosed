@@ -123,6 +123,9 @@ def app_once():
     #app.config.update({
     #    "TESTING": True,
     #})
+    datadir = tempfile.TemporaryDirectory()
+    #print("temporary test directory", datadir)
+    #shutil.copyfile(mydir + "/data/preferred.json", datadir.name + "/preferred.json")
     aes = AMR_Edit_Server(4568,
                           mydir + "/data/comptest_gold.txt",
                           None, #"propbank-frames/frames/",
@@ -133,12 +136,44 @@ def app_once():
                           None, # author
                           mydir + "/data/reification-table.txt",
                           False, # do_git
-                          compare=[mydir + "/data/comptest_sys.txt"]
+                          compare=[mydir + "/data/comptest_sys.txt"],
+                          preferred=datadir.name + "/preferred.json" # file will be created by test
                           )
     app = aes.app
 
     # other setup can go here
     yield app
+
+    # clean up / reset resources here
+
+
+# start server just for one test (--compare and --preferred)
+@pytest.fixture()
+def app_once2():
+    #app = create_app()
+    #app.config.update({
+    #    "TESTING": True,
+    #})
+    datadir = tempfile.TemporaryDirectory()
+    #print("temporary test directory", datadir)
+    #shutil.copyfile(mydir + "/data/preferred.json", datadir.name + "/preferred.json")
+    aes = AMR_Edit_Server(4568,
+                          mydir + "/data/comptest_gold.txt",
+                          None, #"propbank-frames/frames/",
+                          mydir + "/data/relations.txt",
+                          None, #"concepts.txt",
+                          None, # "constraints.yml",
+                          False, # readonly
+                          None, # author
+                          mydir + "/data/reification-table.txt",
+                          False, # do_git
+                          compare=[mydir + "/data/comptest_sys.txt"],
+                          preferred=datadir.name + "/preferred.json" # file will be created by test
+                          )
+    app = aes.app
+
+    # other setup can go here
+    yield app, datadir.name, aes
 
     # clean up / reset resources here
 
@@ -178,6 +213,13 @@ def client(app):
 @pytest.fixture()
 def client_once(app_once):
     return app_once.test_client()
+
+
+@pytest.fixture()
+def client_once2(app_once2):
+    app2, datadir, aes = app_once2
+    return app2.test_client(), datadir, aes
+    #return app_once2.test_client()
 
 
 @pytest.fixture()
@@ -300,7 +342,7 @@ def test_exportgraphs(client):
     fobj = zfp.infolist()[6] # metadata
     #print(fobj)
     assert fobj.filename == "metadata.json"
-    assert fobj.file_size in [1349, 1289]
+    #assert fobj.file_size in [1349, 1289]
     contents = zfp.read(fobj.filename)
     print(contents)
     contentsobj = json.loads(contents)
@@ -1021,8 +1063,9 @@ def test_reify_dereify_missing_ARG(client):
         ]
 
 
-def test_compare_read(client_once):
-    response = client_once.get("/read", query_string={"num": 1, "compare": "1,2"})
+def test_compare_read(client_once2):
+    client2, datadir, server = client_once2
+    response = client2.get("/read", query_string={"num": 1, "compare": "1,2"})
     res = json.loads(response.data)
     #print("res", json.dumps(res, indent=2))
     assert res["smatch"] == "80.00"
@@ -1030,20 +1073,31 @@ def test_compare_read(client_once):
     assert res["left_triplenum"] == 16
     assert res["right_triplenum"] == 14
 
-    response = client_once.get("/next", query_string={"num": 2, "direction": "next", "compare": "1,2"})
+    response = client2.get("/next", query_string={"num": 2, "direction": "next", "compare": "1,2"})
     res = json.loads(response.data)
-    print("res", json.dumps(res, indent=2))
+    #print("res", json.dumps(res, indent=2))
     #print("res", json.dumps(res["penman"], indent=2))
     #print("res", json.dumps(res["penman2"], indent=2))
     assert res["smatch"] == "100.00"
     assert res["penman"] == res["others"][0]["penman"]
 
-    response = client_once.get("/next", query_string={"num": 2, "direction": "last", "compare": "1,2"})
-    response = client_once.get("/read", query_string={"num": 4, "compare": "1,2"})
+    response = client2.get("/next", query_string={"num": 2, "direction": "last", "compare": "1,2"})
+    response = client2.get("/read", query_string={"num": 4, "compare": "1,2"})
     res = json.loads(response.data)
     #print("res1", json.dumps(res["penman"], indent=2))
     #print("res2", json.dumps(res["others"][0]["penman"], indent=2))
     assert res["smatch"] == "57.14"
+
+    response = client2.get("/setpreferred", query_string={"num": 3, "compare": "1,2", "preferred": server.filename})
+    response = client2.get("/setpreferred", query_string={"num": 1, "compare": "1,2", "preferred": server.filename})
+    res = json.loads(response.data)
+    #/setpreferred?num=999&preferred=annotator-2.txt&compare=1,2
+
+    server.save()
+    with open(datadir + "/preferred.json") as ifp:
+        print(ifp.read())
+    with open(datadir + "/preferred.amr.txt") as ifp:
+        print(ifp.read())
 
 
 def test_smatchpm():

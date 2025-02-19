@@ -430,9 +430,11 @@ function formatAMR(data) {
 		});
 
 	$('#ctr_' + $('#compvars').val().replace(",", "_")).addClass("boldline")
-    //console.log("PPPPPP", data.preferred.source);
+	console.log("PPPPPP", data)
 	if (data.preferred) {
-		$('#preferred').val(data.preferred.source);
+             $('#preferred').val(data.preferred.source);
+	} else {
+             $('#preferred').val("not_chosen");
 	}
 	$('#choosepreferred_row').show();
 	if ('#innertext_' + currentsentnum in visible_divselectors && visible_divselectors['#innertext_' + currentsentnum] == false) {
