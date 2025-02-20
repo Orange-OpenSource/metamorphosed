@@ -357,7 +357,7 @@ start _metamorphosed_ with the option `--edge_predictor` (or `-E`):
 
 If you specify a second AMR file using the option `--compare  <amr file 2> <amr file 3> <amr file 4>`, _metAMoRphosED_ will show the corresponding graphs of both files side-by-side, highlighting differences (in green) and displaying the [Smatch](https://github.com/snowblink14/smatch) score (with the option `--smatchpp` the [SmatchPP](https://github.com/flipz357/smatchpp/) package is used instead of Smatch):
 
-![AMR file comparison ](doc/comparison.png)
+![AMR file comparison ](doc/comparison-multiple-files.png)
 
 It is possible to search in the text, PENMAN and comments as in the edit mode. However, editing is not possible.
 
@@ -370,7 +370,6 @@ If you add the option `--preferred <preferredgraphs.json>` you can choose a grap
 To compare several files (for instance the annotations of multiple annotators), specify one of the files using the `-f <amr file 1>` option, and all other with  `--compare <amr file 2> <amr file 3> <amr file 4>`.
 _metAMoRphosED_ switches automatically in multifile mode. In order to see the difference (ans Smatch) between two files for the displayed sentence choose the two files to compare with the `comparisons`-selection bar
 
-![AMR file comparison ](doc/comparison-multiple-files.png)
 
 # AMR Coreference editor
 
