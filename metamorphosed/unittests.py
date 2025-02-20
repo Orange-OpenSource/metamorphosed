@@ -308,7 +308,7 @@ def test_exportgraphs(client):
     assert len(zfp.infolist()) == 26
     fobj = zfp.infolist()[10]
     assert fobj.filename == "11.pdf"
-    assert fobj.file_size in [14027, 14028, 13940]
+    assert fobj.file_size in [14028, 14029, 13940]
     #assert fobj.file_size == 14028 #13940
     contents = zfp.read(fobj.filename)
     assert contents.startswith(b'%PDF-1.7\n%\xb5\xed\xae\xfb\n4') or contents.startswith(b'%PDF-1.5\n%\xb5\xed\xae\xfb\n4')

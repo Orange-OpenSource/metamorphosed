@@ -2,7 +2,7 @@
 
 # This library is under the 3-Clause BSD License
 #
-# Copyright (c) 2022-2023,  Orange
+# Copyright (c) 2022-2025,  Orange
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 # Software Name: MetAMoRphosED AMR-Editor
 # Author: Johannes Heinecke
 
-# version 1.6 as of 12th November 2023
+# version 1.7 as of 20th February 2025
 
 # read .xml and if present .json file (if absent, AMRfiles must be given) and display a block of sentences with coreferences (from XML)
 # allow adding new coreferences and deleting incorrect ones
@@ -49,7 +49,7 @@ from xml.dom import minidom
 import amrs2dot
 
 
-VERSION = "1.6"
+VERSION = "1.7"
 
 # hurts E402. TODO change somehow
 parent = pathlib.Path(os.path.abspath(__file__)).parent.parent
@@ -197,7 +197,7 @@ class IdentChain:
             self.prefix = ""
         self.mentions = []
         self.implicitroles = []
-        if xmlparent:
+        if xmlparent is not None:
             # parsing data, if absent, creating new chain
             for x in xmlparent:
                 if x.tag == "mention":

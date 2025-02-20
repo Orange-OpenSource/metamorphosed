@@ -41,6 +41,7 @@ from metamorphosed.exception import ServerException
 
 NOT_CHOSEN = "not_chosen"
 
+
 class PreferredGraphs:
     def __init__(self, amrfiledict, preferredfile):
         self.filedict = amrfiledict
@@ -72,7 +73,7 @@ class PreferredGraphs:
                 # check whether all sources in this file are loaded via --compare
                 for pos, obj in self.preferred.items():
                     if obj.get("source") not in self.filedict and obj.get("source") != NOT_CHOSEN:
-                        raise ServerException("preferred file '%s' contains a source (pos:%s, sid:%s) '%s' not used in this session" % (preferred, pos, obj.get("sid"), obj.get("source")))
+                        raise ServerException("preferred file '%s' contains a source (pos:%s, sid:%s) '%s' not used in this session" % (self.preferredfile, pos, obj.get("sid"), obj.get("source")))
 
     def set(self, sentnum, sent, source):
         # set source of preferred graph

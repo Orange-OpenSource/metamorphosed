@@ -95,11 +95,11 @@ class AMR_Edit_Server:
 
         self.readonly = readonly
         self.otheramrdocs = [] # (doc,aps)
-        #self.NOT_CHOSEN = "not_chosen" # if changed here, also change in compare.js
+
         if compare is not None:
             self.readonly = True
             self.do_git = False
-            
+
             filedict = collections.OrderedDict({filename: self.amrdoc})
             # inter-annotator mode
             for fn in compare:
@@ -114,45 +114,10 @@ class AMR_Edit_Server:
                         ap.lastpm = cursentence.amr
                         ap.comments = cursentence.comments
                 self.otheramrdocs.append((doc, aps))
-
+            print("all compare sentences initialized")
 
             if preferred is not None:
-                #filelist = [self.filename]
-                #filelist += compare
-
                 self.preferred = PreferredGraphs(filedict, preferred)
-
-
-#            self.filelist = [self.filename]
-#            self.filelist += compare
-#            self.filedict = {self.filename: self.amrdoc}
-#            if preferred is not None:
-#                self.preferredfile = preferred
-#                if os.path.isfile(preferred):
-#                    with open(preferred) as ifp:
-#                        obj = json.load(ifp)
-#                        #print(obj)
-#                        if "preferred" not in obj:
-#                            raise Exception("bad format for preferred file '%s' does not contain 'preferred'" % (preferred))
-#                        if "files" not in obj:
-#                            raise Exception("bad format for preferred file '%s' does not contain 'files'" % (preferred))
-#                        self.preferred = obj["preferred"]
-#                        if (set(self.filelist)) != set(obj["files"]):
-#                            raise Exception("files specified preferred file '%s' do not correspond to files given '%s' != '%s'" % (preferred, self.filelist, obj["files"]))
-#                        # must be {"pos": position of sentence in file # Attention: must be a stringnot an int ! json.dumps() silently transforms int keys in strings
-#                        #             {
-#                        #               "sid": sentence id
-#                        #               "source": filename with best graph
-#                        #             }
-#                        #          }
-#                        # TODO check with jsonschema
-#
-#                        # check whether all sources in this file are loaed via --compare
-#                        for pos, obj in self.preferred.items():
-#                            if obj.get("source") not in self.filelist and obj.get("source") != self.NOT_CHOSEN:
-#                                raise Exception("preferred file '%s' contains a source (pos:%s, sid:%s) '%s' not used in this session" % (preferred, pos, obj.get("sid"), obj.get("source")))
-#                else:
-#                    self.preferred = {}
 
         else:
             if reifications:
@@ -181,24 +146,6 @@ class AMR_Edit_Server:
             self.initstates.append(ap.lastpm)
 
         print("all sentences initialized")
-
-#        self.otheramrdocs = [] # (doc,aps)
-#        if compare is not None:
-#            # inter-annotator mode
-#            for fn in compare:
-#                doc = amrdoc.AMRdoc(fn)
-#                self.filedict[fn] = doc
-#                aps = {}
-#                for sentnum, cursentence in enumerate(doc.sentences, start=1):
-#                    if sentnum % 10 == 0:
-#                        print("%d initialized" % sentnum, end="\r")
-#                        ap = amreditor.AMRProcessor()
-#                        aps[sentnum] = ap
-#                        ap.lastpm = cursentence.amr
-#                        ap.comments = cursentence.comments
-#                self.otheramrdocs.append((doc, aps))
-#
-#            print("all compare sentences initialized")
 
         # stack of last actions, used by undo/redo
         # save current ap **after** modifiying it
@@ -1020,13 +967,6 @@ class AMR_Edit_Server:
 
                 if self.preferred:
                     dico["preferred"] = self.preferred.get(sentnum)
-#                    sentnumstr = str(sentnum) # needs to be a string since the json file (which is written) cannot have int keys
-#                    if sentnumstr not in self.preferred:
-#                        self.preferred[sentnumstr] = {
-#                            "sid": cursentence.id,
-#                            "source": self.NOT_CHOSEN
-#                            }
-#                    dico["preferred"] = self.preferred[sentnumstr]
                 else:
                     dico["preferred"] = None
 
@@ -1044,40 +984,6 @@ class AMR_Edit_Server:
         if self.preferred is not None:
             print("zzzzzzzzzzzzzzzzz")
             self.preferred.save()
-            
-#            outfn = self.preferredfile
-#
-#            with open(outfn + ".amr.txt", "w") as ofp:
-#                print(" *  saving preferred graphs into", outfn + ".amr.txt")
-#                for pos in range(len(self.amrdoc.sentences)):
-#                    strpos = str(pos + 1)
-#                    if strpos in self.preferred:
-#                        source = self.preferred[strpos]["source"]
-#                        if source != self.NOT_CHOSEN:
-#                            adoc = self.filedict[source]
-#                            sent = adoc.sentences[pos]
-#                            now = time.strftime("%a %b %d, %Y %H:%M", time.localtime(time.time()))
-#                            sent.comments.append("::preferred %s ::choose-date %s" % (source, now))
-#                            sent.write(ofp)
-#                    else:
-#                        # not yet chose, output empty graph
-#                        self.amrdoc.sentences[pos].write(ofp, onlyheader=True)
-#                        print("()\n", file=ofp)
-#
-#            if os.path.isfile(outfn):
-#                outfn += ".2"
-#            with open(outfn, "w") as ofp:
-#                print(" *  saving list of preferred graphs in", outfn)
-#                # self.otheramrdocs = [doc,aps]
-#                dico = {"files": self.filelist}
-#                sortedpreferred = {}
-#                for key in sorted(self.preferred, key=int):
-#                    if self.preferred[key]["source"] != self.NOT_CHOSEN:
-#                        sortedpreferred[key] = self.preferred[key]
-#                dico["preferred"] = sortedpreferred
-#                if len(sortedpreferred) != len(self.amrdoc.sentences):
-#                    print(" ** ATTENTION output file incomplete, for some sentences no preferred graphs has been chosen")
-#                print(json.dumps(dico, indent=2, ensure_ascii=False), file=ofp)
 
 #    def findinvalidparameters(self, request, validlist):
 #        for k, v in request.values.items():

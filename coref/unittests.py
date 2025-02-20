@@ -2,7 +2,7 @@
 
 # This library is under the 3-Clause BSD License
 #
-# Copyright (c) 2022-2023,  Orange
+# Copyright (c) 2022-2025,  Orange
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -32,7 +32,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Software Name: MetAMoRphosED AMR-Editor for coreferences
 # Author: Johannes Heinecke
-# version 1.6 as of 2nd June 2023
+# version 1.7 as of 20th February 2025
 
 import glob
 import json
@@ -120,7 +120,7 @@ def test_request_example(client):
 def test_info(client):
     response = client.get("/version")
     res = json.loads(response.data)
-    assert res == {'name': 'AMR Coreference Editor', 'version': '1.6', 'apiversion': 1.1}
+    assert res == {'name': 'AMR Coreference Editor', 'version': '1.7', 'apiversion': 1.1}
 
     response = client.get("/info")
     res = json.loads(response.data)
