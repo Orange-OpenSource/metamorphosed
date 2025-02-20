@@ -364,7 +364,29 @@ It is possible to search in the text, PENMAN and comments as in the edit mode. H
 The `highlight` select button allows to chose two graphs which differences will be highlighted in the visualisations.
 If you add the option `--preferred <preferredgraphs.json>` you can choose a graph for each sentence from a given file (for instance to choose from several annotations. When stopping the server two files are generated:
 
-* `preferredgraphs.json` which notes which graph is chosen for any given sentence. If this file exists when the server is started, the information is read and shown.
+* `preferredgraphs.json` which notes which graph is chosen for any given sentence. If this file exists when the server is started, the information is read and shown. It has the following format:
+
+```
+{
+  "files": [
+    "comptest_annot1.txt",
+    "comptest_annot2.txt",
+    "comptest_annot3.txt",
+    "comptest_annot4.txt"
+  ],
+  "preferred": {
+    "2": {
+      "sid": "sentence 2",
+      "source": "comptest_annot2.txt"
+    },
+    "4": {
+      "sid": "sentence 4",
+      "source": "comptest_annot4.txt"
+    }
+  }
+}
+```
+
 * `preferredgraphs.amr.txt` creates a AMR file with all the sentences for which a graph has been chosen
 
 To compare several files (for instance the annotations of multiple annotators), specify one of the files using the `-f <amr file 1>` option, and all other with  `--compare <amr file 2> <amr file 3> <amr file 4>`.
