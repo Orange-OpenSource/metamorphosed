@@ -129,6 +129,10 @@ function getServerInfo() {
 			$("#cmdl").empty();
 			$("#cmdl").append(data.cmdline.replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
 
+			if (data.preferred_file) {
+			    $('#choosepreferred_row').show();
+			    $("#preferredfile").append(data.preferred_file)
+			}
 			if (data.sentences) {
 				sentencelist = data.sentences;
 				for (var i = 0; i < data.sentences.length; ++i) {
@@ -436,7 +440,7 @@ function formatAMR(data) {
 	} else {
              $('#preferred').val("not_chosen");
 	}
-	$('#choosepreferred_row').show();
+
 	if ('#innertext_' + currentsentnum in visible_divselectors && visible_divselectors['#innertext_' + currentsentnum] == false) {
 		ToggleDiv('#innertext_' + currentsentnum, "#togglesentence");
 	}

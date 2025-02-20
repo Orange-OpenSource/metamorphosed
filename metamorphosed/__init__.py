@@ -222,6 +222,8 @@ class AMR_Edit_Server:
                     for b in range(a + 1, len(self.otheramrdocs) + 1):
                         possible_comparisons.append([a + 1, b + 1])
                 dico["comparisons"] = possible_comparisons
+                if self.preferred:
+                    dico["preferred_file"] = self.preferred.preferredfile
 
             if withdata:
                 dico["relations"] = sorted(self.amr_rels.relations)
@@ -982,7 +984,6 @@ class AMR_Edit_Server:
             self.savefile(self.filename, self.fileversion)
 
         if self.preferred is not None:
-            print("zzzzzzzzzzzzzzzzz")
             self.preferred.save()
 
 #    def findinvalidparameters(self, request, validlist):

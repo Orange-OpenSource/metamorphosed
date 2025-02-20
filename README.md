@@ -387,7 +387,7 @@ If you add the option `--preferred <preferredgraphs.json>` you can choose a grap
 }
 ```
 
-* `preferredgraphs.amr.txt` creates a AMR file with all the sentences for which a graph has been chosen
+* `preferredgraphs.amr.txt` creates a AMR file with all the sentences for which a graph has been chosen. For sentences without a graph chose, an empty graph is written in to file (and a warning issued).
 
 To compare several files (for instance the annotations of multiple annotators), specify one of the files using the `-f <amr file 1>` option, and all other with  `--compare <amr file 2> <amr file 3> <amr file 4>`.
 _metAMoRphosED_ switches automatically in multifile mode. In order to see the difference (ans Smatch) between two files for the displayed sentence choose the two files to compare with the `comparisons`-selection bar
