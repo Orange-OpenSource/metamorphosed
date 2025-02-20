@@ -10,7 +10,7 @@ by LDC (https://catalog.ldc.upenn.edu/LDC2020T02)
 * _metAMoRphosED_ allows to download the displayed graphs as SVG or to export all graphs in either SVG, PDF or PNG format
 * _metAMoRphosED_ provides a script to calculate inter-annotator agreement (see section [Inter-annotator agreement](#inter-annotator-agreement))
 
-Current version 4.4.0 (see [CHANGES.md](CHANGES.md))
+Current version 4.5.0 (see [CHANGES.md](CHANGES.md))
 
 ## TL;DR
 * if your updating from version up to 4.0.0: the file `server.py` has been renamed to `metamorphosed_server.py`, also install the additional packages:
@@ -355,11 +355,17 @@ start _metamorphosed_ with the option `--edge_predictor` (or `-E`):
 
 # AMR file comparison
 
-If you specify a second AMR file using the option `--compare <amr file>`, _metAMoRphosED_ will show the corresponding graphs of both files side-by-side, highlighting differences (in green) and displaying the [Smatch](https://github.com/snowblink14/smatch) score (with the option `--smatchpp` the [SmatchPP](https://github.com/flipz357/smatchpp/) package is used instead of Smatch):
+If you specify a second AMR file using the option `--compare  <amr file 2> <amr file 3> <amr file 4>`, _metAMoRphosED_ will show the corresponding graphs of both files side-by-side, highlighting differences (in green) and displaying the [Smatch](https://github.com/snowblink14/smatch) score (with the option `--smatchpp` the [SmatchPP](https://github.com/flipz357/smatchpp/) package is used instead of Smatch):
 
 ![AMR file comparison ](doc/comparison.png)
 
 It is possible to search in the text, PENMAN and comments as in the edit mode. However, editing is not possible.
+
+The `highlight` select button allows to chose two graphs which differences will be highlighted in the visualisations.
+If you add the option `--preferred <preferredgraphs.json>` you can choose a graph for each sentence from a given file (for instance to choose from several annotations. When stopping the server two files are generated:
+
+* `preferredgraphs.json` which notes which graph is chosen for any given sentence. If this file exists when the server is started, the information is read and shown.
+* `preferredgraphs.amr.txt` creates a AMR file with all the sentences for which a graph has been chosen
 
 To compare several files (for instance the annotations of multiple annotators), specify one of the files using the `-f <amr file 1>` option, and all other with  `--compare <amr file 2> <amr file 3> <amr file 4>`.
 _metAMoRphosED_ switches automatically in multifile mode. In order to see the difference (ans Smatch) between two files for the displayed sentence choose the two files to compare with the `comparisons`-selection bar
