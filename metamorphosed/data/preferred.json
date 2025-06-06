@@ -1,0 +1,25 @@
+{
+  "files": [
+    "comptest_gold.txt",
+    "comptest_sys.txt"
+  ],
+  "preferred": {
+    "1": {
+      "sid": "sentence 1",
+      "source": "comptest_gold.txt"
+    },
+    "2": {
+      "sid": "sentence 2",
+      "source": "comptest_sys.txt"
+    },
+    "3": {
+      "sid": "sentence 3",
+      "source": "comptest_gold.txt"
+    },
+    "4": {
+      "sid": "sentence 4",
+      "source": "comptest_sys.txt"
+    }
+  }
+}
+

@@ -244,7 +244,7 @@ def test_info(client):
     response = client.get("/version")
     res = json.loads(response.data)
     #print("res", res, file=sys.stderr)
-    assert res == {'name': 'AMR Editor', 'version': '4.5.0', 'apiversion': '1.9.0'}
+    assert res == {'name': 'AMR Editor', 'version': '4.6.0', 'apiversion': '1.9.0'}
 
     response = client.get("/info", query_string={"withdata": True})
     res = json.loads(response.data)
@@ -1270,7 +1270,7 @@ def test_iaa():
     import io
     import metamorphosed.inter_annotator as inter_annotator
     reportfile = tempfile.TemporaryDirectory()
-    #print("AAAA", reportfile.name, dir(reportfile))
+    print("AAAA", reportfile.name, dir(reportfile))
     iaa = inter_annotator.IAA([mydir + "/data/comptest_annot1.txt", mydir + "/data/comptest_annot3.txt", mydir + "/data/comptest_annot4.txt"], debug=True)
     s1 = io.StringIO()
     iaa.eval(micro=True, runs=1, ofp=s1, report=os.path.join(reportfile.name, "report1.txt"), sortcolumn=5)
@@ -1312,11 +1312,13 @@ annotator pair inter-annotator agreement Smatch F1: 58.86 differences: 4.4167
 """
     assert gold2 == s2.getvalue()
 
-    report2 = """id	smatch 0-1	smatch 0-2	smatch 1-2	average smatch	diffs 0-1	diffs 0-2	diffs 1-2	average diffs
-sentence 4	62.5	50.0	75.0	62.5	3	4	2	3.0
-sentence 2	66.67	75.0	72.73	71.46	5	4	3	4.0
-sentence 1	69.23	71.43	61.54	67.4	5	4	6	5.0
-sentence 3	40.0	22.22	40.0	34.07	5	6	6	5.67
+    report2 = """id	smatch 0-1	smatch 0-2	smatch 1-2	average smatch	diffs 0-1	diffs 0-2	diffs 1-2	average diffs	aver. smatch annot 0	aver. smatch annot 1	aver. smatch annot 2	most central annotator
+sentence 4	62.5	50.0	75.0	62.5	3	4	2	3.0	56.25	68.75	62.5	1
+sentence 2	66.67	75.0	72.73	71.46	5	4	3	4.0	70.83	69.7	73.86	2
+sentence 1	69.23	71.43	61.54	67.4	5	4	6	5.0	70.33	65.38	66.48	0
+sentence 3	40.0	22.22	40.0	34.07	5	6	6	5.67	31.11	40.0	31.11	1
+
+global	Smatch F1: 58.86	 differences: 4.4167
 """
 
     ifp = open(os.path.join(reportfile.name, "report2.txt"))
@@ -1369,11 +1371,13 @@ annotator pair inter-annotator agreement Smatch F1: 58.86 differences: 4.4167
 """
     assert gold2 == s2.getvalue()
 
-    report2 = """id	smatch 0-1	smatch 0-2	smatch 1-2	average smatch	diffs 0-1	diffs 0-2	diffs 1-2	average diffs
-sentence 3	40.0	22.22	40.0	34.07	5	6	6	5.67
-sentence 4	62.5	50.0	75.0	62.5	3	4	2	3.0
-sentence 1	69.23	71.43	61.54	67.4	5	4	6	5.0
-sentence 2	66.67	75.0	72.73	71.46	5	4	3	4.0
+    report2 = """id	smatch 0-1	smatch 0-2	smatch 1-2	average smatch	diffs 0-1	diffs 0-2	diffs 1-2	average diffs	aver. smatch annot 0	aver. smatch annot 1	aver. smatch annot 2	most central annotator
+sentence 3	40.0	22.22	40.0	34.07	5	6	6	5.67	31.11	40.0	31.11	1
+sentence 4	62.5	50.0	75.0	62.5	3	4	2	3.0	56.25	68.75	62.5	1
+sentence 1	69.23	71.43	61.54	67.4	5	4	6	5.0	70.33	65.38	66.48	0
+sentence 2	66.67	75.0	72.73	71.46	5	4	3	4.0	70.83	69.7	73.86	2
+
+global	Smatch F1: 58.86	 differences: 4.4167
 """
 
     ifp = open(os.path.join(reportfile.name, "report2+.txt"))

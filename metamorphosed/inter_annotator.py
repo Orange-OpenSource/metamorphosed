@@ -49,6 +49,7 @@
 
 # option: using number of differences between two graphs instead of smatch
 
+import json
 import sys
 
 import metamorphosed.amrdoc as amrdoc
@@ -62,9 +63,15 @@ class IAA:
         self.debug = debug
         self.last = last
         self.first = first
-        for fn in files:
+
+        self.filenames = []
+        for fn in files: # not filenames but io.TextIOWrapper
             doc = amrdoc.AMRdoc(fn)
             self.docs.append(doc)
+            if isinstance(fn, str):
+                self.filenames.append(fn)
+            else:
+                self.filenames.append(fn.name)
         for d in self.docs[1:]:
             if len(d.sentences) != len(self.docs[0].sentences):
                 # if length > last, we can go on
@@ -157,6 +164,14 @@ class IAA:
             # comparing all pairs of annotators of a sentence and calculate an average for each sentence
             results = [] # list of averages of all sentences smatch of all annotator pairs
             diffresults = []  # differences on all sentences
+            averages = [] # smatch values for each annotator
+
+            preferred = {} # create a preferred file to put the "graph which is closest to all others" (i.e. the mean smatches of this annotator compared to all other annotators)
+            preferred["files"] = []
+            for fn in self.filenames:
+                preferred["files"].append(fn)
+            preferred["preferred"] = {}
+
             if rfp:
                 headers = ["id"]
                 for fi1 in range(self.numfiles):
@@ -167,14 +182,24 @@ class IAA:
                     for fi2 in range(fi1 + 1, self.numfiles):
                         headers.append("diffs %d-%d" % (fi1, fi2))
                 headers.append("average diffs")
+
+                for fi1 in range(self.numfiles):
+                    headers.append("aver. smatch annot %d" % (fi1))
+                headers.append("most central annotator")
                 print("\t".join(headers), file=rfp)
 
             for ix in range(len(self.docs[0].sentences)):
+                # for all sentences
                 if ix < self.first:
                     continue
 
                 localresults = [] # list of smatch for all annotator pairs for a given sentence
                 localdiffresults = []
+
+                localaverages = {} # annotator: [ smatch with other annotator] # a la multiparse
+                for fi1 in range(self.numfiles):
+                    localaverages[fi1] = [] # init
+
                 for fi1 in range(self.numfiles):
                     sent1 = self.docs[fi1].sentences[ix]
                     for fi2 in range(fi1 + 1, self.numfiles):
@@ -183,7 +208,8 @@ class IAA:
                             print("!! Sentences to be compared have different ids: %s != %s" % (sent1.id, sent2.id))
 
                         compres = amr_comparison.compare(sent1.amr, sent2.amr, runs=runs, use_smatchpp=smatchpp, align=True)
-
+                        localaverages[fi1].append(compres.f1)
+                        localaverages[fi2].append(compres.f1)
                         localresults.append(compres.f1)
                         localdiffresults.append(compres.number_of_diffs)
                 if self.debug:
@@ -194,6 +220,7 @@ class IAA:
                 ldmean = sum(localdiffresults) / len(localdiffresults)
                 results.append(lmean)
                 diffresults.append(ldmean)
+                #averages.append(localaverages)
 
                 if rfp:
                     sid = sent1.id
@@ -206,7 +233,18 @@ class IAA:
                     for x in localdiffresults:
                         entry.append(x)
                     entry.append(round(ldmean, 2))
+                    is_best = None
+                    best = 0
+                    for k in localaverages:
+                        mean = sum(localaverages[k]) / len(localaverages[k])
+                        if mean > best:
+                            best = mean
+                            is_best = k
+                        entry.append(round(100 * mean, 2))
+                    entry.append(is_best)
                     reportlines.append(entry)
+                    preferred["preferred"][str(ix + 1)] = {"sid": sent1.id,
+                                                           "source": self.filenames[is_best]}
                 #print("sent", ix, localresults, lmean)
 
                 if self.last > 0 and ix == self.last:
@@ -224,6 +262,13 @@ class IAA:
                 print("averages for %d sentences (smatch): %s" % (len(results), [float("%.2f" % (100 * x)) for x in results]), file=ofp)
                 print("                          (diffs): %s" % ([float("%.2f" % (x)) for x in diffresults]), file=ofp)
             print("annotator pair inter-annotator agreement Smatch F1: %.2f differences: %.4f" % (100 * mean, dmean), file=ofp)
+            print("\nglobal\tSmatch F1: %.2f\t differences: %.4f" % (100 * mean, dmean), file=rfp)
+
+            rfp.close()
+            rfp = open(report + ".preferred.json", "w")
+
+            print(json.dumps(preferred, indent=2), file=rfp)
+            rfp.close()
 
 
 def main():

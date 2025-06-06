@@ -12,7 +12,7 @@ dynamic = ["version"]
 description = "A graphical Abstract Meaning Represention Editor"
 readme = "README.md"
 license = { file ="LICENSE" }
-requires-python = ">=3.10"
+requires-python = "<4.0.0,>=3.10"
 authors = [
     { name = "Johannes Heinecke", email = "johannes.heinecke@orange.com" },
 ]
@@ -32,6 +32,7 @@ dependencies = [
     "requests==2.32.3",
     "smatchpp==1.7.0",
     "werkzeug==3.0.6",
+    "rdflib (==7.1.4)",
 ]
 
 [project.scripts]

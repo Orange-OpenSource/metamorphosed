@@ -1,5 +1,9 @@
 # Changes
 
+## Version 4.6.0
+* new report for inter annotator agreement
+* method to replace parts of a graph (not yet in GUI)
+
 ## Version 4.5.0
 * possiblity to choose best graph in compare mode (to create a AMR file from mulitple annotations)
 * new test

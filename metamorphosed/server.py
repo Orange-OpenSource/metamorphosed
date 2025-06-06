@@ -65,6 +65,7 @@ def main():
         parser.print_help()
     else:
         args = parser.parse_args()
+        #if 1:
         try:
             aes = AMR_Edit_Server(args.port, args.file, args.pbframes,
                                   args.relations,
