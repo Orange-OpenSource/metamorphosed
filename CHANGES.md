@@ -1,5 +1,8 @@
 # Changes
 
+## Version 4.6.1
+* using `uv` instead of `pyenv`
+
 ## Version 4.6.0
 * new report for inter annotator agreement
 * method to replace parts of a graph (not yet in GUI)

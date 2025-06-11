@@ -17,12 +17,35 @@ Current version 4.6.0 (see [CHANGES.md](CHANGES.md))
 ```
 pip install rdflib==7.0.0 oxrdflib==0.3.7
 ```
+or
+
+```
+uv add rdflib==7.0.0 oxrdflib==0.3.7
+```
+
 * if you are updating from versions up to 3.3.0, please install an additional packages:
 ```
 pip install smatchpp==1.7.0 rdflib==7.0.0 oxrdflib==0.3.7
 ```
+or
+
+```
+uv add smatchpp==1.7.0 rdflib==7.0.0 oxrdflib==0.3.7
+```
 
 ## installation
+
+### using `uv`
+
+```
+uv sync
+git submodule update --init
+pushd propbank-frames/frames;
+  git checkout ad2bafa4c9c9c58cc1bc89;
+  wget https://raw.githubusercontent.com/propbank/propbank-frames/development/frames/AMR-UMR-91-rolesets.xml
+popd
+./metamorphosed/installJQ.py
+```
 
 ### Linux
 python 3.10
