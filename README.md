@@ -38,6 +38,7 @@ uv add smatchpp==1.7.0 rdflib==7.0.0 oxrdflib==0.3.7
 ### using `uv`
 
 ```
+sudo apt install libffi-dev
 uv sync
 git submodule update --init
 pushd propbank-frames/frames;
@@ -94,6 +95,14 @@ pytest unittests.py -vv [-k testname] [-s]
 ```
 
 For more complete testing use `tox`:
+
+* with `uv`
+
+```
+uv add tox
+uv run tox
+```
+* else
 
 ```
 pip install -r requirements-test.txt
