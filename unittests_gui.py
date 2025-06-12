@@ -1,15 +1,3 @@
-import os
-import pytest
-import shutil
-import tempfile
-import time
-from threading import Thread
-
-import selenium_test
-
-import amrdoc
-from server import AMR_Edit_Server
-
 #!/usr/bin/env python3
 
 # This library is under the 3-Clause BSD License
@@ -45,20 +33,32 @@ from server import AMR_Edit_Server
 # Author: Johannes Heinecke
 
 # run (pytest-6.2.3)
-#   pytest unittests.py -vv -s
+#   pytest unittests_gui.py -vv -s
 #  -s shows print statements in test
 #  -k test_edit_modliteral (filters tests which do not match argument)
+
+import os
+import pytest
+import shutil
+import tempfile
+import time
+from threading import Thread
+
+import metamorphosed.selenium_test as selenium_test
+import metamorphosed.amrdoc as amrdoc
+from metamorphosed.server import AMR_Edit_Server
 
 
 PORT = 4568
 
+mydir = os.path.dirname(__file__)
 
 # launched only once
 @pytest.fixture(scope="session")
 def app2():
     datadir = tempfile.TemporaryDirectory()
     print("temporary test directory", datadir)
-    shutil.copyfile("testamr.txt", os.path.join(datadir.name, "testamr.txt"))
+    shutil.copyfile(mydir + "/metamorphosed/data/testamr.txt", os.path.join(datadir.name, "testamr.txt"))
 
     aes = AMR_Edit_Server(PORT,
                           datadir.name + "/testamr.txt",
