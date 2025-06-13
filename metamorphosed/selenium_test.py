@@ -2,7 +2,7 @@
 
 # This library is under the 3-Clause BSD License
 #
-# Copyright (c) 2022-2024,  Orange
+# Copyright (c) 2022-2025,  Orange
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -112,9 +112,6 @@ class GUITest:
 
     def addconcept(self):
         # add concept
-        #field = self.driver.find_element(By.ID, "concept")
-        #field.clear()
-        #field.send_keys("house" + Keys.RETURN)
         self.enter_text("concept", "house")
         
         #time.sleep(2)
@@ -122,18 +119,10 @@ class GUITest:
 
     def addname(self):
         # add name
-        #var = self.driver.find_element(By.ID, 'nameof')
-        #s = Select(var)
-        #s.select_by_value("h")
         self.select("nameof", value="h")
-        
-        #field = self.driver.find_element(By.ID, "name")
-        #field.clear()
-        #field.send_keys("Tir na nOg")
         self.enter_text("name", "Tir na nOg")
-        #button = self.driver.find_element(By.ID, "addname")
-        #button.click()
         self.button("addname")
+
         print("named added")
 
         # not needed
@@ -148,23 +137,16 @@ class GUITest:
         b = self.wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="node#l#live-01"]')))
         ac = ActionChains(self.driver)
         ac.move_to_element_with_offset(b, 0, -20).click().perform()
-        #b.click()
         time.sleep(self.pause)
 
         b = self.wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="node#h#house"]')))
         ac.move_to_element_with_offset(b, 0, 20).click().perform()
-        #b.click()
         print("concept linked")
         time.sleep(self.pause)
 
     def settop(self):
         # set new top
-        #var = self.driver.find_element(By.ID, 'topnode')
-        #s = Select(var)
-        #s.select_by_value("h")
         self.select("topnode", value="h")
-        #button = self.driver.find_element(By.ID, "settop")
-        #button.click()
         self.button("settop")
 
     def modstart(self):
@@ -187,23 +169,9 @@ class GUITest:
 
     def addliteral(self):
         # add literal
-        #var = self.driver.find_element(By.ID, 'literalof')
-        #s = Select(var)
-        #s.select_by_value("s")
         self.select("literalof", value="s")
-
-        #field = self.driver.find_element(By.ID, "relationforliteral")
-        #field.clear()
-        #field.send_keys("quant")
         self.enter_text("relationforliteral", "quant")
-
-        #field = self.driver.find_element(By.ID, "newliteral")
-        #field.clear()
-        #field.send_keys("245.6")
         self.enter_text("newliteral", "245.6")
-
-        #button = self.driver.find_element(By.ID, "addliteral")
-        #button.click()
         self.button("addliteral")
 
         time.sleep(self.pause)
@@ -226,11 +194,9 @@ class GUITest:
         
     def safe(self):
         # safefile
-        #x = self.driver.find_element(By.ID, "save")
-        #x.click()
         self.button("save")
         print("file saved")
-        #time.sleep(2)
+
 
     def runtests(self):
         self.readsentence()
