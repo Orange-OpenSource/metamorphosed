@@ -33,7 +33,7 @@
 # Author: Johannes Heinecke
 
 # run (pytest-6.2.3)
-#   pytest unittests_gui.py -vv -s
+#   pytest unittests_gui.py -vv
 #  -s shows print statements in test
 #  -k test_edit_modliteral (filters tests which do not match argument)
 
@@ -58,7 +58,8 @@ mydir = os.path.dirname(__file__)
 def app2():
     datadir = tempfile.TemporaryDirectory()
     print("temporary test directory", datadir)
-    shutil.copyfile(mydir + "/metamorphosed/data/testamr.txt", os.path.join(datadir.name, "testamr.txt"))
+    shutil.copyfile(os.path.join(mydir, "metamorphosed/data/testamr.txt"),
+                    os.path.join(datadir.name, "testamr.txt"))
 
     aes = AMR_Edit_Server(PORT,
                           datadir.name + "/testamr.txt",
@@ -83,38 +84,34 @@ def client(app2):
     app, datadir = app2
     return app.test_client(), datadir
 
+def getcontents(fn, grep=None):
+    with open(fn) as ifp:
+        if not grep:
+            return ifp.read()
+        else:
+            lines = []
+            for line in ifp:
+                if grep not in line:
+                    lines.append(line)
+            return "".join(lines)
 
 def test_gui(client):
     client, datadir = client
-    gt = selenium_test.GUITest(port=PORT, browser="chrome", headless=False)
+    gt = selenium_test.GUITest(port=PORT, browser="chrome", headless=True)
     gt.runtests()
 
-    # coyp result to metamorphosed dir to be able to compare manually
-    shutil.copyfile(os.path.join(datadir.name, "testamr.txt.2"), mydir + "/tmp-ui-test-results.txt")
-    doc = amrdoc.AMRdoc(os.path.join(datadir.name, "testamr.txt.2"))
-    result = doc.sentences[0].amr
-    ref = '''(h / house
-   :ARG0-of (l / live-01
-               :snt2-of (m / multi-sentence
-                           :snt1 (b / bear-02
-                                    :ARG1 p
-                                    :location c
-                                    :name (n / name
-                                             :op1 "Naomie"
-                                             :op2 "Harris")))
-               :ARG0 (p / person
-                        :wiki "Q156586")
-               :location (c / city
-                            :name (n2 / name
-                                      :op1 "London")
-                            :wiki "Q84")
-               :mod (s / still
-                       :quant 245.6))
-   :name (n1 / name
-             :op1 "Tir"
-             :op2 "na"
-             :op3 "nOg"))'''
+    # copy result to metamorphosed dir to be able to compare manually
+    shutil.copyfile(os.path.join(datadir.name, "testamr.txt.2"), os.path.join(mydir, "tmp-ui-test-results.txt"))
 
-    time.sleep(1)
-    # we did only modify the first sentence
-    assert ref == result
+    res = getcontents(os.path.join(datadir.name, "testamr.txt.2"), "::save-date")
+
+    ref = getcontents(os.path.join(mydir, "metamorphosed/data/ui-test-results.txt"), "::save-date")
+#    ofp = open('ref', 'w')
+#    print(ref, file=ofp)
+#    ofp.close()
+#    ofp = open('res', 'w')
+#    print(res, file=ofp)
+#    ofp.close()
+
+    assert ref == res
+

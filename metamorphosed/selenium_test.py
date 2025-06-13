@@ -150,7 +150,7 @@ class GUITest:
         self.button("settop")
 
     def modstart(self):
-        # change starting point of edge
+        # change starting point of edge (n/name will moved from p/person to b/bear)
         # edge
         b = self.wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="edge#p#n#:name"]')))
         #b = self.wait.until(EC.element_to_be_clickable((By.XPATH, '//*[text()="????"]')))
@@ -164,7 +164,6 @@ class GUITest:
         #ac = ActionChains(self.driver)
         #ac.move_to_element_with_offset(b, 0, 5).click().perform()
         b.click()
-
         time.sleep(self.pause)
 
     def addliteral(self):
