@@ -69,32 +69,71 @@ class GUITest:
         self.driver.get("http://%s:%d" % (host, port))
         self.wait = WebDriverWait(self.driver, 20)
         print("init OK")
+        self.pause = 0.5
         time.sleep(5)
 
+    def button(self, bid=None, xpath=None):
+        if xpath:
+            print("BUTTON", xpath)
+            b = self.driver.find_element(By.XPATH, xpath)
+        else:
+            print("BUTTON", bid)
+            b = self.driver.find_element(By.ID, bid)
+        b.click()
+        time.sleep(self.pause)
+        return b
+
+    def enter_text(self, bid, text, xpath=None):
+        if xpath:
+            print("TEXT", xpath, text)
+            b = self.driver.find_element(By.XPATH, xpath)
+        else:
+            print("TEXT", bid, text)
+            b = self.driver.find_element(By.ID, bid)
+        b.clear()
+        b.send_keys(text + Keys.RETURN)
+        time.sleep(self.pause)
+
+    def select(self, bid, index=None, value=None):
+        print("SELECT", bid, index, value)
+        b = self.driver.find_element(By.ID, bid)
+        s = Select(b)
+        if index:
+            s.select_by_index(index)
+        elif value:
+            s.select_by_value(value)
+        time.sleep(self.pause)
+
     def readsentence(self):
-        read = self.driver.find_element(By.ID, "lire")
-        read.click()
+        #read = self.driver.find_element(By.ID, "lire")
+        #read.click()
+        self.button("lire")
         print("sentence read")
 
     def addconcept(self):
         # add concept
-        field = self.driver.find_element(By.ID, "concept")
-        field.clear()
-        field.send_keys("house" + Keys.RETURN)
-
-        time.sleep(2)
+        #field = self.driver.find_element(By.ID, "concept")
+        #field.clear()
+        #field.send_keys("house" + Keys.RETURN)
+        self.enter_text("concept", "house")
+        
+        #time.sleep(2)
         print("concept 'house' added")
 
     def addname(self):
         # add name
-        var = self.driver.find_element(By.ID, 'nameof')
-        s = Select(var)
-        s.select_by_value("h")
-        field = self.driver.find_element(By.ID, "name")
-        field.clear()
-        field.send_keys("Tir na nOg")
-        button = self.driver.find_element(By.ID, "addname")
-        button.click()
+        #var = self.driver.find_element(By.ID, 'nameof')
+        #s = Select(var)
+        #s.select_by_value("h")
+        self.select("nameof", value="h")
+        
+        #field = self.driver.find_element(By.ID, "name")
+        #field.clear()
+        #field.send_keys("Tir na nOg")
+        self.enter_text("name", "Tir na nOg")
+        #button = self.driver.find_element(By.ID, "addname")
+        #button.click()
+        self.button("addname")
         print("named added")
 
         # not needed
@@ -107,25 +146,26 @@ class GUITest:
         print("scrolled")
 
         b = self.wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="node#l#live-01"]')))
-
         ac = ActionChains(self.driver)
         ac.move_to_element_with_offset(b, 0, -20).click().perform()
         #b.click()
-        time.sleep(2)
+        time.sleep(self.pause)
 
         b = self.wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="node#h#house"]')))
         ac.move_to_element_with_offset(b, 0, 20).click().perform()
         #b.click()
         print("concept linked")
-        time.sleep(1)
+        time.sleep(self.pause)
 
     def settop(self):
         # set new top
-        var = self.driver.find_element(By.ID, 'topnode')
-        s = Select(var)
-        s.select_by_value("h")
-        button = self.driver.find_element(By.ID, "settop")
-        button.click()
+        #var = self.driver.find_element(By.ID, 'topnode')
+        #s = Select(var)
+        #s.select_by_value("h")
+        self.select("topnode", value="h")
+        #button = self.driver.find_element(By.ID, "settop")
+        #button.click()
+        self.button("settop")
 
     def modstart(self):
         # change starting point of edge
@@ -135,7 +175,7 @@ class GUITest:
         #ac = ActionChains(self.driver)
         #ac.move_to_element_with_offset(b, 0, 5).click().perform()
         b.click()
-        time.sleep(2)
+        time.sleep(self.pause)
 
         # new start
         b = self.wait.until(EC.element_to_be_clickable((By.ID, 'node#b#bear-02')))
@@ -143,33 +183,54 @@ class GUITest:
         #ac.move_to_element_with_offset(b, 0, 5).click().perform()
         b.click()
 
-        time.sleep(2)
+        time.sleep(self.pause)
 
     def addliteral(self):
         # add literal
-        var = self.driver.find_element(By.ID, 'literalof')
-        s = Select(var)
-        s.select_by_value("s")
+        #var = self.driver.find_element(By.ID, 'literalof')
+        #s = Select(var)
+        #s.select_by_value("s")
+        self.select("literalof", value="s")
 
-        field = self.driver.find_element(By.ID, "relationforliteral")
-        field.clear()
-        field.send_keys("quant")
+        #field = self.driver.find_element(By.ID, "relationforliteral")
+        #field.clear()
+        #field.send_keys("quant")
+        self.enter_text("relationforliteral", "quant")
 
-        field = self.driver.find_element(By.ID, "newliteral")
-        field.clear()
-        field.send_keys("245.6")
+        #field = self.driver.find_element(By.ID, "newliteral")
+        #field.clear()
+        #field.send_keys("245.6")
+        self.enter_text("newliteral", "245.6")
 
-        button = self.driver.find_element(By.ID, "addliteral")
-        button.click()
+        #button = self.driver.find_element(By.ID, "addliteral")
+        #button.click()
+        self.button("addliteral")
 
-        time.sleep(2)
+        time.sleep(self.pause)
 
+    def addpartial(self):
+        self.enter_text("sentnum", "2")
+        self.button("addgraph")
+        self.enter_text("addedgraph", "(x / kill :time (d / date-entity    :dayperiod (n / morning)))")
+        self.enter_text("conceptmappings", "k/x")
+        self.button("modifyaddgraph")
+        print("graph added")
+        #input("ENTER> ")
+
+    def choosesentence(self):
+        self.button("choosesentence")
+        self.enter_text("textfilter", "the")
+        self.button("modifysentencelist")
+        self.select("sentencelist", index=3)
+        #input("ENTER> ")
+        
     def safe(self):
         # safefile
-        x = self.driver.find_element(By.ID, "save")
-        x.click()
+        #x = self.driver.find_element(By.ID, "save")
+        #x.click()
+        self.button("save")
         print("file saved")
-        time.sleep(2)
+        #time.sleep(2)
 
     def runtests(self):
         self.readsentence()
@@ -179,6 +240,9 @@ class GUITest:
         self.settop()
         self.modstart()
         self.addliteral()
+        self.addpartial()
+        self.choosesentence()
+        
         self.safe()
 
 

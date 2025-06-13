@@ -86,9 +86,11 @@ def client(app2):
 
 def test_gui(client):
     client, datadir = client
-    gt = selenium_test.GUITest(port=PORT, browser="chrome", headless=True)
+    gt = selenium_test.GUITest(port=PORT, browser="chrome", headless=False)
     gt.runtests()
 
+    # coyp result to metamorphosed dir to be able to compare manually
+    shutil.copyfile(os.path.join(datadir.name, "testamr.txt.2"), mydir + "/tmp-ui-test-results.txt")
     doc = amrdoc.AMRdoc(os.path.join(datadir.name, "testamr.txt.2"))
     result = doc.sentences[0].amr
     ref = '''(h / house
