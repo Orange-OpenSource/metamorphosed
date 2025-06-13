@@ -105,16 +105,14 @@ class GUITest:
         time.sleep(self.pause)
 
     def readsentence(self):
-        #read = self.driver.find_element(By.ID, "lire")
-        #read.click()
         self.button("lire")
+
         print("sentence read")
 
     def addconcept(self):
         # add concept
         self.enter_text("concept", "house")
-        
-        #time.sleep(2)
+
         print("concept 'house' added")
 
     def addname(self):
@@ -190,12 +188,11 @@ class GUITest:
         self.button("modifysentencelist")
         self.select("sentencelist", index=3)
         #input("ENTER> ")
-        
+
     def safe(self):
         # safefile
         self.button("save")
         print("file saved")
-
 
     def runtests(self):
         self.readsentence()
@@ -207,7 +204,6 @@ class GUITest:
         self.addliteral()
         self.addpartial()
         self.choosesentence()
-        
         self.safe()
 
 

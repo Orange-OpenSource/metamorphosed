@@ -53,6 +53,7 @@ PORT = 4568
 
 mydir = os.path.dirname(__file__)
 
+
 # launched only once
 @pytest.fixture(scope="session")
 def app2():
@@ -84,6 +85,7 @@ def client(app2):
     app, datadir = app2
     return app.test_client(), datadir
 
+
 def getcontents(fn, grep=None):
     with open(fn) as ifp:
         if not grep:
@@ -94,6 +96,7 @@ def getcontents(fn, grep=None):
                 if grep not in line:
                     lines.append(line)
             return "".join(lines)
+
 
 def test_gui(client):
     client, datadir = client
@@ -114,4 +117,3 @@ def test_gui(client):
 #    ofp.close()
 
     assert ref == res
-
