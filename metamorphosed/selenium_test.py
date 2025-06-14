@@ -189,6 +189,12 @@ class GUITest:
         self.select("sentencelist", index=3)
         #input("ENTER> ")
 
+    def reify(self):
+        self.enter_text("sentnum", "3")
+        self.select("reifylist", index=25)
+        self.button("reifygraph")
+        input("ENTER> ")
+
     def safe(self):
         # safefile
         self.button("save")
@@ -204,6 +210,7 @@ class GUITest:
         self.addliteral()
         self.addpartial()
         self.choosesentence()
+        self.reify()
         self.safe()
 
 

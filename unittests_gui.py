@@ -68,7 +68,8 @@ def app2():
                           None,
                           None,
                           None,
-                          False
+                          False,
+                          reifications=mydir + "/metamorphosed/data/reification-table.txt"
                           )
     app = aes.app
     thread = Thread(target=app.run, daemon=True, kwargs=dict(host='localhost', port=PORT))

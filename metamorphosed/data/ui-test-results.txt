@@ -36,11 +36,12 @@
 # ::id sentence 3
 # ::snt The cat killed the mouse in the kitchen during the night
 (k / kill-01
-    :ARG0 (c / cat)
-    :ARG1 (m / mouse)
-    :location (k2 / kitchen)
-    :time (d / date-entity
-        :dayperiod (n / night)))
+   :ARG0 (c / cat)
+   :ARG1 (m / mouse)
+   :location (k2 / kitchen)
+   :ARG1-of (zzz0 / be-temporally-at-91
+                  :ARG2 (d / date-entity
+                           :dayperiod (n / night))))
 
 # ::id sentence 4
 # ::snt the little dog barks at the big dog
