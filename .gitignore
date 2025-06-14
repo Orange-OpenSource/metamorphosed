@@ -16,3 +16,6 @@ metamorphosed.egg-info/
 dist/
 *.zip
 tools
+ref
+res
+tmp-ui*

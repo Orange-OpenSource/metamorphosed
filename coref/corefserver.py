@@ -74,7 +74,7 @@ class CorefServer:
                             "\nPlease rename Backup file first" % (", ".join(ko), ", ".join(ko2)))
 
         mydir = os.path.abspath(os.path.dirname(__file__))
-        print("zzzz", "%s/../metamorphosed/gui" % mydir)
+        #print("zzzz", "%s/../metamorphosed/gui" % mydir)
         app = Flask(__name__,
                     static_url_path='',
                     static_folder="%s/../metamorphosed/gui" % mydir,

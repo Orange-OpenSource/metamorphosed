@@ -62,7 +62,7 @@ def app():
     #app.config.update({
     #    "TESTING": True,
     #})
-    #print("zzzzzzzzzzzzzzzzzzzz")
+    #print("zzzzzzzzzzzzzzzzzzzz", PATH)
     aes = CorefServer(4569,
                       [PATH + "/pp_001.xml", PATH + "/wikipedia.shakespeare.xml", PATH + "/wikipedia.welsh.xml"],
                       [PATH + "/pp.amr.txt", PATH + "/shakespeare.amr.txt", PATH + "/welsh.amr.txt"],
@@ -276,7 +276,7 @@ def test_nogit_back_exists():
 
     ls(datadir.name)
 
-    # should crahs here, since we are in no-git mode and the backup file is already there
+    # should crash here, since we are in no-git mode and the backup file is already there
     try:
         CorefServer(4569,
                     [datadir.name + "/pp_001.xml", datadir.name + "/pp_002.xml"],
