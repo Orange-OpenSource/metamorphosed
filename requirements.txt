@@ -9,4 +9,4 @@ PyYAML==6.0.1
 smatchpp==1.7.0
 requests==2.32.4
 rdflib==7.0.0
-oxrdflib==0.3.7
+oxrdflib==0.4.0
