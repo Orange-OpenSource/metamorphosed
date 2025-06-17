@@ -23,15 +23,24 @@ RUN apt-get update \
 	&& apt-get -y upgrade \
         && apt-get -y install graphviz python3-minimal python3-pip python3.12-venv git wget libffi-dev \
         && apt-get clean
+
 RUN python3 -m venv /opt/venv
 
 WORKDIR /wikidata
 COPY requirements.txt .
 RUN . /opt/venv/bin/activate && pip --no-cache-dir install -r requirements.txt
 
+# public
+RUN echo a
 RUN git clone https://github.com/Orange-OpenSource/metamorphosed.git
 
-#RUN apt-get -y install wget
+# developping
+#WORKDIR /wikidata/metamorphosed
+#COPY metamorphosed_server.py .
+#COPY metamorphosed metamorphosed
+#COPY propbank-frames/frames propbank-frames/frames
+
+
 WORKDIR /wikidata/metamorphosed
 RUN cd propbank-frames/frames; \
 	git checkout ad2bafa4c9c9c58cc1bc89; \
@@ -50,10 +59,13 @@ ENV QUAL_LABELS=
 #  CMD curl --silent --fail --noproxy '*' http://localhost:3500/status | grep  '"status": "ok"' || exit 1
 
 
+#CMD . /opt/venv/bin/activate && exec ./metamorphosed_server.py \
+#	--pbframes ./propbank-frames/frames/ \
+#	--reifications ./metamorphosed/data/reification-table.txt \
+#        -f /data/$AMRFILE $COMPAREWITH
+
 CMD . /opt/venv/bin/activate && exec ./metamorphosed_server.py \
 	--pbframes ./propbank-frames/frames/ \
 	--reifications ./metamorphosed/data/reification-table.txt \
-        -f /data/$AMRFILE \
-	$COMPAREWITH
-
+        -f None --dockerargs /data $AMRFILE $COMPAREWITH
 

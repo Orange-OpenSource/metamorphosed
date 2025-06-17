@@ -9,6 +9,7 @@ by LDC (https://catalog.ldc.upenn.edu/LDC2020T02).
 * _metAMoRphosED_ allows text-grounded annotatation of coreferences in AMR graphs. See [coref/README.md](coref/README.md) for more information.
 * _metAMoRphosED_ allows download of the displayed graphs as SVG or export of all graphs in either SVG, PDF or PNG format.
 * _metAMoRphosED_ provides a script to calculate inter-annotator agreement (see section [Inter-annotator agreement](#inter-annotator-agreement)).
+* _metAMoRphosED_ comes with an docker image (for editing and comparing only, see section [Docker](#docker)).
 
 Current version 4.6.1 (see [CHANGES.md](CHANGES.md))
 
@@ -109,7 +110,6 @@ pip install -r requirements-test.txt
 tox
 ```
 
-
 ## run
 
 ```
@@ -126,8 +126,8 @@ tox
         [--smatchpp]
 ```
 
-Use our internet browser as GUI: https://localhost:<port>
 
+Use our internet browser as GUI: https://localhost:<port>
 
 * The `relations.txt` file must contain all the relations which are valid in the AMR graphs, the editor will show a warning for each relation found in a graph which is not mentioned in this file. The relations will also be used for autocompletion. The file [metamorphosed/data/relations.txt](relations.txt) is used as default value.
 * If `--concepts concepts.txt` is given, the concepts will be used for autocompletion.
@@ -207,7 +207,28 @@ The objects of all predicates `:quant` must match `\d+`, i.e. an integer
 
 **Note:** `relations.txt` and `constraints.yml` must not be modified in order to not break the unitary tests. Please use a personalised file.
 
+## Docker
 
+Editing and comparing AMR-files can be used by _metAMoRphosEd_ in a docker image
+
+* get current docker image
+``` bash
+docker pull jheinecke/metamorphosed:latest
+```
+
+* run the docker container. The AMR files youd want to edit/compare must all be in the same directory and specified in `docker`s `--volume` option:
+
+
+```
+docker run --rm -d -t --name metamorphosed \
+	-p 4567:4567 \
+	--volume <absolute/path/to/directory/with/you/files>:/data
+	--env AMRFILE=<yourfile>
+	--env COMPAREWITH="<second-annotator-file> <third-annotator-file>"
+	jheinecke/metamorphosed:latest
+```
+
+the option `--env COMPAREWITH=...` only be used if you want to compare files
 
 ## Validate AMR files
 
@@ -391,6 +412,7 @@ If you specify a second AMR file using the option `--compare  <amr file 2> <amr 
 
 ![AMR file comparison ](doc/comparison-multiple-files.png)
 
+All files must contain the same sentences.
 It is possible to search in the text, PENMAN and comments as in the edit mode. However, editing is not possible.
 
 The `highlight` select button allows to chose two graphs which differences will be highlighted in the visualisations.
