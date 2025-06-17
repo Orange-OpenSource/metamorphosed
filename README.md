@@ -228,7 +228,7 @@ docker run --rm -d -t --name metamorphosed \
 	jheinecke/metamorphosed:latest
 ```
 
-the option `--env COMPAREWITH=...` only be used if you want to compare files
+the option `--env COMPAREWITH=...` must only be used if you want to compare files
 
 ## Validate AMR files
 
