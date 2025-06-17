@@ -47,7 +47,7 @@ def main():
 
     parser.add_argument("--port", "-p", default=4567, type=int, help="port to use")
     parser.add_argument("--file", "-f", required=True, help="AMR file to edit")
-    parser.add_argument("--compare", nargs="+", help="AMR file of additional annotators")
+    parser.add_argument("--compare", nargs="+", help="AMR file of additional annotators to compare with file given by --file")
     parser.add_argument("--author", help="author (for git), use format 'Name <mail@example.com>', if absent current user+mail is used")
     parser.add_argument("--relations", "-R", default=mydir + "/data/relations.txt", help="list of valid AMR-relations (simple text file with list of all valid relations)")
     parser.add_argument("--relationsdoc", default=mydir + "/data/relations-doc.json", help="examples for valid AMR-relations (json file)")
@@ -61,13 +61,25 @@ def main():
     parser.add_argument("--smatchpp", "-S", action='store_true', help='use smatchpp (https://github.com/flipz357/smatchpp) instead of smatch')
     parser.add_argument("--preferred", default=None, help="json file with preferred graphs (used together which --compare)")
 
+    parser.add_argument("--dockerargs", nargs="+", default=None, help=argparse.SUPPRESS) # only used in the docker image entrypoint
+    # format: datadir file [compare1 compare2 ...]
+
     if len(sys.argv) < 2:
         parser.print_help()
     else:
         args = parser.parse_args()
-        #if 1:
         try:
-            aes = AMR_Edit_Server(args.port, args.file, args.pbframes,
+            amrfile = args.file
+            compare = args.compare
+            if args.dockerargs:
+                datadir = args.dockerargs[0]
+                amrfile = os.path.join(datadir, args.dockerargs[1])
+                if len(args.dockerargs) > 2:
+                    compare = []
+                    for cf in args.dockerargs[2:]:
+                        compare.append(os.path.join(datadir, cf))
+
+            aes = AMR_Edit_Server(args.port, amrfile, args.pbframes,
                                   args.relations,
                                   args.concepts,
                                   args.constraints, args.readonly,
@@ -76,7 +88,7 @@ def main():
                                   relationsdoc=args.relationsdoc,
                                   predictor=args.edge_predictor,
                                   do_git=args.git,
-                                  compare=args.compare,
+                                  compare=compare,
                                   smatchpp=args.smatchpp,
                                   preferred=args.preferred)
             aes.start()
