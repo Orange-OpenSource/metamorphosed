@@ -925,6 +925,8 @@ class AMR_Edit_Server:
                                             "fn1": filenames[first],
                                             "fn2": filenames[second],
                                             "F1": "%.2f" % (compres2.f1 * 100),
+                                            "P": "%.2f" % (compres2.p * 100),
+                                            "R": "%.2f" % (compres2.r * 100),
                                             "gold_triples": compres2.gold_triple_num,
                                             "sys_triples": compres2.test_triple_num,
                                             "best_match_triples": compres2.best_match_num})

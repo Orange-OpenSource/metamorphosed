@@ -412,7 +412,7 @@ function formatAMR(data) {
 	//$('#numright').html(data.right_triplenum);
 
 	$("#compres").empty();
-	$('#compres').append('<table id="allcomparisons"><tr><th>first</th> <th>second</th> <th>Smatch</th> <th>matching</th> <th>triples first</th> <th>triples second</th></tr></table>');
+	$('#compres').append('<table id="allcomparisons"><tr><th>first</th> <th>second</th> <th>Smatch (F1)</th> <th>matching triples</th> <th>triples in first</th> <th>triples in second</th> <th title="matching / triples in first">Precision</th> <th title="matching / triples in second">Recall</th></tr></table>');
 	$.each(data.comp_results,
 		function (key, value) {
 			//console.log("CMP", value);
@@ -428,9 +428,12 @@ function formatAMR(data) {
 			$('#ctr_' + index).append('<td class="' + tdclasses.join(" ") + '">' + value.fn1);
 			$('#ctr_' + index).append('<td>' + value.fn2);
 			$('#ctr_' + index).append('<td class="cmpval ' + tdclasses.join(" ") + '">' + value.F1);
-			$('#ctr_' + index).append('<td class="cmpval ' + tdclasses.join(" ") + '">' + value.gold_triples);
-			$('#ctr_' + index).append('<td class="cmpval ' + tdclasses.join(" ") + '">' + value.sys_triples);
 			$('#ctr_' + index).append('<td class="cmpval ' + tdclasses.join(" ") + '">' + value.best_match_triples);
+			$('#ctr_' + index).append('<td class="cmpval ' + tdclasses.join(" ") + '">' + value.sys_triples);
+			$('#ctr_' + index).append('<td class="cmpval ' + tdclasses.join(" ") + '">' + value.gold_triples);
+			$('#ctr_' + index).append('<td class="cmpval ' + tdclasses.join(" ") + '">' + value.P);
+			$('#ctr_' + index).append('<td class="cmpval ' + tdclasses.join(" ") + '">' + value.R);
+
 		});
 
 	$('#ctr_' + $('#compvars').val().replace(",", "_")).addClass("boldline")

@@ -1,5 +1,8 @@
 # Changes
 
+## Version 4.6.2
+* correction in display in compare-mode, showing also precision and recall (in addition to F1 (Smatch/Spatch++))
+
 ## Version 4.6.1
 * using `uv` instead of `pyenv`
 
