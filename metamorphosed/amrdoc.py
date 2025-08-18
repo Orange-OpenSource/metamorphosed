@@ -243,7 +243,8 @@ class AMRdoc:
                             duplicated[asent.id] = 1
                         else:
                             duplicated[asent.id] += 1
-                        print("*** duplicate sentence id <%s> renamed to <%s-%d>" % (asent.id, asent.id, duplicated[asent.id]), file=sys.stderr)
+                        if verbose:
+                            print("*** duplicate sentence id <%s> renamed to <%s-%d>" % (asent.id, asent.id, duplicated[asent.id]), file=sys.stderr)
                         #print("     ", asent.comments, file=sys.stderr)
                         newid = "%s-%d" % (asent.id, duplicated[asent.id])
 
