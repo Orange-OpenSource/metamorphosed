@@ -33,6 +33,7 @@
 # Software Name: MetAMoRphosED AMR-Editor
 # Author: Johannes Heinecke
 
+# version 1.8 as of 29th August 2025
 
 import json
 import os

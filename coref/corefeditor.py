@@ -33,7 +33,7 @@
 # Software Name: MetAMoRphosED AMR-Editor
 # Author: Johannes Heinecke
 
-# version 1.7 as of 20th February 2025
+# version 1.8 as of 29th August 2025
 
 # read .xml and if present .json file (if absent, AMRfiles must be given) and display a block of sentences with coreferences (from XML)
 # allow adding new coreferences and deleting incorrect ones
@@ -49,7 +49,7 @@ from xml.dom import minidom
 import amrs2dot
 
 
-VERSION = "1.7"
+VERSION = "1.8"
 
 # hurts E402. TODO change somehow
 parent = pathlib.Path(os.path.abspath(__file__)).parent.parent

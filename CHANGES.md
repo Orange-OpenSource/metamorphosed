@@ -1,5 +1,8 @@
 # Changes
 
+## Version 4.6.3
+* correction in `corefinit.py`: concept shown in XML and GUI were incorrect
+
 ## Version 4.6.2
 * correction in display in compare-mode, showing also precision and recall (in addition to F1 (Smatch/Spatch++))
 

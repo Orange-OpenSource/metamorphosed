@@ -2,7 +2,7 @@
 
 # This library is under the 3-Clause BSD License
 #
-# Copyright (c) 2022-2023,  Orange
+# Copyright (c) 2022-2025,  Orange
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -33,6 +33,7 @@
 # Software Name: MetAMoRphosED AMR-Editor
 # Author: Johannes Heinecke
 
+# version 1.8 as of 29th August 2025
 
 import collections
 import os
@@ -62,7 +63,6 @@ class CorefInit:
             fn = os.path.abspath(fn)
             ad = amrdoc.AMRdoc(fn)
             self.amrdocs.append(ad)
-
             for sid in ad.ids:
                 # for all sentid in the document
                 for spat in self.sidpatterns:
@@ -161,8 +161,7 @@ class CorefInit:
                 namestring = " ".join([x[1].replace('"', '') for x in sorted(names[n].items())])
                 if namestring not in chains:
                     chains[namestring] = []
-                chains[namestring].append((sid, p, concepts[s]))
-                #print("namestring", namestring , sid, p, concepts[s])
+                chains[namestring].append((sid, p, concepts[p]))
 
         print('      <identity>', file=ofp)
         for cid, c in enumerate(chains, 1):
