@@ -50,6 +50,7 @@ import yaml
 
 import metamorphosed.AMR_relations as AMR_relations
 import metamorphosed.amrdoc as amrdoc
+import metamorphosed.umrdoc as umrdoc
 import metamorphosed.amreditor as amreditor
 import metamorphosed.gitinterface as gitinterface
 import metamorphosed.propbank_frames as propbank_frames
@@ -83,9 +84,13 @@ class AMR_Edit_Server:
                  do_git=True, compare=None, smatchpp=False,
                  preferred=None, # filename where to read/write the preferred graph in comparison mode
                  ):
+        self.umr = True
         self.port = port
         self.filename = filename
-        self.amrdoc = amrdoc.AMRdoc(filename)
+        if self.umr:
+            self.amrdoc = umrdoc.UMRdoc(filename)
+        else:
+            self.amrdoc = amrdoc.AMRdoc(filename)
         self.aps = {} # parsed and possibly modified PENMAN AMRs
         self.author = author
         self.reificator = None

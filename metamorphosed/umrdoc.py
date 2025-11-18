@@ -77,6 +77,12 @@ class UMRsentence(AMRsentence):
 
         self.other = other
         self.meta = meta
+        self.text = other.get("Sentence")
+        if not self.text:
+            if self.wiok:
+                self.text = " ".join(self.words)
+            else:
+                self.text = self.words.strip()
         if sentid:
             self.id = sentid
 
@@ -242,6 +248,11 @@ class UMRdoc:
                 usent.id = "%s-%d" % (usent.id, self.duplicated[usent.id])
         self.ids[newid] = usent
 
+    def getsentencelist(self):
+        sents = []
+        for sent in self.sentences:
+            sents.append((sent.id, sent.text))
+        return sents
 
 def main():
     import argparse
