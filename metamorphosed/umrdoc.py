@@ -72,7 +72,7 @@ class UMRsentence(AMRsentence):
                 self.index = index
                 self.words = words
             else:
-                self.index = il
+                self.index = [int(x) for x in il]
                 self.words = wl
 
         self.other = other
@@ -85,6 +85,7 @@ class UMRsentence(AMRsentence):
                 self.text = self.words.strip()
         if sentid:
             self.id = sentid
+        self.pg = None # penman.Graph
 
     def write(self, ofp=sys.stdout, onlyheader=False):
         print("################################################################################", file=ofp)
@@ -124,6 +125,24 @@ class UMRsentence(AMRsentence):
         print(self.docamr, file=ofp)
         print("\n\n", file=ofp)
 
+    def validate(self, triples):
+        msg = []
+        # check what can be checked without resources
+        # variables in alignment must be in graph
+        variables = set()
+        for s, p, o in triples:
+            if p == ":instance":
+                variables.add(s)
+        for k in self.alignments:
+            if k not in variables:
+                msg.append("%s alignment variable %s not in sentenve level graph" % (self.id, k))
+            if isinstance(self.index, list):
+                for startend in self.alignments[k]:
+                    if startend[0] > 0 and startend[0] not in self.index:
+                        msg.append("%s alignment variable %s start position not in Index:" % (self.id, startend[0]))
+                    if startend[1] > 0 and startend[1] not in self.index:
+                        msg.append("%s alignment variable %s end position not in Index:" % (self.id, startend[1]))
+        return msg
 
 
 ALIGNMENT = re.compile(r"(-?\d+)-(-?\d+)")
@@ -248,6 +267,25 @@ class UMRdoc:
                 usent.id = "%s-%d" % (usent.id, self.duplicated[usent.id])
         self.ids[newid] = usent
 
+    def validate(self, validators):
+        msgs = []
+        for sent in self.sentences:
+            triples = sent.tsv()
+            ee = sent.validate(triples) # validate from UMRSentence
+            if ee:
+                msgs += ee
+            for v in validators:
+                ee = v.validate(triples)
+                if ee:
+                    msgs += ee
+                #for e in ee:
+                #    print("ZZZ", e)
+            try:
+                ddd = penman.parse(sent.amr.replace("\n", "")) # penman needs \n replaced to detect quote errors
+            except Exception as e:
+                msgs.append(str(e))
+        return msgs
+
     def getsentencelist(self):
         sents = []
         for sent in self.sentences:
@@ -262,7 +300,7 @@ def main():
     parser.add_argument("--file", "-f", required=True, nargs="+", help="AMR file to read")
     parser.add_argument("--rels", "-R", default=None, help="list of valid AMR-relations (simple text file)")
     #parser.add_argument("--pbframes", "-P", default=None, help="Propbank frameset documentation (directory with xml files)")
-    #parser.add_argument("--constraints", "-C", default=None, help="constraints for subjects and predicates (yaml file)")
+    parser.add_argument("--constraints", "-C", default=None, help="constraints for subjects and predicates (yaml file)")
     parser.add_argument("--stats", "-s", default=False, action="store_true", help='calculate stats and create graphs')
     #parser.add_argument("--conceptlist", default=False, action="store_true", help="calculate stats and output only a list of concepts")
     #parser.add_argument("--concepts", "-c", default=0, type=int, help='show links between concepts (1, 2, 3)')
@@ -292,11 +330,12 @@ def main():
 
         for fn in args.file:
             ad = UMRdoc(fn)
-            for sent in ad.sentences:
-                sent.write()
-            #msg = ad.validate(validators)
-            #for m in msg:
-            #    print("Problem:", m)
+            #for sent in ad.sentences:
+            #    sent.write()
+            if args.validate:
+                msg = ad.validate(validators)
+                for m in msg:
+                    print("Problem:", m)
 
             ads.append(ad)
             #ad.tsv()
