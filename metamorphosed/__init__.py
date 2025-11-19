@@ -137,7 +137,7 @@ class AMR_Edit_Server:
                 raise Exception("Edited file <%s> not under git version control. Backup file <%s> exists already.\nPlease rename Backup file first" % (filename, bak_filename))
 
         self.relationsdoc = None
-        if relationsdoc:
+        if relationsdoc and relationsdoc != "-":
             self.relationsdoc = RelDoc(relationsdoc)
 
         # initial version of Penman graph
@@ -899,6 +899,9 @@ class AMR_Edit_Server:
                     "undos": len(self.undos),
                     "redos": len(self.redos),
                     "prevmod": ap.previous_modification}
+            if self.umr:
+                dico["alignments"] = cursentence.alignments
+                dico["docgraph"] = cursentence.docgraph.docgraph
 
             if self.otheramrdocs:
                 others = []

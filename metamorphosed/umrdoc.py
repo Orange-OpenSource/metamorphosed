@@ -63,9 +63,9 @@ class UMRDocGraph:
         self.variables = set() # all variables
         self.resources = set() # all subjects and objects which are not a variable
         self.relations = set()
-        self.docgraph = { ":temporal": [],
-                          ":modal": [],
-                          ":coref": [] }
+        self.docgraph = { "temporal": [],
+                          "modal": [],
+                          "coref": [] }
         if len(toklist) > 0:
             self.id = toklist[1]
             state = None
@@ -83,7 +83,7 @@ class UMRDocGraph:
                     elif indent == 0:
                         state = None
                     elif indent == 2:
-                        self.docgraph[state].append((tok, toklist[ix+1], toklist[ix+2]))
+                        self.docgraph[state[1:]].append((tok, toklist[ix+1], toklist[ix+2]))
                         self.relations.add(toklist[ix+1])
                         ix += 2
                 ix += 1
@@ -96,10 +96,10 @@ class UMRDocGraph:
                          "have-concession-91", "have-concessive-condition-91", "have-purpose-91", 
                          ])
 
-            for s, p, o in self.docgraph[":coref"]:
+            for s, p, o in self.docgraph["coref"]:
                 self.variables.add(s)
                 self.variables.add(o)
-            for s, p, o in self.docgraph[":modal"]:
+            for s, p, o in self.docgraph["modal"]:
                 if s not in fixed:
                     self.variables.add(s)
                 else:
@@ -109,7 +109,7 @@ class UMRDocGraph:
                 else:
                     self.resources.add(o)
 
-            for s, p, o in self.docgraph[":temporal"]:
+            for s, p, o in self.docgraph["temporal"]:
                 if s not in fixed:
                     self.variables.add(s)
                 else:
@@ -135,7 +135,7 @@ class UMRsentence(AMRsentence):
     def __init__(self, sentencegraph, alignements, documentgraph, sentid, meta, index, words, other):
         AMRsentence.__init__(self, sentencegraph)
         self.alignments = alignements
-        self.docamr = UMRDocGraph(documentgraph)
+        self.docgraph = UMRDocGraph(documentgraph)
         self.wiok = True
         if index == None:
             print("* missing 'Index' line", sentid, file=sys.stderr)
@@ -205,7 +205,7 @@ class UMRsentence(AMRsentence):
             print(", ".join(["%d-%d" % (x[0], x[1]) for x in vv]), file=ofp)
         print("\n", file=ofp)
         print("# document level annotation:", file=ofp)
-        self.docamr.write(ofp=ofp)
+        self.docgraph.write(ofp=ofp)
         print("\n\n", file=ofp)
 
     def validate(self, triples):

@@ -171,7 +171,8 @@ input {
 
 .triples,
 .triplerow,
-.triplecell {
+.triplecell,
+.docgraphcell {
   border: 1px solid black;
   border-collapse: collapse;
 }

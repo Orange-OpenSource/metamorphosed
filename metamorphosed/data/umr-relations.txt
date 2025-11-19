@@ -1,15 +1,26 @@
 # standard UMR 2.0 relations
 :ARG0
+:ARG0-of
 :ARG1
+:ARG1-of
 :ARG10
+:ARG10-of
 :ARG2
+:ARG2-of
 :ARG3
+:ARG3-of
 :ARG4
+:ARG4-of
 :ARG5
+:ARG5-of
 :ARG6
+:ARG6-of
 :ARG7
+:ARG7-of
 :ARG8
+:ARG8-of
 :ARG9
+:ARG9-of
 :COMPL
 :DENOM
 :FPHR
