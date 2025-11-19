@@ -49,6 +49,7 @@ logging.getLogger('penman').setLevel(logging.ERROR)
 from metamorphosed.exception import ServerException
 from metamorphosed.amrdoc import AMRsentence
 
+
 class UMRDocGraph:
     def __init__(self, dg):
         lexer = shlex.shlex(dg.replace(":", " :"))
@@ -63,15 +64,15 @@ class UMRDocGraph:
         self.variables = set() # all variables
         self.resources = set() # all subjects and objects which are not a variable
         self.relations = set()
-        self.docgraph = { "temporal": [],
-                          "modal": [],
-                          "coref": [] }
+        self.docgraph = {"temporal": [],
+                         "modal": [],
+                         "coref": []}
         if len(toklist) > 0:
             self.id = toklist[1]
             state = None
             indent = 0
             ix = 3
-            while ix < len(toklist)-4:
+            while ix < len(toklist) - 4:
                 tok = toklist[ix]
                 if tok in [":temporal", ":modal", ":coref"]:
                     state = tok
@@ -83,8 +84,8 @@ class UMRDocGraph:
                     elif indent == 0:
                         state = None
                     elif indent == 2:
-                        self.docgraph[state[1:]].append((tok, toklist[ix+1], toklist[ix+2]))
-                        self.relations.add(toklist[ix+1])
+                        self.docgraph[state[1:]].append((tok, toklist[ix + 1], toklist[ix + 2]))
+                        self.relations.add(toklist[ix + 1])
                         ix += 2
                 ix += 1
 
@@ -93,7 +94,7 @@ class UMRDocGraph:
                          "past-reference", "present-reference", "future-reference",
                          "purpose", "null-conceiver",
                          "have-condition-91", "have-condition",
-                         "have-concession-91", "have-concessive-condition-91", "have-purpose-91", 
+                         "have-concession-91", "have-concessive-condition-91", "have-purpose-91",
                          ])
 
             for s, p, o in self.docgraph["coref"]:
@@ -119,7 +120,6 @@ class UMRDocGraph:
                 else:
                     self.resources.add(o)
 
-
         #print(json.dumps(self.docgraph, indent=2))
         #print(sorted(self.variables))
 
@@ -137,15 +137,15 @@ class UMRsentence(AMRsentence):
         self.alignments = alignements
         self.docgraph = UMRDocGraph(documentgraph)
         self.wiok = True # Index: and Words: lines are both not None and have the same length
-        if index == None:
+        if index is None:
             print("* missing 'Index' line", sentid, file=sys.stderr)
             self.wiok = False
             self.index = index
-        if words == None:
+        if words is None:
             print("* missing 'Words' line", sentid, file=sys.stderr)
             self.wiok = False
             self.words = words
-        
+
         if self.wiok:
             il = index.split()
             wl = words.split()
@@ -173,7 +173,7 @@ class UMRsentence(AMRsentence):
     def write(self, ofp=sys.stdout, onlyheader=False):
         print("################################################################################", file=ofp)
         if self.meta:
-            metainfo = [":: %s = %s" % (k,v) for k,v in self.meta.items()]
+            metainfo = [":: %s = %s" % (k, v) for k, v in self.meta.items()]
             print("# meta-info", " ".join(metainfo), file=ofp)
         else:
             print("# meta-info", file=ofp)
@@ -186,8 +186,8 @@ class UMRsentence(AMRsentence):
                 ilen = len(str(self.index[ix]))
                 wlen = len(str(self.words[ix]))
                 maxlen = max(ilen, wlen)
-                istr.append(f"{str(self.index[ix]):{maxlen}}")
-                wstr.append(f"{self.words[ix]:{maxlen}}")
+                istr.append(f"{str(self.index[ix]): {maxlen}}")
+                wstr.append(f"{self.words[ix]: {maxlen}}")
             print("Index:", " ".join(istr), file=ofp)
             print("Words:", " ".join(wstr), file=ofp)
         else:
@@ -228,9 +228,8 @@ class UMRsentence(AMRsentence):
         return msg
 
 
-
-
 ALIGNMENT = re.compile(r"(-?\d+)-(-?\d+)")
+
 
 class UMRdoc:
     def __init__(self, fn, verbose=True, rename_duplicate_ids=False):
@@ -252,6 +251,7 @@ class UMRdoc:
         self.duplicated = {} # id: number
         index = None
         words = None
+        other = {}
         sentenceblock = []
         documentblock = []
         alignments = {} # var: [(from, to), ...]
@@ -271,7 +271,7 @@ class UMRdoc:
                     for keyval in line.split("::")[1:]:
                         fields = keyval.split("=")
                         meta[fields[0].strip()] = fields[1].strip()
-                
+
                 state = 0
                 sentid = None
                 sentenceblock = []
@@ -294,20 +294,20 @@ class UMRdoc:
                     #words = line.split(":", 1)[1].split()
                     words = line.split(":", 1)[1]
                 elif line.startswith("Morphemes:") \
-                    or line.startswith("Morphemes(English):") \
-                    or line.startswith("Part of Speech:") \
-                    or line.startswith("Words(English):") \
-                    or line.startswith("Morpheme Gloss(English):") \
-                    or line.startswith("Morpheme Gloss(Spanish):") \
-                    or line.startswith("Morpheme Category:") \
-                    or line.startswith("Sentence:") \
-                    or line.startswith("Translation(English):") \
-                    or line.startswith("Translation(Spanish):"):
+                        or line.startswith("Morphemes(English):") \
+                        or line.startswith("Part of Speech:") \
+                        or line.startswith("Words(English):") \
+                        or line.startswith("Morpheme Gloss(English):") \
+                        or line.startswith("Morpheme Gloss(Spanish):") \
+                        or line.startswith("Morpheme Category:") \
+                        or line.startswith("Sentence:") \
+                        or line.startswith("Translation(English):") \
+                        or line.startswith("Translation(Spanish):"):
                     elems = line.split(":", 1)
                     other[elems[0]] = elems[1]
 
                 elif line.startswith("# sentence level graph:"):
-                    state = 1             
+                    state = 1
                 elif line.startswith("# alignment:"):
                     state = 2
                 elif line.startswith("# document level annotation:"):
@@ -376,6 +376,7 @@ class UMRdoc:
         for sent in self.sentences:
             sents.append((sent.id, sent.text))
         return sents
+
 
 def main():
     import argparse

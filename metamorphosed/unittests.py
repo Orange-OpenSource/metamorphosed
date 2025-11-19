@@ -91,6 +91,36 @@ def app():
     # clean up / reset resources here
 
 
+# launched only once
+@pytest.fixture(scope="session")
+def appumr():
+    #app = create_app()
+    #app.config.update({
+    #    "TESTING": True,
+    #})
+
+    aes = AMR_Edit_Server(port=4569,
+                          filename=mydir + "/data/testumr.umr",
+                          pbframes=None, #"propbank-frames/frames/",
+                          rels=None, #mydir + "/data/relations.txt",
+                          concepts=None, #mydir + "/data/concepts.txt",
+                          constraints=None, #mydir + "/data/constraints.yml",
+                          readonly=False,
+                          author=None,
+                          reifications=None, #mydir + "/data/reification-table.txt",
+                          relationsdoc=None, #mydir + "/data/relations-doc.json"
+                          umr=True,
+                          )
+    app = aes.app
+    number_of_sentences = len(aes.aps)
+
+    # other setup can go here
+
+    yield app
+
+    # clean up / reset resources here
+
+
 # start server just for one test
 # needed for tests with SmatchPP
 @pytest.fixture()
@@ -208,6 +238,11 @@ def app_git():
 @pytest.fixture()
 def client(app):
     return app.test_client()
+
+
+@pytest.fixture()
+def client_umr(appumr):
+    return appumr.test_client()
 
 
 @pytest.fixture()
@@ -364,6 +399,19 @@ def test_read(client):
     assert '<h2>have-org-role</h2>\n<h3>have-org-role.91:' in res["framedoc"]
     assert res['filename'].endswith('metamorphosed/data/testamr.txt')
     assert res['warning'] == ['more than one relation label « :op2 » start at instance « n2 »', 'incoherent :opNN numbering for instance « n »: 4, 2, 3', 'incoherent :opNN numbering for instance « n2 »: 2, 2']
+
+
+def testumr_read(client_umr):
+    response = client_umr.get("/read", query_string={"num": 2})
+    res = json.loads(response.data)
+    #print("res", json.dumps(res, indent=2, ensure_ascii=False), file=sys.stderr)
+    assert res["index"] == [1, 2, 3, 4]
+    assert res["words"] == ["Ch’óol’į́’í", "hoolyéegi", "’áhóót’įįd", "daaní"]
+    assert res["docgraph"]["coref"][0] == ["s1h", ":same-event", "s2d"]
+
+    response = client_umr.get("/read", query_string={"num": 3})
+    res = json.loads(response.data)
+    print("res", json.dumps(res, indent=2, ensure_ascii=False), file=sys.stderr)
 
 
 def test_read_date(client):
@@ -1267,6 +1315,7 @@ def test_amreditor():
     res = aa.write()
     print("<%s>" % res)
     assert res == "(mmmm / multigraph\n      :snt1 (c / cat)\n      :snt2 (m / mouse))\n\n"
+
 
 def test_iaa():
     import io

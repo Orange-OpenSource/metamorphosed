@@ -1,0 +1,119 @@
+################################################################################
+# meta-info
+# :: snt1
+Index:               	1	2	3	4	5	6	7	8	9	10	11
+Words:               	Ałk’idą́ą́’   díí  nahasdzáán                          nihił  dah                               si’ánígíí                            bikáa’gi                         ’ádahóót’įįd                         ha’níigo                            baa                     dahane’
+Morphemes:           	ałk’idą́ą́’   díí  nahasdzáán                        nih- ił  dah                           si- ’án =ígíí                        bi- káa’ =gi               ’á- da- h- óó- t- ’įįd                   ha- ’a- ní =go                          b- aa                   da- hane’
+Morpheme Gloss(English):	long.ago  this       world              1.DU/PL.POSS with   up  3.SI.PERF be.placed.SRO.NEU.PERF =NMLZ                   3.POSS on.top =at    TH DISTR AR 3.YI.PERF PAS do.PERF  TH NSP.SBJ say.NEU.IMPF =SUBORD                      3.POSS to                 DISTR story
+Morpheme Category:   	adv   prt           n  Attaches to any category post  adv                            v:TAMS v prt  Attaches to any category post post  v:PRVB v:DISTR  v:AR v:TAMS v:VAL v              v:PRVB v:OSBJ v prt  Attaches to any category post  Attaches to any category n
+Words(English):      	long.ago  this       world                        with us   up                            it is placed                        on top of it                        they happened                       it is said                       about it                     stories
+Translation(English):	There are stories which tell of the events which took place long ago on this earth of ours.
+
+# sentence level graph:
+(s1e / exist-91
+	:ARG1 (s1d / dahane’
+		:topic (s1h / ha’níigo
+			:theme (s1x / ’ádahóót’įįd
+				:place (s1b2 / bikáa’gi-
+					:part (s1n / nahasdzáán
+						:mod (s1d2 / díí)
+						:place-of (s1s / si’ánígíí
+							:mod (s1d3 / dah-)
+							:companion (s1p / person
+								:refer-person 1st
+								:refer-number plural)
+							:aspect state)))
+				:time (s1a / ałk’idą́ą́’)
+				:aspect performance
+				:quote s1h))
+		:refer-number plural)
+	:aspect state)
+
+# alignment:
+s1a: 0-0
+s1b2: 7-7
+s1d: 11-11
+s1d2: 2-2
+s1d3: 5-5
+s1e: 0-0
+s1h: 0-0
+s1n: 3-3
+s1p: 0-0
+s1s: 6-6
+s1x: 8-8
+
+# document level annotation:
+(s1s0 / sentence
+	:temporal ((document-creation-time :before s1e)
+		(s1e :contained s1d)
+		(s1d :before s1x)
+		(s1x :depends-on s1a)
+		(document-creation-time :before s3j))
+	:modal ((root :modal author)
+		(author :full-affirmative s1s)
+		(author :full-affirmative s1h)
+		(author :full-affirmative s1e)))
+
+
+################################################################################
+# meta-info
+# :: snt2
+Index:               	1	2	3	4
+Words:               	Ch’óol’į́’í                             hoolyéegi                   ’áhóót’įįd               daaní
+Morphemes:           	Ch’óol’į́’í                     h- oo- l- yée =gi           ’á- h- óó- t- ’įįd             daa- ní
+Morpheme Gloss(English):	Gobernador.Knob  AR 3.YINI.IMPF PAS call.NEU.IMPF =at  TH AR 3.YI.PERF PAS do.PERF  DISTR say.NEU.IMPF
+Morpheme Category:   	nprop              v:AR v:TAMS v:VAL v post   v:PRVB v:AR v:TAMS v:VAL v          v:DISTR  v
+Words(English):      	Gobernador.Knob                    where it is called                  it happened            they say
+Translation(English):	They say that this story took place at Gobernador Knob.
+
+# sentence level graph:
+(s2d / daaní
+	:actor (s2p / person
+		:refer-person 3rd
+		:refer-number plural)
+	:theme (s2x / ’áhóót’įįd
+		:place (s2m / mountain
+			:name (s2n / name
+				:op1 "Ch’óol’į́’í")
+			:wiki "El_Gobernador_Knob")
+		:aspect performance
+		:quote s2d)
+	:aspect habitual)
+
+# alignment:
+s2d: 0-0
+s2m: 0-0
+s2n: 0-0
+s2p: 0-0
+s2x: 2-3
+
+# document level annotation:
+(s2s0 / sentence
+	:temporal ((document-creation-time :overlap s2d)
+		(s2d :before s2x))
+	:modal ((root :modal author)
+		(author :full-affirmative s2x)
+		(author :full-affirmative s2d))
+	:coref ((s1h :same-event s2d)
+		(s1x :same-event s2x)))
+
+###############################################################################
+# meta-info :: sent_id =  bad-index--bad-alignment
+# :: snt3
+Index:               	1	2	3	4
+Words:               	The mouse eats the cheese
+
+# sentence level graph:
+(s3e / eat-01
+	:actor (s2m / mouse)
+	:theme (s2c / cheese)
+	:aspect habitual)
+
+# alignment:
+s3e: 3-3
+s3m: 2-2
+s3c: 6-6
+
+# document level annotation:
+(s3s0 / sentence
+	:temporal ((document-creation-time :overlap s3e)))
