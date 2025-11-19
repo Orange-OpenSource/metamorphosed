@@ -136,7 +136,7 @@ class UMRsentence(AMRsentence):
         AMRsentence.__init__(self, sentencegraph)
         self.alignments = alignements
         self.docgraph = UMRDocGraph(documentgraph)
-        self.wiok = True
+        self.wiok = True # Index: and Words: lines are both not None and have the same length
         if index == None:
             print("* missing 'Index' line", sentid, file=sys.stderr)
             self.wiok = False

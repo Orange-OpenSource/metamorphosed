@@ -600,7 +600,6 @@ function formatAMR(data) {
 		ToggleDiv('#innercomment_' + currentsentnum, "#togglesentence");
 	}
 
-
 	$("#comment_" + currentsentnum).click(function () {
 		if (!readonly) {
 			$(".editmode").hide();
@@ -608,6 +607,31 @@ function formatAMR(data) {
 		}
 		$("#modifiedcomment").val($('#precomment_' + currentsentnum).html());
 	});
+
+	// UMR data contains Index: and Words: lines which should be of same length (checked by server)
+	console.log("iiiiii", data.index)
+	if (data.index !== undefined) {
+		$("#resultat").append('<button class="toggleresult" id="toggleindex" >&#8210;</button>');
+		$("#toggleindex").click(function () {
+			ToggleDiv('#innerwordindex_' + currentsentnum, "#toggleindex");
+		});
+
+		$("#resultat").append('<div class="text" id="wordindex_' + currentsentnum + '">');
+	    $('#wordindex_' + currentsentnum).append('<div id="innerwordindex_' + currentsentnum + '">');
+		$('#innerwordindex_' + currentsentnum).append("<h4>index");
+		$('#innerwordindex_' + currentsentnum).append('<table id="tab_wordindex_' + currentsentnum + '">');
+		$('#tab_wordindex_' + currentsentnum).append('<tr id="tr_index_' + currentsentnum + '">');
+		$('#tab_wordindex_' + currentsentnum).append('<tr id="tr_word_' + currentsentnum + '">');
+		for (var i = 0; i<data.index.length; i++) {
+			$("#tr_index_" + currentsentnum).append("<td>" + data.index[i]);
+			$("#tr_word_" + currentsentnum).append("<td>" + data.words[i]);
+		}
+	
+		if ('#innerwordindex_' + currentsentnum in visible_divselectors && visible_divselectors['#innerwordindex_' + currentsentnum] == false) {
+			ToggleDiv('#innerwordindex_' + currentsentnum, "#toggleindex");
+		}
+	
+	}
 
 	// container for penman and svg, either on top of one another or next to each other
 	$("#resultat").append('<div id="gresultat">');

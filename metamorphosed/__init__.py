@@ -902,6 +902,9 @@ class AMR_Edit_Server:
             if self.umr:
                 dico["alignments"] = cursentence.alignments
                 dico["docgraph"] = cursentence.docgraph.docgraph
+                if cursentence.wiok:
+                    dico["index"] = cursentence.index
+                    dico["words"] = cursentence.words
 
             if self.otheramrdocs:
                 others = []
