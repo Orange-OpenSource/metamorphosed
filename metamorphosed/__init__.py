@@ -46,6 +46,7 @@ import time
 import zipfile
 
 from flask import Flask, Response, jsonify, render_template, request
+from flask_cors import CORS
 import yaml
 
 import metamorphosed.AMR_relations as AMR_relations
@@ -188,6 +189,7 @@ class AMR_Edit_Server:
                     static_folder="%s/gui" % mydir,
                     template_folder="%s/gui" % mydir)
         app.config['TEMPLATES_AUTO_RELOAD'] = True # needed to reload index.html
+        CORS(app)
         self.app = app
 
         @app.route('/', methods=["GET"])

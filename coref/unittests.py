@@ -32,7 +32,8 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Software Name: MetAMoRphosED AMR-Editor for coreferences
 # Author: Johannes Heinecke
-# version 1.7 as of 20th February 2025
+
+# version 1.8 as of 29th August 2025
 
 import glob
 import json
@@ -120,7 +121,7 @@ def test_request_example(client):
 def test_info(client):
     response = client.get("/version")
     res = json.loads(response.data)
-    assert res == {'name': 'AMR Coreference Editor', 'version': '1.7', 'apiversion': 1.1}
+    assert res == {'name': 'AMR Coreference Editor', 'version': '1.8', 'apiversion': 1.1}
 
     response = client.get("/info")
     res = json.loads(response.data)

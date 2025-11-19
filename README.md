@@ -11,7 +11,7 @@ by LDC (https://catalog.ldc.upenn.edu/LDC2020T02).
 * _metAMoRphosED_ provides a script to calculate inter-annotator agreement (see section [Inter-annotator agreement](#inter-annotator-agreement)).
 * _metAMoRphosED_ comes with an docker image (for editing and comparing only, see section [Docker](#docker)).
 
-Current version 4.6.2 (see [CHANGES.md](CHANGES.md))
+Current version 4.6.3 (see [CHANGES.md](CHANGES.md))
 
 ## TL;DR
 * if you're updating from version up to 4.0.0: the file `server.py` has been renamed to `metamorphosed_server.py`, also install the additional packages:
@@ -42,8 +42,8 @@ uv add smatchpp==1.7.0 rdflib==7.0.0 oxrdflib==0.3.7
 sudo apt install libffi-dev
 uv sync
 git submodule update --init
-pushd propbank-frames/frames;
-  git checkout ad2bafa4c9c9c58cc1bc89;
+pushd propbank-frames/frames
+  git checkout ad2bafa4c9c9c58cc1bc89
   wget https://raw.githubusercontent.com/propbank/propbank-frames/development/frames/AMR-UMR-91-rolesets.xml
 popd
 ./metamorphosed/installJQ.py
@@ -58,8 +58,8 @@ python3 -m venv VENV
 source VENV/bin/activate
 pip install -r requirements.txt
 git submodule update --init
-pushd propbank-frames/frames;
-  git checkout ad2bafa4c9c9c58cc1bc89;
+pushd propbank-frames/frames
+  git checkout ad2bafa4c9c9c58cc1bc89
   wget https://raw.githubusercontent.com/propbank/propbank-frames/development/frames/AMR-UMR-91-rolesets.xml
 popd
 ./metamorphosed/installJQ.py
