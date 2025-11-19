@@ -60,7 +60,7 @@ def main():
     parser.add_argument("--edge_predictor", "-E", default=None, help="yml file which defines an Edge Predictor class (filename, Classname and parameters")
     parser.add_argument("--smatchpp", "-S", action='store_true', help='use smatchpp (https://github.com/flipz357/smatchpp) instead of smatch')
     parser.add_argument("--preferred", default=None, help="json file with preferred graphs (used together which --compare)")
-
+    parser.add_argument("--umr", action='store_true', help='inpput file is in UMR format')
     parser.add_argument("--dockerargs", nargs="+", default=None, help=argparse.SUPPRESS) # only used in the docker image entrypoint
     # format: datadir file [compare1 compare2 ...]
 
@@ -90,7 +90,8 @@ def main():
                                   do_git=args.git,
                                   compare=compare,
                                   smatchpp=args.smatchpp,
-                                  preferred=args.preferred)
+                                  preferred=args.preferred,
+                                  umr=args.umr)
             aes.start()
         except Exception as e:
             print(e, file=sys.stderr)

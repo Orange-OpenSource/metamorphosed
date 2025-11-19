@@ -84,8 +84,9 @@ class AMR_Edit_Server:
                  predictor=None,
                  do_git=True, compare=None, smatchpp=False,
                  preferred=None, # filename where to read/write the preferred graph in comparison mode
+                 umr=False
                  ):
-        self.umr = True
+        self.umr = umr
         self.port = port
         self.filename = filename
         if self.umr:
@@ -1073,9 +1074,12 @@ class AMR_Edit_Server:
                 if self.aps[i + 1].modified:
                     self.modified.append(str(i + 1))
                     sent.date = time.strftime("%a %b %d, %Y %H:%M", time.localtime(time.time()))
-                sent.write(ofp, onlyheader=True)
-                #print("SENT", i+1, self.aps[i+1].modified, sent.id, sent.text, self.aps[i+1].triples)
-                self.aps[i + 1].write(ofp)
+                #sent.write(ofp, onlyheader=True)
+                ##print("SENT", i+1, self.aps[i+1].modified, sent.id, sent.text, self.aps[i+1].triples)
+                #self.aps[i + 1].write(ofp)
+                output = self.aps[i + 1].write()
+                sent.amr = output
+                sent.write(ofp)
             else:
                 sent.write(ofp)
 

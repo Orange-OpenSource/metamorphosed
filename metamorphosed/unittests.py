@@ -1260,11 +1260,13 @@ def test_amreditor():
     aa.readpenman("(c / cat)")
     aa.process("mouse")
     aa.show()
-    s = io.StringIO()
-    aa.write(ofp=s)
-    print("<%s>" % s.getvalue())
-    assert s.getvalue() == "(mmmm / multigraph\n      :snt1 (c / cat)\n      :snt2 (m / mouse))\n\n"
-
+    #s = io.StringIO()
+    #aa.write(ofp=s)
+    #print("<%s>" % s.getvalue())
+    #assert s.getvalue() == "(mmmm / multigraph\n      :snt1 (c / cat)\n      :snt2 (m / mouse))\n\n"
+    res = aa.write()
+    print("<%s>" % res)
+    assert res == "(mmmm / multigraph\n      :snt1 (c / cat)\n      :snt2 (m / mouse))\n\n"
 
 def test_iaa():
     import io

@@ -35,6 +35,7 @@
 
 # version 4.6.3 as of 29th August 2025
 
+import io
 import re
 import readline
 import sys
@@ -125,7 +126,8 @@ class AMRProcessor:
     def __str__(self):
         return self.lastpm
 
-    def write(self, ofp):
+    def write(self):
+        ofp = io.StringIO()
         if not self.valid or not self.isparsed:
             print(self.lastpm, file=ofp)
         elif self.isDisconnected:
@@ -157,6 +159,7 @@ class AMRProcessor:
             print(pm, file=ofp)
         print(file=ofp)
         self.modified = False
+        return ofp.getvalue()
 
     def findamr(self, regex):
         if self.lastpm:

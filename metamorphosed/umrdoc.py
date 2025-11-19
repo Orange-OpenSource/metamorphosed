@@ -2,7 +2,7 @@
 
 # This library is under the 3-Clause BSD License
 #
-# Copyright (c) 2022-2025,  Orange
+# Copyright (c) 2025,  Orange
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -37,6 +37,7 @@
 # read and store an AMR file
 import os
 import re
+import shlex
 import sys
 
 import penman
@@ -48,11 +49,93 @@ logging.getLogger('penman').setLevel(logging.ERROR)
 from metamorphosed.exception import ServerException
 from metamorphosed.amrdoc import AMRsentence
 
+class UMRDocGraph:
+    def __init__(self, dg):
+        lexer = shlex.shlex(dg.replace(":", " :"))
+        lexer.wordchars += "-:"
+        lexer.source = 'source'
+
+        # for tok in lexer:
+        #    print(tok)
+        toklist = list(lexer)
+        #print(dg, toklist)
+
+        self.variables = set() # all variables
+        self.resources = set() # all subjects and objects which are not a variable
+        self.relations = set()
+        self.docgraph = { ":temporal": [],
+                          ":modal": [],
+                          ":coref": [] }
+        if len(toklist) > 0:
+            self.id = toklist[1]
+            state = None
+            indent = 0
+            ix = 3
+            while ix < len(toklist)-4:
+                tok = toklist[ix]
+                if tok in [":temporal", ":modal", ":coref"]:
+                    state = tok
+                elif state:
+                    if tok == "(":
+                        indent += 1
+                    elif tok == ")":
+                        indent -= 1
+                    elif indent == 0:
+                        state = None
+                    elif indent == 2:
+                        self.docgraph[state].append((tok, toklist[ix+1], toklist[ix+2]))
+                        self.relations.add(toklist[ix+1])
+                        ix += 2
+                ix += 1
+
+            fixed = set(["author", "author2", "author3", "author4", "author5",
+                         "document-creation-time", "root",
+                         "past-reference", "present-reference", "future-reference",
+                         "purpose", "null-conceiver",
+                         "have-condition-91", "have-condition",
+                         "have-concession-91", "have-concessive-condition-91", "have-purpose-91", 
+                         ])
+
+            for s, p, o in self.docgraph[":coref"]:
+                self.variables.add(s)
+                self.variables.add(o)
+            for s, p, o in self.docgraph[":modal"]:
+                if s not in fixed:
+                    self.variables.add(s)
+                else:
+                    self.resources.add(s)
+                if o not in fixed:
+                    self.variables.add(o)
+                else:
+                    self.resources.add(o)
+
+            for s, p, o in self.docgraph[":temporal"]:
+                if s not in fixed:
+                    self.variables.add(s)
+                else:
+                    self.resources.add(s)
+                if o not in fixed:
+                    self.variables.add(o)
+                else:
+                    self.resources.add(o)
+
+
+        #print(json.dumps(self.docgraph, indent=2))
+        #print(sorted(self.variables))
+
+    def write(self, ofp=sys.stdout):
+        print("(%s / sentence" % self.id, end="", file=ofp)
+        for k in self.docgraph:
+            if self.docgraph[k]:
+                print("\n   %s (%s)" % (k, "\n        ".join(["(%s %s %s)" % tr for tr in self.docgraph[k]])), end="", file=ofp)
+        print(")", file=ofp)
+
+
 class UMRsentence(AMRsentence):
     def __init__(self, sentencegraph, alignements, documentgraph, sentid, meta, index, words, other):
         AMRsentence.__init__(self, sentencegraph)
         self.alignments = alignements
-        self.docamr = documentgraph
+        self.docamr = UMRDocGraph(documentgraph)
         self.wiok = True
         if index == None:
             print("* missing 'Index' line", sentid, file=sys.stderr)
@@ -115,14 +198,14 @@ class UMRsentence(AMRsentence):
         print(file=ofp)
         print("# sentence level graph:", file=ofp)
         print(self.amr, file=ofp)
-        print("\n", file=ofp)
+        #print("\n", file=ofp)
         print("# alignment:", file=ofp)
         for k, vv in self.alignments.items():
             print("%s: " % k, end="", file=ofp)
             print(", ".join(["%d-%d" % (x[0], x[1]) for x in vv]), file=ofp)
         print("\n", file=ofp)
         print("# document level annotation:", file=ofp)
-        print(self.docamr, file=ofp)
+        self.docamr.write(ofp=ofp)
         print("\n\n", file=ofp)
 
     def validate(self, triples):
@@ -143,6 +226,8 @@ class UMRsentence(AMRsentence):
                     if startend[1] > 0 and startend[1] not in self.index:
                         msg.append("%s alignment variable %s end position not in Index:" % (self.id, startend[1]))
         return msg
+
+
 
 
 ALIGNMENT = re.compile(r"(-?\d+)-(-?\d+)")
