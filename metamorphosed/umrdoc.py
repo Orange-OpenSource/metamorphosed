@@ -127,7 +127,7 @@ class UMRDocGraph:
         print("(%s / sentence" % self.id, end="", file=ofp)
         for k in self.docgraph:
             if self.docgraph[k]:
-                print("\n   %s (%s)" % (k, "\n        ".join(["(%s %s %s)" % tr for tr in self.docgraph[k]])), end="", file=ofp)
+                print("\n   :%s (%s)" % (k, "\n        ".join(["(%s %s %s)" % tr for tr in self.docgraph[k]])), end="", file=ofp)
         print(")", file=ofp)
 
 
@@ -137,6 +137,10 @@ class UMRsentence(AMRsentence):
         self.alignments = alignements
         self.docgraph = UMRDocGraph(documentgraph)
         self.wiok = True # Index: and Words: lines are both not None and have the same length
+        self.index = index
+        self.words = words
+        self.varprefix = None
+
         if index is None:
             print("* missing 'Index' line", sentid, file=sys.stderr)
             self.wiok = False
@@ -147,9 +151,11 @@ class UMRsentence(AMRsentence):
             self.words = words
 
         if self.wiok:
+            # we found both index and words
             il = index.split()
             wl = words.split()
             if index and words and len(il) != len(wl):
+                # but they do not have the same length
                 print("* Words do not correspond do Index", sentid, words, index, file=sys.stderr)
                 self.wiok = False
                 self.index = index
@@ -161,13 +167,14 @@ class UMRsentence(AMRsentence):
         self.other = other
         self.meta = meta
         self.text = other.get("Sentence")
-        if not self.text:
+        if not self.text and self.words:
             if self.wiok:
                 self.text = " ".join(self.words)
             else:
                 self.text = self.words.strip()
         if sentid:
             self.id = sentid
+            self.varprefix = "s" + sentid.split("snt")[-1] # the sentence number is the required prefix
         self.pg = None # penman.Graph
 
     def write(self, ofp=sys.stdout, onlyheader=False):
@@ -186,8 +193,8 @@ class UMRsentence(AMRsentence):
                 ilen = len(str(self.index[ix]))
                 wlen = len(str(self.words[ix]))
                 maxlen = max(ilen, wlen)
-                istr.append(f"{str(self.index[ix]): {maxlen}}")
-                wstr.append(f"{self.words[ix]: {maxlen}}")
+                istr.append(f"{str(self.index[ix]):{maxlen}}")
+                wstr.append(f"{self.words[ix]:{maxlen}}")
             print("Index:", " ".join(istr), file=ofp)
             print("Words:", " ".join(wstr), file=ofp)
         else:
@@ -216,15 +223,22 @@ class UMRsentence(AMRsentence):
         for s, p, o in triples:
             if p == ":instance":
                 variables.add(s)
+                if self.varprefix:
+                    if not s.startswith(self.varprefix):
+                        msg.append("%s: variable &lt;%s&gt; does not start in %s" % (self.id, s, self.varprefix))
+                else:
+                    msg.append("%s: no sentence number" % (self.id))
         for k in self.alignments:
             if k not in variables:
-                msg.append("%s alignment variable %s not in sentenve level graph" % (self.id, k))
+                msg.append("%s: alignment <%s> not in sentence level graph" % (self.id, k))
             if isinstance(self.index, list):
                 for startend in self.alignments[k]:
                     if startend[0] > 0 and startend[0] not in self.index:
-                        msg.append("%s alignment variable %s start position not in Index:" % (self.id, startend[0]))
+                        msg.append("%s: alignment <%s> start position not in Index: %s" % (self.id, startend[0], self.index))
                     if startend[1] > 0 and startend[1] not in self.index:
-                        msg.append("%s alignment variable %s end position not in Index:" % (self.id, startend[1]))
+                        msg.append("%s: alignment <%s> end position not in Index: %s" % (self.id, startend[1], self.index))
+        if not self.wiok:
+            msg.append("Index: &lt;%s&gt; and Words: &lt;%s&gt; do not correspond" % (self.index, self.words))
         return msg
 
 

@@ -75,7 +75,7 @@ import metamorphosed.installJQ as iJQ
 # find an example in AMR data
 # call an AMRserver for an (empty) sentence ? rather not
 
-APIVERSION = "1.9.0"
+APIVERSION = "2.0.0"
 
 
 class AMR_Edit_Server:
@@ -147,6 +147,8 @@ class AMR_Edit_Server:
             if sentnum % 10 == 0:
                 print("%d initialized" % sentnum, end="\r")
             ap = amreditor.AMRProcessor()
+            if self.umr:
+                ap.umr_varprefix = cursentence.varprefix
             self.aps[sentnum] = ap
             ap.lastpm = cursentence.amr
             ap.comments = cursentence.comments
@@ -862,7 +864,11 @@ class AMR_Edit_Server:
                 for mo in reversed(list(oktext)):
                     sentencetext = sentencetext[:mo.start()] + '<span class="highlight">%s</span>' % sentencetext[mo.start():mo.end()] + sentencetext[mo.end():]
 
-            warnings = ap.validate(valfuncs=[self.amr_rels.validate, self.pbframes.validate, self.constraints.validate])
+            validationfunctions = [self.amr_rels.validate, self.pbframes.validate, self.constraints.validate]
+            if self.umr:
+                validationfunctions.append(cursentence.validate)
+            warnings = ap.validate(valfuncs=validationfunctions)
+
             if len(warnings) < 1:
                 warnings = None
 

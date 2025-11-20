@@ -48,7 +48,7 @@ from metamorphosed.reification import getInstance
 import metamorphosed.amr_comparison as amr_comparison
 
 
-VERSION = "4.6.3"
+VERSION = "5.0.0"
 
 # terminology
 # instance  a / ...
@@ -110,9 +110,10 @@ class AMRProcessor:
 
     def __init__(self, inserver=True):
         self.triples = []
+        self.umr_varprefix = None # if not None, we deal with UMR graphs which have the sentence number as variable prefix
         self.top = None
         self.vars = {} # var: concept
-        self.varletters = {} # first letter: set()
+        self.varletters = {} # first letter (after umr-prefix): set()
         self.inserver = inserver # we are in an server instance
         self.isDisconnected = False
         self.isNumber = re.compile(r"^[+-]?\d*\.?\d+$")
@@ -257,10 +258,15 @@ class AMRProcessor:
                         if p == "/":
                             p = ":instance"
                             self.vars[s] = o
-                            if not s[0] in self.varletters:
-                                self.varletters[s[0]] = set([s])
+                            if self.umr_varprefix and s.startswith(self.umr_varprefix):
+                                letter = s[len(self.umr_varprefix)]
                             else:
-                                self.varletters[s[0]].add(s)
+                                letter = s[0]
+
+                            if not letter in self.varletters:
+                                self.varletters[letter] = set([s])
+                            else:
+                                self.varletters[letter].add(s)
                         if not isinstance(o, str):
                             o = o[0]
 
@@ -298,14 +304,19 @@ class AMRProcessor:
     def newvar(self, concept):
         #return "v%d" % len(self.vars)
         letter = concept[0]
+
+        pref = ""
+        if self.umr_varprefix:
+        #    letter = self.umr_varprefix + concept[0]
+            pref = self.umr_varprefix
         if letter not in self.varletters:
-            self.varletters[letter] = set([letter])
-            return letter
+            self.varletters[letter] = set([pref+letter])
+            return pref+letter
         else:
             i = 1
-            while "%c%d" % (letter, i) in self.varletters[letter]:
+            while "%s%c%d" % (pref, letter, i) in self.varletters[letter]:
                 i += 1
-            var = "%c%d" % (letter, i)
+            var = "%s%c%d" % (pref, letter, i)
             self.varletters[letter].add(var)
             return var
 

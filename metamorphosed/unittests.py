@@ -279,7 +279,7 @@ def test_info(client):
     response = client.get("/version")
     res = json.loads(response.data)
     #print("res", res, file=sys.stderr)
-    assert res == {'name': 'AMR Editor', 'version': '4.6.3', 'apiversion': '1.9.0'}
+    assert res == {'name': 'AMR Editor', 'version': '5.0.0', 'apiversion': '2.0.0'}
 
     response = client.get("/info", query_string={"withdata": True})
     res = json.loads(response.data)
