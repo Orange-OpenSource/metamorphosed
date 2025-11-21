@@ -263,7 +263,7 @@ class AMRProcessor:
                             else:
                                 letter = s[0]
 
-                            if not letter in self.varletters:
+                            if letter not in self.varletters:
                                 self.varletters[letter] = set([s])
                             else:
                                 self.varletters[letter].add(s)
@@ -307,11 +307,11 @@ class AMRProcessor:
 
         pref = ""
         if self.umr_varprefix:
-        #    letter = self.umr_varprefix + concept[0]
+            # letter = self.umr_varprefix + concept[0]
             pref = self.umr_varprefix
         if letter not in self.varletters:
-            self.varletters[letter] = set([pref+letter])
-            return pref+letter
+            self.varletters[letter] = set([pref + letter])
+            return pref + letter
         else:
             i = 1
             while "%s%c%d" % (pref, letter, i) in self.varletters[letter]:

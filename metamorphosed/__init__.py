@@ -904,7 +904,8 @@ class AMR_Edit_Server:
                     "variables": sorted(list(set(ap.vars.keys()))),
                     "undos": len(self.undos),
                     "redos": len(self.redos),
-                    "prevmod": ap.previous_modification}
+                    "prevmod": ap.previous_modification,
+                    "umr": self.umr}
             if self.umr:
                 dico["alignments"] = cursentence.alignments
                 dico["docgraph"] = cursentence.docgraph.docgraph

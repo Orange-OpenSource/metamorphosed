@@ -225,7 +225,7 @@ class UMRsentence(AMRsentence):
                 variables.add(s)
                 if self.varprefix:
                     if not s.startswith(self.varprefix):
-                        msg.append("%s: variable &lt;%s&gt; does not start in %s" % (self.id, s, self.varprefix))
+                        msg.append("%s: variable &lt;%s&gt; does not start with %s" % (self.id, s, self.varprefix))
                 else:
                     msg.append("%s: no sentence number" % (self.id))
         for k in self.alignments:
