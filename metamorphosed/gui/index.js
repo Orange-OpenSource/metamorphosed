@@ -750,6 +750,8 @@ function formatAMR(data) {
 			});
 	}
 
+
+	// propbank and AMR/UMR relation documentation
 	if (data.framedoc || data.reldoc) {
 		$("#resultat").append('<div class="documentation" id="doc_' + currentsentnum + '">');
 		if (data.framedoc) {

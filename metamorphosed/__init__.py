@@ -496,11 +496,12 @@ class AMR_Edit_Server:
             if self.umr:
                 dico["alignments"] = cursentence.alignments
                 dico["docgraph"] = cursentence.docgraph.docgraph
-                #if cursentence.wiok:
-            if cursentence.index:
-                dico["index"] = cursentence.index
-            if cursentence.words:
-                dico["words"] = cursentence.words
+
+                if cursentence.index:
+                    dico["index"] = cursentence.index
+                if cursentence.words:
+                    dico["words"] = cursentence.words
+
             return Response("%s\n" % json.dumps(dico), 200, mimetype="application/json")
 
         @app.route('/search', methods=["GET"])
@@ -918,11 +919,11 @@ class AMR_Edit_Server:
             if self.umr:
                 dico["alignments"] = cursentence.alignments
                 dico["docgraph"] = cursentence.docgraph.docgraph
-                #if cursentence.wiok:
-            if cursentence.index:
-                dico["index"] = cursentence.index
-            if cursentence.words:
-                dico["words"] = cursentence.words
+
+                if cursentence.index:
+                    dico["index"] = cursentence.index
+                if cursentence.words:
+                    dico["words"] = cursentence.words
 
             if self.otheramrdocs:
                 others = []
