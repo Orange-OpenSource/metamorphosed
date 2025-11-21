@@ -91,6 +91,11 @@ def app():
     # clean up / reset resources here
 
 
+@pytest.fixture()
+def client(app):
+    return app.test_client()
+
+
 # launched only once
 @pytest.fixture(scope="session")
 def appumr():
@@ -121,6 +126,11 @@ def appumr():
     # clean up / reset resources here
 
 
+@pytest.fixture()
+def client_umr(appumr):
+    return appumr.test_client()
+
+
 # start server just for one test
 # needed for tests with SmatchPP
 @pytest.fixture()
@@ -144,6 +154,11 @@ def app2():
     yield app
 
     # clean up / reset resources here
+
+
+@pytest.fixture()
+def client2(app2):
+    return app2.test_client()
 
 
 # start server just for one test
@@ -177,6 +192,11 @@ def app_once():
     # clean up / reset resources here
 
 
+@pytest.fixture()
+def client_once(app_once):
+    return app_once.test_client()
+
+
 # start server just for one test (--compare and --preferred)
 @pytest.fixture()
 def app_once2():
@@ -208,6 +228,13 @@ def app_once2():
     # clean up / reset resources here
 
 
+@pytest.fixture()
+def client_once2(app_once2):
+    app2, datadir, aes = app_once2
+    return app2.test_client(), datadir, aes
+    #return app_once2.test_client()
+
+
 # start server just for one test without any validating stuff to test git
 @pytest.fixture()
 def app_git():
@@ -236,35 +263,43 @@ def app_git():
 
 
 @pytest.fixture()
-def client(app):
-    return app.test_client()
-
-
-@pytest.fixture()
-def client_umr(appumr):
-    return appumr.test_client()
-
-
-@pytest.fixture()
-def client_once(app_once):
-    return app_once.test_client()
-
-
-@pytest.fixture()
-def client_once2(app_once2):
-    app2, datadir, aes = app_once2
-    return app2.test_client(), datadir, aes
-    #return app_once2.test_client()
-
-
-@pytest.fixture()
-def client2(app2):
-    return app2.test_client()
-
-
-@pytest.fixture()
 def client_git(app_git):
     app, repo = app_git
+    #return app_git.test_client()
+    return app.test_client(), repo
+
+
+# start server (with UMR) just for one test without any validating stuff to test git
+@pytest.fixture()
+def app_git_umr():
+    datadir = tempfile.TemporaryDirectory()
+    print("temporary test directory", datadir)
+    shutil.copyfile(mydir + "/data/testumr.umr", datadir.name + "/testumr.umr")
+    repo = git.Repo.init(datadir.name)
+    repo.git.add(datadir.name + "/testumr.umr")
+    repo.git.commit("-m", "initial")
+
+    aes = AMR_Edit_Server(4568,
+                          datadir.name + "/testumr.umr",
+                          None,
+                          None,
+                          None,
+                          None,
+                          False,
+                          umr=True,
+                          )
+    app = aes.app
+
+    # other setup can go here
+
+    yield app, repo
+
+    # clean up / reset resources here
+
+
+@pytest.fixture()
+def client_git_umr(app_git_umr):
+    app, repo = app_git_umr
     #return app_git.test_client()
     return app.test_client(), repo
 
@@ -412,6 +447,52 @@ def testumr_read(client_umr):
     response = client_umr.get("/read", query_string={"num": 3})
     res = json.loads(response.data)
     print("res", json.dumps(res, indent=2, ensure_ascii=False), file=sys.stderr)
+    assert res["warning"] == [
+        "snt3: variable &lt;s2m&gt; does not start with s3",
+        "snt3: variable &lt;s2c&gt; does not start with s3",
+        "snt3: alignment <s3m> not in sentence level graph",
+        "snt3: alignment <s3c> not in sentence level graph",
+        "Index: &lt;               \t1\t2\t3\t4&gt; and Words: &lt;               \tThe mouse eats the cheese&gt; do not correspond"
+    ]
+
+    #response = client_umr.get("/save", query_string={"num": 2})
+
+
+# test git add/commit
+def testumr_edit_addinstance_git(client_git_umr):
+    client, repo = client_git_umr
+    response = client.get("/read", query_string={"num": 2})
+    response = client.get("/edit", query_string={"num": 2, "addconcept": "rise-01"})
+    response = client.get("/edit", query_string={"num": 2, "prevmod": 1, "start": "s2d", "label": "ARG0", "end": "s2r"})
+    response = client.get("/save", query_string={"num": 2})
+    res = json.loads(response.data)
+    # print("res", json.dumps(res["alignments"], indent=2, ensure_ascii=False), file=sys.stderr)
+    assert res["docgraph"] == {
+        "temporal": [
+            ["document-creation-time", ":overlap", "s2d"],
+            ["s2d", ":before", "s2x"],
+        ],
+        "modal": [
+            ["root", ":modal", "author"],
+            ["author", ":full-affirmative", "s2x"],
+            ["author", ":full-affirmative", "s2d"],
+        ],
+        "coref": [["s1h", ":same-event", "s2d"], ["s1x", ":same-event", "s2x"]],
+    }
+
+    assert res["alignments"] == {
+        "s2d": [[0, 0]],
+        "s2m": [[0, 0]],
+        "s2n": [[0, 0]],
+        "s2p": [[0, 0]],
+        "s2x": [[2, 3]],
+    }
+
+    # cat(repo.working_dir + "/testumr.umr")
+
+    # res = json.loads(response.data)
+    # print(res)
+    assert "commit: metamorphosed AMR editor: 2 of " in repo.head.log()[-1].message
 
 
 def test_read_date(client):
@@ -561,7 +642,7 @@ def test_edit_modedge(client):
     #print("res", json.dumps(res, indent=2))
     assert res["penman"] == "(k / kill-01\n   :ARG0 (c / cat)\n   :ARG2 (m / mouse))"
 
-#def test_edit_deledge(client_once):
+# def test_edit_deledge(client_once):
 #    response = client_once.get("/read", query_string={"num": 2})
 #    response = client_once.get("/edit", query_string={"num": 2, "deledge_start": "k","deledge_end": "m", "deledge": ":ARG1"})
 #    res = json.loads(response.data)
@@ -1168,6 +1249,11 @@ def ls(dn):
         print("%-50s\t%7d" % (x, os.path.getsize(x)))
 
 
+def cat(fn):
+    with open(fn) as ifp:
+        print(ifp.read())
+
+
 # test whether server stops if backup file exists
 def test_nogit_back_exists():
     datadir = tempfile.TemporaryDirectory()
@@ -1177,7 +1263,7 @@ def test_nogit_back_exists():
 
     ls(datadir.name)
 
-    # should crahs here, since we are in no-git mode and the backup file is already there
+    # should crashs here, since we are in no-git mode and the backup file is already there
     try:
         aes = AMR_Edit_Server(4568,
                               datadir.name + "/testamr.txt",
