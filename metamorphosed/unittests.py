@@ -458,7 +458,7 @@ def testumr_read(client_umr):
     #response = client_umr.get("/save", query_string={"num": 2})
 
 
-# test git add/commit
+# test save, git add/commit
 def testumr_edit_addinstance_git(client_git_umr):
     client, repo = client_git_umr
     response = client.get("/read", query_string={"num": 2})

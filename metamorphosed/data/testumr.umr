@@ -117,3 +117,116 @@ s3c: 6-6
 # document level annotation:
 (s3s0 / sentence
 	:temporal ((document-creation-time :overlap s3e)))
+
+
+################################################################################
+# meta-info :: sent_id = u_tree-cs-s4-root :: comment = missing Index
+# :: snt4
+#Index: 1            2    3    4 5   6      7    8    9        10    11  12        13  14  15      16 17         18 19  20    21 22  23         24     25 26    27
+Words: Eyewitnesses said only a few houses were left standing after the landslide hit the village of Guinsaugon in the south of the Philippine island of Leyte .
+
+# sentence level graph:
+(s4s / say-01
+    :ARG0 (s4p / person
+        :ARG0-of (s4w / witness-01
+            :ARG1 s4l2))
+    :ARG1 (s4l / leave-14
+        :ARG0 (s4h / hit-01
+            :ARG0 (s4l2 / landslide-01
+                :ARG1 (s4t / thing)
+                :aspect process)
+            :ARG1 (s4v / village
+                :mod (s4h3 / human-settlement :wiki "Saint_Bernard,_Southern_Leyte"
+                    :name (s4n / name :op1 "Guinsaugon"))
+                :place (s4s2 / south
+                    :part-of (s4i2 / island :wiki "Leyte"
+                        :name (s4n2 / name :op1 "Leyte")
+                        :place (s4c / country  :wiki "Philippines"
+                            :name (s4n3 / name :op1 "Philippine")))))
+            :aspect performance)
+        :ARG1 (s4s3 / stand-01
+            :ARG1 (s4h2 / house
+                :quant (s4a / a-few
+                    :mod (s4o / only)))
+            :aspect state)
+        :aspect state
+        :quote s4s)
+    :aspect performance)
+
+
+# alignment:
+s4s: 2-2
+s4p: 1-1
+s4w: 0-0
+s4l: 8-8
+s4h: 13-13
+s4l2: 12-12
+s4t: 0-0
+s4v: 15-15
+s4h3: 20-20
+s4n: 0-0
+s4i2: 24-24
+s4n2: 26-26
+s4c: 23-23
+s4n3: 0-0
+s4s3: 9-9
+s4h2: 6-6
+s4a: 4-5
+s4o: 3-3
+
+
+# document level annotation:
+(s4s0 / sentence
+    :temporal ((s3b2 :overlap s4l)
+            (s4l :after s4s3))
+    :modal ((root :modal author)
+            (author :full-affirmative s4s)
+            (author :full-affirmative s4p)
+            (s4p :full-affirmative s4l2)
+            (s4p :full-affirmative s4l)
+            (s4p :full-affirmative s4h)
+            (s4p :full-affirmative s4s3))
+    :coref ((s2t :subset-of s4s)
+            (s3l :same-event s4l)))
+
+
+
+################################################################################
+# meta-info :: sent_id = u_tree-cs-s7-root :: comment = missing Words
+# :: snt7
+Index: 1    2 3   4      5  6   7       8   9   10         11      12   13    14 15   16
+#Words: Only a few sheets of tin roofing and the occasional coconut tree could be seen .
+
+# sentence level graph:
+(s7s / see-01
+    :ARG1 (s7a / and
+        :op1 (s7r / roofing
+            :material (s7t / tin)
+            :unit (s7s2 / sheet)
+            :quant (s7a2 / a-few))
+        :op2 (s7t2 / tree
+            :mod (s7c / coconut)
+            :mod (s7o / occasional))
+        :mod (s7o2 / only))
+    :aspect state)
+
+
+# alignment:
+s7s: 15-15
+s7a: 8-8
+s7r: 7-7
+s7t: 6-6
+s7s2: 4-4
+s7a2: 2-3
+s7t2: 12-12
+s7c: 11-11
+s7o: 10-10
+s7o2: 1-1
+
+
+# document level annotation:
+(s7s0 / sentence
+    :temporal ((s7s :contains s6s))
+    :modal ((root :modal author)
+            (author :neutral-affirmative s7s))
+    :coref ((s2t :subset-of s7s)))

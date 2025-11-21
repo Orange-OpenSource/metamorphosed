@@ -144,25 +144,28 @@ class UMRsentence(AMRsentence):
         if index is None:
             print("* missing 'Index' line", sentid, file=sys.stderr)
             self.wiok = False
-            self.index = index
+        else:
+            self.index = [int(x) for x in index.split()]
+
         if words is None:
             print("* missing 'Words' line", sentid, file=sys.stderr)
             self.wiok = False
-            self.words = words
+        else:
+            self.words = words.split()
 
         if self.wiok:
             # we found both index and words
-            il = index.split()
-            wl = words.split()
-            if index and words and len(il) != len(wl):
+            #il = index.split()
+            #wl = words.split()
+            if index and words and len(self.index) != len(self.words):
                 # but they do not have the same length
                 print("* Words do not correspond do Index", sentid, words, index, file=sys.stderr)
                 self.wiok = False
-                self.index = index
-                self.words = words
-            else:
-                self.index = [int(x) for x in il]
-                self.words = wl
+                #self.index = index
+                #self.words = words
+            #else:
+            #    self.index = [int(x) for x in il]
+            #    self.words = wl
 
         self.other = other
         self.meta = meta
@@ -170,8 +173,8 @@ class UMRsentence(AMRsentence):
         if not self.text and self.words:
             if self.wiok:
                 self.text = " ".join(self.words)
-            else:
-                self.text = self.words.strip()
+            #else:
+            #    self.text = self.words.strip()
         if sentid:
             self.id = sentid
             self.varprefix = "s" + sentid.split("snt")[-1] # the sentence number is the required prefix
