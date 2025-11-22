@@ -299,8 +299,9 @@ class AMR_Edit_Server:
             newvarname = self.checkParameter(request, 'newvarname', 'string', isOptional=True, defaultValue=None)
 
             umrvar = self.checkParameter(request, 'umrvar', 'string', isOptional=True, defaultValue=None)
-            alignmentstart = self.checkParameter(request, 'alignmentstart', 'string', isOptional=True, defaultValue=None)
-            alignmentend = self.checkParameter(request, 'alignmentend', 'string', isOptional=True, defaultValue=None)
+            indexes = self.checkParameter(request, 'indexes', 'string', isOptional=True, defaultValue=None)
+            #alignmentstart = self.checkParameter(request, 'alignmentstart', 'string', isOptional=True, defaultValue=None)
+            #alignmentend = self.checkParameter(request, 'alignmentend', 'string', isOptional=True, defaultValue=None)
 
             if sentnum < 1 or sentnum > len(self.amrdoc.sentences):
                 # creates an http status code 400
@@ -327,7 +328,8 @@ class AMR_Edit_Server:
                            "addgraph", "mappings",
                            "newvarname", "oldvarname",
                            
-                           "umrvar", "alignmentstart", "alignmentend"]
+                           "umrvar", "indexes", #"alignmentstart", "alignmentend"
+                           ]
 
             #self.findinvalidparameters(request, validparams)
             self.validParameters(request, set(validparams))
@@ -415,11 +417,8 @@ class AMR_Edit_Server:
                     ap = newap
                     ap.modified = True # set rather by ap.-functions ??
             elif modcomment is not None:
-                # comments are not processed in AMRProcessor
                 cursentence.modcomment(modcomment)
-                print("CCC", cursentence.comments)
                 ap.comments = cursentence.comments[:]
-
             elif newtop:
                 rtc = ap.settop(newtop)
             elif reify:
@@ -460,9 +459,42 @@ class AMR_Edit_Server:
             elif umrvar:
                 if not self.umr:
                     raise ServerException("Not in UMR mode")
-                #print("CHANGE ALIGNMENT", umrvar, alignmentstart,alignmentend)
-                if alignmentstart and alignmentend:
-                    pass # TODO modify UMR
+
+                if indexes:
+                    newindexes = []
+                    for e in indexes.strip().split(","):
+                        mo = umrdoc.ALIGNMENT.match(e.strip())
+                        if not mo:
+                            return invalidumr(ap.lastpm, "alignments string invalid «%s»" % indexes, cursentence, sentnum)
+
+                        als = int(mo.group(1))
+                        ale = int(mo.group(2))
+
+                        if als > ale:
+                            return invalidumr(ap.lastpm, "alignment start %s must be <= alignment end %s" % (als, ale), cursentence, sentnum)
+                        if (als <= 0 and ale > 0) \
+                            or (ale <= 0 and als > 0):
+                            return invalidumr(ap.lastpm, "alignment start %s and alignment end %s must be both 0 or -1 or both different" % (als, ale), cursentence, sentnum)
+                        if cursentence.index and als > cursentence.index[-1]:
+                            return invalidumr(ap.lastpm, "alignment start %s is beyond last word" % (als), cursentence, sentnum)
+                        if cursentence.index and ale > cursentence.index[-1]:
+                            return invalidumr(ap.lastpm, "alignment end %s is beyond last word" % (ale), cursentence, sentnum)
+                        newindexes.append((als,ale))
+                    cursentence.alignments[umrvar] = newindexes
+                else:
+                    del cursentence.alignments[umrvar]
+
+                    #als = int(alignmentstart)
+                    #ale = int(alignmentend)
+                    #if als > ale \
+                    #    or (als <= 0 and ale > 0) \
+                    #    or (ale <= 0 and als > 0):
+                    #    # invalidumr
+                    #    pass
+                    #cursentence.alignments[umrvar] = [(als, ale)]
+                    #ap.modified = True 
+
+                    pass
             else:
                 # creates an http status code 400
                 raise ServerException("No edit valid operation given")
@@ -821,6 +853,34 @@ class AMR_Edit_Server:
         #    response = jsonify({"error": str(error)})
         #    response.status_code = 404
         #    return response
+        def invalidumr(pm, msg, cursentence, sentnum):
+            print("uuuuuuuuuu", pm, msg)
+            warnings = [msg]
+            dico = {"penman": pm,
+                    "svg": "",
+                    "svg_canon": "",
+                    "warning": warnings,
+                    "framedoc": "",
+                    "readonly": self.readonly,
+                    "filename": filename,
+                    "numsent": len(self.amrdoc.sentences),
+                    "num": sentnum,
+                    "text": cursentence.text,
+                    "comments": "\n".join(ap.comments),
+                    "sentid": cursentence.id,
+                    "undos": len(self.undos),
+                    "redos": len(self.redos),
+                    "umr": self.umr}
+            if self.umr:
+                dico["alignments"] = cursentence.alignments
+                dico["docgraph"] = cursentence.docgraph.docgraph
+
+                if cursentence.index:
+                    dico["index"] = cursentence.index
+                if cursentence.words:
+                    dico["words"] = cursentence.words
+
+            return Response("%s\n" % json.dumps(dico), 200, mimetype="application/json")
 
         def invalidamr(ap, pm, cursentence, sentnum):
             # format error in file
@@ -855,8 +915,17 @@ class AMR_Edit_Server:
                     "comments": "\n".join(ap.comments),
                     "sentid": cursentence.id,
                     "undos": len(self.undos),
-                    "redos": len(self.redos)
-                    }
+                    "redos": len(self.redos),
+                    "umr": self.umr}
+            if self.umr:
+                dico["alignments"] = cursentence.alignments
+                dico["docgraph"] = cursentence.docgraph.docgraph
+
+                if cursentence.index:
+                    dico["index"] = cursentence.index
+                if cursentence.words:
+                    dico["words"] = cursentence.words
+
             return Response("%s\n" % json.dumps(dico), 200, mimetype="application/json")
 
         def prepare_newpage(sentnum, oktext=None, okamr=None, compare=None):

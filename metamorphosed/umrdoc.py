@@ -245,7 +245,7 @@ class UMRsentence(AMRsentence):
         return msg
 
 
-ALIGNMENT = re.compile(r"(-?\d+)-(-?\d+)")
+ALIGNMENT = re.compile(r"^(-?\d+)-(-?\d+)$")
 
 
 class UMRdoc:

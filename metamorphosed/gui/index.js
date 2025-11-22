@@ -484,9 +484,30 @@ function info(event) {
 	}
 }
 
+var umralignment_pos = -1;
+
 function click_alignment_var(event) {
-	//console.log("CLICK_AL", event.target.id);
+	console.log("CLICK_AL", event.target.id);
 	$("#umrvar").text(event.target.id.split("_")[1]);
+	$("#indexes").empty()
+	var ct = 1;
+	
+	//console.log("AAAbb", ct, contents, "#alv_" + event.target.id.split("_")[1] + "_" + ct);
+	var contents = $("#alv_" + event.target.id.split("_")[1] + "_" + ct).text();
+
+	ct++;
+	while (ct < 4) {
+		var nextcontents = $("#alv_" + event.target.id.split("_")[1] + "_" + ct).text();
+		if (nextcontents == "") {
+			break;
+		}
+		contents += ", ";
+
+		contents += nextcontents;
+		ct ++;
+	}
+	$("#indexes").val(contents)
+
 	$("#umr_alignment_modal").css("top", event.pageY + "px");
 	$("#umr_alignment_modal").css("left", event.pageX + "px");
 	$("#umr_alignment_modal").show()
@@ -633,7 +654,6 @@ function formatAMR(data) {
 	});
 
 
-
 	if (data.umr) {
 		// UMR data contains Index: and Words: lines which should be of same length (checked by server)
 		//console.log("iiiiii", data.index)
@@ -744,15 +764,15 @@ function formatAMR(data) {
 		$.each(data.alignments,
 			function (key, value) {
 				$('#tab_alignments_' + currentsentnum).append('<tr id="tr_al_' + currentsentnum + '_' + key + '">');
-				$('#tr_al_' + currentsentnum + '_' + key).append('<th class="alignment_var" id="alk_'+key+'" onmousedown="click_alignment_var(event)">' + key);
+				$('#tr_al_' + currentsentnum + '_' + key).append('<th id="alk_'+key+'">' + key);
 				for (var i = 0; i < value.length; ++i) {
-					$('#tr_al_' + currentsentnum + '_' + key).append('<td class="alignment_var" id="alv_'+key+'" onmousedown="click_alignment_var(event)">' + value[i][0] + "-" + value[i][1]);
+					$('#tr_al_' + currentsentnum + '_' + key).append('<td class="alignment_var" id="alv_'+key+'_' + (i+1) +'" onmousedown="click_alignment_var(event)">' + value[i][0] + "-" + value[i][1]);
 				}
 			});
+		$('#alignments_' + currentsentnum).append('add alignment');
 	}
 
 	// UMR document level annotation
-	console.log("DG", data.docgraph)
 	if (data.docgraph !== undefined) {
 		// toggle button to hide/show the alignments
 		$("#g4resultat").append('<button class="toggleresult" id="toggledocgraph" >&#8210;</button>');
@@ -863,8 +883,6 @@ $(document).ready(function () {
 	$("#toggledirection").click(function () {
 		ToggleDirection();
 	});
-
-
 
 
 	$("#save").click(function () {
@@ -1277,8 +1295,9 @@ $(document).ready(function () {
 			params = {
 				// TODO
 				"umrvar": $("#umrvar").text(),
-				"alignmentstart": $("#startindex").val(),
-				"alignmentend": $("#endindex").val()
+				"indexes": $("#indexes").val(),
+				//"alignmentstart": $("#startindex").val(),
+				//"alignmentend": $("#endindex").val()
 			}
 
 		} else {
