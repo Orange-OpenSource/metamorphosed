@@ -84,6 +84,7 @@ class AMR_Edit_Server:
                  predictor=None,
                  do_git=True, compare=None, smatchpp=False,
                  preferred=None, # filename where to read/write the preferred graph in comparison mode
+                 override=False, # if True override an existing backup (*.2) file 
                  umr=False
                  ):
         self.umr = umr
@@ -119,7 +120,7 @@ class AMR_Edit_Server:
                         ap = amreditor.AMRProcessor()
                         aps[sentnum] = ap
                         ap.lastpm = cursentence.amr
-                        ap.comments = cursentence.comments
+                        ap.comments = cursentence.comments[:]
                 self.otheramrdocs.append((doc, aps))
             print("all compare sentences initialized")
 
@@ -131,10 +132,14 @@ class AMR_Edit_Server:
                 self.reificator = reification.getInstance(reifications)
 
         self.fileversion = "2"
-        if not self.readonly and not gitinterface.is_git_controlled(filename):
-            bak_filename = filename + "." + self.fileversion
+        bak_filename = filename + "." + self.fileversion
+        if not override:
+            if not self.readonly and not gitinterface.is_git_controlled(filename):
+                if os.path.exists(bak_filename):
+                    raise Exception("Edited file <%s> not under git version control. Backup file <%s> exists already.\nPlease rename Backup file first" % (filename, bak_filename))
+        else:
             if os.path.exists(bak_filename):
-                raise Exception("Edited file <%s> not under git version control. Backup file <%s> exists already.\nPlease rename Backup file first" % (filename, bak_filename))
+                print("ATTENTION! backup file %s will be overwritten !" % bak_filename)
 
         self.relationsdoc = None
         if relationsdoc and relationsdoc != "-":
@@ -151,7 +156,7 @@ class AMR_Edit_Server:
                 ap.umr_varprefix = cursentence.varprefix
             self.aps[sentnum] = ap
             ap.lastpm = cursentence.amr
-            ap.comments = cursentence.comments
+            ap.comments = cursentence.comments[:]
             self.initstates.append(ap.lastpm)
 
         print("all sentences initialized")
@@ -293,6 +298,10 @@ class AMR_Edit_Server:
             oldvarname = self.checkParameter(request, 'oldvarname', 'string', isOptional=True, defaultValue=None)
             newvarname = self.checkParameter(request, 'newvarname', 'string', isOptional=True, defaultValue=None)
 
+            umrvar = self.checkParameter(request, 'umrvar', 'string', isOptional=True, defaultValue=None)
+            alignmentstart = self.checkParameter(request, 'alignmentstart', 'string', isOptional=True, defaultValue=None)
+            alignmentend = self.checkParameter(request, 'alignmentend', 'string', isOptional=True, defaultValue=None)
+
             if sentnum < 1 or sentnum > len(self.amrdoc.sentences):
                 # creates an http status code 400
                 raise ServerException("invalid sentence number: must be between 1 and %d" % len(self.amrdoc.sentences))
@@ -316,7 +325,9 @@ class AMR_Edit_Server:
                            "newtop",
                            "prevmod",
                            "addgraph", "mappings",
-                           "newvarname", "oldvarname"]
+                           "newvarname", "oldvarname",
+                           
+                           "umrvar", "alignmentstart", "alignmentend"]
 
             #self.findinvalidparameters(request, validparams)
             self.validParameters(request, set(validparams))
@@ -406,6 +417,9 @@ class AMR_Edit_Server:
             elif modcomment is not None:
                 # comments are not processed in AMRProcessor
                 cursentence.modcomment(modcomment)
+                print("CCC", cursentence.comments)
+                ap.comments = cursentence.comments[:]
+
             elif newtop:
                 rtc = ap.settop(newtop)
             elif reify:
@@ -443,7 +457,12 @@ class AMR_Edit_Server:
                     self.aps[sentnum] = newap
                     ap = newap
                     ap.modified = True # set rather by ap.-functions ??
-
+            elif umrvar:
+                if not self.umr:
+                    raise ServerException("Not in UMR mode")
+                #print("CHANGE ALIGNMENT", umrvar, alignmentstart,alignmentend)
+                if alignmentstart and alignmentend:
+                    pass # TODO modify UMR
             else:
                 # creates an http status code 400
                 raise ServerException("No edit valid operation given")
@@ -485,7 +504,7 @@ class AMR_Edit_Server:
                     "filename": filename, "numsent": len(self.amrdoc.sentences),
                     "num": sentnum,
                     "text": cursentence.text,
-                    "comments": "\n".join(cursentence.comments),
+                    "comments": "\n".join(ap.comments),
                     "sentid": cursentence.id,
                     "lastchanged": lastchanged,
                     "variables": sorted(list(set(ap.vars.keys()))),
@@ -833,7 +852,7 @@ class AMR_Edit_Server:
                     "numsent": len(self.amrdoc.sentences),
                     "num": sentnum,
                     "text": cursentence.text,
-                    "comments": "\n".join(cursentence.comments),
+                    "comments": "\n".join(ap.comments),
                     "sentid": cursentence.id,
                     "undos": len(self.undos),
                     "redos": len(self.redos)
@@ -908,7 +927,7 @@ class AMR_Edit_Server:
                     "numsent": len(self.amrdoc.sentences),
                     "num": sentnum,
                     "text": sentencetext, #cursentence.text,
-                    "comments": "\n".join(cursentence.comments),
+                    "comments": "\n".join(ap.comments),
                     "sentid": cursentence.id,
                     "lastchanged": lastchanged,
                     "variables": sorted(list(set(ap.vars.keys()))),
@@ -993,7 +1012,7 @@ class AMR_Edit_Server:
                     dico2["filename"] = doc.fn
                     dico2["svg"] = csvg.decode("utf8")
                     dico2["penman"] = cpm
-                    dico2["comments"] = "\n".join(ccursentence.comments),
+                    dico2["comments"] = "\n".join(ap.comments),
                     others.append(dico2)
                 dico["others"] = others
                 dico["smatch"] = "%.2f" % (compres.f1 * 100)
@@ -1103,6 +1122,7 @@ class AMR_Edit_Server:
                 ##print("SENT", i+1, self.aps[i+1].modified, sent.id, sent.text, self.aps[i+1].triples)
                 #self.aps[i + 1].write(ofp)
                 output = self.aps[i + 1].write()
+                sent.comments = self.aps[i + 1].comments[:]
                 sent.amr = output
                 sent.write(ofp)
             else:

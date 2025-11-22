@@ -53,7 +53,6 @@ function getServerInfo() {
 	//URL_BASE = 'http://' + window.location.host + '/info';
 	URL_BASE = 'info';
 
-
 	$.ajax({
 		url: URL_BASE,
 		type: 'GET',
@@ -248,7 +247,6 @@ function ToggleHelp() {
 	}
 }
 
-
 function ToggleSVGExport() {
 	if ($("#svgexport").is(":visible")) {
 		$("#svgexport").hide();
@@ -338,7 +336,7 @@ function info(event) {
 	//console.log("EEEG", event.target.parentNode.children[1]);
 	node = event.target.textContent;
 	node = getAncestor(event.target);
-	//console.log("EEEb", node, node.id, lastclickededge);
+	console.log("EEEb", node, node.id, lastclickededge);
 	unhighlight();
 
 	if (readonly) {
@@ -430,10 +428,12 @@ function info(event) {
 		modedge = edgename;
 		modedge_start = node.id.split("#")[1];
 		modedge_end = node.id.split("#")[2];
-		$("#relationfrom").empty();
-		$("#relationfrom").append(modedge_start);
-		$("#relationto").empty();
-		$("#relationto").append(modedge_end);
+		//$("#relationfrom").empty();
+		//$("#relationfrom").append(modedge_start);
+		$("#relationfrom").text(modedge_start);
+		//$("#relationto").empty();
+		//$("#relationto").append(modedge_end);
+		$("#relationto").text(modedge_end);
 		$("#newsource").val("");
 
 		// open edit modal
@@ -482,6 +482,19 @@ function info(event) {
 			$(".modal").hide();
 		}
 	}
+}
+
+function click_alignment_var(event) {
+	//console.log("CLICK_AL", event.target.id);
+	$("#umrvar").text(event.target.id.split("_")[1]);
+	$("#umr_alignment_modal").css("top", event.pageY + "px");
+	$("#umr_alignment_modal").css("left", event.pageX + "px");
+	$("#umr_alignment_modal").show()
+	$("#umr_alignment_modal").draggable();
+
+	$("#cancel_ua").click(function () {
+		$("#umr_alignment_modal").hide();
+	});
 }
 
 function runcommand(params) {
@@ -550,7 +563,6 @@ function formatAMR(data) {
 	}
 
 	// set valid variables to <select> tags
-
 	$('.validvars').empty();
 
 	$.each(data.variables,
@@ -558,6 +570,18 @@ function formatAMR(data) {
 			//console.log("AAA", key, value);
 			$('.validvars').append('<option value="' + value + '">' + value);
 		});
+
+    // UMR set alignment postions to <select> tags
+	$('.validindexes').empty();
+	if (data.index !== undefined) {
+		$('.validindexes').append('<option value="' + -1 + '">' + -1);
+		$('.validindexes').append('<option value="' + 0 + '">' + 0);
+		$.each(data.index,
+			function (key, value) {
+				//console.log("AAA", key, value);
+				$('.validindexes').append('<option value="' + value + '">' + value);
+			});
+	}
 
 	// toggle button to hide/show the sentence id and the sentence
 	$("#resultat").append('<button class="toggleresult" id="togglesentence" >&#8210;</button>');
@@ -608,49 +632,53 @@ function formatAMR(data) {
 		$("#modifiedcomment").val($('#precomment_' + currentsentnum).html());
 	});
 
-	// UMR data contains Index: and Words: lines which should be of same length (checked by server)
-	console.log("iiiiii", data.index)
 
-	$("#resultat").append('<button class="toggleresult" id="toggleindex" >&#8210;</button>');
-	$("#toggleindex").click(function () {
-		ToggleDiv('#innerwordindex_' + currentsentnum, "#toggleindex");
-	});
 
-	$("#resultat").append('<div class="text" id="wordindex_' + currentsentnum + '">');
-	$('#wordindex_' + currentsentnum).append('<div id="innerwordindex_' + currentsentnum + '">');
-	$('#innerwordindex_' + currentsentnum).append("<h4>index");
-	$('#innerwordindex_' + currentsentnum).append('<table id="tab_wordindex_' + currentsentnum + '">');
-	$('#tab_wordindex_' + currentsentnum).append('<tr id="tr_index_' + currentsentnum + '">');
-	$('#tab_wordindex_' + currentsentnum).append('<tr id="tr_word_' + currentsentnum + '">');
+	if (data.umr) {
+		// UMR data contains Index: and Words: lines which should be of same length (checked by server)
+		//console.log("iiiiii", data.index)
 
-	$("#tr_index_" + currentsentnum).append("<th>Index:");
-	if (data.index !== undefined) {
-		for (var i = 0; i<data.index.length; i++) {
-			$("#tr_index_" + currentsentnum).append("<td>" + data.index[i]);
+		$("#resultat").append('<button class="toggleresult" id="toggleindex" >&#8210;</button>');
+		$("#toggleindex").click(function () {
+			ToggleDiv('#innerwordindex_' + currentsentnum, "#toggleindex");
+		});
+		$("#resultat").append('<div class="text" id="wordindex_' + currentsentnum + '">');
+		$('#wordindex_' + currentsentnum).append('<div id="innerwordindex_' + currentsentnum + '">');
+		$('#innerwordindex_' + currentsentnum).append("<h4>word index");
+		$('#innerwordindex_' + currentsentnum).append('<table id="tab_wordindex_' + currentsentnum + '">');
+		$('#tab_wordindex_' + currentsentnum).append('<tr id="tr_index_' + currentsentnum + '">');
+		$('#tab_wordindex_' + currentsentnum).append('<tr id="tr_word_' + currentsentnum + '">');
+
+		$("#tr_index_" + currentsentnum).append("<th>Index:");
+		if (data.index !== undefined) {
+			for (var i = 0; i<data.index.length; i++) {
+				$("#tr_index_" + currentsentnum).append("<td>" + data.index[i]);
+			}
+		}
+		$("#tr_word_" + currentsentnum).append("<th>Words:");
+		if (data.words !== undefined) {
+			for (var i = 0; i<data.words.length; i++) {
+				$("#tr_word_" + currentsentnum).append("<td>" + data.words[i]);
+			}
+		}
+		if ('#innerwordindex_' + currentsentnum in visible_divselectors && visible_divselectors['#innerwordindex_' + currentsentnum] == false) {
+			ToggleDiv('#innerwordindex_' + currentsentnum, "#toggleindex");
 		}
 	}
-	$("#tr_word_" + currentsentnum).append("<th>Words:");
-	if (data.words !== undefined) {
-		for (var i = 0; i<data.words.length; i++) {
-			$("#tr_word_" + currentsentnum).append("<td>" + data.words[i]);
-		}
-	}
-	if ('#innerwordindex_' + currentsentnum in visible_divselectors && visible_divselectors['#innerwordindex_' + currentsentnum] == false) {
-		ToggleDiv('#innerwordindex_' + currentsentnum, "#toggleindex");
-	}
-	
 
 	// container for penman and svg, either on top of one another or next to each other
 	$("#resultat").append('<div id="gresultat">');
 	$("#gresultat").append('<div id="g1resultat">'); // penman
 	$("#gresultat").append('<div id="g2resultat">'); // visualisation
-	if (data.alignments !== undefined) {
-		// UMR data
-		$("#gresultat").append('<div id="g3resultat">'); // alignments
-	}
-	if (data.docgraph !== undefined) {
-		// UMR data	
-		$("#gresultat").append('<div id="g4resultat">'); // document level annotation
+	if (data.umr) {
+		if (data.alignments !== undefined) {
+			// UMR data
+			$("#gresultat").append('<div id="g3resultat">'); // alignments
+		}
+		if (data.docgraph !== undefined) {
+			// UMR data	
+			$("#gresultat").append('<div id="g4resultat">'); // document level annotation
+		}
 	}
 
 	// toggle button to hide/show the penman graph
@@ -716,9 +744,9 @@ function formatAMR(data) {
 		$.each(data.alignments,
 			function (key, value) {
 				$('#tab_alignments_' + currentsentnum).append('<tr id="tr_al_' + currentsentnum + '_' + key + '">');
-				$('#tr_al_' + currentsentnum + '_' + key).append('<th>' + key);
+				$('#tr_al_' + currentsentnum + '_' + key).append('<th class="alignment_var" id="alk_'+key+'" onmousedown="click_alignment_var(event)">' + key);
 				for (var i = 0; i < value.length; ++i) {
-					$('#tr_al_' + currentsentnum + '_' + key).append('<td>' + value[i][0] + "-" + value[i][1]);
+					$('#tr_al_' + currentsentnum + '_' + key).append('<td class="alignment_var" id="alv_'+key+'" onmousedown="click_alignment_var(event)">' + value[i][0] + "-" + value[i][1]);
 				}
 			});
 	}
@@ -1240,6 +1268,17 @@ $(document).ready(function () {
 			params = {
 				"addgraph": $("#addedgraph").val(),
 				"mappings": $("#conceptmappings").val()
+			}
+		}
+		else if (this.id == "modifyalignment") {
+			$(".editmode").hide();
+			$("#commands").show();
+			//console.log("ZZZZ", $("#umrvar").text());
+			params = {
+				// TODO
+				"umrvar": $("#umrvar").text(),
+				"alignmentstart": $("#startindex").val(),
+				"alignmentend": $("#endindex").val()
 			}
 
 		} else {

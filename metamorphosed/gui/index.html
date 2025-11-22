@@ -414,6 +414,20 @@ Else the input is interpreted as regular expression" placeholder="regex/PENMAN" 
         </div>
     </div>
 
+    <!-- UMR alignment edit -->
+    <div class="modal editmode" id="umr_alignment_modal">
+        <div class="grouping noborder" id="umr_al">
+            <button class="cancelmodal" id="cancel_ua">&times;</button>
+            <h3>Modify UMR alignment &ldquo;<span id="umrvar"></span>&rdquo;</h3>
+            <ul>
+                <li><select class="validindexes" name="idmr" id="startindex"></select> -
+                    <select class="validindexes" name="idmr" id="endindex"></select>
+                <button class="addbutton mybutton" id="modifyalignment">set</button></li>
+            
+            </ul>
+        </div>
+    </div>
+
 
 </body>
 

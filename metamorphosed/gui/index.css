@@ -350,7 +350,15 @@ input {
   border: solid 1px #959595;
   padding-left: 3px;
   background-color: #ffe8f7;
+}
 
+.validindexes {
+  width: 5em;
+  vertical-align: middle;
+  border-radius: 5px;
+  border: solid 1px #959595;
+  padding-left: 3px;
+  background-color: #c2f7fa;
 }
 
 #conceptmappings {
@@ -697,6 +705,13 @@ td.framealiastable {
   max-width: 50%;
   width: 50%;
 }
+
+#urm_alignment_modal {
+  top: 20%;
+  max-width: 20%;
+  width: 20%;
+}
+
 
 #sentencelist {
   width: 100%;

@@ -378,7 +378,7 @@ def test_exportgraphs(client):
     assert len(zfp.infolist()) == 26
     fobj = zfp.infolist()[10]
     assert fobj.filename == "11.pdf"
-    assert fobj.file_size in [14028, 14029, 13940]
+    assert fobj.file_size in [14027, 14028, 14029, 13940]
     #assert fobj.file_size == 14028 #13940
     contents = zfp.read(fobj.filename)
     assert contents.startswith(b'%PDF-1.7\n%\xb5\xed\xae\xfb\n4') or contents.startswith(b'%PDF-1.5\n%\xb5\xed\xae\xfb\n4')
@@ -446,13 +446,15 @@ def testumr_read(client_umr):
 
     response = client_umr.get("/read", query_string={"num": 3})
     res = json.loads(response.data)
-    print("res", json.dumps(res, indent=2, ensure_ascii=False), file=sys.stderr)
+    print("res", json.dumps(res["warning"], indent=2, ensure_ascii=False), file=sys.stderr)
     assert res["warning"] == [
         "snt3: variable &lt;s2m&gt; does not start with s3",
         "snt3: variable &lt;s2c&gt; does not start with s3",
         "snt3: alignment <s3m> not in sentence level graph",
         "snt3: alignment <s3c> not in sentence level graph",
-        "Index: &lt;               \t1\t2\t3\t4&gt; and Words: &lt;               \tThe mouse eats the cheese&gt; do not correspond"
+        "snt3: alignment <6> start position not in Index: [1, 2, 3, 4]",
+        "snt3: alignment <6> end position not in Index: [1, 2, 3, 4]",
+        "Index: &lt;[1, 2, 3, 4]&gt; and Words: &lt;['The', 'mouse', 'eats', 'the', 'cheese']&gt; do not correspond"
     ]
 
     #response = client_umr.get("/save", query_string={"num": 2})

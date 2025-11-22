@@ -33,7 +33,7 @@
 # Software Name: MetAMoRphosED AMR-Editor
 # Author: Johannes Heinecke
 
-# version 4.6.3 as of 29th August 2025
+# version 5.0.0 as of 22nd November 2025
 
 import io
 import re
@@ -122,6 +122,7 @@ class AMRProcessor:
         self.valid = True
         self.isparsed = False
         self.modified = False
+        self.comments = []
         self.previous_modification = 0 # sent to client and must be still the same when client answers. If not another client was faster. In this cas we refuse the anwser of the first client who came to late
 
     def __str__(self):
@@ -249,7 +250,6 @@ class AMRProcessor:
                     # print(s)
                     if s in usedvariables:
                         s = "%s_new%d" % (s, i)
-
                     for po in branch[1]:
                         # print("   ", po)
                         p = po[0]

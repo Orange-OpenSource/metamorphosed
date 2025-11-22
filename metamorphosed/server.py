@@ -57,6 +57,7 @@ def main():
     parser.add_argument("--readonly", "--ro", default=False, action="store_true", help='browse corpus only')
     parser.add_argument("--reifications", "-X", default=mydir + "/data/reification-table.txt", help="table for (de)reification")
     parser.add_argument("--nogit", dest="git", default=True, action="store_false", help='no git add/commit, even if file is git controlled (does nevertheless overwrite existing file)')
+    parser.add_argument("--override", default=False, action="store_true", help='if file is not under git control, override existing backup file')
     parser.add_argument("--edge_predictor", "-E", default=None, help="yml file which defines an Edge Predictor class (filename, Classname and parameters")
     parser.add_argument("--smatchpp", "-S", action='store_true', help='use smatchpp (https://github.com/flipz357/smatchpp) instead of smatch')
     parser.add_argument("--preferred", default=None, help="json file with preferred graphs (used together which --compare)")
@@ -91,6 +92,7 @@ def main():
                                   compare=compare,
                                   smatchpp=args.smatchpp,
                                   preferred=args.preferred,
+                                  override=args.override,
                                   umr=args.umr)
             aes.start()
         except Exception as e:
