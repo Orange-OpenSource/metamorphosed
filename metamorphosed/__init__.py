@@ -84,7 +84,7 @@ class AMR_Edit_Server:
                  predictor=None,
                  do_git=True, compare=None, smatchpp=False,
                  preferred=None, # filename where to read/write the preferred graph in comparison mode
-                 override=False, # if True override an existing backup (*.2) file 
+                 override=False, # if True override an existing backup (*.2) file
                  umr=False
                  ):
         self.umr = umr
@@ -245,6 +245,10 @@ class AMR_Edit_Server:
                 dico["relations"] = sorted(self.amr_rels.relations)
                 dico["concepts"] = sorted(self.amr_concepts.relations)
                 dico["sentences"] = self.amrdoc.getsentencelist()
+                if self.umr:
+                    dico["docgraphitems"] = {"validsubjects": umrdoc.UMRDocGraph.validsubjects,
+                                             "validpredicates": umrdoc.UMRDocGraph.validpredicats,
+                                             "validobjects": umrdoc.UMRDocGraph.validobjects}
 
             if self.reificator:
                 reifs = self.reificator.getquivalences()
@@ -329,7 +333,6 @@ class AMR_Edit_Server:
                            "prevmod",
                            "addgraph", "mappings",
                            "newvarname", "oldvarname",
-                           
                            "umrvar", "indexes", #"alignmentstart", "alignmentend"
                            "newalignment"
                            ]
@@ -459,7 +462,7 @@ class AMR_Edit_Server:
                     self.aps[sentnum] = newap
                     ap = newap
                     ap.modified = True # set rather by ap.-functions ??
-            elif umrvar is not None: # can be an empty string if no uanmligned variable exists (H) 
+            elif umrvar is not None: # can be an empty string if no unaligned variable exists (H)
                 if not self.umr:
                     raise ServerException("Not in UMR mode")
 
@@ -476,7 +479,7 @@ class AMR_Edit_Server:
                         if als > ale:
                             return invalidumr(ap, "alignment start %s must be <= alignment end %s" % (als, ale), cursentence, sentnum)
                         if (als <= 0 and ale > 0) \
-                            or (ale <= 0 and als > 0):
+                           or (ale <= 0 and als > 0):
                             return invalidumr(ap, "alignment start %s and alignment end %s must be both 0 or -1 or both different" % (als, ale), cursentence, sentnum)
                         if cursentence.index and als > cursentence.index[-1]:
                             return invalidumr(ap, "alignment start %s is beyond last word" % (als), cursentence, sentnum)
@@ -484,7 +487,6 @@ class AMR_Edit_Server:
                             return invalidumr(ap, "alignment end %s is beyond last word" % (ale), cursentence, sentnum)
                         newindexes.append((als,ale))
                     cursentence.alignments[umrvar] = newindexes
-
 
                 if newalignment:
                     if umrvar == "":
@@ -938,7 +940,6 @@ class AMR_Edit_Server:
                     dico["words"] = cursentence.words
                 if cursentence.other:
                     dico["glosses"] = cursentence.other
-
 
             return Response("%s\n" % json.dumps(dico), 200, mimetype="application/json")
 

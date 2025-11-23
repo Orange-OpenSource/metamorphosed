@@ -459,6 +459,7 @@ def testumr_read(client_umr):
 
     #response = client_umr.get("/save", query_string={"num": 2})
 
+
 def testumr_modify_alignment(client_umr):
     response = client_umr.get("/read", query_string={"num": 1})
     response = client_umr.get("/edit", query_string={"num": 1, "umrvar": "s1d3", "indexes": "4-4, 5-5"})
@@ -500,25 +501,25 @@ def testumr_modify_alignment(client_umr):
     response = client_umr.get("/edit", query_string={"num": 1, "prevmod": 2, "umrvar": "s1h", "indexes": "4-a"})
     res = json.loads(response.data)
     #print("res", json.dumps(res, indent=2, ensure_ascii=False), file=sys.stderr)
-    assert res["warning"] == [ "alignments string invalid «4-a»" ]
+    assert res["warning"] == ["alignments string invalid «4-a»"]
 
     # bad input end < start
     response = client_umr.get("/edit", query_string={"num": 1, "prevmod": 3, "umrvar": "s1h", "indexes": "4-3"})
     res = json.loads(response.data)
     #print("res", json.dumps(res, indent=2, ensure_ascii=False), file=sys.stderr)
-    assert res["warning"] == [ "alignment start 4 must be <= alignment end 3" ]
+    assert res["warning"] == ["alignment start 4 must be <= alignment end 3"]
 
     # bad input 0 and not 0
     response = client_umr.get("/edit", query_string={"num": 1, "prevmod": 3, "umrvar": "s1h", "indexes": "0-2"})
     res = json.loads(response.data)
     #print("res", json.dumps(res, indent=2, ensure_ascii=False), file=sys.stderr)
-    assert res["warning"] == [ "alignment start 0 and alignment end 2 must be both 0 or -1 or both different" ]
+    assert res["warning"] == ["alignment start 0 and alignment end 2 must be both 0 or -1 or both different"]
 
     # bad input index beyond max words
     response = client_umr.get("/edit", query_string={"num": 1, "prevmod": 3, "umrvar": "s1h", "indexes": "2-21"})
     res = json.loads(response.data)
     #print("res", json.dumps(res, indent=2, ensure_ascii=False), file=sys.stderr)
-    assert res["warning"] == [ "alignment end 21 is beyond last word" ]
+    assert res["warning"] == ["alignment end 21 is beyond last word"]
 
 
 # test save, git add/commit

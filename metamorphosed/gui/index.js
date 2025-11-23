@@ -194,6 +194,37 @@ function getServerInfo() {
 			if (data.umr) {
 				// activate stuff only needed when editing UMR file
 				$(".onlyumr").show();
+
+				// set docgraph S,P and O values to to <select> tags
+				$.each(data.docgraphitems.validsubjects.modal,
+					function (key, value) {
+						$('.validsubjects_m').append('<option value="' + value + '">' + value);
+					});
+				$.each(data.docgraphitems.validsubjects.temporal,
+					function (key, value) {
+						$('.validsubjects_t').append('<option value="' + value + '">' + value);
+					});
+				$.each(data.docgraphitems.validobjects.modal,
+					function (key, value) {
+						$('.validobjects_m').append('<option value="' + value + '">' + value);
+					});
+				$.each(data.docgraphitems.validobjects.temporal,
+					function (key, value) {
+						$('.validobjects_t').append('<option value="' + value + '">' + value);
+					});
+				$.each(data.docgraphitems.validpredicates.temporal,
+					function (key, value) {
+						//console.log("T PRED", key, value);
+						$('.validpreds_t').append('<option value="' + value + '">' + value);
+					});
+				$.each(data.docgraphitems.validpredicates.modal,
+					function (key, value) {
+						$('.validpreds_m').append('<option value="' + value + '">' + value);
+					});
+				$.each(data.docgraphitems.validpredicates.coref,
+					function (key, value) {
+						$('.validpreds_c').append('<option value="' + value + '">' + value);
+					});
 			}
 		},
 		error: function (data) {

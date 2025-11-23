@@ -140,10 +140,45 @@
             <table>
                 <tr>
                     <td>H)</td>
-                    <td class="task">add new alignment:&nbsp;</td>
+                    <td class="task">add new alignment:</td>
                     <td><select class="unalignedvars" id="alignmentvar"></select>
-                        <input class="alignmentfield" title="add UMR alignments" type="text" id="newpositions" value="0-0">
-                        <button class="addbutton mybutton" id="addalignment">add alignment</button>
+                        <input class="alignmentfield" title="UMR alignments" type="text" id="newpositions" value="0-0">
+                        <button class="addbutton mybutton" id="addalignment">add</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>I)</td>
+                    <td class="task">add docgraph temporal triple:</td>
+                    <td> <input class="varfield" title="temporal triple subject" type="text" id="dg_temp_s" value="">
+                        <select class="edgefield validpreds_t" id="dg_temp_p"></select>
+                        <!--input class="varfield" title="temporal triple object" type="text" id="dg_temp_o" value=""-->
+                        <select class="varfield validvars" id="dg_temp_o"></select>
+
+                        <button class="addbutton mybutton" id="adddgtemporal">add</button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td class="task">add docgraph modal triple:</td>
+                    <td> <input class="varfield" title="modal triple subject" type="text" id="dg_mod_s" value="">
+                        <select class="edgefield validpreds_m" id="dg_temp_p"></select>
+                        <!--input class="varfield" title="modal triple object" type="text" id="dg_mod_o" value=""-->
+                        <select class="varfield validvars" id="dg_mod_o"></select>
+
+                        <button class="addbutton mybutton" id="adddgmodal">add</button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td class="task">add docgraph coref triple:</td>
+                    <td> <input class="varfield" title="coref triple subject" type="text" id="dg_coref_s" value="">
+                        <select class="edgefield validpreds_c" id="dg_coref_p"></select>
+                        <!--input class="varfield" title="coref triple object" type="text" id="dg_coref_o" value="" -->
+                        <select class="varfield validvars" id="dg_coref_o"></select>
+
+                        <button class="addbutton mybutton" id="adddgmodal">add</button>
                     </td>
                 </tr>
                 </table>

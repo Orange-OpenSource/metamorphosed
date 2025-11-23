@@ -51,15 +51,85 @@ from metamorphosed.amrdoc import AMRsentence
 
 
 class UMRDocGraph:
+    # TODO read these from a file
+    validsubjects = {}
+    validsubjects["temporal"] = [
+        "document-creation-time",
+        "future-reference",
+        "past-reference",
+        "present-reference",
+        "root",
+    ]
+
+    validsubjects["modal"] = [
+        "author2",
+        "author3",
+        "author",
+        "have-concession-91",
+        "have-concessive-condition-91",
+        "have-condition-91",
+        "have-condition",
+        "have-purpose-91",
+        "null-conceiver",
+        "purpose",
+        "root",
+    ]
+
+    validpredicats = {}
+    validpredicats["temporal"] = [
+        ":after",
+        ":before",
+        ":contained",
+        ":contains",
+        ":depends-on",
+        ":overlap",
+        ":verlap"
+    ]
+
+    validpredicats["modal"] = [
+        ":full-affirmative",
+        ":full-negative",
+        ":modal",
+        ":neutral-affirmative",
+        ":neutral-negative",
+        ":partial-affirmative",
+        ":partial-negative",
+        ":State",
+        ":strong-partial-affirmative",
+        ":unspecified",
+    ]
+
+    validpredicats["coref"] = [":contains", ":same-entity", ":same-event", ":subset-of"]
+
+    validobjects = {}
+    validobjects["temporal"] = ["document-creation-time", "past-reference"]
+    validobjects["modal"] = [
+        "author2",
+        "author3",
+        "author",
+        "have-concession-91",
+        "have-concessive-condition-91",
+        "have-condition-91",
+        "have-condition",
+        "have-purpose-91",
+        "null-conceiver",
+        "purpose",
+    ]
+
     def __init__(self, dg):
         lexer = shlex.shlex(dg.replace(":", " :"))
         lexer.wordchars += "-:"
         lexer.source = 'source'
 
+        # to get all possibilities from existing UMR 2.0 files
+        # sl = set()
+        # pl = set()
+        # ol = set()
+
         # for tok in lexer:
         #    print(tok)
         toklist = list(lexer)
-        #print(dg, toklist)
+        # print(dg, toklist)
 
         self.variables = set() # all variables
         self.resources = set() # all subjects and objects which are not a variable
@@ -89,6 +159,7 @@ class UMRDocGraph:
                         ix += 2
                 ix += 1
 
+            # S and P which are not variables
             fixed = set(["author", "author2", "author3", "author4", "author5",
                          "document-creation-time", "root",
                          "past-reference", "present-reference", "future-reference",
@@ -100,28 +171,38 @@ class UMRDocGraph:
             for s, p, o in self.docgraph["coref"]:
                 self.variables.add(s)
                 self.variables.add(o)
+                # pl.add((p, "c"))
             for s, p, o in self.docgraph["modal"]:
+                # pl.add((p, "m"))
                 if s not in fixed:
                     self.variables.add(s)
                 else:
                     self.resources.add(s)
+                    # sl.add((s, "m"))
                 if o not in fixed:
                     self.variables.add(o)
                 else:
                     self.resources.add(o)
+                    # ol.add((o, "m"))
 
             for s, p, o in self.docgraph["temporal"]:
+                # pl.add((p, "t"))
                 if s not in fixed:
                     self.variables.add(s)
                 else:
                     self.resources.add(s)
+                    # sl.add((s, "t"))
                 if o not in fixed:
                     self.variables.add(o)
                 else:
                     self.resources.add(o)
+                    # ol.add((o, "t"))
 
-        #print(json.dumps(self.docgraph, indent=2))
-        #print(sorted(self.variables))
+        # print(json.dumps(self.docgraph, indent=2))
+        # print(sorted(self.variables))
+        # for s in sl: print("S\t%s\t%s" % s)
+        # for p in pl: print("P\t%s\t%s" % p)
+        # for o in ol: print("O\t%s\t%s" % o)
 
     def write(self, ofp=sys.stdout):
         print("(%s / sentence" % self.id, end="", file=ofp)
