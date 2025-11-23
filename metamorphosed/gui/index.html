@@ -52,7 +52,7 @@
             <table>
                 <tr>
                     <td>A)</td>
-                    <td>add a new instance for concept:</td>
+                    <td class="task">add a new instance for concept:</td>
                     <td><input class="conceptfield" placeholder="concept" title="concept to be instantiated" type="text"
                             id="concept" value="">
                         <button class="addbutton mybutton" id="addconcept">add</button>
@@ -61,7 +61,7 @@
 
                 <tr>
                     <td>B)</td>
-                    <td>add new relation between instances: </td>
+                    <td class="task">add new relation between instances: </td>
                     <td><!--input class="varfield" placeholder="source instance"
                             title="variable of instance from which relation starts" type="text" id="startvar" value=""-->
                         <select class="validvars" name="varb1" id="startvar"></select>
@@ -77,7 +77,7 @@
 
                 <tr>
                     <td>C)</td>
-                    <td>set a new top:</td>
+                    <td class="task">set a new top:</td>
                     <td><!--input class="varfield" placeholder="instance" title="instance which is in top position"
                             type="text" id="topnode" value=""-->
                         <select class="validvars" name="varc1" id="topnode"></select>
@@ -85,13 +85,9 @@
                     </td>
                 </tr>
 
-                <!--tr>
-                    <td>&nbsp;</td>
-                </tr-->
-
                 <tr>
                     <td>D)</td>
-                    <td>add new relation and literal:</td>
+                    <td class="task">add new relation and literal:</td>
                     <td><!--input class="varfield" placeholder="instance" title="instance to attach the relation to"
                             type="text" id="literalof" value=""-->
                         <select class="validvars" name="vard1" id="literalof"></select>
@@ -105,7 +101,7 @@
 
                 <tr>
                     <td>E)</td>
-                    <td>add new <span class="code">:name</span>-relation for instance: </td>
+                    <td class="task">add new <span class="code">:name</span>-relation for instance: </td>
                     <td><!--input class="varfield" placeholder="instance" title="instance to attach the name to"
                             type="text" id="nameof" value=""-->
                         <select class="validvars" name="vare1" id="nameof"></select>
@@ -115,14 +111,16 @@
                         <button class="addbutton mybutton" id="addname">add</button>
                     </td>
                 </tr>
+
                 <tr>
                     <td>F)</td>
-                    <td>add partial graph</td>
+                    <td class="task">add partial graph</td>
                     <td><button class="openbutton mybutton" id="addgraph">open edit window</button></td>
                 </tr>
+
                 <tr>
                     <td>G)</td>
-                    <td>rename variable:</td>
+                    <td class="task">rename variable:</td>
                     <td>
                         <select class="validvars" name="varg1" id="var_to_rename"></select>
                         <input class="varfield" placeholder="variable" title="new name for the given variable"
@@ -135,6 +133,21 @@
                     <td colspan="3"><button class="cleanbutton mybutton" id="cleanfields">clean all</button></td>
                 </tr>
             </table>
+
+
+            <div class="onlyumr">
+            <h3>UMR</h3>
+            <table>
+                <tr>
+                    <td>H)</td>
+                    <td class="task">add new alignment:&nbsp;</td>
+                    <td><select class="unalignedvars" id="alignmentvar"></select>
+                        <input class="alignmentfield" title="add UMR alignments" type="text" id="newpositions" value="0-0">
+                        <button class="addbutton mybutton" id="addalignment">add alignment</button>
+                    </td>
+                </tr>
+                </table>
+                </div>
         </div>
 
         <div>
@@ -422,7 +435,7 @@ Else the input is interpreted as regular expression" placeholder="regex/PENMAN" 
             <ul>
                 <li><!--select class="validindexes" name="idmr" id="startindex"></select> -
                     <select class="validindexes" name="idmr" id="endindex"></select-->
-                    <input class="edgefield" title="modify UMR alignments" type="text" id="indexes" value="">
+                    <input class="alignmentfield" title="modify UMR alignments" type="text" id="indexes" value="">
                 <button class="addbutton mybutton" id="modifyalignment">set</button></li>
             
             </ul>

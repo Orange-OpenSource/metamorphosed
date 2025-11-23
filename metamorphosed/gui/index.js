@@ -190,6 +190,11 @@ function getServerInfo() {
 			} else {
 				$('#reifygroup').hide();
 			}
+
+			if (data.umr) {
+				// activate stuff only needed when editing UMR file
+				$(".onlyumr").show();
+			}
 		},
 		error: function (data) {
 			// do something else
@@ -781,15 +786,18 @@ function formatAMR(data) {
 			});
 
 		$('.unalignedvars').empty();
-		$('#alignments_' + currentsentnum).append('<select class="unalignedvars" name="varmr" id="alignmentvar"></select>');
+		//$('#alignments_' + currentsentnum).append('<select class="unalignedvars" name="varmr" id="alignmentvar"></select>');
+		ct = 0;
 		$.each(data.variables,
 			function (key, value) {
+				console.log('tttty', key, ct, value);
 				if (!(value in data.alignments)) {
-					$('#alignmentvar').append('<option value="' + key + '">' + value);
+					$('#alignmentvar').append('<option value="' + value + '">' + value);
+					ct++;
 				}
 			});
 		
-		$('#alignments_' + currentsentnum).append('<button class="addbutton mybutton" id="addalignment">add alignment</button>');
+		//$('#alignments_' + currentsentnum).append('<button class="addbutton mybutton" id="addalignment">add alignment</button>');
 	}
 
 	// UMR document level annotation
@@ -1309,9 +1317,10 @@ $(document).ready(function () {
 			}
 		}
 		else if (this.id == "addalignment") {
+			console.log("aZZZZ", $("#alignmentvar").val(), $("#var_to_rename").val());
 			params = {
-				"umrvar": $("#umrvar").text(),
-				"addalignment": $("#modifiededge").val()
+				"umrvar": $("#alignmentvar").val(),
+				"newalignment": $("#newpositions").val()
 				//"alignmentstart": $("#startindex").val(),
 				//"alignmentend": $("#endindex").val()
 			}
@@ -1319,7 +1328,7 @@ $(document).ready(function () {
 		else if (this.id == "modifyalignment") {
 			$(".editmode").hide();
 			$("#commands").show();
-			//console.log("ZZZZ", $("#umrvar").text());
+
 			params = {
 				"umrvar": $("#umrvar").text(),
 				"indexes": $("#indexes").val(),

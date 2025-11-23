@@ -303,6 +303,7 @@ input {
 .conceptfield,
 .literalfield,
 .textfield,
+.alignmentfield,
 .amrfield {
   vertical-align: middle;
   border-radius: 5px;
@@ -315,6 +316,13 @@ input {
   width: 8em;
   background-color: #b5e8f7;
 }
+
+.alignmentfield {
+  width: 8em;
+  background-color: #dacff3;
+}
+
+
 
 .reifrelations { 
   background-color: #b5e8f7;
@@ -797,4 +805,12 @@ td.framealiastable {
   width: auto;
   display: inline-block;
   vertical-align: top;
+}
+
+.task {
+  width: 17em;
+}
+
+.onlyumr {
+  display: none
 }

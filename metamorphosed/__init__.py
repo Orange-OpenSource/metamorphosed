@@ -227,7 +227,8 @@ class AMR_Edit_Server:
                     "propbank_frames": pbframes,
                     "readonly": self.readonly,
                     "version": amreditor.VERSION,
-                    "apiversion": APIVERSION
+                    "apiversion": APIVERSION,
+                    "umr": self.umr
                     }
 
             if self.otheramrdocs:
@@ -302,6 +303,7 @@ class AMR_Edit_Server:
             indexes = self.checkParameter(request, 'indexes', 'string', isOptional=True, defaultValue=None)
             #alignmentstart = self.checkParameter(request, 'alignmentstart', 'string', isOptional=True, defaultValue=None)
             #alignmentend = self.checkParameter(request, 'alignmentend', 'string', isOptional=True, defaultValue=None)
+            newalignment = self.checkParameter(request, 'newalignment', 'string', isOptional=True, defaultValue=None)
 
             if sentnum < 1 or sentnum > len(self.amrdoc.sentences):
                 # creates an http status code 400
@@ -329,6 +331,7 @@ class AMR_Edit_Server:
                            "newvarname", "oldvarname",
                            
                            "umrvar", "indexes", #"alignmentstart", "alignmentend"
+                           "newalignment"
                            ]
 
             #self.findinvalidparameters(request, validparams)
@@ -456,31 +459,63 @@ class AMR_Edit_Server:
                     self.aps[sentnum] = newap
                     ap = newap
                     ap.modified = True # set rather by ap.-functions ??
-            elif umrvar:
+            elif umrvar is not None: # can be an empty string if no uanmligned variable exists (H) 
                 if not self.umr:
                     raise ServerException("Not in UMR mode")
 
-                if indexes:
+                def check_word_pos(line):
                     newindexes = []
-                    for e in indexes.strip().split(","):
+                    for e in line.strip().split(","):
                         mo = umrdoc.ALIGNMENT.match(e.strip())
                         if not mo:
-                            return invalidumr(ap.lastpm, "alignments string invalid «%s»" % indexes, cursentence, sentnum)
+                            return invalidumr(ap, "alignments string invalid «%s»" % indexes, cursentence, sentnum)
 
                         als = int(mo.group(1))
                         ale = int(mo.group(2))
 
                         if als > ale:
-                            return invalidumr(ap.lastpm, "alignment start %s must be <= alignment end %s" % (als, ale), cursentence, sentnum)
+                            return invalidumr(ap, "alignment start %s must be <= alignment end %s" % (als, ale), cursentence, sentnum)
                         if (als <= 0 and ale > 0) \
                             or (ale <= 0 and als > 0):
-                            return invalidumr(ap.lastpm, "alignment start %s and alignment end %s must be both 0 or -1 or both different" % (als, ale), cursentence, sentnum)
+                            return invalidumr(ap, "alignment start %s and alignment end %s must be both 0 or -1 or both different" % (als, ale), cursentence, sentnum)
                         if cursentence.index and als > cursentence.index[-1]:
-                            return invalidumr(ap.lastpm, "alignment start %s is beyond last word" % (als), cursentence, sentnum)
+                            return invalidumr(ap, "alignment start %s is beyond last word" % (als), cursentence, sentnum)
                         if cursentence.index and ale > cursentence.index[-1]:
-                            return invalidumr(ap.lastpm, "alignment end %s is beyond last word" % (ale), cursentence, sentnum)
+                            return invalidumr(ap, "alignment end %s is beyond last word" % (ale), cursentence, sentnum)
                         newindexes.append((als,ale))
                     cursentence.alignments[umrvar] = newindexes
+
+
+                if newalignment:
+                    if umrvar == "":
+                        return invalidumr(ap, "no unaligned variable available", cursentence, sentnum)
+                    rtc = check_word_pos(newalignment)
+                    if rtc:
+                        return rtc
+                elif indexes:
+                    rtc = check_word_pos(indexes)
+                    if rtc:
+                        return rtc
+                    # newindexes = []
+                    # for e in indexes.strip().split(","):
+                    #     mo = umrdoc.ALIGNMENT.match(e.strip())
+                    #     if not mo:
+                    #         return invalidumr(ap.lastpm, "alignments string invalid «%s»" % indexes, cursentence, sentnum)
+
+                    #     als = int(mo.group(1))
+                    #     ale = int(mo.group(2))
+
+                    #     if als > ale:
+                    #         return invalidumr(ap.lastpm, "alignment start %s must be <= alignment end %s" % (als, ale), cursentence, sentnum)
+                    #     if (als <= 0 and ale > 0) \
+                    #         or (ale <= 0 and als > 0):
+                    #         return invalidumr(ap.lastpm, "alignment start %s and alignment end %s must be both 0 or -1 or both different" % (als, ale), cursentence, sentnum)
+                    #     if cursentence.index and als > cursentence.index[-1]:
+                    #         return invalidumr(ap.lastpm, "alignment start %s is beyond last word" % (als), cursentence, sentnum)
+                    #     if cursentence.index and ale > cursentence.index[-1]:
+                    #         return invalidumr(ap.lastpm, "alignment end %s is beyond last word" % (ale), cursentence, sentnum)
+                    #     newindexes.append((als,ale))
+                    # cursentence.alignments[umrvar] = newindexes
                 else:
                     del cursentence.alignments[umrvar]
 
@@ -855,12 +890,13 @@ class AMR_Edit_Server:
         #    response = jsonify({"error": str(error)})
         #    response.status_code = 404
         #    return response
-        def invalidumr(pm, msg, cursentence, sentnum):
-            print("uuuuuuuuuu", pm, msg)
+        def invalidumr(ap, msg, cursentence, sentnum):
+            #print("uuuuuuuuuu", pm, msg)
             warnings = [msg]
+            pm, svg, svg_canon = ap.show()
             dico = {"penman": pm,
-                    "svg": "",
-                    "svg_canon": "",
+                    "svg": svg.decode("utf8"),
+                    "svg_canon": svg_canon.decode("utf8"),
                     "warning": warnings,
                     "framedoc": "",
                     "readonly": self.readonly,
