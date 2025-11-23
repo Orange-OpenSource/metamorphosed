@@ -1,5 +1,8 @@
 # Changes
 
+## Version 5.0.0
+* Uniform Meaning Representation support
+
 ## Version 4.6.3
 * correction in `corefinit.py`: concept shown in XML and GUI were incorrect
 

@@ -10,6 +10,7 @@ by LDC (https://catalog.ldc.upenn.edu/LDC2020T02).
 * _metAMoRphosED_ allows download of the displayed graphs as SVG or export of all graphs in either SVG, PDF or PNG format.
 * _metAMoRphosED_ provides a script to calculate inter-annotator agreement (see section [Inter-annotator agreement](#inter-annotator-agreement)).
 * _metAMoRphosED_ comes with an docker image (for editing and comparing only, see section [Docker](#docker)).
+* _metAMoRphosED_ can also handle Uniform Meaning Representation (UMR) files. see [UMR.md](UMR.md)
 
 Current version 4.6.3 (see [CHANGES.md](CHANGES.md))
 
