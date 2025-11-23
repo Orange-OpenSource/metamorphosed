@@ -183,6 +183,10 @@ input {
   stroke: red;
 }
 
+.wordhighlight {
+  color: red;
+}
+
 .info { 
   font-style: italic;
 }

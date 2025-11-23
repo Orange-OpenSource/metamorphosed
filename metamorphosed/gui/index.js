@@ -319,6 +319,7 @@ var litedge = "";
 var lastclickededge = null;
 var lastclickednode = null;
 var lastclickedElement = null;
+var lastclickedWordpos = null;
 var prevmod = 0;
 
 function getAncestor(element) {
@@ -332,6 +333,14 @@ function getAncestor(element) {
 	}
 }
 
+function alignmentinfo(event) {
+	//console.log("======", event.target.id);
+	lastclickedWordpos = event.target.id.split("_")[2];
+	console.log("ALINFO()", lastclickedWordpos, lastclickededge);
+	$(".wordpos").removeClass("wordhighlight");
+	event.target.setAttribute("class", "wordpos wordhighlight");
+}
+
 function info(event) {
 	//console.log("======", event);
 	//console.log("EEEF", event.target.parentNode.id);
@@ -340,7 +349,7 @@ function info(event) {
 	//console.log("EEEG", event.target.parentNode.children[1]);
 	node = event.target.textContent;
 	node = getAncestor(event.target);
-	console.log("EEEb", node, node.id, lastclickededge);
+	console.log("INFO()", node, node.id, lastclickededge);
 	unhighlight();
 
 	if (readonly) {
@@ -349,6 +358,7 @@ function info(event) {
 	if (node.id.startsWith("node#")) {
 		// edit node
 		modconceptvar = node.id.split("#")[1];
+		console.log("CONCEPTVAR", modconceptvar);
 		if (lastclickededge != null) {
 			// we take the last clicked edge and connect to the now clicked instance
 			$(".editmode").hide();
@@ -375,6 +385,15 @@ function info(event) {
 			lastclickednode = null;
 			runcommand(params);
 			$("#conceptsetmodal").hide();
+		} else if (lastclickedWordpos != null) {
+			var params = {
+				"umrvar": modconceptvar,
+				"newalignment": lastclickedWordpos + "-" + lastclickedWordpos,
+			}
+			
+			lastclickedWordpos = null;
+			lastclickednode = null;
+			runcommand(params);
 		} else {
 			// we modify an instance/class node
 			$(".modal").hide();
@@ -485,6 +504,8 @@ function info(event) {
 			lastclickededge = null;
 			$(".modal").hide();
 		}
+		$(".wordpos").removeClass("wordhighlight");
+		lastclickedWordpos = null;
 	}
 }
 
@@ -674,13 +695,13 @@ function formatAMR(data) {
 		$("#tr_index_" + currentsentnum).append("<th>Index:");
 		if (data.index !== undefined) {
 			for (var i = 0; i<data.index.length; i++) {
-				$("#tr_index_" + currentsentnum).append("<td>" + data.index[i]);
+				$("#tr_index_" + currentsentnum).append('<td class="wordpos" onmousedown="alignmentinfo(event);" id="wordpos_index_' + (i+1) + '">' + data.index[i]);
 			}
 		}
 		$("#tr_word_" + currentsentnum).append("<th>Words:");
 		if (data.words !== undefined) {
 			for (var i = 0; i<data.words.length; i++) {
-				$("#tr_word_" + currentsentnum).append("<td>" + data.words[i]);
+				$("#tr_word_" + currentsentnum).append('<td class="wordpos" onmousedown="alignmentinfo(event);" id="wordpos_word_' + (i+1) + '">' + data.words[i]);
 			}
 		}
 
@@ -790,7 +811,6 @@ function formatAMR(data) {
 		ct = 0;
 		$.each(data.variables,
 			function (key, value) {
-				console.log('tttty', key, ct, value);
 				if (!(value in data.alignments)) {
 					$('#alignmentvar').append('<option value="' + value + '">' + value);
 					ct++;
@@ -1137,7 +1157,6 @@ $(document).ready(function () {
 	/* open modal */
 	$(".openbutton").click(function () {
 		if (this.id == "addgraph") {
-			console.log("eeee", this.id);
 			$("#addgraphmodal").show();
 			$("#addgraphmodal").draggable();
 		}
@@ -1148,8 +1167,7 @@ $(document).ready(function () {
 		//URL_BASE = 'http://' + window.location.host + '/edit';
 		URL_BASE = 'edit';
 		$("#resultat").empty(); // vider le div
-		//var command = "dog"; //$("#command").val();
-		//console.log("EEEEE", this.id, $("#conceptinstance").text());
+
 		var yscroll = $(window).scrollTop();
 		var params = {};
 		if (this.id == "addconcept") {
