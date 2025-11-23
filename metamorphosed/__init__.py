@@ -552,6 +552,8 @@ class AMR_Edit_Server:
                     dico["index"] = cursentence.index
                 if cursentence.words:
                     dico["words"] = cursentence.words
+                if cursentence.other:
+                    dico["glosses"] = cursentence.other
 
             return Response("%s\n" % json.dumps(dico), 200, mimetype="application/json")
 
@@ -879,6 +881,8 @@ class AMR_Edit_Server:
                     dico["index"] = cursentence.index
                 if cursentence.words:
                     dico["words"] = cursentence.words
+                if cursentence.other:
+                    dico["glosses"] = cursentence.other
 
             return Response("%s\n" % json.dumps(dico), 200, mimetype="application/json")
 
@@ -925,6 +929,9 @@ class AMR_Edit_Server:
                     dico["index"] = cursentence.index
                 if cursentence.words:
                     dico["words"] = cursentence.words
+                if cursentence.other:
+                    dico["glosses"] = cursentence.other
+
 
             return Response("%s\n" % json.dumps(dico), 200, mimetype="application/json")
 
@@ -1012,6 +1019,8 @@ class AMR_Edit_Server:
                     dico["index"] = cursentence.index
                 if cursentence.words:
                     dico["words"] = cursentence.words
+                if cursentence.other:
+                    dico["glosses"] = cursentence.other
 
             if self.otheramrdocs:
                 others = []

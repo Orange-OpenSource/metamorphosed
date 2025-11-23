@@ -167,7 +167,7 @@ class UMRsentence(AMRsentence):
             #    self.index = [int(x) for x in il]
             #    self.words = wl
 
-        self.other = other
+        self.other = other # other information like glosses and translations
         self.meta = meta
         self.text = other.get("Sentence")
         if not self.text and self.words:

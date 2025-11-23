@@ -343,7 +343,7 @@ input {
 
 }
 
-.varfield, .validvars {
+.varfield, .validvars, .unalignedvars {
   width: 5em;
   vertical-align: middle;
   border-radius: 5px;

@@ -185,7 +185,6 @@ function getServerInfo() {
 			if (!readonly && data.reifications) {
 				$.each(data.reifications,
 					function (key, value) {
-						//console.log("AAA", key, value);
 						$('#reifylist').append('<option value="' + value + '">' + value);
 					});
 			} else {
@@ -588,7 +587,6 @@ function formatAMR(data) {
 
 	$.each(data.variables,
 		function (key, value) {
-			//console.log("AAA", key, value);
 			$('.validvars').append('<option value="' + value + '">' + value);
 		});
 
@@ -599,7 +597,6 @@ function formatAMR(data) {
 		$('.validindexes').append('<option value="' + 0 + '">' + 0);
 		$.each(data.index,
 			function (key, value) {
-				//console.log("AAA", key, value);
 				$('.validindexes').append('<option value="' + value + '">' + value);
 			});
 	}
@@ -664,7 +661,7 @@ function formatAMR(data) {
 		});
 		$("#resultat").append('<div class="text" id="wordindex_' + currentsentnum + '">');
 		$('#wordindex_' + currentsentnum).append('<div id="innerwordindex_' + currentsentnum + '">');
-		$('#innerwordindex_' + currentsentnum).append("<h4>word index");
+		$('#innerwordindex_' + currentsentnum).append("<h4>words");
 		$('#innerwordindex_' + currentsentnum).append('<table id="tab_wordindex_' + currentsentnum + '">');
 		$('#tab_wordindex_' + currentsentnum).append('<tr id="tr_index_' + currentsentnum + '">');
 		$('#tab_wordindex_' + currentsentnum).append('<tr id="tr_word_' + currentsentnum + '">');
@@ -681,6 +678,19 @@ function formatAMR(data) {
 				$("#tr_word_" + currentsentnum).append("<td>" + data.words[i]);
 			}
 		}
+
+		if (data.glosses) {
+			$('#innerwordindex_' + currentsentnum).append('<table id="tab_glosses_' + currentsentnum + '">');
+			var ct = 0
+			$.each(data.glosses,
+				function (what, value) {
+					$('#tab_glosses_' + currentsentnum).append('<tr id="tr_gloss_' + currentsentnum + '_' + ct + '">');
+					$('#tr_gloss_' + currentsentnum + '_' + ct).append('<th class="glossheader">' + what + ":");
+					$('#tr_gloss_' + currentsentnum + '_' + ct).append('<td class="gloss">' + value);
+					ct++;
+				});
+		}
+
 		if ('#innerwordindex_' + currentsentnum in visible_divselectors && visible_divselectors['#innerwordindex_' + currentsentnum] == false) {
 			ToggleDiv('#innerwordindex_' + currentsentnum, "#toggleindex");
 		}
@@ -769,7 +779,17 @@ function formatAMR(data) {
 					$('#tr_al_' + currentsentnum + '_' + key).append('<td class="alignment_var" id="alv_'+key+'_' + (i+1) +'" onmousedown="click_alignment_var(event)">' + value[i][0] + "-" + value[i][1]);
 				}
 			});
-		$('#alignments_' + currentsentnum).append('add alignment');
+
+		$('.unalignedvars').empty();
+		$('#alignments_' + currentsentnum).append('<select class="unalignedvars" name="varmr" id="alignmentvar"></select>');
+		$.each(data.variables,
+			function (key, value) {
+				if (!(value in data.alignments)) {
+					$('#alignmentvar').append('<option value="' + key + '">' + value);
+				}
+			});
+		
+		$('#alignments_' + currentsentnum).append('<button class="addbutton mybutton" id="addalignment">add alignment</button>');
 	}
 
 	// UMR document level annotation
@@ -1288,12 +1308,19 @@ $(document).ready(function () {
 				"mappings": $("#conceptmappings").val()
 			}
 		}
+		else if (this.id == "addalignment") {
+			params = {
+				"umrvar": $("#umrvar").text(),
+				"addalignment": $("#modifiededge").val()
+				//"alignmentstart": $("#startindex").val(),
+				//"alignmentend": $("#endindex").val()
+			}
+		}
 		else if (this.id == "modifyalignment") {
 			$(".editmode").hide();
 			$("#commands").show();
 			//console.log("ZZZZ", $("#umrvar").text());
 			params = {
-				// TODO
 				"umrvar": $("#umrvar").text(),
 				"indexes": $("#indexes").val(),
 				//"alignmentstart": $("#startindex").val(),
@@ -1305,6 +1332,7 @@ $(document).ready(function () {
 		}
 		params["num"] = currentsentnum;
 		params["prevmod"] = prevmod;
+		console.log("QQQQ", params);
 		if (sentenceloaded == true) {
 			$.ajax({
 				url: URL_BASE,
