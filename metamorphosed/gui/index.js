@@ -334,14 +334,26 @@ function getAncestor(element) {
 }
 
 function alignmentinfo(event) {
-	//console.log("======", event.target.id);
-	lastclickedWordpos = event.target.id.split("_")[2];
-	console.log("ALINFO()", lastclickedWordpos, lastclickededge);
-	$(".wordpos").removeClass("wordhighlight");
-	event.target.setAttribute("class", "wordpos wordhighlight");
+	//console.log("AAA", event);
+	//console.log(" LEl", lastclickedElement);
+	//console.log(" LW ", lastclickedWordpos);
+	//console.log(" LE ", lastclickededge);
+	//console.log(" LN ", lastclickednode);
+	if (lastclickedElement == null) {
+		lastclickedWordpos = event.target.id.split("_")[2];
+		console.log("ALINFO()", lastclickedWordpos, lastclickededge);
+		$(".wordpos").removeClass("wordhighlight");
+		event.target.setAttribute("class", "wordpos wordhighlight");
+	}
 }
 
 function info(event) {
+	//console.log("III", event);
+	//console.log(" LEl", lastclickedElement);
+	//console.log(" LW ", lastclickedWordpos);
+	//console.log(" LE ", lastclickededge);
+	//console.log(" LN ", lastclickednode);
+
 	//console.log("======", event);
 	//console.log("EEEF", event.target.parentNode.id);
 	//console.log("EEEa", getAncestor(event.target));
@@ -476,8 +488,7 @@ function info(event) {
 	} else if (node.id.startsWith("literal#")) {
 		// edit literal
 		$(".modal").hide();
-		//$("#modlit").show();
-		//console.log("ZZZZ", event.target.parentNode.id.split(" "));
+
 		const elems = node.id.split("#");
 		const toto = elems.slice(3);
 		const literalname = toto.join("#");
@@ -500,6 +511,7 @@ function info(event) {
 		if (lastclickedElement != null) {
 			//lastclickedElement.removeAttribute("class"); // removes all classes
 			lastclickedElement.classList.remove("boxhighlight");
+			lastclickedElement = null;
 			lastclickednode = null;
 			lastclickededge = null;
 			$(".modal").hide();
@@ -517,7 +529,6 @@ function click_alignment_var(event) {
 	$("#indexes").empty()
 	var ct = 1;
 	
-	//console.log("AAAbb", ct, contents, "#alv_" + event.target.id.split("_")[1] + "_" + ct);
 	var contents = $("#alv_" + event.target.id.split("_")[1] + "_" + ct).text();
 
 	ct++;
