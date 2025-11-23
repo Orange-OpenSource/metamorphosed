@@ -75,7 +75,7 @@ import metamorphosed.installJQ as iJQ
 # find an example in AMR data
 # call an AMRserver for an (empty) sentence ? rather not
 
-APIVERSION = "2.0.0"
+APIVERSION = "2.0.0rc"
 
 
 class AMR_Edit_Server:
@@ -496,38 +496,9 @@ class AMR_Edit_Server:
                     rtc = check_word_pos(indexes)
                     if rtc:
                         return rtc
-                    # newindexes = []
-                    # for e in indexes.strip().split(","):
-                    #     mo = umrdoc.ALIGNMENT.match(e.strip())
-                    #     if not mo:
-                    #         return invalidumr(ap.lastpm, "alignments string invalid «%s»" % indexes, cursentence, sentnum)
 
-                    #     als = int(mo.group(1))
-                    #     ale = int(mo.group(2))
-
-                    #     if als > ale:
-                    #         return invalidumr(ap.lastpm, "alignment start %s must be <= alignment end %s" % (als, ale), cursentence, sentnum)
-                    #     if (als <= 0 and ale > 0) \
-                    #         or (ale <= 0 and als > 0):
-                    #         return invalidumr(ap.lastpm, "alignment start %s and alignment end %s must be both 0 or -1 or both different" % (als, ale), cursentence, sentnum)
-                    #     if cursentence.index and als > cursentence.index[-1]:
-                    #         return invalidumr(ap.lastpm, "alignment start %s is beyond last word" % (als), cursentence, sentnum)
-                    #     if cursentence.index and ale > cursentence.index[-1]:
-                    #         return invalidumr(ap.lastpm, "alignment end %s is beyond last word" % (ale), cursentence, sentnum)
-                    #     newindexes.append((als,ale))
-                    # cursentence.alignments[umrvar] = newindexes
                 else:
                     del cursentence.alignments[umrvar]
-
-                    #als = int(alignmentstart)
-                    #ale = int(alignmentend)
-                    #if als > ale \
-                    #    or (als <= 0 and ale > 0) \
-                    #    or (ale <= 0 and als > 0):
-                    #    # invalidumr
-                    #    pass
-                    #cursentence.alignments[umrvar] = [(als, ale)]
-                    #ap.modified = True 
 
                     pass
             else:
