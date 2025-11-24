@@ -1,0 +1,50 @@
+{
+    "coref": {
+        "predicates": [
+            ":same-entity",
+            ":same-event",
+            ":subset-of"
+        ]
+    },
+    "temporal": {
+        "subjects": [
+            "document-creation-time",
+            "future-reference",
+            "past-reference",
+            "present-reference",
+            "root"
+        ],
+        "predicates": [
+            ":after",
+            ":before",
+            ":contained",
+            ":contains",
+            ":depends-on",
+            ":overlap"
+        ]
+    },
+    "modal": {
+        "subjects": [
+            "author",
+            "have-condition",
+            "null-conceiver",
+            "purpose",
+            "root"
+        ],
+        "predicates": [
+            ":full-affirmative",
+            ":modal",
+            ":neutral-affirmative",
+            ":neutral-negative",
+            ":partial-affirmative",
+            ":partial-negative",
+            ":unspecified"
+        ],
+        "objects": [
+            "author",
+            "have-condition",
+            "null-conceiver",
+            "purpose"
+        ]
+    }
+}

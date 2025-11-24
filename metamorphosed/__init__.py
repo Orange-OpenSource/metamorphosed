@@ -246,9 +246,7 @@ class AMR_Edit_Server:
                 dico["concepts"] = sorted(self.amr_concepts.relations)
                 dico["sentences"] = self.amrdoc.getsentencelist()
                 if self.umr:
-                    dico["docgraphitems"] = {"validsubjects": umrdoc.UMRDocGraph.validsubjects,
-                                             "validpredicates": umrdoc.UMRDocGraph.validpredicats,
-                                             "validobjects": umrdoc.UMRDocGraph.validobjects}
+                    dico["docgraphitems"] = umrdoc.UMRDocGraph.valid_dg_rels
 
             if self.reificator:
                 reifs = self.reificator.getquivalences()
@@ -308,6 +306,12 @@ class AMR_Edit_Server:
             #alignmentstart = self.checkParameter(request, 'alignmentstart', 'string', isOptional=True, defaultValue=None)
             #alignmentend = self.checkParameter(request, 'alignmentend', 'string', isOptional=True, defaultValue=None)
             newalignment = self.checkParameter(request, 'newalignment', 'string', isOptional=True, defaultValue=None)
+            adddocgraph = self.checkParameter(request, 'adddocgraph', 'string', isOptional=True, defaultValue=None)
+            moddocgraph = self.checkParameter(request, 'moddocgraph', 'string', isOptional=True, defaultValue=None)
+            dgpos = self.checkParameter(request, 'dgpos', 'integer', isOptional=True, defaultValue=None)
+            dg_subj = self.checkParameter(request, 'dg_subj', 'string', isOptional=True, defaultValue=None)
+            dg_pred = self.checkParameter(request, 'dg_pred', 'string', isOptional=True, defaultValue=None)
+            dg_obj = self.checkParameter(request, 'dg_obj', 'string', isOptional=True, defaultValue=None)
 
             if sentnum < 1 or sentnum > len(self.amrdoc.sentences):
                 # creates an http status code 400
@@ -334,7 +338,8 @@ class AMR_Edit_Server:
                            "addgraph", "mappings",
                            "newvarname", "oldvarname",
                            "umrvar", "indexes", #"alignmentstart", "alignmentend"
-                           "newalignment"
+                           "newalignment",
+                           "adddocgraph", "dg_subj", "dg_obj", "dg_pred", "moddocgraph", "dgpos"
                            ]
 
             #self.findinvalidparameters(request, validparams)
@@ -462,6 +467,18 @@ class AMR_Edit_Server:
                     self.aps[sentnum] = newap
                     ap = newap
                     ap.modified = True # set rather by ap.-functions ??
+            elif adddocgraph:
+                if dg_subj and dg_obj and dg_pred:
+                    msg = cursentence.docgraph.add(adddocgraph, dg_subj, dg_pred, dg_obj)
+                    if msg is not None:
+                        return invalidumr(ap, msg, cursentence, sentnum)
+                else:
+                    return invalidumr(ap, ["invalid document graph triple for %s «%s, %s, %s»" % (adddocgraph, dg_subj, dg_pred, dg_obj)], cursentence, sentnum)
+            elif moddocgraph and dgpos is not None:
+                if dg_subj and dg_obj and dg_pred:
+                    cursentence.docgraph.modify(moddocgraph, dgpos, dg_subj, dg_pred, dg_obj)
+                else:
+                    cursentence.docgraph.delete(moddocgraph, dgpos)
             elif umrvar is not None: # can be an empty string if no unaligned variable exists (H)
                 if not self.umr:
                     raise ServerException("Not in UMR mode")
@@ -471,20 +488,20 @@ class AMR_Edit_Server:
                     for e in line.strip().split(","):
                         mo = umrdoc.ALIGNMENT.match(e.strip())
                         if not mo:
-                            return invalidumr(ap, "alignments string invalid «%s»" % indexes, cursentence, sentnum)
+                            return invalidumr(ap, ["alignments string invalid «%s»" % indexes], cursentence, sentnum)
 
                         als = int(mo.group(1))
                         ale = int(mo.group(2))
 
                         if als > ale:
-                            return invalidumr(ap, "alignment start %s must be <= alignment end %s" % (als, ale), cursentence, sentnum)
+                            return invalidumr(ap, ["alignment start %s must be <= alignment end %s" % (als, ale)], cursentence, sentnum)
                         if (als <= 0 and ale > 0) \
                            or (ale <= 0 and als > 0):
-                            return invalidumr(ap, "alignment start %s and alignment end %s must be both 0 or -1 or both different" % (als, ale), cursentence, sentnum)
+                            return invalidumr(ap, ["alignment start %s and alignment end %s must be both 0 or -1 or both different" % (als, ale)], cursentence, sentnum)
                         if cursentence.index and als > cursentence.index[-1]:
-                            return invalidumr(ap, "alignment start %s is beyond last word" % (als), cursentence, sentnum)
+                            return invalidumr(ap, ["alignment start %s is beyond last word" % (als)], cursentence, sentnum)
                         if cursentence.index and ale > cursentence.index[-1]:
-                            return invalidumr(ap, "alignment end %s is beyond last word" % (ale), cursentence, sentnum)
+                            return invalidumr(ap, ["alignment end %s is beyond last word" % (ale)], cursentence, sentnum)
                         newindexes.append((als,ale))
                     cursentence.alignments[umrvar] = newindexes
 
@@ -498,7 +515,6 @@ class AMR_Edit_Server:
                     rtc = check_word_pos(indexes)
                     if rtc:
                         return rtc
-
                 else:
                     del cursentence.alignments[umrvar]
 
@@ -863,9 +879,8 @@ class AMR_Edit_Server:
         #    response = jsonify({"error": str(error)})
         #    response.status_code = 404
         #    return response
-        def invalidumr(ap, msg, cursentence, sentnum):
+        def invalidumr(ap, warnings, cursentence, sentnum):
             #print("uuuuuuuuuu", pm, msg)
-            warnings = [msg]
             pm, svg, svg_canon = ap.show()
             dico = {"penman": pm,
                     "svg": svg.decode("utf8"),

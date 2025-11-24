@@ -34,7 +34,8 @@
 # Author: Johannes Heinecke
 
 
-# read and store an AMR file
+# read and store an UMR file
+import json
 import os
 import re
 import shlex
@@ -49,72 +50,13 @@ logging.getLogger('penman').setLevel(logging.ERROR)
 from metamorphosed.exception import ServerException
 from metamorphosed.amrdoc import AMRsentence
 
+mydir = os.path.dirname(__file__)
+VARNAME = re.compile(r"^s\d+[a-z]\d*$")
+
 
 class UMRDocGraph:
-    # TODO read these from a file
-    validsubjects = {}
-    validsubjects["temporal"] = [
-        "document-creation-time",
-        "future-reference",
-        "past-reference",
-        "present-reference",
-        "root",
-    ]
-
-    validsubjects["modal"] = [
-        "author2",
-        "author3",
-        "author",
-        "have-concession-91",
-        "have-concessive-condition-91",
-        "have-condition-91",
-        "have-condition",
-        "have-purpose-91",
-        "null-conceiver",
-        "purpose",
-        "root",
-    ]
-
-    validpredicats = {}
-    validpredicats["temporal"] = [
-        ":after",
-        ":before",
-        ":contained",
-        ":contains",
-        ":depends-on",
-        ":overlap",
-        ":verlap"
-    ]
-
-    validpredicats["modal"] = [
-        ":full-affirmative",
-        ":full-negative",
-        ":modal",
-        ":neutral-affirmative",
-        ":neutral-negative",
-        ":partial-affirmative",
-        ":partial-negative",
-        ":State",
-        ":strong-partial-affirmative",
-        ":unspecified",
-    ]
-
-    validpredicats["coref"] = [":contains", ":same-entity", ":same-event", ":subset-of"]
-
-    validobjects = {}
-    validobjects["temporal"] = ["document-creation-time", "past-reference"]
-    validobjects["modal"] = [
-        "author2",
-        "author3",
-        "author",
-        "have-concession-91",
-        "have-concessive-condition-91",
-        "have-condition-91",
-        "have-condition",
-        "have-purpose-91",
-        "null-conceiver",
-        "purpose",
-    ]
+    # read from a file in umrDOC.__init__()
+    valid_dg_rels = None
 
     def __init__(self, dg):
         lexer = shlex.shlex(dg.replace(":", " :"))
@@ -203,6 +145,63 @@ class UMRDocGraph:
         # for s in sl: print("S\t%s\t%s" % s)
         # for p in pl: print("P\t%s\t%s" % p)
         # for o in ol: print("O\t%s\t%s" % o)
+
+    def add(self, what, s, p, o):
+        msg = self.checktriple(what, s, p, o)
+        if len(msg):
+            return msg
+
+        if what not in self.docgraph:
+            return "invalid document graph type %s" % what
+        if (s, p, o) not in self.docgraph[what]:
+            self.docgraph[what].append((s, p, o))
+        else:
+            return "%s triple exists already: %s, %s, %s" % (what, s, p, o)
+
+        return None
+
+    def delete(self, what, pos):
+        if len(self.docgraph[what]) > pos:
+            del self.docgraph[what][pos]
+
+    def modify(self, what, pos, s, p, o):
+        msg = self.checktriple(what, s, p, o)
+        if len(msg):
+            return msg
+        if len(self.docgraph[what]) > pos:
+            del self.docgraph[what][pos]
+            self.docgraph[what].insert(pos, (s, p, o))
+        return None
+
+    def checktriple(self, what, s, p, o):
+        # check whether triples are conform do UMR specifications
+        # TODO check whether o is a valid variable of corresponding sentence level graph
+        msg = []
+        if what == "coref":
+            if not VARNAME.match(s):
+                msg.append("Bad %s subject: %s must be a variable matching <tt>%s</tt>" % (what, s, VARNAME.pattern))
+            if not VARNAME.match(o):
+                msg.append("Bad %s object: %s a variable matching <tt>%s</tt>" % (what, o, VARNAME.pattern))
+        else:
+            if not VARNAME.match(s) and s not in UMRDocGraph.valid_dg_rels[what].get("subjects", []):
+                msg.append("Bad %s subject: %s must be a variable matching <tt>%s</tt> or one of %s" % (what, s, VARNAME.pattern, UMRDocGraph.valid_dg_rels[what].get("subjects")))
+            if not VARNAME.match(o) and o not in UMRDocGraph.valid_dg_rels[what].get("objects", []):
+                msg.append("Bad %s object: %s must be a variable matching <tt>%s</tt> or one of %s" % (what, o, VARNAME.pattern, UMRDocGraph.valid_dg_rels[what].get("objects")))
+        if p not in UMRDocGraph.valid_dg_rels[what].get("predicates", []):
+            msg.append("Bad %s predicate: %s must be one of %s" % (what, p, UMRDocGraph.valid_dg_rels[what].get("predicates")))
+        return msg
+
+    def validate(self):
+        msg = []
+        if self.docgraph["modal"]:
+            if self.docgraph["modal"][0] != ("root", ":modal", "author"):
+                msg.append("First :modal triple must be <tt>root :modal author</tt> and not <tt>%s %s %s</tt>" % self.docgraph["modal"][0])
+
+        if UMRDocGraph.valid_dg_rels is not None:
+            for what in self.docgraph:
+                for s, p, o in self.docgraph[what]:
+                    msg.extend(self.checktriple(what, s, p, o))
+        return msg
 
     def write(self, ofp=sys.stdout):
         print("(%s / sentence" % self.id, end="", file=ofp)
@@ -323,6 +322,7 @@ class UMRsentence(AMRsentence):
                         msg.append("%s: alignment <%s> end position not in Index: %s" % (self.id, startend[1], self.index))
         if not self.wiok:
             msg.append("Index: &lt;%s&gt; and Words: &lt;%s&gt; do not correspond" % (self.index, self.words))
+        msg.extend(self.docgraph.validate())
         return msg
 
 
@@ -330,12 +330,16 @@ ALIGNMENT = re.compile(r"^(-?\d+)-(-?\d+)$")
 
 
 class UMRdoc:
-    def __init__(self, fn, verbose=True, rename_duplicate_ids=False):
+    def __init__(self, fn, verbose=True, rename_duplicate_ids=False, docgraphrel=mydir + "/data/docgraph.json"):
         self.rename_duplicate_ids = rename_duplicate_ids
         self.verbose = verbose
         self.sentences = []
         self.ids = {} # id: sentence
         self.fn = fn
+
+        if docgraphrel:
+            with open(docgraphrel) as ifp:
+                UMRDocGraph.valid_dg_rels = json.load(ifp)
 
         if isinstance(fn, str):
             ifp = open(fn)

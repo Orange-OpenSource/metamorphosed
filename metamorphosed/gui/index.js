@@ -196,32 +196,32 @@ function getServerInfo() {
 				$(".onlyumr").show();
 
 				// set docgraph S,P and O values to to <select> tags
-				$.each(data.docgraphitems.validsubjects.modal,
+				$.each(data.docgraphitems.modal.subjects,
 					function (key, value) {
 						$('.validsubjects_m').append('<option value="' + value + '">' + value);
 					});
-				$.each(data.docgraphitems.validsubjects.temporal,
+				$.each(data.docgraphitems.temporal.subjects,
 					function (key, value) {
 						$('.validsubjects_t').append('<option value="' + value + '">' + value);
 					});
-				$.each(data.docgraphitems.validobjects.modal,
+				$.each(data.docgraphitems.modal.objects,
 					function (key, value) {
 						$('.validobjects_m').append('<option value="' + value + '">' + value);
 					});
-				$.each(data.docgraphitems.validobjects.temporal,
+				$.each(data.docgraphitems.temporal.objects,
 					function (key, value) {
 						$('.validobjects_t').append('<option value="' + value + '">' + value);
 					});
-				$.each(data.docgraphitems.validpredicates.temporal,
+				$.each(data.docgraphitems.temporal.predicates,
 					function (key, value) {
 						//console.log("T PRED", key, value);
 						$('.validpreds_t').append('<option value="' + value + '">' + value);
 					});
-				$.each(data.docgraphitems.validpredicates.modal,
+				$.each(data.docgraphitems.modal.predicates,
 					function (key, value) {
 						$('.validpreds_m').append('<option value="' + value + '">' + value);
 					});
-				$.each(data.docgraphitems.validpredicates.coref,
+				$.each(data.docgraphitems.coref.predicates,
 					function (key, value) {
 						$('.validpreds_c').append('<option value="' + value + '">' + value);
 					});
@@ -556,15 +556,17 @@ var umralignment_pos = -1;
 
 function click_alignment_var(event) {
 	console.log("CLICK_AL", event.target.id);
-	$("#umrvar").text(event.target.id.split("_")[1]);
+	var elems = event.target.id.split("_");
+	var umrvar = elems[1];
+	$("#umrvar").text(umrvar);
 	$("#indexes").empty()
 	var ct = 1;
 	
-	var contents = $("#alv_" + event.target.id.split("_")[1] + "_" + ct).text();
+	var contents = $("#alv_" + umrvar + "_" + ct).text();
 
 	ct++;
 	while (ct < 4) {
-		var nextcontents = $("#alv_" + event.target.id.split("_")[1] + "_" + ct).text();
+		var nextcontents = $("#alv_" + umrvar + "_" + ct).text();
 		if (nextcontents == "") {
 			break;
 		}
@@ -582,6 +584,45 @@ function click_alignment_var(event) {
 
 	$("#cancel_ua").click(function () {
 		$("#umr_alignment_modal").hide();
+	});
+}
+
+
+function click_docgraph(event, key, i, j) {
+	console.log("DG", event.target.id)
+	var elems = event.target.id.split("_");
+	var dgtype = elems[1];
+	var pos = elems[2];
+	//var triplepos = elems[3];
+	$("#dgtype").text(dgtype); // coref/modal/temporal
+	$("#dgpos").text(pos); // position in list
+	var cursubj = $("#dg_" + dgtype + "_" + pos + "_0").text();
+	var curpred = $("#dg_" + dgtype + "_" + pos + "_1").text();
+	var curobj = $("#dg_" + dgtype + "_" + pos + "_2").text();
+	$("#dg_s").val(cursubj);
+	$("#dg_o").val(curobj);
+
+	//$("#dg_p").addClass("validpreds_m");
+	$("#dg_p_c").hide();
+	$("#dg_p_m").hide();
+	$("#dg_p_t").hide();
+	if (dgtype == "modal") {
+		$("#dg_p_m").val(curpred);
+		$("#dg_p_m").show();
+	} else if (dgtype == "temporal") {
+		$("#dg_p_t").val(curpred);
+		$("#dg_p_t").show();
+	} else {
+		$("#dg_p_c").val(curpred);
+		$("#dg_p_c").show();
+	}
+	$("#umr_dg_modal").css("top", event.pageY + "px");
+	$("#umr_dg_modal").css("left", event.pageX + "px");
+	$("#umr_dg_modal").show()
+	$("#umr_dg_modal").draggable();
+	
+	$("#cancel_dgt").click(function () {
+		$("#umr_dg_modal").hide();
 	});
 }
 
@@ -691,7 +732,6 @@ function formatAMR(data) {
 	if ('#innertext_' + currentsentnum in visible_divselectors && visible_divselectors['#innertext_' + currentsentnum] == false) {
 		ToggleDiv('#innertext_' + currentsentnum, "#togglesentence");
 	}
-
 
 	// toggle button to hide/show comments
 	$("#resultat").append('<button class="toggleresult" id="togglecomment" >&#8210;</button>');
@@ -882,7 +922,7 @@ function formatAMR(data) {
 					const rowid = 'tr_dg_' + currentsentnum + '_' + key + "_" + i;
 					$('#' + tableid).append('<tr id="' + rowid + '">');
 					for (var j = 0; j < values[i].length; ++j) {
-				    	$('#' + rowid).append('<td class="docgraphcell">' + values[i][j]);
+				    	$('#' + rowid).append('<td class="docgraphcell" id="dg_' + key + "_" + i + "_" + j +'" onmousedown="click_docgraph(event);">' + values[i][j]);
 					}
 				}
 			});
@@ -1338,7 +1378,7 @@ $(document).ready(function () {
 		else if (this.id == "reifygraph") {
 			$(".editmode").hide();
 			$("#commands").show();
-			console.log("TTT", $("#reifylist").val());
+			//console.log("TTT", $("#reifylist").val());
 			var relation_to_reify = $("#reifylist").val().split(" ")[0];
 			params = { "reify": relation_to_reify }
 		}
@@ -1377,12 +1417,38 @@ $(document).ready(function () {
 			}
 		}
 		else if (this.id == "addalignment") {
-			console.log("aZZZZ", $("#alignmentvar").val(), $("#var_to_rename").val());
+			//console.log("aZZZZ", $("#alignmentvar").val(), $("#var_to_rename").val());
 			params = {
 				"umrvar": $("#alignmentvar").val(),
 				"newalignment": $("#newpositions").val()
 				//"alignmentstart": $("#startindex").val(),
 				//"alignmentend": $("#endindex").val()
+			}
+		}
+		else if (this.id == "adddgmodal") {
+			//console.log("MM", $("#dg_mod_s").val(), $("#dg_mod_p").val(), $("#dg_mod_o").val())
+			params = {
+				"adddocgraph": "modal",
+				"dg_subj": $("#dg_mod_s").val(),
+				"dg_pred": $("#dg_mod_p").val(),
+				"dg_obj": $("#dg_mod_o").val()
+			}
+		}
+		else if (this.id == "adddgtemporal") {
+			params = {
+				"adddocgraph": "temporal",
+				"dg_subj": $("#dg_temp_s").val(),
+				"dg_pred": $("#dg_temp_p").val(),
+				"dg_obj": $("#dg_temp_o").val()
+			}
+		}
+		else if (this.id == "adddgcoref") {
+			//console.log("MM", $("#dg_mod_s").val(), $("#dg_mod_p").val(), $("#dg_mod_o").val())
+			params = {
+				"adddocgraph": "coref",
+				"dg_subj": $("#dg_coref_s").val(),
+				"dg_pred": $("#dg_coref_p").val(),
+				"dg_obj": $("#dg_coref_o").val()
 			}
 		}
 		else if (this.id == "modifyalignment") {
@@ -1395,13 +1461,32 @@ $(document).ready(function () {
 				//"alignmentstart": $("#startindex").val(),
 				//"alignmentend": $("#endindex").val()
 			}
-
+		}
+		else if (this.id == "modifydocgraph") {
+			$(".editmode").hide();
+			$("#commands").show();
+			var what = $("#dgtype").text();
+			var pos = $("#dgpos").text();
+			params = {
+				"moddocgraph": what,
+				"dgpos": pos,
+				"dg_subj": $("#dg_s").val(),
+				"dg_obj": $("#dg_o").val()
+			}
+			if (what == "coref") {
+				params["dg_pred"] = $("#dg_p_c").val();
+			} else if (what == "modal") {
+				params["dg_pred"] = $("#dg_p_m").val();
+			} else {
+				params["dg_pred"] = $("#dg_p_t").val();
+			}
+			console.log("pppp", params);
 		} else {
 			return;
 		}
 		params["num"] = currentsentnum;
 		params["prevmod"] = prevmod;
-		console.log("QQQQ", params);
+		console.log("AJAX", sentenceloaded, params);
 		if (sentenceloaded == true) {
 			$.ajax({
 				url: URL_BASE,

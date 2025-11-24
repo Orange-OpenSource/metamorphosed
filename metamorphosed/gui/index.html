@@ -23,7 +23,7 @@
 </head>
 
 <body>
-    <img src="img/metamorphosed+.png" width="500px">
+    <div><span><img src="img/metamorphosed+.png" width="500px"></span> <span id="umrheader" class="onlyumr" style="display: none; font-size: larger;">for UMR</span></div>
     <p />
     <!--h1 id="mainheader">Abstract Meaning Representation - Editor <span id="version"></span></h1-->
 
@@ -151,8 +151,8 @@
                     <td class="task">add docgraph temporal triple:</td>
                     <td> <input class="varfield" title="temporal triple subject" type="text" id="dg_temp_s" value="">
                         <select class="edgefield validpreds_t" id="dg_temp_p"></select>
-                        <!--input class="varfield" title="temporal triple object" type="text" id="dg_temp_o" value=""-->
-                        <select class="varfield validvars" id="dg_temp_o"></select>
+                        <input class="varfield" title="temporal triple object" type="text" id="dg_temp_o" value="">
+                        <!--select class="varfield validvars" id="dg_temp_o"></select-->
 
                         <button class="addbutton mybutton" id="adddgtemporal">add</button>
                     </td>
@@ -162,9 +162,9 @@
                     <td></td>
                     <td class="task">add docgraph modal triple:</td>
                     <td> <input class="varfield" title="modal triple subject" type="text" id="dg_mod_s" value="">
-                        <select class="edgefield validpreds_m" id="dg_temp_p"></select>
-                        <!--input class="varfield" title="modal triple object" type="text" id="dg_mod_o" value=""-->
-                        <select class="varfield validvars" id="dg_mod_o"></select>
+                        <select class="edgefield validpreds_m" id="dg_mod_p"></select>
+                        <input class="varfield" title="modal triple object" type="text" id="dg_mod_o" value="">
+                        <!--select class="varfield validvars" id="dg_mod_o"></select-->
 
                         <button class="addbutton mybutton" id="adddgmodal">add</button>
                     </td>
@@ -178,7 +178,7 @@
                         <!--input class="varfield" title="coref triple object" type="text" id="dg_coref_o" value="" -->
                         <select class="varfield validvars" id="dg_coref_o"></select>
 
-                        <button class="addbutton mybutton" id="adddgmodal">add</button>
+                        <button class="addbutton mybutton" id="adddgcoref">add</button>
                     </td>
                 </tr>
                 </table>
@@ -477,6 +477,24 @@ Else the input is interpreted as regular expression" placeholder="regex/PENMAN" 
         </div>
     </div>
 
+    <!-- UMR doggraph edit -->
+    <div class="modal editmode" id="umr_dg_modal">
+        <div class="grouping noborder" id="umr_dg">
+            <button class="cancelmodal" id="cancel_dgt">&times;</button>
+            <h3>Modify UMR document level annotation &ldquo;<span id="dgtype"></span> <span id="dgpos"></span>&rdquo;</h3>
+            <ul>
+                <li>
+                    <input class="varfield" title="temporal triple subject" type="text" id="dg_s" value="">
+                        <select style="display: none;" class="edgefield validpreds_m" id="dg_p_m"></select>
+                        <select style="display: none;" class="edgefield validpreds_t" id="dg_p_t"></select>
+                        <select style="display: none;" class="edgefield validpreds_c" id="dg_p_c"></select>
+                        <input class="varfield" title="temporal triple object" type="text" id="dg_o" value="">
+                        <!--select class="varfield validvars" id="dg_o"></select-->
+                <button class="addbutton mybutton" id="modifydocgraph">set</button></li>
+            
+            </ul>
+        </div>
+    </div>
 
 </body>
 
