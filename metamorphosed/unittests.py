@@ -522,7 +522,61 @@ def testumr_modify_alignment(client_umr):
     assert res["warning"] == ["alignment end 21 is beyond last word"]
 
 
-# test save, git add/commit
+def testumr_modify_docgraph(client_umr):
+    response = client_umr.get("/read", query_string={"num": 4})
+    response = client_umr.get("/edit", query_string={"num": 4, "adddocgraph": "temporal", "dg_subj": "s3d", "dg_obj": "s4d", "dg_pred": ":after"})
+    res = json.loads(response.data)
+    # print("res", json.dumps(res, indent=2, ensure_ascii=False), file=sys.stderr)
+    assert res["docgraph"]["temporal"] == [
+        ["s3b2", ":overlap", "s4l"],
+        ["s4l", ":after", "s4s3"],
+        ["s3d", ":after", "s4d"],
+    ]
+    # invalid relation
+    response = client_umr.get("/edit", query_string={"num": 4, "prevmod": 1, "adddocgraph": "modal", "dg_subj": "s3d", "dg_obj": "s4d", "dg_pred": ":after"})
+    res = json.loads(response.data)
+    # print("res", json.dumps(res, indent=2, ensure_ascii=False), file=sys.stderr)
+    assert res["warning"] == ["Bad modal predicate: :after must be one of [':full-affirmative', ':modal', ':neutral-affirmative', ':neutral-negative', ':partial-affirmative', ':partial-negative', ':unspecified']"]
+
+    # modify
+    response = client_umr.get("/edit", query_string={"num": 4, "prevmod": 2, "moddocgraph": "modal", "dg_subj": "s4p", "dg_obj": "s4l10", "dg_pred": ":full-affirmative", "dgpos": 4})
+    res = json.loads(response.data)
+    # print("res", json.dumps(res, indent=2, ensure_ascii=False), file=sys.stderr)
+    assert res["docgraph"]["modal"] == [
+        ["root", ":modal", "author"],
+        ["author", ":full-affirmative", "s4s"],
+        ["author", ":full-affirmative", "s4p"],
+        ["s4p", ":full-affirmative", "s4l2"],
+        ["s4p", ":full-affirmative", "s4l10"],
+        ["s4p", ":full-affirmative", "s4h"],
+        ["s4p", ":full-affirmative", "s4s3"],
+    ]
+
+    # delete
+    response = client_umr.get("/edit", query_string={"num": 4, "prevmod": 2, "moddocgraph": "coref", "dg_subj": "", "dg_obj": "s4l", "dg_pred": ":same-event", "dgpos": 0})
+    res = json.loads(response.data)
+    # print("res", json.dumps(res, indent=2, ensure_ascii=False), file=sys.stderr)
+    assert res["docgraph"]["coref"] == [["s3l", ":same-event", "s4l"]]
+
+    # adding bad variable
+    response = client_umr.get("/edit", query_string={"num": 4, "prevmod": 3, "adddocgraph": "coref", "dg_subj": "s3d", "dg_obj": "s4dDD", "dg_pred": ":same-entity"})
+    res = json.loads(response.data)
+    #print("res", json.dumps(res, indent=2, ensure_ascii=False), file=sys.stderr)
+    assert res["warning"] == ["Bad coref object: s4dDD a variable matching <tt>^s\\d+[a-z]\\d*$</tt>"]
+
+    response = client_umr.get("/edit", query_string={"num": 4, "prevmod": 3, "adddocgraph": "temporal", "dg_subj": "s3d", "dg_obj": "s4d", "dg_pred": ":subset-of"})
+    res = json.loads(response.data)
+    # print("res", json.dumps(res, indent=2, ensure_ascii=False), file=sys.stderr)
+    assert res["warning"] == ["Bad temporal predicate: :subset-of must be one of [':after', ':before', ':contained', ':contains', ':depends-on', ':overlap']"]
+
+    # first modal incorrect
+    response = client_umr.get("/edit", query_string={"num": 4, "prevmod": 3, "moddocgraph": "modal", "dg_subj": "s4p11", "dg_obj": "s4l10", "dg_pred": ":full-affirmative", "dgpos": 0})
+    res = json.loads(response.data)
+    print("res", json.dumps(res, indent=2, ensure_ascii=False), file=sys.stderr)
+    assert res["warning"] == ["First :modal triple must be <tt>root :modal author</tt> and not <tt>root :modal author</tt>"]
+
+
+# UMR file save, git add/commit
 def testumr_edit_addinstance_git(client_git_umr):
     client, repo = client_git_umr
     response = client.get("/read", query_string={"num": 2})

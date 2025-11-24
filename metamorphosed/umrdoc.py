@@ -169,6 +169,10 @@ class UMRDocGraph:
         if len(msg):
             return msg
         if len(self.docgraph[what]) > pos:
+            if pos == 0 and what == "modal":
+                if (s, p, o) != ("root", ":modal", "author"):
+                    msg = ["First :modal triple must be <tt>root :modal author</tt> and not <tt>%s %s %s</tt>" % self.docgraph["modal"][0]]
+                    return msg
             del self.docgraph[what][pos]
             self.docgraph[what].insert(pos, (s, p, o))
         return None

@@ -476,7 +476,9 @@ class AMR_Edit_Server:
                     return invalidumr(ap, ["invalid document graph triple for %s «%s, %s, %s»" % (adddocgraph, dg_subj, dg_pred, dg_obj)], cursentence, sentnum)
             elif moddocgraph and dgpos is not None:
                 if dg_subj and dg_obj and dg_pred:
-                    cursentence.docgraph.modify(moddocgraph, dgpos, dg_subj, dg_pred, dg_obj)
+                    msg = cursentence.docgraph.modify(moddocgraph, dgpos, dg_subj, dg_pred, dg_obj)
+                    if msg is not None:
+                        return invalidumr(ap, msg, cursentence, sentnum)
                 else:
                     cursentence.docgraph.delete(moddocgraph, dgpos)
             elif umrvar is not None: # can be an empty string if no unaligned variable exists (H)
