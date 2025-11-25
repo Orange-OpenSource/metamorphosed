@@ -58,7 +58,7 @@ class UMRDocGraph:
     # read from a file in umrDOC.__init__()
     valid_dg_rels = None
 
-    def __init__(self, dg):
+    def __init__(self, dg, defaultsentid):
         lexer = shlex.shlex(dg.replace(":", " :"))
         lexer.wordchars += "-:"
         lexer.source = 'source'
@@ -72,6 +72,8 @@ class UMRDocGraph:
         #    print(tok)
         toklist = list(lexer)
         # print(dg, toklist)
+
+        self.id = "s%ss0" % defaultsentid[3:]
 
         self.variables = set() # all variables
         self.resources = set() # all subjects and objects which are not a variable
@@ -219,7 +221,7 @@ class UMRsentence(AMRsentence):
     def __init__(self, sentencegraph, alignements, documentgraph, sentid, meta, index, words, other):
         AMRsentence.__init__(self, sentencegraph)
         self.alignments = alignements
-        self.docgraph = UMRDocGraph(documentgraph)
+        self.docgraph = UMRDocGraph(documentgraph, sentid)
         self.wiok = True # Index: and Words: lines are both not None and have the same length
         self.index = index
         self.words = words
@@ -370,7 +372,9 @@ class UMRdoc:
                 if sentid:
                     # save preceding sentence
                     self.add(sentenceblock, alignments, documentblock, sentid, meta, index, words, other)
-
+                else:
+                    if sentenceblock or documentblock or alignments or index or words or other:
+                        print("* Missing '# ::sntN' line. Sentence ignored", sentid, linect, file=sys.stderr)
                 # start next sentence
                 meta = {}
                 if ("::") in line:
@@ -437,6 +441,9 @@ class UMRdoc:
                     documentblock.append(line)
         if sentid:
             self.add(sentenceblock, alignments, documentblock, sentid, meta, index, words, other)
+        else:
+            if sentenceblock or documentblock or alignments or index or words or other:
+                print("* Missing '# ::sntN' line. Sentence ignored", sentid, linect, file=sys.stderr)
 
     def add(self, sentenceblock, alignments, documentblock, sentid, meta, index, words, other):
         wiok = True # if index and words do not go together, we keep that what we find

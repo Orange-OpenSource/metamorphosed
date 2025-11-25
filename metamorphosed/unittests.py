@@ -291,7 +291,6 @@ def app_git_umr():
     app = aes.app
 
     # other setup can go here
-
     yield app, repo
 
     # clean up / reset resources here
@@ -302,6 +301,42 @@ def client_git_umr(app_git_umr):
     app, repo = app_git_umr
     #return app_git.test_client()
     return app.test_client(), repo
+
+
+# start server (with UMR) just for one test without any validating stuff to test git
+@pytest.fixture()
+def app_git_umr2():
+    datadir = tempfile.TemporaryDirectory()
+    print("temporary test directory", datadir)
+    shutil.copyfile(mydir + "/data/testumr-minimal.umr", datadir.name + "/testumr-minimal.umr")
+    #repo = git.Repo.init(datadir.name)
+    #repo.git.add(datadir.name + "/testumr-minimal.umr")
+    #repo.git.commit("-m", "initial")
+
+    aes = AMR_Edit_Server(4568,
+                          datadir.name + "/testumr-minimal.umr",
+                          None,
+                          None,
+                          None,
+                          None,
+                          False,
+                          do_git=False,
+                          override=True,
+                          umr=True,
+                          )
+    app = aes.app
+
+    # other setup can go here
+    yield app, datadir.name #repo
+
+    # clean up / reset resources here
+
+
+@pytest.fixture()
+def client_git_umr2(app_git_umr2):
+    app, datadir = app_git_umr2
+    #return app_git.test_client()
+    return app.test_client(), datadir
 
 
 def test_request_example(client):
@@ -606,11 +641,39 @@ def testumr_edit_addinstance_git(client_git_umr):
         "s2x": [[2, 3]],
     }
 
-    # cat(repo.working_dir + "/testumr.umr")
+    # cat(repo.working_dir + "/testumr.umr", show=True)
 
     # res = json.loads(response.data)
     # print(res)
     assert "commit: metamorphosed AMR editor: 2 of " in repo.head.log()[-1].message
+
+
+# UMR file save and compare wit reference
+def testumr_edit2(client_git_umr2):
+    client, datadir = client_git_umr2
+    response = client.get("/read", query_string={"num": 1})
+    response = client.get("/edit", query_string={"num": 1, "addconcept": "sleep-01"})
+    response = client.get("/edit", query_string={"num": 1, "prevmod": 1, "addconcept": "kitchen"})
+    response = client.get("/edit", query_string={"num": 1, "prevmod": 2, "start": "s1s", "end": "s1k", "label": ":place"})
+    response = client.get("/edit", query_string={"num": 1, "prevmod": 3, "addconcept": "cat"})
+    response = client.get("/edit", query_string={"num": 1, "prevmod": 4, "start": "s1s", "end": "s1c", "label": ":ARG0"})
+
+    response = client.get("/edit", query_string={"num": 1, "prevmod": 5, "umrvar": "s1k", "newalignment": "7-7"})
+    response = client.get("/edit", query_string={"num": 1, "prevmod": 6, "umrvar": "s1s", "newalignment": "4-4"})
+    response = client.get("/edit", query_string={"num": 1, "prevmod": 7, "umrvar": "s1c", "newalignment": "2-2"})
+
+    response = client.get("/edit", query_string={"num": 1, "prevmod": 8, "adddocgraph": "modal", "dg_subj": "root", "dg_obj": "author", "dg_pred": ":modal"})
+    response = client.get("/edit", query_string={"num": 1, "prevmod": 9, "adddocgraph": "temporal", "dg_subj": "document-creation-time", "dg_obj": "s1s", "dg_pred": ":overlap"})
+    #response = client.get("/edit", query_string={"num": 2, "prevmod": 1, "start": "s2d", "label": "ARG0", "end": "s2r"})
+    response = client.get("/save", query_string={"num": 1})
+    #res = json.loads(response.data)
+    #print("res", res)
+    newfile = cat(datadir + "/testumr-minimal.umr.2")
+    reference = cat(mydir + "/data/testumr-minimal-expected.umr")
+
+    #print(newfile)
+    #print(reference)
+    assert newfile == reference
 
 
 def test_read_date(client):
@@ -1367,9 +1430,12 @@ def ls(dn):
         print("%-50s\t%7d" % (x, os.path.getsize(x)))
 
 
-def cat(fn):
+def cat(fn, show=False):
     with open(fn) as ifp:
-        print(ifp.read())
+        contents = ifp.read()
+        if show:
+            print(contents)
+        return contents
 
 
 # test whether server stops if backup file exists

@@ -64,3 +64,7 @@ Click on the alignment in the alignment window (on the right of the sentence lev
 
 An empty input field removes all alignments for the given instance. Separate multiple alignments with a comma: `4-4, 6-6`)
 
+## Limitations
+
+* `Words:` and `Index:` (and `Morphemes:` etc.) lines cannot yet be modified
+* Document level annotations constaints are not yet all enforced
