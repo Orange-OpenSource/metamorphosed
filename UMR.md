@@ -45,7 +45,7 @@ Open your browser on `http://localhost:4567:
 
 ## Edit the sentence level graph
 
-This works as with AMR files
+This works as with AMR files (see [README.md](README.md))
 
 ## Edit the alignments
 
@@ -63,6 +63,17 @@ Click on the alignment in the alignment window (on the right of the sentence lev
 ![Modify UMR alignment](doc/modify-UMR-alignment.png)
 
 An empty input field removes all alignments for the given instance. Separate multiple alignments with a comma: `4-4, 6-6`)
+
+## Edit the document level annotation
+
+Adding new temporal, modal or coref triples use the input fields on the top left (`I) add docgraph ....`
+
+![Add document annotation triples](doc/docgraph-add.png)
+
+In order to edit (or remove) existing triples, click on a triple and edit it the pop-up. An empty field deletes the triple.
+Validate by clicking on `set`, cancel by clicking on the circled `X` (top right)
+
+![Add document annotation triples](doc/docgraph-edit.png)
 
 ## Limitations
 
