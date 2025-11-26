@@ -60,7 +60,7 @@ There are three ways to add/modify/delete alignments:
 
 ### modify alignement
 
-Click on the alignment in the alignment window (on the right of the sentence level graph) and edit it accordingly and click `set`. If the format is incorrect (startposition - endposition), the input is not accepted and an error message is given.
+Click on the alignment in the `Alignments:` line and edit it accordingly and click `set`. If the format is incorrect (startposition - endposition), the input is not accepted and an error message is given.
 
 ![Modify UMR alignment](doc/modify-UMR-alignment.png)
 
