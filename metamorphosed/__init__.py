@@ -572,6 +572,7 @@ class AMR_Edit_Server:
                     "umr": self.umr}
             if self.umr:
                 dico["alignments"] = cursentence.alignments
+                dico["alignments2"] = cursentence.getAlignments()
                 dico["docgraph"] = cursentence.docgraph.docgraph
 
                 if cursentence.index:
@@ -949,6 +950,7 @@ class AMR_Edit_Server:
                     "umr": self.umr}
             if self.umr:
                 dico["alignments"] = cursentence.alignments
+                dico["alignments2"] = cursentence.getAlignments()
                 dico["docgraph"] = cursentence.docgraph.docgraph
 
                 if cursentence.index:
@@ -1038,6 +1040,7 @@ class AMR_Edit_Server:
                     "umr": self.umr}
             if self.umr:
                 dico["alignments"] = cursentence.alignments
+                dico["alignments2"] = cursentence.getAlignments()
                 dico["docgraph"] = cursentence.docgraph.docgraph
 
                 if cursentence.index:

@@ -33,6 +33,7 @@
         ],
         "predicates": [
             ":full-affirmative",
+            ":full-negative",
             ":modal",
             ":neutral-affirmative",
             ":neutral-negative",

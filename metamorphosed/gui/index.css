@@ -326,6 +326,11 @@ input {
   background-color: #dacff3;
 }
 
+.alignment_var {
+  text-wrap: word;
+  vertical-align: baseline;
+}
+
 
 
 .reifrelations { 

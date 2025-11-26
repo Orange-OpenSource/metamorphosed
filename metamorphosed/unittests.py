@@ -571,7 +571,7 @@ def testumr_modify_docgraph(client_umr):
     response = client_umr.get("/edit", query_string={"num": 4, "prevmod": 1, "adddocgraph": "modal", "dg_subj": "s3d", "dg_obj": "s4d", "dg_pred": ":after"})
     res = json.loads(response.data)
     # print("res", json.dumps(res, indent=2, ensure_ascii=False), file=sys.stderr)
-    assert res["warning"] == ["Bad modal predicate: :after must be one of [':full-affirmative', ':modal', ':neutral-affirmative', ':neutral-negative', ':partial-affirmative', ':partial-negative', ':unspecified']"]
+    assert res["warning"] == ["Bad modal predicate: :after must be one of [':full-affirmative', ':full-negative', ':modal', ':neutral-affirmative', ':neutral-negative', ':partial-affirmative', ':partial-negative', ':unspecified']"]
 
     # modify
     response = client_umr.get("/edit", query_string={"num": 4, "prevmod": 2, "moddocgraph": "modal", "dg_subj": "s4p", "dg_obj": "s4l10", "dg_pred": ":full-affirmative", "dgpos": 4})

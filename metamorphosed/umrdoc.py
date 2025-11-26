@@ -266,6 +266,20 @@ class UMRsentence(AMRsentence):
             self.varprefix = "s" + sentid.split("snt")[-1] # the sentence number is the required prefix
         self.pg = None # penman.Graph
 
+    def getAlignments(self):
+        # outputs the alignments in a way easy to display in index.js
+        out = {} # word pos: [umrvar, ...]
+        for umrvar in self.alignments:
+            for index in self.alignments[umrvar]:
+                start = index[0]
+                end = index[1]
+                for pos in range(start, end + 1, 1):
+                    if pos not in out:
+                        out[pos] = []
+                    out[pos].append(umrvar)
+
+        return out
+
     def write(self, ofp=sys.stdout, onlyheader=False):
         print("################################################################################", file=ofp)
         if self.meta:

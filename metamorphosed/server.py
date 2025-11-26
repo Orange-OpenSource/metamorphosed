@@ -49,8 +49,8 @@ def main():
     parser.add_argument("--file", "-f", required=True, help="AMR file to edit")
     parser.add_argument("--compare", nargs="+", help="AMR file of additional annotators to compare with file given by --file")
     parser.add_argument("--author", help="author (for git), use format 'Name <mail@example.com>', if absent current user+mail is used")
-    parser.add_argument("--relations", "-R", default=mydir + "/data/relations.txt", help="list of valid AMR-relations (simple text file with list of all valid relations)")
-    parser.add_argument("--relationsdoc", default=mydir + "/data/relations-doc.json", help="examples for valid AMR-relations (json file)")
+    parser.add_argument("--relations", "-R", default=None, help="list of valid AMR-relations (simple text file with list of all valid relations)")
+    parser.add_argument("--relationsdoc", default=None, help="examples for valid AMR-relations (json file), '-' deactivates this option")
     parser.add_argument("--concepts", "-C", default=None, help="list of valid AMR-concepts (simple text file with list of all valid concepts)")
     parser.add_argument("--pbframes", "-P", default=None, help="Propbank frameset documentation (directory with xml files)")
     parser.add_argument("--constraints", "-c", default=None, help="constraints for subjects and predicates (yaml file)")
@@ -69,6 +69,18 @@ def main():
         parser.print_help()
     else:
         args = parser.parse_args()
+
+        if args.relations is None:
+            if args.umr:
+                args.relations = mydir + "/data/umr-relations.txt"
+            else:
+                args.relations = mydir + "/data/relations.txt"
+        if args.relationsdoc is None:
+            if args.umr:
+                args.relationsdoc = mydir + "/data/umr-relations-doc.json"
+            else:
+                args.relationsdoc = mydir + "/data/relations-doc.json"
+
         try:
             amrfile = args.file
             compare = args.compare

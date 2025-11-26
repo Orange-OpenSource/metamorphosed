@@ -773,17 +773,34 @@ function formatAMR(data) {
 		$('#innerwordindex_' + currentsentnum).append('<table id="tab_wordindex_' + currentsentnum + '">');
 		$('#tab_wordindex_' + currentsentnum).append('<tr id="tr_index_' + currentsentnum + '">');
 		$('#tab_wordindex_' + currentsentnum).append('<tr id="tr_word_' + currentsentnum + '">');
+		$('#tab_wordindex_' + currentsentnum).append('<tr id="tr_alignments_' + currentsentnum + '" style="vertical-align: baseline;">');
 
 		$("#tr_index_" + currentsentnum).append("<th>Index:");
 		if (data.index !== undefined) {
+			$("#tr_index_" + currentsentnum).append('<td class="wordpos" style="width: 3em;" id="wordpos_index_0">unaligned');
 			for (var i = 0; i<data.index.length; i++) {
 				$("#tr_index_" + currentsentnum).append('<td class="wordpos" onmousedown="alignmentinfo(event);" id="wordpos_index_' + (i+1) + '">' + data.index[i]);
 			}
 		}
 		$("#tr_word_" + currentsentnum).append("<th>Words:");
 		if (data.words !== undefined) {
+			$("#tr_word_" + currentsentnum).append('<td class="wordpos" id="wordpos_word_0">');
 			for (var i = 0; i<data.words.length; i++) {
 				$("#tr_word_" + currentsentnum).append('<td class="wordpos" onmousedown="alignmentinfo(event);" id="wordpos_word_' + (i+1) + '">' + data.words[i]);
+			}
+		}
+
+		if (data.index !== undefined) {
+			$("#tr_alignments_" + currentsentnum).append("<th>Alignments:");
+			for (var i = 0; i<data.index.length+1; i++) {
+				var value = "";
+				if (data.alignments2[i] !== undefined) {
+					for (var j = 0; j < data.alignments2[i].length; j++) {
+						var key = data.alignments2[i][j]
+						value += " " + key;
+					}
+				}
+				$("#tr_alignments_" + currentsentnum).append('<td class="alignment_var code" onmousedown="click_alignment_var(event);" id="alv_'+key+'_' + (i+1) +'">' + value);					
 			}
 		}
 
@@ -809,10 +826,10 @@ function formatAMR(data) {
 	$("#gresultat").append('<div id="g1resultat">'); // penman
 	$("#gresultat").append('<div id="g2resultat">'); // visualisation
 	if (data.umr) {
-		if (data.alignments !== undefined) {
-			// UMR data
-			$("#gresultat").append('<div id="g3resultat">'); // alignments
-		}
+		// if (data.alignments !== undefined) {
+		// 	// UMR data
+		// 	$("#gresultat").append('<div id="g3resultat">'); // alignments
+		// }
 		if (data.docgraph !== undefined) {
 			// UMR data	
 			$("#gresultat").append('<div id="g4resultat">'); // document level annotation
@@ -870,6 +887,7 @@ function formatAMR(data) {
 	downloadSVG('innersvggraph_' + currentsentnum, 'semgraph_' + currentsentnum, currentsentnum);
 
 	/* UMR alignments */
+	/* // under Index:
 	if (data.alignments !== undefined) {
 		// toggle button to hide/show the alignments
 		$("#g3resultat").append('<button class="toggleresult" id="togglealignments" >&#8210;</button>');
@@ -901,6 +919,7 @@ function formatAMR(data) {
 		
 		//$('#alignments_' + currentsentnum).append('<button class="addbutton mybutton" id="addalignment">add alignment</button>');
 	}
+	*/
 
 	// UMR document level annotation
 	if (data.docgraph !== undefined) {
