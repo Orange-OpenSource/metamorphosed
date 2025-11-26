@@ -294,6 +294,16 @@ function ToggleSVGExport() {
 	}
 }
 
+function highlight_pm(amr) {
+    var output = amr.replace(/("[^\"]+")/g, '<span class="literal">$1</span>'); // " // hightlight strings
+    output = output.replace(/(:quant|:value|:op[0-9]) ([a-z0-9\.]+)/g, '$1 <span class="literal">$2</span>'); // highlight non-string literals
+    output = output.replace(/([a-z]+[0-9]*) \//g, ' <span class="conceptslash">$1</span> <b>/</b>'); // highlight variables
+    output = output.replace(/:([ARGa-z]+[0-9]?)/g, ' <span class="$1text">:$1</span>'); //  highlight relations
+
+    return output;
+}
+
+
 function updateExportFormat() {
 	// check also here to improve download mechanism: https://codepen.io/chrisdpratt/pen/RKxJNo
 	//$("#exporthref")[0].href="/graphs/amrgraphs.zip?format=" + obj.value;
@@ -777,7 +787,7 @@ function formatAMR(data) {
 
 		$("#tr_index_" + currentsentnum).append("<th>Index:");
 		if (data.index !== undefined) {
-			$("#tr_index_" + currentsentnum).append('<td class="wordpos" style="width: 3em;" id="wordpos_index_0">unaligned');
+			$("#tr_index_" + currentsentnum).append('<td class="wordpos" style="width: 3em;" id="wordpos_index_0">n/a');
 			for (var i = 0; i<data.index.length; i++) {
 				$("#tr_index_" + currentsentnum).append('<td class="wordpos" onmousedown="alignmentinfo(event);" id="wordpos_index_' + (i+1) + '">' + data.index[i]);
 			}
@@ -811,7 +821,14 @@ function formatAMR(data) {
 				function (what, value) {
 					$('#tab_glosses_' + currentsentnum).append('<tr id="tr_gloss_' + currentsentnum + '_' + ct + '">');
 					$('#tr_gloss_' + currentsentnum + '_' + ct).append('<th class="glossheader">' + what + ":");
-					$('#tr_gloss_' + currentsentnum + '_' + ct).append('<td class="gloss">' + value);
+					//$('#tr_gloss_' + currentsentnum + '_' + ct).append('<td class="gloss">' + value);
+					if (what.startsWith("Morphem")) {
+						for (var i = 0; i < value.length; i++) {
+							$('#tr_gloss_' + currentsentnum + '_' + ct).append('<td class="gloss">' + value[i]);
+						}
+					} else {
+						$('#tr_gloss_' + currentsentnum + '_' + ct).append('<td colspan="' + value.length + '" class="gloss">' + value.join(" "));
+					}
 					ct++;
 				});
 		}
@@ -847,7 +864,7 @@ function formatAMR(data) {
 	// penman graph in an inner div
 	$("#g1resultat").append('<div class="penman" id="penman_' + currentsentnum + '">');
 	$('#penman_' + currentsentnum).append('<pre id="amr_' + currentsentnum + '">');
-	$('#amr_' + currentsentnum).append(data.penman);
+	$('#amr_' + currentsentnum).append(highlight_pm(data.penman));
 
 	if ('#amr_' + currentsentnum in visible_divselectors && visible_divselectors['#amr_' + currentsentnum] == false) {
 		ToggleDiv('#amr_' + currentsentnum, "#togglepenman");

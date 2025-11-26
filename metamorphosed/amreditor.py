@@ -59,7 +59,9 @@ VERSION = "5.0.0rc"
 
 orangecolors = {
     ":ARG0": "#ff7900",
+    ":actor": "#ff7900",
     ":ARG1": "#9164cd",
+    ":affectee": "#9164cd",
     ":ARG3": "#ffb4e6",
     ":ARG4": "#50be87",
     ":ARG2": "#4bb4e6",
@@ -76,8 +78,10 @@ orangecolors = {
     ":mod": "#ffb400",
     ":name": "#492191",
     ":location": "#ff8ad4",
+    ":place": "#ff8ad4",
     ":destination": "#ff8ad4",
     ":manner": "#0a6e31",
+    ":aspect": "#0a6e31",
     ":time": "#085ebd",
     ":day": "#085ebd",
     ":month": "#085ebd",

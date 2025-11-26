@@ -428,7 +428,7 @@ class UMRdoc:
                         or line.startswith("Translation(English):") \
                         or line.startswith("Translation(Spanish):"):
                     elems = line.split(":", 1)
-                    other[elems[0]] = elems[1]
+                    other[elems[0]] = elems[1].split()
 
                 elif line.startswith("# sentence level graph:"):
                     state = 1

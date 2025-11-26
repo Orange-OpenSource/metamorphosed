@@ -529,16 +529,16 @@ td.framealiastable {
 
 
 
-.ARG0 {
+.ARG0, .actor {
   background-color: #ff7900;
 }
 
-.ARG1 {
+.ARG1, .patient, .affectee {
   background-color: #9164cd;
   color: white;
 }
 
-.ARG3 {
+.ARG3, .theme {
   background-color: #ffb4e6;
 }
 
@@ -625,11 +625,11 @@ td.framealiastable {
   color: white
 }
 
-.location {
+.location, .place {
   background-color: #ff8ad4;
 }
 
-.manner {
+.manner,.aspect {
   background-color: #0a6e31;
 }
 
@@ -678,6 +678,50 @@ td.framealiastable {
   color: white
 }
 
+.ARG0text { color: #ff7900; }
+.actortext { color: #ff7900; }
+.ARG1text { color: #9164cd; }
+.affecteetext { color: #9164cd; }
+.ARG3text { color: #ffb4e6; }
+.themetext { color: #ffb4e6; }
+.ARG4text { color: #50be87; }
+.ARG2text { color: #4bb4e6; }
+.ARG5text { color: #ffdc00; }
+
+.mannertext { color: #8f8f8f; }
+.aspecttext { color: #8f8f8f; }
+.beneficiarytext  {  color: #d9c2f0; }
+.ordtext {  color: #d6d6d6; }
+.snt1text {  color: #b8ebd6; }
+.snt2text {  color: #b8ebd6; }
+.snt3text {  color: #b8ebd6; }
+.snt4text {  color: #b8ebd6; }
+.modtext {  color: #ffb400; }
+.nametext {  color: #492191; }
+.locationtext {  color: #ff8ad4; }
+.placetext {  color: #ff8ad4; }
+.mannertext {  color: #0a6e31; }
+.timetext {  color: #085ebd; }
+.monthtext {  color: #085ebd; }
+.daytext {  color: #085ebd; }
+.dayperiodtext {  color: #085ebd; }
+.op1text {  color: #595959; }
+.op2text {  color: #595959; }
+.op3text {  color: #595959; }
+.op4text {  color: #595959; }
+.valuetext {  color: #595959; }
+.purposetext {  color: #085ebd; }
+.directiontext {  color: #b5e8f7; }
+.quanttext {  color: #d9c2f0;}
+.unittext {  color: #fff6b6;}
+.accompaniertext {  color: #085ebd;}
+
+.literal {
+ font-style: italic;
+ }
+.conceptslash {
+  font-weight: bold;
+}
 
 .modal {
   display: none;

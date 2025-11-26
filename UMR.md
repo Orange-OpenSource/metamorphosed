@@ -80,4 +80,10 @@ Validate by clicking on `set`, cancel by clicking on the circled `X` (top right)
 ## Limitations
 
 * `Words:` and `Index:` (and `Morphemes:` etc.) lines cannot yet be modified
-* Document level annotations constaints are not yet all enforced
+* Document level annotations constraints are not yet all enforced
+
+* TODO:
+  * check whether variables in document level annotations are in document (Subject) or in current sentence (Object)
+  * add alignments in graph visualisation
+
+
