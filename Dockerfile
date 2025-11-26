@@ -54,6 +54,7 @@ EXPOSE 4567
 ENV AMRLIB_URL=
 ENV PROPERTY_LABELS=
 ENV QUAL_LABELS=
+ENV NON_FILE_OPTIONS=
 
 #HEALTHCHECK --interval=60s --timeout=3s --retries=1 \
 #  CMD curl --silent --fail --noproxy '*' http://localhost:3500/status | grep  '"status": "ok"' || exit 1
@@ -67,5 +68,6 @@ ENV QUAL_LABELS=
 CMD . /opt/venv/bin/activate && exec ./metamorphosed_server.py \
 	--pbframes ./propbank-frames/frames/ \
 	--reifications ./metamorphosed/data/reification-table.txt \
+	$NON_FILE_OPTIONS \
         -f None --dockerargs /data $AMRFILE $COMPAREWITH
 
