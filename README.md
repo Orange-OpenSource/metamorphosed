@@ -222,11 +222,12 @@ docker pull jheinecke/metamorphosed:latest
 
 ```
 docker run --rm -d -t --name metamorphosed \
-	-p 4567:4567 \
-	--volume <absolute/path/to/directory/with/you/files>:/data
-	--env AMRFILE=<yourfile>
-	--env COMPAREWITH="<second-annotator-file> <third-annotator-file>"
-	jheinecke/metamorphosed:latest
+    -p 4567:4567 \
+    --volume <absolute/path/to/directory/with/you/files>:/data \
+    --env AMRFILE=<yourfile> \
+    --env COMPAREWITH="<second-annotator-file> <third-annotator-file>" \
+    --env NON_FILE_OPTIONS=... \
+    jheinecke/metamorphosed:latest
 ```
 
 the option `--env COMPAREWITH=...` must only be used if you want to compare files

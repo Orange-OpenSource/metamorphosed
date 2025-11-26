@@ -39,6 +39,8 @@ uv run ./metamorphosed_server.py \
     --port 4567
 ```
 
+the options `--relations metamorphosed/data/umr-relations.txt`  `--relationsdoc metamorphosed/data/umr-relations-doc.json` are default options, so strictly speaking they are not necessary.
+
 Open your browser on `http://localhost:4567:
 
 ![Main window for UMR editing](doc/umr-main.png)
