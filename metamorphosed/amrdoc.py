@@ -88,7 +88,7 @@ class AMRsentence:
         for c in self.comments:
             print("#", c, file=ofp)
         if not onlyheader:
-            print(self.amr, file=ofp)
+            print(self.amr.strip(), file=ofp)
             print(file=ofp)
 
     def tsv(self, #meta=False, ofp=sys.stdout

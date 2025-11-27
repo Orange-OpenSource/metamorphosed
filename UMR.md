@@ -85,6 +85,7 @@ Validate by clicking on `set`, cancel by clicking on the circled `X` (top right)
 * TODO:
   * check whether variables in document level annotations are in document (Subject) or in current sentence (Object)
   * make `Words:`, `Index:` etc. editable
+  * activate undo/redo for changes in Alignments nad Document Level Annotation
 
 
 

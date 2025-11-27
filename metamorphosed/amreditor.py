@@ -383,10 +383,11 @@ class AMRProcessor:
         else:
             localorangecolors = orangecolors
 
+        deffont = "Lato"
         graph_attr = {#'rankdir':'LR'
         }
         kwargsinit = {
-            "fontname": "Lato",
+            "fontname": deffont,
             "style": "filled",
             "fillcolor": "white"
             }
@@ -405,11 +406,11 @@ class AMRProcessor:
             if p == ":instance":
                 ibg = "white"
                 if highlightinstances and s not in highlightinstances:
-                    kwargs = {"fontname": "Lato",  #"Lato Black",
+                    kwargs = {"fontname": deffont,
                               "style": "filled",
                               "fillcolor": "#ff7900"} #localorangecolors.get(":snt1")}
                 elif highlightconcepts and o in highlightconcepts:
-                    kwargs = {"fontname": "Lato",  #"Lato Black",
+                    kwargs = {"fontname": deffont,
                               "style": "filled",
                               "fillcolor": localorangecolors.get(o, "white")
                               }
@@ -445,7 +446,7 @@ class AMRProcessor:
                 pp = p
 
                 if highlightrelations and (s, p, o) not in highlightrelations:
-                    kwargs["fontname"] = "Lato" # "Lato Black" }
+                    kwargs["fontname"] = deffont
                     kwargs["fontcolor"] = "black"
                     pp = '< <table border="0"> <tr><td bgcolor="%s">%s</td></tr></table> >' % ("#ff7900",
                                                                                                p)
@@ -478,7 +479,7 @@ class AMRProcessor:
 
         if tokenalignments:
             # add words of sentence and alignments
-            kwargs["fillcolor"] = "white"
+            kwargs["fillcolor"] = "#FFF0F5"
             tokens, alignments = tokenalignments
             # add words and alignments
             lasttid = None
@@ -492,6 +493,7 @@ class AMRProcessor:
                        id="words",
                        label="|".join(struct),
                        shape="record",
+                       #fontname=deffont + ":italic",
                        **kwargs
                        )
 
@@ -523,17 +525,11 @@ class AMRProcessor:
             try:
                 pm = penman.encode(penman.Graph(self.triples, top=self.top))
                 self.lastpm = pm
-                #a = amr2dot.AMR2DOT(format="svg", font="Lato", instances=False, lr=False, bw=False)
-                #a.build(pm)
-                #self.lastsvg = a.graph.pipe()
                 self.readpenman(pm)
                 self.lastsvg = self.dot(highlightinstances, highlightrelations, highlightconcepts=highlightconcepts, format=format, tokenalignments=tokenalignments)
                 self.lastsvg_canonised = self.dot(highlightinstances, highlightrelations, highlightconcepts=highlightconcepts, format=format, inverse_of=True, tokenalignments=tokenalignments)
                 self.isDisconnected = False
             except penman.exceptions.LayoutError:
-                #a = amr2dot.AMR2DOT(format="svg", font="Lato", instances=False, lr=False, bw=False)
-                #a.buildtriples(self.triples)
-                #self.lastsvg = a.graph.pipe()
                 self.lastsvg = self.dot(format=format)
                 self.lastsvg_canonised = self.dot(format=format, inverse_of=True)
                 noninst = []
