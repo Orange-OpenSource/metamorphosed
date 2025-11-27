@@ -525,7 +525,10 @@ class AMR_Edit_Server:
                 # creates an http status code 400
                 raise ServerException("No edit valid operation given")
 
-            pm, svg, svg_canon = ap.show()
+            tokenalignments = None
+            if self.umr:
+                tokenalignments = (cursentence.words, cursentence.getAlignments())
+            pm, svg, svg_canon = ap.show(tokenalignments=tokenalignments)
 
             framedoc = None
             framedocs = self.pbframes.getdoc(ap.triples)
@@ -781,11 +784,14 @@ class AMR_Edit_Server:
             for typ, col in amreditor.orangecolors.items():
                 typ = typ[1:] #.replace("-", "")
                 lines.append(".%s { background-color: %s; " % (typ, col))
-                blackness = (int(col[1:3], 16) + int(col[3:5], 16) + int(col[5:], 16)) / 3
-                if blackness < 0x80:
-                    lines.append("color: white")
+                light = (int(col[1:3], 16) + int(col[3:5], 16) + int(col[5:], 16)) / 3
+                if light < 0x80:
+                    lines.append("color: white;")
                 lines.append("}")
-                lines.append(".%stext { color: %s; }" % (typ, col))
+                lines.append(".%stext { color: %s; " % (typ, col))
+                if light > 0xb0:
+                    lines.append("background-color: #111111")
+                lines.append("}")
             return Response("\n".join(lines), 200, mimetype="text/css")
 
         @app.route('/graphs/<filename>', methods=["GET"])
@@ -897,8 +903,7 @@ class AMR_Edit_Server:
         #    response.status_code = 404
         #    return response
         def invalidumr(ap, warnings, cursentence, sentnum):
-            #print("uuuuuuuuuu", pm, msg)
-            pm, svg, svg_canon = ap.show()
+            pm, svg, svg_canon = ap.show(tokenalignments=(cursentence.words, cursentence.getAlignments()))
             dico = {"penman": pm,
                     "svg": svg.decode("utf8"),
                     "svg_canon": svg_canon.decode("utf8"),
@@ -989,7 +994,10 @@ class AMR_Edit_Server:
                 if not ap.isparsed:
                     ap.readpenman(cursentence.amr)
 
-            pm, svg, svg_canon = ap.show()
+            tokenalignments = None
+            if self.umr:
+                tokenalignments = (cursentence.words, cursentence.getAlignments())
+            pm, svg, svg_canon = ap.show(tokenalignments=tokenalignments)
             if not ap.valid:
                 return invalidamr(ap, pm, cursentence, sentnum)
 

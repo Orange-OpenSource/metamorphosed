@@ -372,7 +372,7 @@ class AMRProcessor:
                 insts.append(k)
         return insts
 
-    def dot(self, highlightinstances=None, highlightrelations=None, highlightconcepts=None, format="svg", inverse_of=False):
+    def dot(self, highlightinstances=None, highlightrelations=None, highlightconcepts=None, format="svg", inverse_of=False, tokenalignments=None):
         # highlight instances and relations NOT in highlightinstances and highlightrelations
         #global orangecolors
         if highlightconcepts:
@@ -475,10 +475,47 @@ class AMRProcessor:
                            color=col,
                            # fontcolor=orangecolors.get(p.replace("-of", ""), "black"),
                            **kwargs)
-        # print("DOT source", graph)
+
+        if tokenalignments:
+            # add words of sentence and alignments
+            kwargs["fillcolor"] = "white"
+            tokens, alignments = tokenalignments
+            # add words and alignments
+            lasttid = None
+            struct = []
+            # add alignments in dot graph
+            #for ix, token in enumerate(reversed(tokens)):
+            for ix, token in enumerate(tokens, 1):
+                tid = "tok%d" % ix
+                struct.append("<%s>%s" % (tid, token))
+            graph.node("tokens",
+                       id="words",
+                       label="|".join(struct),
+                       shape="record",
+                       **kwargs
+                       )
+
+            for token in alignments:
+                if token == 0:
+                    continue
+                if token > len(tokens):
+                    # error in Words
+                    continue
+                tid = "tokens:tok%d" % token
+                for varname in alignments[token]:
+                    kwargs["style"] = "dashed"
+                    kwargs["fontcolor"] = "black"
+                    graph.edge(tid, varname, label="%s - %s" % (tokens[token - 1], varname),
+                               id="tokenedge#%s#%s" % (tid,varname),
+                               color="#888888",
+                               #style="dashed",
+                               fontsize="12.0",
+                               #fontcolor=orangecolors.get(p.replace("-of", ""), "black"),
+                               **kwargs)
+        #print("DOT source",graph)
         return graph.pipe()
 
-    def show(self, highlightinstances=None, highlightrelations=None, highlightconcepts=None, format="svg"):
+    def show(self, highlightinstances=None, highlightrelations=None, highlightconcepts=None, format="svg", tokenalignments=None):
         if self.inserver:
             if not self.valid:
                 return self.lastpm, None, None
@@ -490,8 +527,8 @@ class AMRProcessor:
                 #a.build(pm)
                 #self.lastsvg = a.graph.pipe()
                 self.readpenman(pm)
-                self.lastsvg = self.dot(highlightinstances, highlightrelations, highlightconcepts=highlightconcepts, format=format)
-                self.lastsvg_canonised = self.dot(highlightinstances, highlightrelations, highlightconcepts=highlightconcepts, format=format, inverse_of=True)
+                self.lastsvg = self.dot(highlightinstances, highlightrelations, highlightconcepts=highlightconcepts, format=format, tokenalignments=tokenalignments)
+                self.lastsvg_canonised = self.dot(highlightinstances, highlightrelations, highlightconcepts=highlightconcepts, format=format, inverse_of=True, tokenalignments=tokenalignments)
                 self.isDisconnected = False
             except penman.exceptions.LayoutError:
                 #a = amr2dot.AMR2DOT(format="svg", font="Lato", instances=False, lr=False, bw=False)

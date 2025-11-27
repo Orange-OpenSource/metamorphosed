@@ -4,11 +4,11 @@
 # mcolors.CSS4_COLORS
 
 colorlist = {
-    "aliceblue": "#F0F8FF",
+    #"aliceblue": "#F0F8FF",
     "antiquewhite": "#FAEBD7",
     "aqua": "#00FFFF",
     "aquamarine": "#7FFFD4",
-    "azure": "#F0FFFF",
+    #"azure": "#F0FFFF",
     "beige": "#F5F5DC",
     "bisque": "#FFE4C4",
     "black": "#000000",
@@ -68,7 +68,7 @@ colorlist = {
     # "ivory": "#FFFFF0",
     "khaki": "#F0E68C",
     "lavender": "#E6E6FA",
-    "lavenderblush": "#FFF0F5",
+    #"lavenderblush": "#FFF0F5",
     "lawngreen": "#7CFC00",
     "lemonchiffon": "#FFFACD",
     "lightblue": "#ADD8E6",
@@ -148,8 +148,8 @@ colorlist = {
     "turquoise": "#40E0D0",
     "violet": "#EE82EE",
     "wheat": "#F5DEB3",
-    # "white": "#FFFFFF",
-    # "whitesmoke": "#F5F5F5",
+    "white": "#FFFFFF",
+    "whitesmoke": "#F5F5F5",
     "yellow": "#FFFF00",
     "yellowgreen": "#9ACD32",
 }

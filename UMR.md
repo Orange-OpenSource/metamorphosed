@@ -84,6 +84,7 @@ Validate by clicking on `set`, cancel by clicking on the circled `X` (top right)
 
 * TODO:
   * check whether variables in document level annotations are in document (Subject) or in current sentence (Object)
-  * add alignments in graph visualisation
+  * make `Words:`, `Index:` etc. editable
+
 
 
