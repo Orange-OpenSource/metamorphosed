@@ -565,22 +565,19 @@ function info(event) {
 var umralignment_pos = -1;
 
 function click_alignment_var(event, alignments) {
-	console.log("CLICK_AL", event.target.id, event);
+	console.log("CLICK_AL", event.target.id, alignments);
 	var elems = event.target.id.split("_");
 	var umrvar = elems[1];
 	$("#umrvar").text(umrvar);
 	$("#indexes").empty()
-	
-	var positions = event.target.dataset.lleoedd.split(",")
 
 	var contents = "";
-	for (var i = 0; i < positions.length; i += 2) {
+	for (var i = 0; i < alignments[umrvar].length; i++) {
 		if (contents !== "") {
 			contents += ", ";
 		}
-		contents += positions[i] + "-" + positions[i+1];
+		contents += alignments[umrvar][i][0] + "-" + alignments[umrvar][i][1];
 	}
-
 
 	/*
 	var ct = 1;
@@ -822,8 +819,11 @@ function formatAMR(data) {
 						value += " " + key;
 					}
 				}
-				// is data-<anyname> the optimal way to give a value to a clickable function ?
-				$("#tr_alignments_" + currentsentnum).append('<td class="alignment_var code" onmousedown="click_alignment_var(event);" data-lleoedd="' + data.alignments[key] + '" id="alv_'+key+'_' + (i+1) +'">' + value);					
+
+			    $("#tr_alignments_" + currentsentnum).append('<td class="alignment_var code" id="alv_'+key+'_' + (i+1) +'">' + value);					
+				$('#alv_'+key+'_' + (i+1) ).on('mousedown', function(event) {
+					click_alignment_var(event, data.alignments);
+			    });
 			}
 		}
 
