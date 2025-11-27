@@ -99,6 +99,7 @@ class Relations:
                     orangecolors[line] = self.getnewcolor()
 
     def getnewcolor(self):
+        random.seed(22) # need this to have stable colors (inf not, unittest will fail, since colors change every time ...)
         return random.choice(list(colorlist.colorlist.values()))
 
     def validate(self, triples):
