@@ -395,6 +395,7 @@ class AMRProcessor:
         graph = Digraph('amr_graph', format=format, graph_attr=graph_attr)
         firstseen = False
         ct_literal = 0
+        kwargs = kwargsinit.copy()
         for s, p, o in self.triples:
             if inverse_of and p.endswith("-of") and not p.startswith(":consist"):
                 tmp = o

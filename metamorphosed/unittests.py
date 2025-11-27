@@ -561,22 +561,22 @@ def testumr_modify_alignment(client_umr):
 
 def testumr_modify_docgraph(client_umr):
     response = client_umr.get("/read", query_string={"num": 4})
-    response = client_umr.get("/edit", query_string={"num": 4, "adddocgraph": "temporal", "dg_subj": "s3d", "dg_obj": "s4d", "dg_pred": ":after"})
+    response = client_umr.get("/edit", query_string={"num": 4, "adddocgraph": "temporal", "dg_subj": "s3d", "dg_obj": "s4t", "dg_pred": ":after"})
     res = json.loads(response.data)
     # print("res", json.dumps(res, indent=2, ensure_ascii=False), file=sys.stderr)
     assert res["docgraph"]["temporal"] == [
         ["s3b2", ":overlap", "s4l"],
         ["s4l", ":after", "s4s3"],
-        ["s3d", ":after", "s4d"],
+        ["s3d", ":after", "s4t"],
     ]
     # invalid relation
-    response = client_umr.get("/edit", query_string={"num": 4, "prevmod": 1, "adddocgraph": "modal", "dg_subj": "s3d", "dg_obj": "s4d", "dg_pred": ":after"})
+    response = client_umr.get("/edit", query_string={"num": 4, "prevmod": 1, "adddocgraph": "modal", "dg_subj": "s3d", "dg_obj": "s4t", "dg_pred": ":after"})
     res = json.loads(response.data)
     # print("res", json.dumps(res, indent=2, ensure_ascii=False), file=sys.stderr)
     assert res["warning"] == ["Bad modal predicate: :after must be one of [':full-affirmative', ':full-negative', ':modal', ':neutral-affirmative', ':neutral-negative', ':partial-affirmative', ':partial-negative', ':unspecified']"]
 
     # modify
-    response = client_umr.get("/edit", query_string={"num": 4, "prevmod": 2, "moddocgraph": "modal", "dg_subj": "s4p", "dg_obj": "s4l10", "dg_pred": ":full-affirmative", "dgpos": 4})
+    response = client_umr.get("/edit", query_string={"num": 4, "prevmod": 2, "moddocgraph": "modal", "dg_subj": "s4p", "dg_obj": "s4n3", "dg_pred": ":full-affirmative", "dgpos": 4})
     res = json.loads(response.data)
     # print("res", json.dumps(res, indent=2, ensure_ascii=False), file=sys.stderr)
     assert res["docgraph"]["modal"] == [
@@ -584,7 +584,7 @@ def testumr_modify_docgraph(client_umr):
         ["author", ":full-affirmative", "s4s"],
         ["author", ":full-affirmative", "s4p"],
         ["s4p", ":full-affirmative", "s4l2"],
-        ["s4p", ":full-affirmative", "s4l10"],
+        ["s4p", ":full-affirmative", "s4n3"],
         ["s4p", ":full-affirmative", "s4h"],
         ["s4p", ":full-affirmative", "s4s3"],
     ]
@@ -599,15 +599,16 @@ def testumr_modify_docgraph(client_umr):
     response = client_umr.get("/edit", query_string={"num": 4, "prevmod": 3, "adddocgraph": "coref", "dg_subj": "s3d", "dg_obj": "s4dDD", "dg_pred": ":same-entity"})
     res = json.loads(response.data)
     #print("res", json.dumps(res, indent=2, ensure_ascii=False), file=sys.stderr)
-    assert res["warning"] == ["Bad coref object: s4dDD a variable matching <tt>^s\\d+[a-z]\\d*$</tt>"]
+    #assert res["warning"] == ["Bad coref object: s4dDD a variable matching <tt>^s\\d+[a-z]\\d*$</tt>"]
+    assert res["warning"] == ["Bad coref object: s4dDD a variable matching <tt>^s\\d+[a-z]\\d*$</tt>", 'Bad coref object: s4dDD is not a variable of Sentence level graph']
 
-    response = client_umr.get("/edit", query_string={"num": 4, "prevmod": 3, "adddocgraph": "temporal", "dg_subj": "s3d", "dg_obj": "s4d", "dg_pred": ":subset-of"})
+    response = client_umr.get("/edit", query_string={"num": 4, "prevmod": 3, "adddocgraph": "temporal", "dg_subj": "s3d", "dg_obj": "s4a", "dg_pred": ":subset-of"})
     res = json.loads(response.data)
     # print("res", json.dumps(res, indent=2, ensure_ascii=False), file=sys.stderr)
     assert res["warning"] == ["Bad temporal predicate: :subset-of must be one of [':after', ':before', ':contained', ':contains', ':depends-on', ':overlap']"]
 
     # first modal incorrect
-    response = client_umr.get("/edit", query_string={"num": 4, "prevmod": 3, "moddocgraph": "modal", "dg_subj": "s4p11", "dg_obj": "s4l10", "dg_pred": ":full-affirmative", "dgpos": 0})
+    response = client_umr.get("/edit", query_string={"num": 4, "prevmod": 3, "moddocgraph": "modal", "dg_subj": "s4p11", "dg_obj": "s4t", "dg_pred": ":full-affirmative", "dgpos": 0})
     res = json.loads(response.data)
     print("res", json.dumps(res, indent=2, ensure_ascii=False), file=sys.stderr)
     assert res["warning"] == ["First :modal triple must be <tt>root :modal author</tt> and not <tt>root :modal author</tt>"]
@@ -665,6 +666,8 @@ def testumr_edit2(client_git_umr2):
     response = client.get("/edit", query_string={"num": 1, "prevmod": 7, "umrvar": "s1c", "newalignment": "2-2"})
 
     response = client.get("/edit", query_string={"num": 1, "prevmod": 8, "adddocgraph": "modal", "dg_subj": "root", "dg_obj": "author", "dg_pred": ":modal"})
+    #res = json.loads(response.data)
+    #print("res", res["warning"])
     response = client.get("/edit", query_string={"num": 1, "prevmod": 9, "adddocgraph": "temporal", "dg_subj": "document-creation-time", "dg_obj": "s1s", "dg_pred": ":overlap"})
     #response = client.get("/edit", query_string={"num": 2, "prevmod": 1, "start": "s2d", "label": "ARG0", "end": "s2r"})
     response = client.get("/save", query_string={"num": 1})

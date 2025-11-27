@@ -148,8 +148,8 @@ class UMRDocGraph:
         # for p in pl: print("P\t%s\t%s" % p)
         # for o in ol: print("O\t%s\t%s" % o)
 
-    def add(self, what, s, p, o):
-        msg = self.checktriple(what, s, p, o)
+    def add(self, what, s, p, o, concepts):
+        msg = self.checktriple(what, s, p, o, concepts)
         if len(msg):
             return msg
 
@@ -166,8 +166,8 @@ class UMRDocGraph:
         if len(self.docgraph[what]) > pos:
             del self.docgraph[what][pos]
 
-    def modify(self, what, pos, s, p, o):
-        msg = self.checktriple(what, s, p, o)
+    def modify(self, what, pos, s, p, o, concepts):
+        msg = self.checktriple(what, s, p, o, concepts)
         if len(msg):
             return msg
         if len(self.docgraph[what]) > pos:
@@ -179,7 +179,7 @@ class UMRDocGraph:
             self.docgraph[what].insert(pos, (s, p, o))
         return None
 
-    def checktriple(self, what, s, p, o):
+    def checktriple(self, what, s, p, o, concepts=None):
         # check whether triples are conform do UMR specifications
         # TODO check whether o is a valid variable of corresponding sentence level graph
         msg = []
@@ -195,9 +195,12 @@ class UMRDocGraph:
                 msg.append("Bad %s object: %s must be a variable matching <tt>%s</tt> or one of %s" % (what, o, VARNAME.pattern, UMRDocGraph.valid_dg_rels[what].get("objects")))
         if p not in UMRDocGraph.valid_dg_rels[what].get("predicates", []):
             msg.append("Bad %s predicate: %s must be one of %s" % (what, p, UMRDocGraph.valid_dg_rels[what].get("predicates")))
+        if concepts:
+            if o not in concepts and o not in UMRDocGraph.valid_dg_rels[what].get("objects", []):
+                msg.append("Bad %s object: %s is not a variable of Sentence level graph" % (what, o))
         return msg
 
-    def validate(self):
+    def validate(self, variables):
         msg = []
         if self.docgraph["modal"]:
             if self.docgraph["modal"][0] != ("root", ":modal", "author"):
@@ -206,7 +209,7 @@ class UMRDocGraph:
         if UMRDocGraph.valid_dg_rels is not None:
             for what in self.docgraph:
                 for s, p, o in self.docgraph[what]:
-                    msg.extend(self.checktriple(what, s, p, o))
+                    msg.extend(self.checktriple(what, s, p, o, variables))
         return msg
 
     def write(self, ofp=sys.stdout):
@@ -342,7 +345,7 @@ class UMRsentence(AMRsentence):
                         msg.append("%s: alignment <%s> end position not in Index: %s" % (self.id, startend[1], self.index))
         if not self.wiok:
             msg.append("Index: &lt;%s&gt; and Words: &lt;%s&gt; do not correspond" % (self.index, self.words))
-        msg.extend(self.docgraph.validate())
+        msg.extend(self.docgraph.validate(variables))
         return msg
 
 

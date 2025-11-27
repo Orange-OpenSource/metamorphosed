@@ -469,15 +469,18 @@ class AMR_Edit_Server:
                     ap.modified = True # set rather by ap.-functions ??
             elif adddocgraph:
                 if dg_subj and dg_obj and dg_pred:
-                    msg = cursentence.docgraph.add(adddocgraph, dg_subj, dg_pred, dg_obj)
+                    msg = cursentence.docgraph.add(adddocgraph, dg_subj, dg_pred, dg_obj, ap.vars)
                     if msg is not None:
                         return invalidumr(ap, msg, cursentence, sentnum)
                 else:
                     return invalidumr(ap, ["invalid document graph triple for %s «%s, %s, %s»" % (adddocgraph, dg_subj, dg_pred, dg_obj)], cursentence, sentnum)
             elif moddocgraph and dgpos is not None:
                 if dg_subj and dg_obj and dg_pred:
-                    msg = cursentence.docgraph.modify(moddocgraph, dgpos, dg_subj, dg_pred, dg_obj)
+                    print("AP", ap.isparsed, ap.vars)
+
+                    msg = cursentence.docgraph.modify(moddocgraph, dgpos, dg_subj, dg_pred, dg_obj, ap.vars)
                     if msg is not None:
+                        print("ZZZAZAZ3")
                         return invalidumr(ap, msg, cursentence, sentnum)
                 else:
                     cursentence.docgraph.delete(moddocgraph, dgpos)
@@ -555,6 +558,7 @@ class AMR_Edit_Server:
                 lastchanged = cursentence.savedateorig
             ap.previous_modification += 1
             print("AUGMENT", cursentence.id, ap.previous_modification)
+            # TODO: we create this dico in 4 different places. Not optimal
             dico = {"warning": warnings,
                     "framedoc": framedoc,
                     "reldoc": reldoc,
@@ -921,6 +925,7 @@ class AMR_Edit_Server:
                     "umr": self.umr}
             if self.umr:
                 dico["alignments"] = cursentence.alignments
+                dico["alignments2"] = cursentence.getAlignments()
                 dico["docgraph"] = cursentence.docgraph.docgraph
 
                 if cursentence.index:
