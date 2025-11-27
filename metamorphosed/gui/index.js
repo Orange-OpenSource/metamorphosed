@@ -295,10 +295,10 @@ function ToggleSVGExport() {
 }
 
 function highlight_pm(amr) {
-    var output = amr.replace(/("[^\"]+")/g, '<span class="literal">$1</span>'); // " // hightlight strings
-    output = output.replace(/(:quant|:value|:op[0-9]) ([a-z0-9\.]+)/g, '$1 <span class="literal">$2</span>'); // highlight non-string literals
-    output = output.replace(/([a-z]+[0-9]*) \//g, ' <span class="conceptslash">$1</span> <b>/</b>'); // highlight variables
-    output = output.replace(/:([ARGa-z]+[0-9]?)/g, ' <span class="$1text">:$1</span>'); //  highlight relations
+    var output = amr.replace(/("[^\"]+")/g, '<span class="literal">$1</span> '); // " // hightlight strings
+    output = output.replace(/(:quant|:value|:op[0-9]) ([a-z0-9\.]+)/g, '$1 <span class="literal">$2</span> '); // highlight non-string literals
+    output = output.replace(/([a-z]+[a-z0-9]*) \//g, ' <span class="conceptslash">$1</span> <b>/</b>'); // highlight variables
+    output = output.replace(/:([ARGa-z0-9-]+[0-9]?)/g, ' <span class="$1text">:$1</span>'); //  highlight relations
 
     return output;
 }
@@ -564,14 +564,26 @@ function info(event) {
 
 var umralignment_pos = -1;
 
-function click_alignment_var(event) {
-	console.log("CLICK_AL", event.target.id);
+function click_alignment_var(event, alignments) {
+	console.log("CLICK_AL", event.target.id, event);
 	var elems = event.target.id.split("_");
 	var umrvar = elems[1];
 	$("#umrvar").text(umrvar);
 	$("#indexes").empty()
-	var ct = 1;
 	
+	var positions = event.target.dataset.lleoedd.split(",")
+
+	var contents = "";
+	for (var i = 0; i < positions.length; i += 2) {
+		if (contents !== "") {
+			contents += ", ";
+		}
+		contents += positions[i] + "-" + positions[i+1];
+	}
+
+
+	/*
+	var ct = 1;
 	var contents = $("#alv_" + umrvar + "_" + ct).text();
 
 	ct++;
@@ -584,7 +596,7 @@ function click_alignment_var(event) {
 
 		contents += nextcontents;
 		ct ++;
-	}
+	}*/
 	$("#indexes").val(contents)
 
 	$("#umr_alignment_modal").css("top", event.pageY + "px");
@@ -810,7 +822,8 @@ function formatAMR(data) {
 						value += " " + key;
 					}
 				}
-				$("#tr_alignments_" + currentsentnum).append('<td class="alignment_var code" onmousedown="click_alignment_var(event);" id="alv_'+key+'_' + (i+1) +'">' + value);					
+				// is data-<anyname> the optimal way to give a value to a clickable function ?
+				$("#tr_alignments_" + currentsentnum).append('<td class="alignment_var code" onmousedown="click_alignment_var(event);" data-lleoedd="' + data.alignments[key] + '" id="alv_'+key+'_' + (i+1) +'">' + value);					
 			}
 		}
 
@@ -904,7 +917,8 @@ function formatAMR(data) {
 	downloadSVG('innersvggraph_' + currentsentnum, 'semgraph_' + currentsentnum, currentsentnum);
 
 	/* UMR alignments */
-	/* // under Index:
+	 // under Index:
+	 /*
 	if (data.alignments !== undefined) {
 		// toggle button to hide/show the alignments
 		$("#g3resultat").append('<button class="toggleresult" id="togglealignments" >&#8210;</button>');

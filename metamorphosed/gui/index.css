@@ -528,7 +528,7 @@ td.framealiastable {
 }
 
 
-
+/*
 .ARG0, .actor {
   background-color: #ff7900;
 }
@@ -582,11 +582,6 @@ td.framealiastable {
 .manner {
   background-color: #8f8f8f;
 }
-
-/*.charteYellowBright {  background-color: #fff6b6; }
-.charteVioletBright {  background-color: #d9c2f0; }
-.chartePinkBright {  background-color: #ffe8f7; }
-*/
 
 .beneficiary {
   background-color: #d9c2f0;
@@ -715,6 +710,7 @@ td.framealiastable {
 .quanttext {  color: #d9c2f0;}
 .unittext {  color: #fff6b6;}
 .accompaniertext {  color: #085ebd;}
+*/
 
 .literal {
  font-style: italic;

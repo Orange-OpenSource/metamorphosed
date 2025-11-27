@@ -35,6 +35,52 @@
 
 # reads list of valid relations (or list of concepts) in AMR
 
+# colors to be used in graphs and PENMAN for some (frequent) relations. For the other relations we assign
+# a color from colorlist.py
+
+import random
+import metamorphosed.colorlist as colorlist
+
+orangecolors = {
+    ":ARG0": "#ff7900",
+    ":actor": "#ff7900",
+    ":ARG1": "#9164cd",
+    ":affectee": "#9164cd",
+    ":ARG3": "#ffb4e6",
+    ":ARG4": "#50be87",
+    ":ARG2": "#4bb4e6",
+    ":ARG5": "#ffdc00",
+    # "charteYellowBright": "#fff6b6",
+    ":beneficiary": "#d9c2f0",
+    # "chartePinkBright": "#ffe8f7",
+    ":snt1": "#b8ebd6",
+    ":snt2": "#b8ebd6",
+    ":snt3": "#b8ebd6",
+    ":snt4": "#b8ebd6",
+    # "charteBlueBright": "#b5e8f7",
+    ":ord": "#d6d6d6",
+    ":mod": "#ffb400",
+    ":name": "#492191",
+    ":location": "#ff8ad4",
+    ":place": "#ff8ad4",
+    ":destination": "#ff8ad4",
+    ":manner": "#0a6e31",
+    ":aspect": "#0a6e31",
+    ":time": "#085ebd",
+    ":day": "#085ebd",
+    ":month": "#085ebd",
+    ":dayperiod": "#085ebd",
+    ":op1": "#595959",
+    ":op2": "#595959",
+    ":op3": "#595959",
+    ":op4": "#595959",
+    ":value": "#595959",
+    ":todo": "#ff1111",
+    ":rel": "#ff1111",
+    "EN": "#ffe5cc",
+    }
+
+
 class Relations:
     def __init__(self, relfn, isconceptlist=False):
         self.isconceptlist = isconceptlist
@@ -49,6 +95,11 @@ class Relations:
                 if not line or line[0] == "#":
                     continue
                 self.relations.add(line)
+                if not line.endswith("QQ-of") and line not in orangecolors:
+                    orangecolors[line] = self.getnewcolor()
+
+    def getnewcolor(self):
+        return random.choice(list(colorlist.colorlist.values()))
 
     def validate(self, triples):
         # return ARG relations which ar note defined for the given concept

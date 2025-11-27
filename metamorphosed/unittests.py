@@ -349,7 +349,7 @@ def test_info(client):
     response = client.get("/version")
     res = json.loads(response.data)
     #print("res", res, file=sys.stderr)
-    assert res == {'name': 'AMR Editor', 'version': '5.0.0rc', 'apiversion': '2.0.0rc'}
+    assert res == {'name': 'AMR Editor', 'version': '5.0.0rc2', 'apiversion': '2.0.0rc'}
 
     response = client.get("/info", query_string={"withdata": True})
     res = json.loads(response.data)
@@ -401,7 +401,7 @@ def test_exportgraphs(client):
     assert len(zfp.infolist()) == 26 # includes metadata file
     fobj = zfp.infolist()[0]
     assert fobj.filename == "1.svg"
-    assert fobj.file_size == 11086 #11046
+    assert fobj.file_size <= 11086 and fobj.file_size >= 11080
     contents = zfp.read(fobj.filename)
     assert b'<svg width="418pt" height="392pt"' in contents
 

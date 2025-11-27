@@ -47,8 +47,9 @@ import metamorphosed.graph as graph
 from metamorphosed.reification import getInstance
 import metamorphosed.amr_comparison as amr_comparison
 
+from metamorphosed.AMR_relations import orangecolors as orangecolors
 
-VERSION = "5.0.0rc"
+VERSION = "5.0.0rc2"
 
 # terminology
 # instance  a / ...
@@ -57,44 +58,44 @@ VERSION = "5.0.0rc"
 # literal -, "Mary", 12, 12.3
 
 
-orangecolors = {
-    ":ARG0": "#ff7900",
-    ":actor": "#ff7900",
-    ":ARG1": "#9164cd",
-    ":affectee": "#9164cd",
-    ":ARG3": "#ffb4e6",
-    ":ARG4": "#50be87",
-    ":ARG2": "#4bb4e6",
-    ":ARG5": "#ffdc00",
-    "charteYellowBright": "#fff6b6",
-    ":beneficiary": "#d9c2f0",
-    "chartePinkBright": "#ffe8f7",
-    ":snt1": "#b8ebd6",
-    ":snt2": "#b8ebd6",
-    ":snt3": "#b8ebd6",
-    ":snt4": "#b8ebd6",
-    "charteBlueBright": "#b5e8f7",
-    ":ord": "#d6d6d6",
-    ":mod": "#ffb400",
-    ":name": "#492191",
-    ":location": "#ff8ad4",
-    ":place": "#ff8ad4",
-    ":destination": "#ff8ad4",
-    ":manner": "#0a6e31",
-    ":aspect": "#0a6e31",
-    ":time": "#085ebd",
-    ":day": "#085ebd",
-    ":month": "#085ebd",
-    ":dayperiod": "#085ebd",
-    ":op1": "#595959",
-    ":op2": "#595959",
-    ":op3": "#595959",
-    ":op4": "#595959",
-    ":value": "#595959",
-    ":todo": "#ff1111",
-    ":rel": "#ff1111",
-    "EN": "#ffe5cc",
-    }
+# orangecolors = {
+#     ":ARG0": "#ff7900",
+#     ":actor": "#ff7900",
+#     ":ARG1": "#9164cd",
+#     ":affectee": "#9164cd",
+#     ":ARG3": "#ffb4e6",
+#     ":ARG4": "#50be87",
+#     ":ARG2": "#4bb4e6",
+#     ":ARG5": "#ffdc00",
+#     "charteYellowBright": "#fff6b6",
+#     ":beneficiary": "#d9c2f0",
+#     "chartePinkBright": "#ffe8f7",
+#     ":snt1": "#b8ebd6",
+#     ":snt2": "#b8ebd6",
+#     ":snt3": "#b8ebd6",
+#     ":snt4": "#b8ebd6",
+#     "charteBlueBright": "#b5e8f7",
+#     ":ord": "#d6d6d6",
+#     ":mod": "#ffb400",
+#     ":name": "#492191",
+#     ":location": "#ff8ad4",
+#     ":place": "#ff8ad4",
+#     ":destination": "#ff8ad4",
+#     ":manner": "#0a6e31",
+#     ":aspect": "#0a6e31",
+#     ":time": "#085ebd",
+#     ":day": "#085ebd",
+#     ":month": "#085ebd",
+#     ":dayperiod": "#085ebd",
+#     ":op1": "#595959",
+#     ":op2": "#595959",
+#     ":op3": "#595959",
+#     ":op4": "#595959",
+#     ":value": "#595959",
+#     ":todo": "#ff1111",
+#     ":rel": "#ff1111",
+#     "EN": "#ffe5cc",
+#     }
 
 colorlist = [
     "#ffe5cc", #    "charteOrangeBright"
@@ -410,7 +411,8 @@ class AMRProcessor:
                 elif highlightconcepts and o in highlightconcepts:
                     kwargs = {"fontname": "Lato",  #"Lato Black",
                               "style": "filled",
-                              "fillcolor": localorangecolors.get(o, "white")}
+                              "fillcolor": localorangecolors.get(o, "white")
+                              }
                 if not firstseen:
                     # mark the topnode
                     kwargs["fontname"] = "Lato Black"
@@ -438,9 +440,10 @@ class AMRProcessor:
                            **kwargs
                            )
             else:
+                # literal
                 onodeid = o
                 pp = p
-                kwargs["fontcolor"] = localorangecolors.get(p.replace("-of", ""), "black")
+
                 if highlightrelations and (s, p, o) not in highlightrelations:
                     kwargs["fontname"] = "Lato" # "Lato Black" }
                     kwargs["fontcolor"] = "black"
@@ -465,7 +468,7 @@ class AMRProcessor:
 
                 # color of arrow head
                 kwargs["fillcolor"] = localorangecolors.get(p.replace("-of", ""), "black")
-
+                kwargs["fontcolor"] = localorangecolors.get(p.replace("-of", ""), "black")
                 col = localorangecolors.get(p.replace("-of", ""), "black")
                 graph.edge(s, onodeid, label=pp,
                            id="edge#%s#%s#%s" % (s, o, p),

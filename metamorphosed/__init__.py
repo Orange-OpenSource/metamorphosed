@@ -774,6 +774,20 @@ class AMR_Edit_Server:
 
             return prepare_newpage(sentnum, compare=compare)
 
+        @app.route('/css/<filename>', methods=["GET"])
+        def getfile(filename):
+            # get CSS file which defines colours of relations (same colors as amreditor.py uses to create graph)
+            lines = []
+            for typ, col in amreditor.orangecolors.items():
+                typ = typ[1:] #.replace("-", "")
+                lines.append(".%s { background-color: %s; " % (typ, col))
+                blackness = (int(col[1:3], 16) + int(col[3:5], 16) + int(col[5:], 16)) / 3
+                if blackness < 0x80:
+                    lines.append("color: white")
+                lines.append("}")
+                lines.append(".%stext { color: %s; }" % (typ, col))
+            return Response("\n".join(lines), 200, mimetype="text/css")
+
         @app.route('/graphs/<filename>', methods=["GET"])
         def downloadgraphs(filename: str):
             # filename necessary in GUI, but we always use the same. Check whether it does not contain strange stuff
