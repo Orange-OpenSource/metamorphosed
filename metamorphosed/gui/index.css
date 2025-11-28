@@ -822,6 +822,34 @@ td.framealiastable {
   /* prevent horizontal scrollbar */
   overflow-x: hidden;
 }
+.ui-tabs .ui-tabs-nav .ui-tabs-anchor {
+  padding: 0.3em .8em;
+}
+
+.ui-widget-header {
+  border: 0px;
+  border-bottom: 1px solid #ddd;
+  background: white;
+  color: #333;
+  font-weight: bold;
+}
+
+.ui-widget-header .ui-state-active {
+  background: #be8557;
+  border: 1px solid #c78975;
+}
+
+.ooopui-widget.ui-widget-content {
+  border: 0px;
+}
+
+.ui-widget {
+  font-family: Urbanist, "Be Vietnam Pro", Syne, Poppins, Lato, Ubuntu, DejaVu Sans, Arial, Helvetica, Sans;
+}
+.ui-state-default a, .ui-state-default a:link {
+  color: black;
+}
+
 
 /*
 .tablehoriz {
@@ -834,9 +862,6 @@ td.framealiastable {
   background-color: #ffe5cc;
   font-weight: bold;
 }
-
-/*.cmprow {
-}*/
 
 .cmpval {
   text-align: right;

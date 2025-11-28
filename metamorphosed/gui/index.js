@@ -33,10 +33,14 @@
  Author: Johannes Heinecke
 */
 
-
 //var URL_BASE = 'http://' + window.location.hostname + ':6543/';
 
 //console.log("AAA", window.location.hostname)
+
+// jquery-ui tabs function
+$(function() {
+    $("#tabs").tabs();
+});
 
 var readonly = false;
 var sentenceloaded = false;
@@ -85,10 +89,12 @@ function getServerInfo() {
 			//	});
 			readonly = data.readonly;
 			if (readonly) {
-				$("#editing").hide();
+				$(".editing").hide();
 				$("#save").hide();
 				$("#mainheader").html($("#mainheader").html() + " (read-only)");
+				$("#tabs").tabs({ active: 2});
 			}
+			
 			$("#filename").empty();
 			$("#filename").append(data.filename);
 
@@ -194,6 +200,10 @@ function getServerInfo() {
 			if (data.umr) {
 				// activate stuff only needed when editing UMR file
 				$(".onlyumr").show();
+				if (readonly) {
+					// stupid, to improve!
+					$(".editing").hide();
+				}
 
 				// set docgraph S,P and O values to to <select> tags
 				$.each(data.docgraphitems.modal.subjects,
@@ -240,111 +250,9 @@ function getServerInfo() {
 	});
 }
 
-function downloadSVG(svgelem, ident, sentnum) {
-	// download the generated svg to use elsewhere (e.G. transform to pdf with inkscape)
-	var svg = document.getElementById(svgelem);
-	/* TODO add here in to svg/defs:
-	 <style type="text/css"><![CDATA[
-	 ... content onf current css ...
-	 ]]></style>
-	 */
-	var data = new Blob([svg.innerHTML]);
-	var a2 = document.getElementById(ident);
-	a2.href = URL.createObjectURL(data);
-	a2.download = "graph_" + sentnum + ".svg";
-}
 
 
 
-var visible_divselectors = {};
-
-
-function ToggleDiv(selector, togglebutton) {
-	if ($(selector).is(":visible")) {
-		$(selector).hide();
-		$(togglebutton).empty();
-		$(togglebutton).append("+");
-		visible_divselectors[selector] = false;
-	} else {
-		$(selector).show();
-		$(togglebutton).empty();
-		$(togglebutton).append("&#8210;");
-		//"&ndash;");
-		visible_divselectors[selector] = true;
-	}
-}
-
-function ToggleHelp() {
-	if ($("#helptext").is(":visible")) {
-		$("#helptext").hide();
-	} else {
-		$("#helptext").show();
-	}
-}
-
-function ToggleSVGExport() {
-	if ($("#svgexport").is(":visible")) {
-		$("#svgexport").hide();
-	} else {
-		$("#svgexport").show();
-		$("#svgexport").draggable();
-		$("#cancelsvgexport").click(function () {
-			$("#svgexport").hide();
-		});
-	}
-}
-
-function highlight_pm(amr) {
-    var output = amr.replace(/("[^\"]+")/g, '<span class="literal">$1</span> '); // " // hightlight strings
-    output = output.replace(/(:quant|:value|:op[0-9]) ([a-z0-9\.]+)/g, '$1 <span class="literal">$2</span> '); // highlight non-string literals
-    output = output.replace(/([a-z]+[a-z0-9]*) \//g, ' <span class="conceptslash">$1</span> <b>/</b>'); // highlight variables
-    output = output.replace(/:([ARGa-z0-9-]+[0-9]?)/g, ' <span class="$1text">:$1</span>'); //  highlight relations
-
-    return output;
-}
-
-
-function updateExportFormat() {
-	// check also here to improve download mechanism: https://codepen.io/chrisdpratt/pen/RKxJNo
-	//$("#exporthref")[0].href="/graphs/amrgraphs.zip?format=" + obj.value;
-	$("#exporthref")[0].href = "/graphs/amrgraphs.zip?format=" + $('input:radio[name=graphformat]:checked').val()
-		+ "&sentences=" + $("#sentnumlist").val().trim();
-
-	var conceptlist = $("#conceptlist").val().trim();
-	if (conceptlist) {
-		$("#exporthref")[0].href += "&concepts=" + conceptlist;
-	}
-}
-
-function ShowSentences() {
-	if ($("#sentmodal").is(":visible")) {
-		$("#sentmodal").hide();
-	} else {
-		$("#sentmodal").show();
-		$("#cancelsentlist").click(function () {
-			//$("#conceptsetmodal").fadeOut();
-			$("#sentmodal").hide();
-		});
-	}
-}
-
-function ToggleDirection() {
-	if ($("#gresultat").css("flexDirection") == "row") {
-		$("#gresultat").css("flexDirection", "column");
-	} else {
-		$("#gresultat").css("flexDirection", "row");
-	}
-}
-
-
-function unhighlight() {
-	// delete boxhighlight class from all word rectangles
-	$("polygon").each(function (index) {
-		// get all node rectangles, and delete highlighting (boxhighlight) class
-		var currentclasses = $(this).attr("class");
-		$(this).attr("class", null);
-	});
-}
 
 //const wdq = new RegExp('.*(Q[0-9]+).*');
 
@@ -363,16 +271,6 @@ var lastclickedElement = null;
 var lastclickedWordpos = null;
 var prevmod = 0;
 
-function getAncestor(element) {
-	//console.log("element id:", element.id, "class:", element.getAttribute("class"));
-	if (element.nodeName == "svg"
-		|| element.getAttribute("class") === "node"
-		|| element.getAttribute("class") === "edge") {
-		return element;
-	} else {
-		return getAncestor(element.parentNode);
-	}
-}
 
 function alignmentinfo(event) {
 	//console.log("AAA", event);
@@ -380,6 +278,9 @@ function alignmentinfo(event) {
 	//console.log(" LW ", lastclickedWordpos);
 	//console.log(" LE ", lastclickededge);
 	//console.log(" LN ", lastclickednode);
+	if (readonly) {
+		return;
+	}
 	if (lastclickedElement == null) {
 		lastclickedWordpos = event.target.id.split("_")[2];
 		console.log("ALINFO()", lastclickedWordpos, lastclickededge);
@@ -415,7 +316,7 @@ function info(event) {
 		if (lastclickededge != null) {
 			// we take the last clicked edge and connect to the now clicked instance
 			$(".editmode").hide();
-			$("#commands").show();
+			//$("#commands").show();
 			//console.log("RRR", lastclickededge);
 			var edgestart = lastclickededge.split("#")[1];
 			var edgeend = lastclickededge.split("#")[2];
@@ -566,6 +467,10 @@ var umralignment_pos = -1;
 
 function click_alignment_var(event, alignments) {
 	console.log("CLICK_AL", event.target.id, alignments);
+
+	if (readonly) {
+		return;
+	}
 	var elems = event.target.id.split("_");
 	var umrvar = elems[1];
 	$("#umrvar").text(umrvar);
@@ -608,7 +513,11 @@ function click_alignment_var(event, alignments) {
 
 
 function click_docgraph(event, key, i, j) {
-	console.log("DG", event.target.id)
+	console.log("DG", event.target.id);
+
+	if (readonly) {
+		return;
+	}
 	var elems = event.target.id.split("_");
 	var dgtype = elems[1];
 	var pos = elems[2];
@@ -706,7 +615,7 @@ function formatAMR(data) {
 	readonly = data.readonly;
 	prevmod = data.prevmod;
 	if (readonly) {
-		$("#editing").hide();
+		$(".editing").hide();
 		$("#save").hide();
 	}
 
@@ -1020,7 +929,7 @@ $(document).ready(function () {
 	$(".canceleditmode").click(function () {
 		if (!readonly) {
 			$(".editmode").hide();
-			$("#commands").show();
+			//$("#commands").show();
 		}
 	});
 
@@ -1068,7 +977,7 @@ $(document).ready(function () {
 	$("#save").click(function () {
 		if (!readonly) {
 			$(".editmode").hide();
-			$("#commands").show();
+			//$("#commands").show();
 		}
 		//URL_BASE = 'http://' + window.location.host + '/save';
 		URL_BASE = 'save';
@@ -1124,7 +1033,7 @@ $(document).ready(function () {
 	$("#lire").click(function () {
 		if (!readonly) {
 			$(".editmode").hide();
-			$("#commands").show();
+			//$("#commands").show();
 		}
 		//URL_BASE = 'http://' + window.location.host + '/read';
 		URL_BASE = 'read';
@@ -1235,7 +1144,7 @@ $(document).ready(function () {
 		//URL_BASE = 'http://' + window.location.host + '/next';
 		URL_BASE = 'next';
 		$(".editmode").hide();
-		$("#commands").show();
+		//$("#commands").show();
 
 		$("#resultat").empty(); // vider le div
 		var params = {};
@@ -1313,7 +1222,7 @@ $(document).ready(function () {
 		}
 		else if (this.id == "addname2") {
 			$(".editmode").hide();
-			$("#commands").show();
+			//$("#commands").show();
 			params = {
 				"addname": $("#name2").val(),
 				"nameof": $("#conceptinstance").text()
@@ -1335,7 +1244,7 @@ $(document).ready(function () {
 		}
 		else if (this.id == "addliteral2") {
 			$(".editmode").hide();
-			$("#commands").show();
+			//$("#commands").show();
 			params = {
 				"literalof": $("#conceptinstance").text(),
 				"relationforliteral": $("#relationforliteral2").val(),
@@ -1353,17 +1262,17 @@ $(document).ready(function () {
 		}
 		else if (this.id == "setinstancetop") {
 			$(".editmode").hide();
-			$("#commands").show();
+			//$("#commands").show();
 			params = { "newtop": $("#conceptinstance").text() }
 		}
 		else if (this.id == "delinstance") {
 			$(".editmode").hide();
-			$("#commands").show();
+			//$("#commands").show();
 			params = { "delinstance": modconceptvar }
 		}
 		else if (this.id == "delliteral") {
 			$(".editmode").hide();
-			$("#commands").show();
+			//$("#commands").show();
 			params = {
 				"delliteral": $("#modifiedliteral").val(),
 				"literalid": litid,
@@ -1372,7 +1281,7 @@ $(document).ready(function () {
 		}
 		else if (this.id == "modifyconcept") {
 			$(".editmode").hide();
-			$("#commands").show();
+			//$("#commands").show();
 			params = {
 				"modconcept": modconceptvar,
 				"newconcept": $("#modifiedconcept").val()
@@ -1380,7 +1289,7 @@ $(document).ready(function () {
 		}
 		else if (this.id == "modifyliteral") {
 			$(".editmode").hide();
-			$("#commands").show();
+			//$("#commands").show();
 			params = {
 				"literalid": litid,
 				"literaledge": litedge,
@@ -1389,7 +1298,7 @@ $(document).ready(function () {
 		}
 		else if (this.id == "deledge") {
 			$(".editmode").hide();
-			$("#commands").show();
+			//$("#commands").show();
 			params = {
 				"deledge_start": modedge_start,
 				"deledge_end": modedge_end,
@@ -1398,7 +1307,7 @@ $(document).ready(function () {
 		}
 		else if (this.id == "modifyedge") {
 			$(".editmode").hide();
-			$("#commands").show();
+			//$("#commands").show();
 			params = {
 				"modedge_start": modedge_start,
 				"modedge_end": modedge_end,
@@ -1407,7 +1316,7 @@ $(document).ready(function () {
 		}
 		else if (this.id == "moveedge") {
 			$(".editmode").hide();
-			$("#commands").show();
+			//$("#commands").show();
 			params = {
 				"modedge_start": modedge_start,
 				"modedge_end": modedge_end,
@@ -1417,24 +1326,24 @@ $(document).ready(function () {
 		}
 		else if (this.id == "modifypenman") {
 			$(".editmode").hide();
-			$("#commands").show();
+			//$("#commands").show();
 			params = { "modpenman": $("#modifiedpenman").val() }
 		}
 		else if (this.id == "modifycomment") {
 			$(".editmode").hide();
-			$("#commands").show();
+			//$("#commands").show();
 			params = { "modcomment": $("#modifiedcomment").val() }
 		}
 		else if (this.id == "reifygraph") {
 			$(".editmode").hide();
-			$("#commands").show();
+			//$("#commands").show();
 			//console.log("TTT", $("#reifylist").val());
 			var relation_to_reify = $("#reifylist").val().split(" ")[0];
 			params = { "reify": relation_to_reify }
 		}
 		else if (this.id == "dereifygraph") {
 			$(".editmode").hide();
-			$("#commands").show();
+			//$("#commands").show();
 			var concept_to_dereify = $("#reifylist").val().split(" ")[2];
 			params = { "dereify": concept_to_dereify }
 		}
@@ -1460,7 +1369,7 @@ $(document).ready(function () {
 		}
 		else if (this.id == "modifyaddgraph") {
 			$(".editmode").hide();
-			$("#commands").show();
+			//$("#commands").show();
 			params = {
 				"addgraph": $("#addedgraph").val(),
 				"mappings": $("#conceptmappings").val()
@@ -1503,7 +1412,7 @@ $(document).ready(function () {
 		}
 		else if (this.id == "modifyalignment") {
 			$(".editmode").hide();
-			$("#commands").show();
+			//$("#commands").show();
 
 			params = {
 				"umrvar": $("#umrvar").text(),
@@ -1514,7 +1423,7 @@ $(document).ready(function () {
 		}
 		else if (this.id == "modifydocgraph") {
 			$(".editmode").hide();
-			$("#commands").show();
+			//$("#commands").show();
 			var what = $("#dgtype").text();
 			var pos = $("#dgpos").text();
 			params = {

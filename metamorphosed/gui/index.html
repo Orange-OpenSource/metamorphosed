@@ -13,6 +13,7 @@
     <script src="./lib/jquery-ui-1.13.2/jquery-ui.min.js" type="text/javascript"></script>
 
     <script src="./index.js" type="text/javascript"></script>
+    <script src="./utils.js" type="text/javascript"></script>
 
 
     <link rel="stylesheet" href="./lib/jquery.modal-0.9.2.min.css" />
@@ -24,10 +25,9 @@
 </head>
 
 <body>
-    <div><span><img src="img/metamorphosed+.png" width="500px"></span> <span id="umrheader" class="onlyumr" style="display: none; font-size: larger;">for UMR</span></div>
+    <div><span><img src="img/metamorphosed+.png" width="500px"></span> <span id="umrheader" class="onlyumr"
+            style="display: none; font-size: larger;">for UMR</span></div>
     <p />
-    <!--h1 id="mainheader">Abstract Meaning Representation - Editor <span id="version"></span></h1-->
-
 
     <button class="walk mybutton" id="first">|&lt; first</button>
     <button class="walk mybutton" id="preceding">&lt;&lt; preceding</button>
@@ -41,224 +41,284 @@
     <button class="mycheck mybutton" id="reverse_of" title="show '-of' relations reversed">"-of" reversed</button>
     <!-- reverse "-of": <input type="checkbox" class="mycheck" id="QQreverse_of"-->
     &nbsp;&nbsp;<button class="mybutton" id="choosesentence">sentence list</button>
-    &nbsp;&nbsp;<button class="mybutton" id="togglehelp">toggle help</button>
+    <!--&nbsp;&nbsp;<button class="mybutton" id="togglehelp">toggle help</button-->
     &nbsp;&nbsp;<button class="mybutton" id="saveallSVG">export visualised graphs</button>
     <br>
-    <button class="save mybutton" id="save">&#x1F4BE; save file</button> filename: <span id="filename"></span> (<span id="numsent"></span> sentences)
+    <button class="save mybutton" id="save">&#x1F4BE; save file</button> filename: <span id="filename"></span> (<span
+        id="numsent"></span> sentences)
     <p />
 
-    <div class="editmode" id="commands">
-        <div class="grouping" id="editing">
-            <h3>Add concepts/edges/names</h3>
-            <table>
-                <tr>
-                    <td>A)</td>
-                    <td class="task">add a new instance for concept:</td>
-                    <td><input class="conceptfield" placeholder="concept" title="concept to be instantiated" type="text"
-                            id="concept" value="">
-                        <button class="addbutton mybutton" id="addconcept">add</button>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>B)</td>
-                    <td class="task">add new relation between instances: </td>
-                    <td><!--input class="varfield" placeholder="source instance"
-                            title="variable of instance from which relation starts" type="text" id="startvar" value=""-->
-                        <select class="validvars" name="varb1" id="startvar"></select>
-                        <input class="edgefield" placeholder="relation"
-                            title="name of the relation to be inserted (like :quant or :polarity)" type="text"
-                            id="edgelabel" value="">
-                        <!--input class="varfield" placeholder="target instance"
-                            title="variable of the instance where relation ends" type="text" id="endvar" value=""-->
-                        <select class="validvars" name="varb2" id="endvar"></select>
-                        <button class="addbutton mybutton" id="addedge">add</button>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>C)</td>
-                    <td class="task">set a new top:</td>
-                    <td><!--input class="varfield" placeholder="instance" title="instance which is in top position"
-                            type="text" id="topnode" value=""-->
-                        <select class="validvars" name="varc1" id="topnode"></select>
-                        <button class="addbutton mybutton" id="settop">set</button>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>D)</td>
-                    <td class="task">add new relation and literal:</td>
-                    <td><!--input class="varfield" placeholder="instance" title="instance to attach the relation to"
-                            type="text" id="literalof" value=""-->
-                        <select class="validvars" name="vard1" id="literalof"></select>
-                        <input class="edgefield" placeholder="relation" title="name of the relation to be inserted"
-                            type="text" id="relationforliteral" value="">
-                        <input class="literalfield" placeholder="literal (without quotes)"
-                            title="literal (without quotes)" type="text" id="newliteral" value="">
-                        <button class="addbutton mybutton" id="addliteral">add</button>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>E)</td>
-                    <td class="task">add new <span class="code">:name</span>-relation for instance: </td>
-                    <td><!--input class="varfield" placeholder="instance" title="instance to attach the name to"
-                            type="text" id="nameof" value=""-->
-                        <select class="validvars" name="vare1" id="nameof"></select>
-                        <input class="literalfield" placeholder="name (without quotes)"
-                            title="new name to be inserted together with an instance of name" type="text" id="name"
-                            value="">
-                        <button class="addbutton mybutton" id="addname">add</button>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>F)</td>
-                    <td class="task">add partial graph</td>
-                    <td><button class="openbutton mybutton" id="addgraph">open edit window</button></td>
-                </tr>
-
-                <tr>
-                    <td>G)</td>
-                    <td class="task">rename variable:</td>
-                    <td>
-                        <select class="validvars" name="varg1" id="var_to_rename"></select>
-                        <input class="varfield" placeholder="variable" title="new name for the given variable"
-                        type="text" id="newvarname" value="">
-                        <button class="addbutton mybutton" id="renamevar">rename</button>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td colspan="3"><button class="cleanbutton mybutton" id="cleanfields">clean all</button></td>
-                </tr>
-            </table>
-
-
-            <div class="onlyumr">
-            <h3>UMR</h3>
-            <table>
-                <tr>
-                    <td>H)</td>
-                    <td class="task">add new alignment:</td>
-                    <td><select class="unalignedvars" id="alignmentvar"></select>
-                        <input class="alignmentfield" title="UMR alignments" type="text" id="newpositions" value="0-0">
-                        <button class="addbutton mybutton" id="addalignment">add</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>I)</td>
-                    <td class="task">add docgraph temporal triple:</td>
-                    <td> <input class="varfield" title="temporal triple subject" type="text" id="dg_temp_s" value="">
-                        <select class="edgefield validpreds_t" id="dg_temp_p"></select>
-                        <input class="varfield" title="temporal triple object" type="text" id="dg_temp_o" value="">
-                        <!--select class="varfield validvars" id="dg_temp_o"></select-->
-
-                        <button class="addbutton mybutton" id="adddgtemporal">add</button>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td></td>
-                    <td class="task">add docgraph modal triple:</td>
-                    <td> <input class="varfield" title="modal triple subject" type="text" id="dg_mod_s" value="">
-                        <select class="edgefield validpreds_m" id="dg_mod_p"></select>
-                        <input class="varfield" title="modal triple object" type="text" id="dg_mod_o" value="">
-                        <!--select class="varfield validvars" id="dg_mod_o"></select-->
-
-                        <button class="addbutton mybutton" id="adddgmodal">add</button>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td></td>
-                    <td class="task">add docgraph coref triple:</td>
-                    <td> <input class="varfield" title="coref triple subject" type="text" id="dg_coref_s" value="">
-                        <select class="edgefield validpreds_c" id="dg_coref_p"></select>
-                        <!--input class="varfield" title="coref triple object" type="text" id="dg_coref_o" value="" -->
-                        <select class="varfield validvars" id="dg_coref_o"></select>
-
-                        <button class="addbutton mybutton" id="adddgcoref">add</button>
-                    </td>
-                </tr>
-                </table>
-                </div>
-        </div>
-
-        <div>
-            &nbsp;&nbsp;&nbsp;&nbsp;
-        </div>
-
-
-        <div class="grouping">
-            <button class="toggleresult searchbuttonpos" id="togglesearch">&#8210;</button>
-            <div id="searchfunctions">
-                <h3>Search <button class="mybutton" id="clearsearch" title="clean search fields">clear</button></h3>
+    <div id="tabs">
+        <ul>
+            <li class="editing"><a href="#commands">edit AMR graph</a></li>
+            <li class="onlyumr editing" style="display: none"><a href="#umrcommands">edit UMR document annotation</a></li>
+            <li ><a href="#searchfunctions">Searching</a></li>
+            <li><a href="#help">Help</a></li>
+        </ul>
+        <div class="editmode" id="commands">
+            <div class="ssgrouping" >
+                <h3>Add concepts/edges/names</h3>
                 <table>
                     <tr>
-                        <td>Id:</td>
-                        <td><input class="textfield searchfield" placeholder="regex" title="search for sentence ID"
-                                type="text" id="idsearch" value="">
-                            <button class="findbutton mybutton" id="findidprec"
-                                title="find preceding occurrence">&lt;&lt;</button>
-                            <button class="findbutton mybutton" id="findidnext"
-                                title="find next occurrence">&gt;&gt;</button>
-                        </td>
+                        <td>A)</td>
+                        <td class="task">add a new instance for concept:</td>
+                        <td><input class="conceptfield" placeholder="concept" title="concept to be instantiated"
+                                type="text" id="concept" value="">
+                            <button class="addbutton mybutton" id="addconcept">add</button>
                         </td>
                     </tr>
 
                     <tr>
-                        <td>Text:</td>
-                        <td><input class="textfield searchfield" placeholder="regex" title="search in sentences"
-                                type="text" id="textsearch" value="">
-                            <button class="findbutton mybutton" id="findtextprec"
-                                title="find preceding occurrence">&lt;&lt;</button>
-                            <button class="findbutton mybutton" id="findtextnext"
-                                title="find next occurrence">&gt;&gt;</button>
-                        </td>
+                        <td>B)</td>
+                        <td class="task">add new relation between instances: </td>
+                        <td><!--input class="varfield" placeholder="source instance"
+                            title="variable of instance from which relation starts" type="text" id="startvar" value=""-->
+                            <select class="validvars" name="varb1" id="startvar"></select>
+                            <input class="edgefield" placeholder="relation"
+                                title="name of the relation to be inserted (like :quant or :polarity)" type="text"
+                                id="edgelabel" value="">
+                            <!--input class="varfield" placeholder="target instance"
+                            title="variable of the instance where relation ends" type="text" id="endvar" value=""-->
+                            <select class="validvars" name="varb2" id="endvar"></select>
+                            <button class="addbutton mybutton" id="addedge">add</button>
                         </td>
                     </tr>
 
                     <tr>
-                        <td>AMR:</td>
-                        <td><!--input class="amrfield" placeholder="regex/PENMAN" title="if the string is a PENMAN graph
-we look for graphs which contain the PENMAN graph.
-Else the input is interpreted as regular expression" type="text" id="amrsearch"value=""-->
-                            <textarea class="amrsearcharea searchfield" title="if the string is a PENMAN graph
-we look for graphs which contain the PENMAN graph.
-Else the input is interpreted as regular expression" placeholder="regex/PENMAN" type="text" rows="2" id="amrsearch"
-                                value=""></textarea>
-                            <button class="findbutton mybutton" id="findamrprec"
-                                title="find preceding occurrence">&lt;&lt;</button>
-                            <button class="findbutton mybutton" id="findamrnext"
-                                title="find next occurrence">&gt;&gt;</button>
+                        <td>C)</td>
+                        <td class="task">set a new top:</td>
+                        <td><!--input class="varfield" placeholder="instance" title="instance which is in top position"
+                            type="text" id="topnode" value=""-->
+                            <select class="validvars" name="varc1" id="topnode"></select>
+                            <button class="addbutton mybutton" id="settop">set</button>
                         </td>
                     </tr>
+
                     <tr>
-                        <td>comments:</td>
-                        <td><input class="amrfield searchfield" placeholder="regex" title="search for comments"
-                                type="text" id="commentsearch" value="">
-                            <button class="findbutton mybutton" id="findcommentprec"
-                                title="find preceding occurrence">&lt;&lt;</button>
-                            <button class="findbutton mybutton" id="findcommentnext"
-                                title="find next occurrence">&gt;&gt;</button>
+                        <td>D)</td>
+                        <td class="task">add new relation and literal:</td>
+                        <td><!--input class="varfield" placeholder="instance" title="instance to attach the relation to"
+                            type="text" id="literalof" value=""-->
+                            <select class="validvars" name="vard1" id="literalof"></select>
+                            <input class="edgefield" placeholder="relation" title="name of the relation to be inserted"
+                                type="text" id="relationforliteral" value="">
+                            <input class="literalfield" placeholder="literal (without quotes)"
+                                title="literal (without quotes)" type="text" id="newliteral" value="">
+                            <button class="addbutton mybutton" id="addliteral">add</button>
                         </td>
+                    </tr>
+
+                    <tr>
+                        <td>E)</td>
+                        <td class="task">add new <span class="code">:name</span>-relation for instance: </td>
+                        <td><!--input class="varfield" placeholder="instance" title="instance to attach the name to"
+                            type="text" id="nameof" value=""-->
+                            <select class="validvars" name="vare1" id="nameof"></select>
+                            <input class="literalfield" placeholder="name (without quotes)"
+                                title="new name to be inserted together with an instance of name" type="text" id="name"
+                                value="">
+                            <button class="addbutton mybutton" id="addname">add</button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>F)</td>
+                        <td class="task">add partial graph</td>
+                        <td><button class="openbutton mybutton" id="addgraph">open edit window</button></td>
+                    </tr>
+
+                    <tr>
+                        <td>G)</td>
+                        <td class="task">rename variable:</td>
+                        <td>
+                            <select class="validvars" name="varg1" id="var_to_rename"></select>
+                            <input class="varfield" placeholder="variable" title="new name for the given variable"
+                                type="text" id="newvarname" value="">
+                            <button class="addbutton mybutton" id="renamevar">rename</button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="3"><button class="cleanbutton mybutton" id="cleanfields">clean all</button></td>
                     </tr>
                 </table>
-                <div id="reifygroup">
-                    <div class="reifyelem">
-                        <h3>Reification</h3>
-                        <select class="reifrelations" name="reify" id="reifylist"></select>
-                        <button class="addbutton mybutton" id="reifygraph" title="reify given relation">reify</button>
-                        <button class="addbutton mybutton" id="dereifygraph"
-                            title="dereify given concept (if possible)">unreify</button>
-                    </div>
+            </div>
+        </div>
+        <div class="editmode" id="umrcommands">
+             <div class="ssgrouping" id="qqqumrediting">
+                <div class="onlyumr">
+                    <h3>UMR</h3>
+                    <table>
+                        <tr>
+                            <td>H)</td>
+                            <td class="task">add new alignment:</td>
+                            <td><select class="unalignedvars" id="alignmentvar"></select>
+                                <input class="alignmentfield" title="UMR alignments" type="text" id="newpositions"
+                                    value="0-0">
+                                <button class="addbutton mybutton" id="addalignment">add</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>I)</td>
+                            <td class="task">add docgraph temporal triple:</td>
+                            <td> <input class="varfield" title="temporal triple subject" type="text" id="dg_temp_s"
+                                    value="">
+                                <select class="edgefield validpreds_t" id="dg_temp_p"></select>
+                                <input class="varfield" title="temporal triple object" type="text" id="dg_temp_o"
+                                    value="">
+                                <!--select class="varfield validvars" id="dg_temp_o"></select-->
+
+                                <button class="addbutton mybutton" id="adddgtemporal">add</button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td></td>
+                            <td class="task">add docgraph modal triple:</td>
+                            <td> <input class="varfield" title="modal triple subject" type="text" id="dg_mod_s"
+                                    value="">
+                                <select class="edgefield validpreds_m" id="dg_mod_p"></select>
+                                <input class="varfield" title="modal triple object" type="text" id="dg_mod_o" value="">
+                                <!--select class="varfield validvars" id="dg_mod_o"></select-->
+
+                                <button class="addbutton mybutton" id="adddgmodal">add</button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td></td>
+                            <td class="task">add docgraph coref triple:</td>
+                            <td> <input class="varfield" title="coref triple subject" type="text" id="dg_coref_s"
+                                    value="">
+                                <select class="edgefield validpreds_c" id="dg_coref_p"></select>
+                                <!--input class="varfield" title="coref triple object" type="text" id="dg_coref_o" value="" -->
+                                <select class="varfield validvars" id="dg_coref_o"></select>
+
+                                <button class="addbutton mybutton" id="adddgcoref">add</button>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </div>
-    </div>
 
+        <!--div class="grouping" id="searchgrouping">
+            <button class="toggleresult searchbuttonpos" id="togglesearch">&#8210;</button-->
+        <div id="searchfunctions">
+            <h3>Search <button class="mybutton" id="clearsearch" title="clean search fields">clear</button></h3>
+            <table>
+                <tr>
+                    <td>Id:</td>
+                    <td><input class="textfield searchfield" placeholder="regex" title="search for sentence ID"
+                            type="text" id="idsearch" value="">
+                        <button class="findbutton mybutton" id="findidprec"
+                            title="find preceding occurrence">&lt;&lt;</button>
+                        <button class="findbutton mybutton" id="findidnext"
+                            title="find next occurrence">&gt;&gt;</button>
+                    </td>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Text:</td>
+                    <td><input class="textfield searchfield" placeholder="regex" title="search in sentences" type="text"
+                            id="textsearch" value="">
+                        <button class="findbutton mybutton" id="findtextprec"
+                            title="find preceding occurrence">&lt;&lt;</button>
+                        <button class="findbutton mybutton" id="findtextnext"
+                            title="find next occurrence">&gt;&gt;</button>
+                    </td>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>AMR:</td>
+                    <td><!--input class="amrfield" placeholder="regex/PENMAN" title="if the string is a PENMAN graph
+we look for graphs which contain the PENMAN graph.
+Else the input is interpreted as regular expression" type="text" id="amrsearch"value=""-->
+                        <textarea class="amrsearcharea searchfield" title="if the string is a PENMAN graph
+we look for graphs which contain the PENMAN graph.
+Else the input is interpreted as regular expression" placeholder="regex/PENMAN" type="text" rows="2" id="amrsearch"
+                            value=""></textarea>
+                        <button class="findbutton mybutton" id="findamrprec"
+                            title="find preceding occurrence">&lt;&lt;</button>
+                        <button class="findbutton mybutton" id="findamrnext"
+                            title="find next occurrence">&gt;&gt;</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>comments:</td>
+                    <td><input class="amrfield searchfield" placeholder="regex" title="search for comments" type="text"
+                            id="commentsearch" value="">
+                        <button class="findbutton mybutton" id="findcommentprec"
+                            title="find preceding occurrence">&lt;&lt;</button>
+                        <button class="findbutton mybutton" id="findcommentnext"
+                            title="find next occurrence">&gt;&gt;</button>
+                    </td>
+                </tr>
+            </table>
+            <div id="reifygroup">
+                <div class="reifyelem">
+                    <h3>Reification</h3>
+                    <select class="reifrelations" name="reify" id="reifylist"></select>
+                    <button class="addbutton mybutton" id="reifygraph" title="reify given relation">reify</button>
+                    <button class="addbutton mybutton" id="dereifygraph"
+                        title="dereify given concept (if possible)">unreify</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="help">
+                 <h2>Help</h2>
+        <h3>Add a new instances</h3>
+        Type the concept in line (A) and click <span class="knopf">add</span>
+        <h3>Add a new relation between instances</h3>
+        Add source- and target instance and relation name in line (B) and click <span class="knopf">add</span> or
+        click on source-instance and than on the target-instance. A new <span class="code">:todo</span> relation is
+        added which must be modified in a second step
+        <h3>Make another instance top instance</h3>
+        set instance in line (C)and click <span class="knopf">set</span>
+        <h3>Add a literal (like a number) and a relation (like <span class="code">:quant</span>)</h3>
+        fill fields in line (D) and click <span class="knopf">add</span>
+        <h3>Add name to an instance</h3>
+        Add instance which will get <span class="code">:name</span> node and <span class="code">:op</span>-linked
+        strings and name in line (E) and click <span class="knopf">add</span>
+        <h3>Add a graph to existing </h3>
+        Click F) <span class="knopf">open edit window</span>,
+        enter a graph in the Add Graph window and specify in the Concept Mapping input field which variable of the
+        existing graph corresponds to which variable in the added graph
+        using the format `a/b` where `a` is the variable of the existing graph, and `b` a variable of the added graph.
+        <h3>Rename variable</h3>
+        Choose a variable G) and specify the new name
+        <h3>Modify concept</h3>
+        Click the concept in the graph, edit concept and click <span class="knopf">update</span> in the «Modify Concept»
+        window
+        <h3>Delete concept (including associated instance and all incoming and outgoing relations)</h3>
+        Click the concept in the graph and click <span class="knopf">delete</span> in the «Modify Concept» window
+        <h3>Modify relation name</h3>
+        Click the relation label, edit name and click <span class="knopf">update</span> in the «Modify Relation» window
+        <h3>Modify relation source</h3>
+        Click the relation label and then click the new source instance.
+        <h3>Delete relation</h3>
+        Click the relation label and click <span class="knopf">delete</span> in the «Modify Relation» window
+        <h3>Change source instance of relation</h3>
+        Click on the relation (in the graph) and click on the future source instance
+
+        <h2>About</h2>
+        <span class="logo2"><img src="img/metamorphosed+.png" width="16%"></span>
+        version <span id="version2"></span> (API version: <span id="apiversion"></span>)<br />
+        Author: Johannes Heinecke.
+        Copyright © 2022-2025 by Orange. This software is published under the <a target="_blank"
+            href="https://opensource.org/licenses/BSD-3-Clause">3-Clause BSD License</a>.
+
+        <h2>This instance</h2>
+        Started on <span class="code" id="hostname"></span>
+        <br><span class="code">cd</span> <span class="code" id="dir"></span>
+        <br><span class="code" id="cmdl"></span>
+   
+        </div>
+
+    </div>
     <p />
     <div class="modal QQeditmode" id="svgexport">
         <div class="grouping noborder" id="modconcept">
@@ -280,9 +340,8 @@ Else the input is interpreted as regular expression" placeholder="regex/PENMAN" 
             <p />
 
             list of concepts to highlight <input class="textfield" placeholder=""
-                title="comma separated list of concepts" type="text" id="conceptlist"
-                value="">
-            <br/>
+                title="comma separated list of concepts" type="text" id="conceptlist" value="">
+            <br />
             list of graphs to be exposted <input class="textfield" placeholder=""
                 title="numbers of the sentences for which a visualised graph is exported" type="text" id="sentnumlist"
                 value="">
@@ -295,7 +354,7 @@ Else the input is interpreted as regular expression" placeholder="regex/PENMAN" 
     </div>
 
 
-    <div id="helptext" class="helptext" style="display:none">
+    <!--div id="helptext" class="helptext" style="display:none">
         <h2>Help</h2>
         <h3>Add a new instances</h3>
         Type the concept in line (A) and click <span class="knopf">add</span>
@@ -312,7 +371,8 @@ Else the input is interpreted as regular expression" placeholder="regex/PENMAN" 
         strings and name in line (E) and click <span class="knopf">add</span>
         <h3>Add a graph to existing </h3>
         Click F) <span class="knopf">open edit window</span>,
-        enter a graph in the Add Graph window and specify in the Concept Mapping input field which variable of the existing graph corresponds to which variable in the added graph
+        enter a graph in the Add Graph window and specify in the Concept Mapping input field which variable of the
+        existing graph corresponds to which variable in the added graph
         using the format `a/b` where `a` is the variable of the existing graph, and `b` a variable of the added graph.
         <h3>Rename variable</h3>
         Choose a variable G) and specify the new name
@@ -342,7 +402,7 @@ Else the input is interpreted as regular expression" placeholder="regex/PENMAN" 
         <br><span class="code">cd</span> <span class="code" id="dir"></span>
         <br><span class="code" id="cmdl"></span>
     </div>
-    <p />
+    <p /-->
 
 
     <div class="editmode grouping" id="modpenman" style="display:none">
@@ -371,30 +431,31 @@ Else the input is interpreted as regular expression" placeholder="regex/PENMAN" 
             <button class="cancelmodal" id="cancelmc">&times;</button>
             <h3>Modify concept for instance &ldquo;<span id="conceptinstance"></span>&rdquo;</h3>
             <ul>
-                <li>Change concept <input class="conceptfield" title="modify concept name" type="text" id="modifiedconcept"
-                        value="">
+                <li>Change concept <input class="conceptfield" title="modify concept name" type="text"
+                        id="modifiedconcept" value="">
                     <button class="addbutton mybutton" id="modifyconcept">update</button>
                     <button class="addbutton mybutton" id="delinstance">delete instance</button>
                 </li>
-            
+
                 <!--button class="canceleditmode" id="cancelmc">cancel</button-->
-            
+
                 <li> new relation and literal:
                     <input class="edgefield" placeholder="relation"
-                        title="name of the relation to be inserted (like :quant or :polarity)" type="text" id="relationforliteral2"
-                        value="">
-                    <input class="literalfield" placeholder="literal (without quotes)" title="literal (without quotes)" type="text"
-                        id="newliteral2" value="">
+                        title="name of the relation to be inserted (like :quant or :polarity)" type="text"
+                        id="relationforliteral2" value="">
+                    <input class="literalfield" placeholder="literal (without quotes)" title="literal (without quotes)"
+                        type="text" id="newliteral2" value="">
                     <button class="addbutton mybutton" id="addliteral2">add</button>
                 </li>
-            
+
                 <li>add new <span class="code">:name</span>-relation for instance:
                     <input class="literalfield" placeholder="name (without quotes)"
-                        title="new name to be inserted together with an instance of name" type="text" id="name2" value="">
+                        title="new name to be inserted together with an instance of name" type="text" id="name2"
+                        value="">
                     <button class="addbutton mybutton" id="addname2">add</button>
                 </li>
-            
-            
+
+
                 <li>make this instance top of the graph <button class="addbutton mybutton" id="setinstancetop">set
                         top</button></li>
             </ul>
@@ -408,13 +469,15 @@ Else the input is interpreted as regular expression" placeholder="regex/PENMAN" 
             <h3>Modify relation &ldquo;<span id="relationfrom"></span> &ndash; <span id="relationto"></span>&rdquo;</h3>
             <ul>
                 <li><input class="edgefield" title="modify relation name" type="text" id="modifiededge" value="">
-                <button class="addbutton mybutton" id="modifyedge">update</button>
-                <button class="addbutton mybutton" id="deledge">delete</button></li>
-            
+                    <button class="addbutton mybutton" id="modifyedge">update</button>
+                    <button class="addbutton mybutton" id="deledge">delete</button>
+                </li>
+
 
                 <li><select class="validvars" name="varmr" id="newsource"></select>
-                <button class="addbutton mybutton" id="moveedge">use as new head</button></li>
-            
+                    <button class="addbutton mybutton" id="moveedge">use as new head</button>
+                </li>
+
             </ul>
         </div>
     </div>
@@ -454,9 +517,9 @@ Else the input is interpreted as regular expression" placeholder="regex/PENMAN" 
             <textarea cols="70" rows="15" placeholder="( e / eat-01 
    :ARG0 ... )" id="addedgraph"></textarea>
             <p />
-            concept mappings: <input title="instances which are coreferent between main graph and added graph (variable names)"
-                placeholder="v/v2 w/w2" 
-                type="text" id="conceptmappings" size="20" value="">
+            concept mappings: <input
+                title="instances which are coreferent between main graph and added graph (variable names)"
+                placeholder="v/v2 w/w2" type="text" id="conceptmappings" size="20" value="">
             <p />
             <button class="addbutton mybutton" id="modifyaddgraph">apply</button>
             <br />
@@ -472,8 +535,9 @@ Else the input is interpreted as regular expression" placeholder="regex/PENMAN" 
                 <li><!--select class="validindexes" name="idmr" id="startindex"></select> -
                     <select class="validindexes" name="idmr" id="endindex"></select-->
                     <input class="alignmentfield" title="modify UMR alignments" type="text" id="indexes" value="">
-                <button class="addbutton mybutton" id="modifyalignment">set</button></li>
-            
+                    <button class="addbutton mybutton" id="modifyalignment">set</button>
+                </li>
+
             </ul>
         </div>
     </div>
@@ -482,17 +546,19 @@ Else the input is interpreted as regular expression" placeholder="regex/PENMAN" 
     <div class="modal editmode" id="umr_dg_modal">
         <div class="grouping noborder" id="umr_dg">
             <button class="cancelmodal" id="cancel_dgt">&times;</button>
-            <h3>Modify UMR document level annotation &ldquo;<span id="dgtype"></span> <span id="dgpos"></span>&rdquo;</h3>
+            <h3>Modify UMR document level annotation &ldquo;<span id="dgtype"></span> <span id="dgpos"></span>&rdquo;
+            </h3>
             <ul>
                 <li>
                     <input class="varfield" title="temporal triple subject" type="text" id="dg_s" value="">
-                        <select style="display: none;" class="edgefield validpreds_m" id="dg_p_m"></select>
-                        <select style="display: none;" class="edgefield validpreds_t" id="dg_p_t"></select>
-                        <select style="display: none;" class="edgefield validpreds_c" id="dg_p_c"></select>
-                        <input class="varfield" title="temporal triple object" type="text" id="dg_o" value="">
-                        <!--select class="varfield validvars" id="dg_o"></select-->
-                <button class="addbutton mybutton" id="modifydocgraph">set</button></li>
-            
+                    <select style="display: none;" class="edgefield validpreds_m" id="dg_p_m"></select>
+                    <select style="display: none;" class="edgefield validpreds_t" id="dg_p_t"></select>
+                    <select style="display: none;" class="edgefield validpreds_c" id="dg_p_c"></select>
+                    <input class="varfield" title="temporal triple object" type="text" id="dg_o" value="">
+                    <!--select class="varfield validvars" id="dg_o"></select-->
+                    <button class="addbutton mybutton" id="modifydocgraph">set</button>
+                </li>
+
             </ul>
         </div>
     </div>

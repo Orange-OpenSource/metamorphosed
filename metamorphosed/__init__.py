@@ -855,7 +855,9 @@ class AMR_Edit_Server:
                     ap = self.aps[x]
                     if not ap.isparsed:
                         ap.readpenman(ap.lastpm)
-                    pm, svg, svg_canon = ap.show(format=dataformat, highlightconcepts=highlight_concepts)
+                    if self.umr:
+                        tokenalignments = (cursentence.words, cursentence.getAlignments())
+                    pm, svg, svg_canon = ap.show(format=dataformat, highlightconcepts=highlight_concepts) #, tokenalignments=tokenalignments)
                     if svg:
                         zip_file.writestr("%d.%s" % (ix, dataformat), svg)
                     sent = self.amrdoc.sentences[ix - 1]
