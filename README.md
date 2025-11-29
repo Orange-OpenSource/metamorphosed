@@ -307,7 +307,7 @@ then click the `apply` button to see the result.
 ## Search, further info
 
 On the bottom of the main screen propbank definitions for all used concepts is displayed.
-Basic search is available in the search field. THE AMR-search field accepts two kinds of input
+Basic search is available in the search tab. THE AMR-search field accepts two kinds of input
 * a valid PENMAN graph: the search will find AMR graphs which contain the given PENMAN graph. So searching for `(e / eat-01 :ARG1 ( c / cheese ))` will find a graph like
 ```
 (v1 / eat-01

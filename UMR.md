@@ -41,7 +41,9 @@ uv run ./metamorphosed_server.py \
 
 the options `--relations metamorphosed/data/umr-relations.txt`  `--relationsdoc metamorphosed/data/umr-relations-doc.json` are default options, so strictly speaking they are not necessary.
 
-Open your browser on `http://localhost:4567:
+Open your browser on `http://localhost:4567`. In addtion to the tabs already present for the AMS mode, a new tab `edit UMR document annotation` appears, which proposes option to modify the document level annotations.
+In addition the graph visualisation shows alignments (if available):
+
 
 ![Main window for UMR editing](doc/umr-main.png)
 
@@ -85,4 +87,4 @@ Validate by clicking on `set`, cancel by clicking on the circled `X` (top right)
 * TODO:
   * check whether variables in document level annotations are in document (Subject) or in current sentence (Object)
   * make `Words:`, `Index:` etc. editable
-  * activate undo/redo for changes in Alignments nad Document Level Annotation
+  * activate undo/redo for changes in Alignments and Document Level Annotation
