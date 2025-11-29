@@ -190,6 +190,103 @@ s4o: 3-3
             (s3l :same-event s4l)))
 
 
+###############################################################################
+# meta-info :: sent_id = u_tree-cs-s5-root
+# :: snt5
+Index: 1      2      3  4      5  6      7     8    9        10 11    12 13
+Words: Marsha Lipman is Editor of Moscow based news magazine '  Itogi '  . 
+
+# sentence level graph:
+(s5h / have-org-role-92
+    :ARG1 (s5p / person
+        :name (s5n / name :op1 "Marsha" :op2 "Lipman"))
+    :ARG2 (s5m / magazine :wiki -
+        :name (s5n2 / name :op1 "Itogi")
+        :mod (s5n3 / news)
+        :ARG1-of (s5b / base-01
+            :place (s5h2 / human-settlement :wiki "Moscow"
+                :name (s5n4 / name :op1 "Moscow"))
+            :aspect state)
+    :ARG3 (s5p2 / person 
+        :ARG0-of (s5e / edit-01)))
+    :aspect state)
+
+
+# alignment:
+s5h: 3-3
+s5p: 1-2
+s5n: 0-0
+s5m: 9-9
+s5n2: 11-11
+s5n3: 8-8
+s5b: 7-7
+s5h2: 6-6
+s5n4: 0-0
+s5p2: 4-4
+s5e: 0-0
+
+# document level annotation:
+(s5s0 / sentence
+    :temporal ((document-creation-time :overlap s5h)
+            (document-creation-time :contains s5b))
+    :modal ((author :full-affirmative s5h)
+            (author :full-affirmative s5b)))
+
+
+###############################################################################
+# meta-info :: sent_id = u_tree-cs-s6-root
+# :: snt6
+Index: 1      2 3   4   5            6       7          8    9   10     11  12    13       14
+Words: Marsha , did the Presidential Pardons Commission give any reason for their decision ? 
+
+# sentence level graph:
+(s6s / say-01
+    :ARG0 (s6p2 / person)
+    :ARG1 (s6g / give-01 
+        :ARG0 (s6g2 / government-organization :wiki - 
+            :name (s6n2 / name :op1 "Presidential" :op2 "Pardons" :op3 "Commission"))
+        :ARG1 (s6r / reason
+            :reason-of (s6d / decide-01 
+                :ARG0 s6g2
+                :topic (s6t / thing)
+                :aspect performance) 
+            :mod (s6a / any)) 
+        :mode interrogative
+        :polarity (s6u / umr-unknown)
+        :vocative (s6p / person :wiki - 
+            :name (s6n / name :op1 "Marsha"))
+        :aspect performance
+        :quote s6s)
+    :ARG2 s6p)
+
+
+# alignment:
+s6g: 8-8
+s6g2: 5-7
+s6n2: 0-0
+s6r: 10-10
+s6d: 13-13
+s6a: 9-9
+s6u: 0-0
+s6p: 1-1
+s6n: 0-0
+s6s: 0-0
+s6p2: 0-0
+s6t: 0-0
+
+
+# document level annotation:
+(s6s0 / sentence
+    :temporal ((document-creation-time :overlap s6s)
+            (document-creation-time :before s6g)
+            (s6g :before s6d))
+    :modal ((author :full-affirmative s6s)
+            (author :neutral-affirmative s6g)
+            (author :full-affirmative s6d))
+    :coref ((s5p :same-entity s6p)
+            (s1c :same-entity s6g2)
+            (s1t :same-entity s6t)))
+
 
 ################################################################################
 # meta-info :: sent_id = u_tree-cs-s7-root :: comment = missing Words

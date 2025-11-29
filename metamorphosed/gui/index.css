@@ -845,6 +845,7 @@ td.framealiastable {
 
 .ui-widget {
   font-family: Urbanist, "Be Vietnam Pro", Syne, Poppins, Lato, Ubuntu, DejaVu Sans, Arial, Helvetica, Sans;
+  font-size: 80%;
 }
 .ui-state-default a, .ui-state-default a:link {
   color: black;

@@ -55,8 +55,8 @@
             <li ><a href="#searchfunctions">Searching</a></li>
             <li><a href="#help">Help</a></li>
         </ul>
-        <div class="editmode" id="commands">
-            <div class="ssgrouping" >
+        <div class="oooeditmode" id="commands">
+            <div class="ooogrouping" >
                 <h3>Add concepts/edges/names</h3>
                 <table>
                     <tr>
@@ -143,6 +143,16 @@
                     </tr>
                 </table>
             </div>
+            <div id="reifygroup">
+                <div class="reifyelem">
+                    <h3>Reification</h3>
+                    <select class="reifrelations" name="reify" id="reifylist"></select>
+                    <button class="addbutton mybutton" id="reifygraph" title="reify given relation">reify</button>
+                    <button class="addbutton mybutton" id="dereifygraph"
+                        title="dereify given concept (if possible)">unreify</button>
+                </div>
+            </div>
+
         </div>
         <div class="editmode" id="umrcommands">
              <div class="ssgrouping" id="qqqumrediting">
@@ -257,15 +267,7 @@ Else the input is interpreted as regular expression" placeholder="regex/PENMAN" 
                     </td>
                 </tr>
             </table>
-            <div id="reifygroup">
-                <div class="reifyelem">
-                    <h3>Reification</h3>
-                    <select class="reifrelations" name="reify" id="reifylist"></select>
-                    <button class="addbutton mybutton" id="reifygraph" title="reify given relation">reify</button>
-                    <button class="addbutton mybutton" id="dereifygraph"
-                        title="dereify given concept (if possible)">unreify</button>
-                </div>
-            </div>
+
         </div>
 
         <div id="help">
@@ -346,6 +348,11 @@ Else the input is interpreted as regular expression" placeholder="regex/PENMAN" 
                 title="numbers of the sentences for which a visualised graph is exported" type="text" id="sentnumlist"
                 value="">
             <p />
+            <div class="onlyumr">
+                <input type="checkbox" id="withalignments" name="alsoalign" />
+                <label for="alsoalign">add alignments</label>
+            </div>
+            <p/>
 
             <a href="/graphs/amrgraphs.zip?format=png" id="exporthref" onclick="updateExportFormat()"
                 type="application/zip"><button class="mybutton" id="runsvgexport">export graphs</button></a>

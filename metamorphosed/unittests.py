@@ -416,6 +416,8 @@ def test_exportgraphs(client):
     #assert fobj.file_size in [13960, 14027, 14028, 14029, 13940]
 
     contents = zfp.read(fobj.filename)
+    # write extracted file to real file (for debugging)
+    #cp(dest="tmp/11.pdf", contents=contents)
     assert contents.startswith(b'%PDF-1.7\n%\xb5\xed\xae\xfb\n4') or contents.startswith(b'%PDF-1.5\n%\xb5\xed\xae\xfb\n4')
 
     # get PNG files
@@ -430,6 +432,7 @@ def test_exportgraphs(client):
     #assert fobj.file_size in [22342, 24324, 22346]
     contents = zfp.read(fobj.filename)
     #print(contents)
+    #cp(dest="tmp/12.png", contents=contents)
     assert contents.startswith(b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x01\xb0\x00\x00\x01#\x08\x06\x00\x00\x00S')
 
     # only some sentence 2-6,9
@@ -471,6 +474,44 @@ def test_read(client):
     assert '<h2>have-org-role</h2>\n<h3>have-org-role.91:' in res["framedoc"]
     assert res['filename'].endswith('metamorphosed/data/testamr.txt')
     assert res['warning'] == ['more than one relation label « :op2 » start at instance « n2 »', 'incoherent :opNN numbering for instance « n »: 4, 2, 3', 'incoherent :opNN numbering for instance « n2 »: 2, 2']
+
+
+@pytest.mark.skipif(PROPBANK_PRESENT is False, reason="cannot find propbank-frames/frames")
+def testumr_exportgraphs(client_umr):
+    # must be run before other tests modify the graphs
+    # get SVG files
+    response = client_umr.get("/graphs/exportfile.zip", query_string={"format": "svg"})
+    fp = io.BytesIO(response.data)
+    #print("res", response.data)
+    zfp = zipfile.ZipFile(fp, "r")
+
+    filenames = []
+    for x in zfp.infolist():
+        filenames.append(x.filename)
+    #    print(x.filename, x.file_size)
+    #    #print(zfp.read(x.filename))
+    #    #break
+    assert filenames == ['1.svg', '2.svg', '3.svg', '4.svg', '5.svg', '6.svg', '7.svg', 'metadata.json']
+
+    assert len(zfp.infolist()) == 8 # includes metadata file
+    fobj = zfp.infolist()[4]
+    assert fobj.filename == "5.svg"
+    assert fobj.file_size <= 14900 and fobj.file_size >= 14080
+    contents = zfp.read(fobj.filename)
+    #cp(dest="tmp/5.svg", contents=contents)
+    assert b'<svg width="709pt" height="479pt"' in contents
+
+    # same graph with alignments
+    response = client_umr.get("/graphs/exportfile.zip", query_string={"format": "svg", "sentences": "5-6","withalignments": True})
+    print("res", response)
+    fp = io.BytesIO(response.data)
+
+    zfp = zipfile.ZipFile(fp, "r")
+    fobj = zfp.infolist()[0]
+    assert fobj.filename == "5.svg"
+    contents = zfp.read(fobj.filename)
+    #cp(dest="tmp/6.svg", contents=contents)
+    assert b'<svg width="889pt" height="565pt"' in contents
 
 
 def testumr_read(client_umr):
@@ -1441,6 +1482,14 @@ def cat(fn, show=False):
         if show:
             print(contents)
         return contents
+
+
+def cp(dest, src=None, contents=None):
+    if contents is None:
+        with open(src, "rb") as ifp:
+            contents = ifp.read()
+    with open(dest, "wb") as ofp:
+        ofp.write(contents)
 
 
 # test whether server stops if backup file exists

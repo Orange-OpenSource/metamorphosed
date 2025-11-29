@@ -804,13 +804,14 @@ class AMR_Edit_Server:
             dataformat = self.checkParameter(request, 'format', 'string', isOptional=True, defaultValue="svg")
             highlight_concepts = self.checkParameter(request, 'concepts', 'string', isOptional=True, defaultValue=None)
             pages = self.checkParameter(request, 'sentences', 'string', isOptional=True, defaultValue=None)
+            withalignments = self.checkParameter(request, 'withalignments', 'boolean', isOptional=True, defaultValue=False)
 
             if not re.match(r"^[A-Za-z0-9_]+\.zip$", filename):
                 dico = {"error": "invalid export filename. Must end in .zip: <%s>" % filename}
                 return Response("%s\n" % json.dumps(dico),
                                 400, mimetype="application/json")
 
-            validargs = set(["format", "sentences", "concepts"])
+            validargs = set(["format", "sentences", "concepts", "withalignments"])
             self.validParameters(request, validargs)
 
             if highlight_concepts:
@@ -855,12 +856,15 @@ class AMR_Edit_Server:
                     ap = self.aps[x]
                     if not ap.isparsed:
                         ap.readpenman(ap.lastpm)
-                    if self.umr:
-                        tokenalignments = (cursentence.words, cursentence.getAlignments())
-                    pm, svg, svg_canon = ap.show(format=dataformat, highlightconcepts=highlight_concepts) #, tokenalignments=tokenalignments)
+                    sent = self.amrdoc.sentences[ix - 1]
+                    tokenalignments = None
+                    if self.umr and withalignments:
+                        tokenalignments = (sent.words, sent
+                                           .getAlignments())
+                    pm, svg, svg_canon = ap.show(format=dataformat, highlightconcepts=highlight_concepts, tokenalignments=tokenalignments)
                     if svg:
                         zip_file.writestr("%d.%s" % (ix, dataformat), svg)
-                    sent = self.amrdoc.sentences[ix - 1]
+
                     metadata.append({"sentence": sent.text, "id": sent.id, "filename": "%d.%s" % (ix, dataformat), "sourcefilename": self.amrdoc.fn})
                     #print("FILE", ix, svg[:100] if svg else svg)
                 zip_file.writestr("metadata.json", json.dumps(metadata, indent=2, ensure_ascii=False))

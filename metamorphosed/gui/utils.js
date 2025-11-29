@@ -65,8 +65,10 @@ function updateExportFormat() {
 	// check also here to improve download mechanism: https://codepen.io/chrisdpratt/pen/RKxJNo
 	//$("#exporthref")[0].href="/graphs/amrgraphs.zip?format=" + obj.value;
 	$("#exporthref")[0].href = "/graphs/amrgraphs.zip?format=" + $('input:radio[name=graphformat]:checked').val()
-		+ "&sentences=" + $("#sentnumlist").val().trim();
+		+ "&sentences=" + $("#sentnumlist").val().trim()
+		+ "&withalignments=" + $('input[name=alsoalign]').is(':checked');
 
+	//console.log("GGGGG", $('input[name=alsoalign]').is(':checked'));
 	var conceptlist = $("#conceptlist").val().trim();
 	if (conceptlist) {
 		$("#exporthref")[0].href += "&concepts=" + conceptlist;
