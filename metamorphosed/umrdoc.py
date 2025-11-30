@@ -336,13 +336,13 @@ class UMRsentence(AMRsentence):
                     msg.append("%s: no sentence number" % (self.id))
         for k in self.alignments:
             if k not in variables:
-                msg.append("%s: alignment <%s> not in sentence level graph" % (self.id, k))
+                msg.append("%s: alignment &lt;%s&gt; not in sentence level graph" % (self.id, k))
             if isinstance(self.index, list):
                 for startend in self.alignments[k]:
                     if startend[0] > 0 and startend[0] not in self.index:
-                        msg.append("%s: alignment <%s> start position not in Index: %s" % (self.id, startend[0], self.index))
+                        msg.append("%s: alignment &lt;%s&gt; start position not in Index: %s" % (self.id, startend[0], self.index))
                     if startend[1] > 0 and startend[1] not in self.index:
-                        msg.append("%s: alignment <%s> end position not in Index: %s" % (self.id, startend[1], self.index))
+                        msg.append("%s: alignment &lt;%s&gt; end position not in Index: %s" % (self.id, startend[1], self.index))
         if not self.wiok:
             msg.append("Index: &lt;%s&gt; and Words: &lt;%s&gt; do not correspond" % (self.index, self.words))
         msg.extend(self.docgraph.validate(variables))

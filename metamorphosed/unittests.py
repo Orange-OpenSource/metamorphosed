@@ -528,10 +528,10 @@ def testumr_read(client_umr):
     assert res["warning"] == [
         "snt3: variable &lt;s2m&gt; does not start with s3",
         "snt3: variable &lt;s2c&gt; does not start with s3",
-        "snt3: alignment <s3m> not in sentence level graph",
-        "snt3: alignment <s3c> not in sentence level graph",
-        "snt3: alignment <6> start position not in Index: [1, 2, 3, 4]",
-        "snt3: alignment <6> end position not in Index: [1, 2, 3, 4]",
+        "snt3: alignment &lt;s3m&gt; not in sentence level graph",
+        "snt3: alignment &lt;s3c&gt; not in sentence level graph",
+        "snt3: alignment &lt;6&gt; start position not in Index: [1, 2, 3, 4]",
+        "snt3: alignment &lt;6&gt; end position not in Index: [1, 2, 3, 4]",
         "Index: &lt;[1, 2, 3, 4]&gt; and Words: &lt;['The', 'mouse', 'eats', 'the', 'cheese']&gt; do not correspond"
     ]
 

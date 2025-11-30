@@ -49,6 +49,7 @@ var conceptlist = [];
 var sentencelist = [];
 var lastdata = null; // to redisplay an unchanged sentence without asking the server
 var reverseof = false;
+var graphwithaligns = false;
 
 /** get information from relation extraction server */
 function getServerInfo() {
@@ -721,18 +722,23 @@ function formatAMR(data) {
 		if (data.index !== undefined) {
 			$("#tr_alignments_" + currentsentnum).append("<th>Alignments:");
 			for (var i = 0; i<data.index.length+1; i++) {
-				var value = "";
+				$("#tr_alignments_" + currentsentnum).append('<td class="alignment_var code" id="altd_' + (i+1) + '">');
+				//var value = "";
 				if (data.alignments2[i] !== undefined) {
 					for (var j = 0; j < data.alignments2[i].length; j++) {
 						var key = data.alignments2[i][j]
-						value += " " + key;
+						//value += " " + key;
+						$('#altd_'+ (i+1)).append(' <span id="alv_' + key + '_' + (j+1) + '">' + key);
+						$('#alv_' + key + '_' + (j+1)).on('mousedown', function(event) {
+							click_alignment_var(event, data.alignments);
+						});
 					}
 				}
 
-			    $("#tr_alignments_" + currentsentnum).append('<td class="alignment_var code" id="alv_'+key+'_' + (i+1) +'">' + value);					
-				$('#alv_'+key+'_' + (i+1) ).on('mousedown', function(event) {
-					click_alignment_var(event, data.alignments);
-			    });
+			    //$("#tr_alignments_" + currentsentnum).append('<td class="alignment_var code" id="alv_'+key+'_' + (i+1) +'">' + value);
+				//$('#alv_'+key+'_' + (i+1) ).on('mousedown', function(event) {
+				//	click_alignment_var(event, data.alignments);
+			    //});
 			}
 		}
 
@@ -965,9 +971,10 @@ $(document).ready(function () {
 	$("#saveallSVG").click(function () {
 		ToggleSVGExport();
 	});
-	$("#choosesentence").click(function () {
-		ShowSentences();
-	});
+
+	//$("#choosesentence").click(function () {
+	//	ShowSentences();
+	//});
 
 	$("#toggledirection").click(function () {
 		ToggleDirection();
@@ -1702,6 +1709,14 @@ $(document).ready(function () {
 
 			$("#resultat").empty(); // vider le div
 			formatAMR(lastdata);
+		}
+		else if (this.id === "graphwithaligns") {
+			if (!graphwithaligns) {
+				$(this).addClass('active');
+			} else {
+				$(this).removeClass('active');
+			}
+			graphwithaligns = !graphwithaligns;
 		}
 	});
 

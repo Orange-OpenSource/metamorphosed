@@ -39,11 +39,13 @@
     <button class="history mybutton" id="undo" disabled>undo</button>
     <button class="history mybutton" id="redo" disabled>redo</button>
     <button class="mycheck mybutton" id="reverse_of" title="show '-of' relations reversed">"-of" reversed</button>
+    <!-- TODO think how to communicate this info to server. In EVERY call ??-->
+    <!--button class="mycheck mybutton onlyumr" id="graphwithaligns" title="show alignments between graph and words">show alignments</button-->
     <!-- reverse "-of": <input type="checkbox" class="mycheck" id="QQreverse_of"-->
-    &nbsp;&nbsp;<button class="mybutton" id="choosesentence">sentence list</button>
+    <!--&nbsp;&nbsp;<button class="mybutton" id="choosesentence">sentence list</button-->
     <!--&nbsp;&nbsp;<button class="mybutton" id="togglehelp">toggle help</button-->
     &nbsp;&nbsp;<button class="mybutton" id="saveallSVG">export visualised graphs</button>
-    <br>
+    <p />
     <button class="save mybutton" id="save">&#x1F4BE; save file</button> filename: <span id="filename"></span> (<span
         id="numsent"></span> sentences)
     <p />
@@ -53,7 +55,8 @@
             <li class="editing"><a href="#commands">edit AMR graph</a></li>
             <li class="onlyumr editing" style="display: none"><a href="#umrcommands">edit UMR document annotation</a></li>
             <li ><a href="#searchfunctions">Searching</a></li>
-            <li><a href="#help">Help</a></li>
+            <li ><a href="#sentencelisttab">Sentence list</a></li>
+            <li id="helptab"><a href="#help">Help</a></li>
         </ul>
         <div class="oooeditmode" id="commands">
             <div class="ooogrouping" >
@@ -154,6 +157,7 @@
             </div>
 
         </div>
+
         <div class="editmode" id="umrcommands">
              <div class="ssgrouping" id="qqqumrediting">
                 <div class="onlyumr">
@@ -270,6 +274,15 @@ Else the input is interpreted as regular expression" placeholder="regex/PENMAN" 
 
         </div>
 
+        <div class="ooogrouping ooonoborder" id="sentencelisttab">
+            <h3>Choose sentence</h3>
+            sentence id filter: <input title="filter sentence ids" type="text" id="sidfilter" size="20" value="">
+            sentence text filter: <input title="filter sentence text" type="text" id="textfilter" size="20" value="">
+            <button class="addbutton mybutton" id="modifysentencelist">apply</button>
+            </p>
+            <select class="allsentences" name="sent1" id="sentencelist"></select>
+        </div>
+
         <div id="help">
                  <h2>Help</h2>
         <h3>Add a new instances</h3>
@@ -319,6 +332,8 @@ Else the input is interpreted as regular expression" placeholder="regex/PENMAN" 
         <br><span class="code" id="cmdl"></span>
    
         </div>
+
+
 
     </div>
     <p />
@@ -503,7 +518,7 @@ Else the input is interpreted as regular expression" placeholder="regex/PENMAN" 
     </div>
 
     <!-- sentence list -->
-    <div class="modal editmode" id="sentmodal">
+    <!--div class="modal editmode" id="sentmodal">
         <div class="grouping noborder" id="sentencelistmod">
             <button class="cancelmodal" id="cancelsentlist">&times;</button>
             <h3>Choose sentence</h3>
@@ -514,7 +529,7 @@ Else the input is interpreted as regular expression" placeholder="regex/PENMAN" 
             <select class="allsentences" name="sent1" id="sentencelist"></select>
             <br />
         </div>
-    </div>
+    </div-->
 
     <!-- add graph edit -->
     <div class="modal editmode" id="addgraphmodal">

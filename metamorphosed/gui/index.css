@@ -835,22 +835,29 @@ td.framealiastable {
 }
 
 .ui-widget-header .ui-state-active {
-  background: #be8557;
-  border: 1px solid #c78975;
+  background: #e77c24;
+  border: 1px solid #e77c24;
 }
 
 .ooopui-widget.ui-widget-content {
   border: 0px;
 }
 
-.ui-widget {
+.ui-widget, .ui-widget button, .ui-widget input, .ui-widget select  {
   font-family: Urbanist, "Be Vietnam Pro", Syne, Poppins, Lato, Ubuntu, DejaVu Sans, Arial, Helvetica, Sans;
-  font-size: 80%;
+  font-size: 90%;
 }
 .ui-state-default a, .ui-state-default a:link {
   color: black;
 }
 
+.ui-tabs-tab {
+  font-size: 85%;
+}
+
+#helptab {
+  float: right;
+}
 
 /*
 .tablehoriz {
