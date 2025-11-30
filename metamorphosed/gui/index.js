@@ -210,31 +210,38 @@ function getServerInfo() {
 				$.each(data.docgraphitems.modal.subjects,
 					function (key, value) {
 						$('.validsubjects_m').append('<option value="' + value + '">' + value);
+						$('#msubjects').append(value + "<br/>");
 					});
 				$.each(data.docgraphitems.temporal.subjects,
 					function (key, value) {
 						$('.validsubjects_t').append('<option value="' + value + '">' + value);
+						$('#tsubjects').append(value + "<br/>");
 					});
 				$.each(data.docgraphitems.modal.objects,
 					function (key, value) {
 						$('.validobjects_m').append('<option value="' + value + '">' + value);
+						$('#mobjects').append(value + "<br/>");
 					});
 				$.each(data.docgraphitems.temporal.objects,
 					function (key, value) {
 						$('.validobjects_t').append('<option value="' + value + '">' + value);
+						$('#tobjects').append(value + "<br/>");
 					});
 				$.each(data.docgraphitems.temporal.predicates,
 					function (key, value) {
 						//console.log("T PRED", key, value);
 						$('.validpreds_t').append('<option value="' + value + '">' + value);
+						$('#tpreds').append(value + "<br/>");
 					});
 				$.each(data.docgraphitems.modal.predicates,
 					function (key, value) {
 						$('.validpreds_m').append('<option value="' + value + '">' + value);
+						$('#mpreds').append(value + "<br/>");
 					});
 				$.each(data.docgraphitems.coref.predicates,
 					function (key, value) {
 						$('.validpreds_c').append('<option value="' + value + '">' + value);
+						$('#cpreds').append(value + "<br/>");
 					});
 			}
 		},

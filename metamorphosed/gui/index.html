@@ -158,7 +158,7 @@
 
         </div>
 
-        <div class="editmode" id="umrcommands">
+        <div class="oooeditmode" id="umrcommands">
              <div class="ssgrouping" id="qqqumrediting">
                 <div class="onlyumr">
                     <h3>UMR</h3>
@@ -286,42 +286,80 @@ Else the input is interpreted as regular expression" placeholder="regex/PENMAN" 
         <div id="help">
                  <h2>Help</h2>
         <h3>Add a new instances</h3>
-        Type the concept in line (A) and click <span class="knopf">add</span>
+        <div class="helpparagraph">Type the concept in line (A) and click <span class="knopf">add</span></div>
+
         <h3>Add a new relation between instances</h3>
-        Add source- and target instance and relation name in line (B) and click <span class="knopf">add</span> or
+        <div class="helpparagraph">Add source- and target instance and relation name in line (B) and click <span class="knopf">add</span> or
         click on source-instance and than on the target-instance. A new <span class="code">:todo</span> relation is
-        added which must be modified in a second step
+        added which must be modified in a second step</div>
+
         <h3>Make another instance top instance</h3>
-        set instance in line (C)and click <span class="knopf">set</span>
+        <div class="helpparagraph">set instance in line (C)and click <span class="knopf">set</span></div>
+
         <h3>Add a literal (like a number) and a relation (like <span class="code">:quant</span>)</h3>
-        fill fields in line (D) and click <span class="knopf">add</span>
+        <div class="helpparagraph">fill fields in line (D) and click <span class="knopf">add</span></div>
+
         <h3>Add name to an instance</h3>
-        Add instance which will get <span class="code">:name</span> node and <span class="code">:op</span>-linked
-        strings and name in line (E) and click <span class="knopf">add</span>
+        <div class="helpparagraph">Add instance which will get <span class="code">:name</span> node and <span class="code">:op</span>-linked
+        strings and name in line (E) and click <span class="knopf">add</span></div>
+
         <h3>Add a graph to existing </h3>
-        Click F) <span class="knopf">open edit window</span>,
+        <div class="helpparagraph">Click F) <span class="knopf">open edit window</span>,
         enter a graph in the Add Graph window and specify in the Concept Mapping input field which variable of the
         existing graph corresponds to which variable in the added graph
-        using the format `a/b` where `a` is the variable of the existing graph, and `b` a variable of the added graph.
+        using the format <tt>a/b</tt> where <tt>a</tt> is the variable of the existing graph, and <tt>b</tt> a variable of the added graph.</div>
+        
         <h3>Rename variable</h3>
-        Choose a variable G) and specify the new name
+        <div class="helpparagraph">Choose a variable G) and specify the new name</div>
+        
         <h3>Modify concept</h3>
-        Click the concept in the graph, edit concept and click <span class="knopf">update</span> in the «Modify Concept»
-        window
+        <div class="helpparagraph">Click the concept in the graph, edit concept and click <span class="knopf">update</span> in the «Modify Concept»
+        window</div>
+
         <h3>Delete concept (including associated instance and all incoming and outgoing relations)</h3>
-        Click the concept in the graph and click <span class="knopf">delete</span> in the «Modify Concept» window
+        <div class="helpparagraph">Click the concept in the graph and click <span class="knopf">delete</span> in the «Modify Concept» window</div>
+        
         <h3>Modify relation name</h3>
-        Click the relation label, edit name and click <span class="knopf">update</span> in the «Modify Relation» window
+        <div class="helpparagraph">Click the relation label, edit name and click <span class="knopf">update</span> in the «Modify Relation» window</div>
+        
         <h3>Modify relation source</h3>
-        Click the relation label and then click the new source instance.
+        <div class="helpparagraph">Click the relation label and then click the new source instance.</div>
+        
         <h3>Delete relation</h3>
-        Click the relation label and click <span class="knopf">delete</span> in the «Modify Relation» window
+        <div class="helpparagraph">Click the relation label and click <span class="knopf">delete</span> in the «Modify Relation» window</div>
+        
         <h3>Change source instance of relation</h3>
-        Click on the relation (in the graph) and click on the future source instance
+        <div class="helpparagraph">Click on the relation (in the graph) and click on the future source instance</div>
+
+        <div class="onlyumr">
+        <h2>UMR specific functions</h2>
+        <h3>Add new alignment Word - Instance</h3>
+        <div class="helpparagraph">Either use H), choose unaligned sentence graph variable and indicate word span (<tt>1-1</tt>: align with first word, 
+        <tt>1-2</tt>: align with words 1 and 2, <tt>1-1, 3-3</tt>: aling with first and third words).
+        Or click on the Word and then on the instance in the graph (this will remove any existing alignment fo the given variable).</div>
+        
+        <h3>Modify/remove alignment Word - Instance</h3>
+        <div class="helpparagraph">Click on the variable in the <tt>Alignments:</tt> line and edit the the alignments. To remove an alignment, use H) and do not indicate any alignment (empty field)</div>
+
+        <h3>Add a document level annotation</h3>
+        <div class="helpparagraph">Use I) and add subject and object variable (or fixed string as shown in following table
+            <!-- completed by index.js getServerInfo() -->
+            <table class="dgcell">
+                <tr><th>type</th> <th class="dgcell">subject</th> <th class="dgcell">predicate</th> <th class="dgcell">object</th></tr>
+                <tr class="helpdocgraph"><th class="dgcell">temporal</th> <td class="dgcell" id="tsubjects"><i>any variable in document</i><br/></td> <td class="dgcell" id="tpreds"></td> <td class="dgcell" id="tobjects"><i>any variable of current sentence</i><br/></td></tr>
+                <tr class="helpdocgraph"><th class="dgcell">modal</th>    <td class="dgcell" id="msubjects"><i>any variable in document</i><br/></td> <td class="dgcell" id="mpreds"></td> <td class="dgcell" id="mobjects"><i>any variable of current sentence</i><br/></td></tr>
+                <tr class="helpdocgraph"><th class="dgcell">coref</th>    <td class="dgcell" id="csubjects"><i>any variable in document</i><br/></td> <td class="dgcell" id="cpreds"></td> <td class="dgcell" id="cobjects"><i>any variable of current sentence</i><br/></td></tr>
+            </table>
+            (defined in <tt>metamorphosed/data/docgraph.json</tt>tt>)
+        </div>
+
+        <h3>Modify/remove a document level annotation</h3>
+        <div class="helpparagraph">Click on the document level annotation triple and modify it in the popup. If the Subjet or Object field is 
+            left empty, the triple will be removed.</div>
 
         <h2>About</h2>
-        <span class="logo2"><img src="img/metamorphosed+.png" width="16%"></span>
-        version <span id="version2"></span> (API version: <span id="apiversion"></span>)<br />
+        <span class="logo2"><img src="img/metamorphosed+.png" width="18%"></span>
+        version <span id="version2"></span> (API version: <span id="apiversion"></span>)<p />
         Author: Johannes Heinecke.
         Copyright © 2022-2025 by Orange. This software is published under the <a target="_blank"
             href="https://opensource.org/licenses/BSD-3-Clause">3-Clause BSD License</a>.
@@ -332,10 +370,8 @@ Else the input is interpreted as regular expression" placeholder="regex/PENMAN" 
         <br><span class="code" id="cmdl"></span>
    
         </div>
-
-
-
     </div>
+
     <p />
     <div class="modal QQeditmode" id="svgexport">
         <div class="grouping noborder" id="modconcept">

@@ -859,6 +859,22 @@ td.framealiastable {
   float: right;
 }
 
+.helpparagraph {
+  padding-left: 2em;
+  padding-bottom: 1em;
+}
+
+.helpdocgraph {
+  vertical-align: baseline;
+  word-wrap: word;
+}
+
+.dgcell {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+
 /*
 .tablehoriz {
   display: inline-block;
