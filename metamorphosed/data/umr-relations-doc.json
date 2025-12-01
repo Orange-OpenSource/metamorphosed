@@ -1,574 +1,419 @@
 {
   ":actor": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:actor</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong>He</strong> ate the corn.\n    (e / eat-01\n        <strong>:actor (p / person\n            :refer-person 3rd\n            :refer-number singular)</strong>\n        :undergoer (c / corn)\n        :aspect performance\n        :modal-strength full-affirmative)\n      </span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:actor-of</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong>the boy</strong> who ate the corn\n    <strong>(b / boy\n        :actor-of</strong> (e / eat-01\n            :undergoer (c / corn)\n            :aspect performance\n            :modal-strength full-affirmative))\n      </span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>have-actor-91</code><br></br>\n<span class=\"docindent\">:ARG1 event<br></br> \n            :ARG2 actor\n      </span></span></td>",
-    "<td class=\"umreldoc\">Animate entity that initiates the action.<br></br>\n<span class=\"docexsent\"><strong>The doctor</strong> laughed.\n          <span class=\"docpopup\">(l / laugh-01\n  :actor (d / doctor)\n  :aspect performance\n  :modal-strength full-affirmative)</span></span>\n<span class=\"docexsent\"><strong>The doctor</strong> ate a salad.\n          <span class=\"docpopup\">(e / eat-01\n  <strong>:actor (d / doctor)</strong>\n  :undergoer (s / salad)\n  :aspect performance\n  :modal-strength full-affirmative)</span></span>\n</td>",
+    "<h3>:actor</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-actor-91\n  :ARG1 event\n  :ARG2 actor</pre></td>",
+    "<td>Animate entity that initiates the action.\n<strong>The doctor</strong> laughed.\n<pre>(l / laugh-01\n  :actor (d / doctor)\n  :aspect performance\n  :modal-strength full-affirmative)</pre>\n<strong>The doctor</strong> ate a salad.\n<pre>(e / eat-01\n  <strong>:actor (d / doctor)</strong>\n  :undergoer (s / salad)\n  :aspect performance\n  :modal-strength full-affirmative)</pre></td>",
     "</tr></table>"
   ],
   ":co-actor": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:co-actor</code>\n<span class=\"docpopup\"><em>Ex:</em> I was arguing with <strong>him</strong>.\n    (a / argue-01\n        :actor (p / person\n            :refer-person 1st\n            :refer-number singular)\n        <strong>:co-actor (p2 / person\n            :refer-person 3rd\n            :refer-number singluar)</strong>\n        :aspect activity\n       :modal-strength full-affirmative)\n      </span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:co-actor-of</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong>the man</strong> I was arguing with\n    <strong>(m / man\n        :co-actor-of</strong> (a / argue-01\n            :actor (p2 / person\n               :refer-person 1st\n               :refer-number singular)\n           :aspect activity\n           :modal-strength full-affirmative))\n      </span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>have-co-actor-91</code><br></br>\n<span class=\"docindent\">:ARG1 event<br></br> \n            :ARG2 co-actor\n      </span></span></td>",
-    "<td class=\"umreldoc\">Secondary parallel Actor who is acting independently of the primary <span class=\"dochighlight\">:actor</span>.<br></br>\n<span class=\"docexsent\">James battled <strong>the dragon</strong>.\n          <span class=\"docpopup\">(b / battle-01\n    :actor (p / person\n        :name (n / name :op1 \"James\"))\n    <strong>:co-actor (d / dragon)</strong>\n    :aspect activity\n    :modal-strength full-affirmative)</span></span>\n</td>",
+    "<h3>:co-actor</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-co-actor-91\n  :ARG1 event\n  :ARG2 co-actor</pre></td>",
+    "<td><pre>Secondary parallel Actor who is acting independently of the primary :actor.</pre>\nJames battled <strong>the dragon</strong>.\n<pre>(b / battle-01\n    :actor (p / person\n        :name (n / name :op1 \"James\"))\n    <strong>:co-actor (d / dragon)</strong>\n    :aspect activity\n    :modal-strength full-affirmative)</pre></td>",
     "</tr></table>"
   ],
   ":undergoer": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:undergoer</code>\n<span class=\"docpopup\"><em>Ex:</em> He ate <strong>the corn</strong>.\n    (e / eat-01\n        :actor (p / person\n            :refer-person 3rd\n            :refer-number singular)\n        <strong>:undergoer (c / corn)</strong>\n        :aspect performance\n        :modal-strength full-affirmative)\n      </span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:undergoer-of</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong>the corn</strong> the boy ate\n    <strong>(c / corn\n       :undergoer-of</strong> (e / eat-01\n            :actor (b / boy)\n            :aspect performance\n           :modal-strength full-affirmative))\n      </span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>have-undergoer-91</code><br></br>\n<span class=\"docindent\">:ARG1 event<br></br> \n            :ARG2 undergoer\n      </span></span></td>",
-    "<td class=\"umreldoc\">Entity (animate or inanimate) that is affected by the action.<br></br>\n<span class=\"docexsent\"><strong>The papers </strong> burned.\n          <span class=\"docpopup\">(b / burn-01\n    <strong>:undergoer (p / paper\n        :refer-number plural)</strong>\n    :aspect activity\n    :modal-strength full-affirmative)</span></span>\n<span class=\"docexsent\">He burned <strong>the onions</strong>.\n          <span class=\"docpopup\">(b / burn-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:undergoer (o / onion\n        :refer-number plural)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</span></span>\n</td>",
+    "<h3>:undergoer</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-undergoer-91\n  :ARG1 event\n  :ARG2 undergoer</pre></td>",
+    "<td>Entity (animate or inanimate) that is affected by the action.\n<strong>The papers </strong> burned.\n<pre>(b / burn-01\n    <strong>:undergoer (p / paper\n        :refer-number plural)</strong>\n    :aspect activity\n    :modal-strength full-affirmative)</pre>\nHe burned <strong>the onions</strong>.\n<pre>(b / burn-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:undergoer (o / onion\n        :refer-number plural)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
     "</tr></table>"
   ],
   ":theme": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:theme</code>\n<span class=\"docpopup\"><em>Ex:</em> She put <strong>the books</strong> on the shelf.\n    (p / put-01\n        :actor (p2 / person\n            :refer-person 3rd\n            :refer-number singular)\n        <strong>:theme (b / book\n            :refer-number plural)</strong>\n        :goal (s / shelf)\n        :aspect performance\n        :modal-strength full-affirmative)\n      </span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:theme-of</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong>the books</strong> she had put on the shelf\n    <strong:source (b=\"doc\"  :refer-number=\"doc\"  :theme-of=\"doc\"  book=\"doc\"  plural=\"doc\"> (p2 / put-01\n            :actor (p3 / person\n                :refer-person 3rd\n                :refer-number singular)\n            :goal (s / shelf)\n            :aspect performance\n            :modal-strength full-affirmative))\n      </strong:source></span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>have-theme-91</code><br></br>\n<span class=\"docindent\">:ARG1 event<br></br> \n            :ARG2 theme\n      </span></span></td>",
-    "<td class=\"umreldoc\">Entity (animate, inanimate, or abstract) that moves from one entity to another entity, either spatially or metaphorically.<br></br>\n<span class=\"docexsent\">She put <strong>the books</strong> on the shelf.\n          <span class=\"docpopup\">(p / put-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:theme (b / book\n        :refer-number plural)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</span></span>\n<span class=\"docexsent\">She tore <strong>a page</strong> from the book.\n          <span class=\"docpopup\">(t /tear-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:theme (p2 / page\n        :refer-number singular)</strong>\n    :source (b / book\n        :refer-number plural)\n    :aspect performance\n    :modal-strength full-affirmative)</span></span>\n<span class=\"docexsent\">He gave me <strong>a sandwich</strong>.\n          <span class=\"docpopup\">(g / give-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:theme (s / sandwich\n        :refer-number singular)</strong>\n    :recipient (p2 / person\n        :refer-person 1st\n        :refer-number singular)\n    :aspect performance\n    :modal-strength full-affirmative)</span></span>\n<span class=\"docexsent\">She told him <strong>a story</strong>.\n          <span class=\"docpopup\">(t / tell-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:theme (s / story\n        :refer-number singular)</strong>\n    :recipient (p2 / person\n        :refer-person 3rd\n        :refer-number singular)\n    :aspect performance\n    :modal-strength full-affirmative)</span></span>\n</td>",
+    "<h3>:theme</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-theme-91\n  :ARG1 event\n  :ARG2 theme</pre></td>",
+    "<td>Entity (animate, inanimate, or abstract) that moves from one entity to another entity, either spatially or metaphorically.\nShe put <strong>the books</strong> on the shelf.\n<pre>(p / put-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:theme (b / book\n        :refer-number plural)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\nShe tore <strong>a page</strong> from the book.\n(t /tear-01\n<pre>:actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:theme (p2 / page\n        :refer-number singular)</strong>\n    :source (b / book\n        :refer-number plural)\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\nHe gave me <strong>a sandwich</strong>.\n<pre>(g / give-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:theme (s / sandwich\n        :refer-number singular)</strong>\n    :recipient (p2 / person\n        :refer-person 1st\n        :refer-number singular)\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\nShe told him <strong>a story</strong>.\n<pre>(t / tell-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:theme (s / story\n        :refer-number singular)</strong>\n    :recipient (p2 / person\n        :refer-person 3rd\n        :refer-number singular)\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
     "</tr></table>"
   ],
   ":recipient": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:recipient</code>\n<span class=\"docpopup\"><em>Ex:</em> I gave <strong>Martha</strong> a book.\n    (g / give-01\n        :actor (p / person\n            :refer-person 1st\n            :refer-number singular)\n        <strong>:recipient (p2 / person :name (n / name :op1 \"Martha\"))</strong>\n        :theme (b / book)\n        :aspect performance\n        :modal-strength full-affirmative)\n      </span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:recipient-of</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong>The book</strong> I gave Martha was old.\n    (h / have-age-91\n        :ARG1 <strong>(b / book\n            :theme-of</strong> (g / give-01\n                :actor (p / person\n                    :refer-person 1st\n                    :refer-number singular)\n                :recipient (p2 / person :name (n / name :op1 \"Martha\"))\n                :aspect performance\n                :modal-strength full-affirmative))\n        :ARG2 (o / old)\n      </span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>have-recipient-91</code><br></br>\n<span class=\"docindent\">:ARG1 event<br></br> \n            :ARG2 recipient\n      </span></span></td>",
-    "<td class=\"umreldoc\">Animate entity that gains possession (or at least temporary control) of another entity.\n        <span class=\"docexsent\">He gave <strong>me</strong> a sandwich.\n          <span class=\"docpopup\">(g / give-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    :theme (s / sandwich\n        :refer-number singular)\n    <strong>:recipient (p2 / person\n        :refer-person 1st\n        :refer-number singular)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</span></span>\n<span class=\"docexsent\">She told <strong>him</strong> a story.\n          <span class=\"docpopup\">(t / tell-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    :theme (s / story\n        :refer-number singular)\n    <strong>:recipient (p2 / person\n        :refer-person 3rd\n        :refer-number singular)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</span></span>\n</td>",
+    "<h3>:recipient</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-recipient-91\n  :ARG1 event\n  :ARG2 recipient</pre></td>",
+    "<td>Animate entity that gains possession (or at least temporary control) of another entity.\nHe gave <strong>me</strong> a sandwich.\n<pre>(g / give-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    :theme (s / sandwich\n        :refer-number singular)\n    <strong>:recipient (p2 / person\n        :refer-person 1st\n        :refer-number singular)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\nShe told <strong>him</strong> a story.\n<pre>(t / tell-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    :theme (s / story\n        :refer-number singular)\n    <strong>:recipient (p2 / person\n        :refer-person 3rd\n        :refer-number singular)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
     "</tr></table>"
   ],
   ":force": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:force</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong>The storm</strong> damaged the power lines.\n    (d/ damage-01 \n        <strong>:force (s/ storm)</strong>  \n        :undergoer (l/ line\n            :purpose (p/ power)\n            :refer-number plural)\n        :aspect performance\n        :modal-strength full-affirmative)</span></span>\n</td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:force-of</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong>the storm</strong> that damaged the power lines\n    <strong>(s/ storm\n        :force-of</strong> (d/ damage-01   \n            :undergoer (l/ line\n                :purpose (p/ power)\n                :refer-number plural)\n          \t:aspect performance\n          \t:modal-strength full-affirmative))</span></span>\n</td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>have-force-91</code><br></br>\n<span class=\"docindent\">:ARG1 event<br></br> \n            :ARG2 force\n      </span></span></td>",
-    "<td class=\"umreldoc\">Inanimate entity that initiates the action.\n        <span class=\"docexsent\"><strong>The wind</strong> knocked down the tree.\n          <span class=\"docpopup\">(k / knock-down-02\n    <strong>:force (w / wind)</strong>\n    :undergoer (t / tree)\n    :aspect performance\n    :modal-strength full-affirmative)</span></span>\n</td>",
+    "<h3>:force</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-force-91\n  :ARG1 event\n  :ARG2 force</pre></td>",
+    "<td>Inanimate entity that initiates the action.\n<strong>The wind</strong> knocked down the tree.\n<pre>(k / knock-down-02\n    <strong>:force (w / wind)</strong>\n    :undergoer (t / tree)\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
     "</tr></table>"
   ],
   ":causer": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:causer</code>\n<span class=\"docpopup\"><em>Ex:</em>\n<strong>Parte</strong>   in    Cinte a         hni-<strong>ter</strong>\n<strong>Parte</strong>   ERG   Cinte 3SG.NOM   laugh.1-<strong>CAUS</strong>  \n    ‘Parte made Cinte laugh.’<br></br>\n    (h/ hniter-00 ‘make laugh’ \n        <strong>:causer (p/ person\n            :name (n/ name :op1 \"Parte\"))</strong> \n        :actor (p2/ person\n            :name (n2/ name :op1 \"Cinte\"))  \n        :aspect performance\n        :modal-strength full-affirmative)\n      </span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:causer-of</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong><br></br>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>have-causer-91</code><br></br>\n<span class=\"docindent\">:ARG1 event<br></br> \n            :ARG2 causer\n      </span></span></td>",
-    "<td class=\"umreldoc\">Animate entity that acts on another animate entity to initiate the action.<br></br>\n<span class=\"docexsent\"><strong>The mother</strong> made her child eat the broccoli.\n          <span class=\"docpopup\">(m / make-01\n    <strong>:causer (p / person\n        :ARG1-of (h / have-rel-role-91\n            :ARG2 (p2 / person)\n            :ARG3 (m / mother)\n            :ARG4 (c / child)))</strong>\n    :theme (e / eat-01\n        :actor p2\n        :undergoer (b / broccoli)\n    :aspect performance\n    :modal-strength full-affirmative))</span></span>\n</td>",
+    "<h3>:causer</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-causer-91\n  :ARG1 event\n  :ARG2 causer</pre></td>",
+    "<td>Animate entity that acts on another animate entity to initiate the action.\n<strong>The mother</strong> made her child eat the broccoli.\n<pre>(m / make-01\n    <strong>:causer (p / person\n        :ARG1-of (h / have-rel-role-91\n            :ARG2 (p2 / person)\n            :ARG3 (m / mother)\n            :ARG4 (c / child)))</strong>\n    :theme (e / eat-01\n        :actor p2\n        :undergoer (b / broccoli)\n    :aspect performance\n    :modal-strength full-affirmative))</pre></td>",
     "</tr></table>"
   ],
   ":experiencer": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:experiencer</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:experiencer-of</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>have-experience-91</code><br></br>\n<span class=\"docindent\">:ARG1 experiencer<br></br> \n            :ARG2 the experience<br></br> \n            :ARG3 stimulus<br></br> \n            :ARG4 the event, if separate\n      </span></span></td>",
-    "<td class=\"umreldoc\">Animate entity that cognitively or sensorily experiences a stimulus.\n        <span class=\"docexsent\"><strong>The dog</strong> heard a sound.\n          <span class=\"docpopup\">(h / hear-01\n    <strong>:experiencer (d / dog)</strong>\n    :stimulus (s / sound)\n    :aspect performance\n    :modal-strength full-affirmative)</span></span>\n</td>",
+    "<h3>:experiencer</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-experience-91\n  :ARG1 experiencer\n  :ARG2 the experience\n  :ARG3 stimulus\n  :ARG4 the event, if separate</pre></td>",
+    "<td>Animate entity that cognitively or sensorily experiences a stimulus.\n<strong>The dog</strong> heard a sound.\n<pre>(h / hear-01\n    <strong>:experiencer (d / dog)</strong>\n    :stimulus (s / sound)\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
     "</tr></table>"
   ],
   ":stimulus": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:stimulus</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:stimulus-of</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">Entity (animate or inanimate) that is experienced by an <span class=\"dochighlight\">:experiencer</span><br></br>\n<span class=\"docexsent\">The dog heard <strong>a sound</strong>.\n          <span class=\"docpopup\">(h / hear-01\n    :experiencer (d / dog)\n    <strong>:stimulus (s / sound)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</span></span>\n</td>",
+    "<h3>:stimulus</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>Entity (animate or inanimate) that is experienced by an :experiencer\n  The dog heard <strong>a sound</strong>.\n  (h / hear-01\n  :experiencer (d / dog)\n  <strong>:stimulus (s / sound)</strong>\n  :aspect performance\n  :modal-strength full-affirmative)</pre></td>",
     "</tr></table>"
   ],
   ":instrument": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:instrument</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:instrument-of</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>have-instrument-91</code><br></br>\n<span class=\"docindent\">:ARG1 event<br></br> \n            :ARG2 instrument\n      </span></span></td>",
-    "<td class=\"umreldoc\">Inanimate entity that is manipulated by an external Causer in order to initiate the action.<br></br>\n<span class=\"docexsent\">She hit him with <strong>a broom</strong>. \n          <span class=\"docpopup\">(h / hit-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    :undergoer (p2 / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:instrument (b / broom)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</span></span>\n</td>",
+    "<h3>:instrument</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-instrument-91\n  :ARG1 event\n  :ARG2 instrument</pre></td>",
+    "<td>Inanimate entity that is manipulated by an external Causer in order to initiate the action.\nShe hit him with <strong>a broom</strong>.\n<pre>(h / hit-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    :undergoer (p2 / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:instrument (b / broom)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
     "</tr></table>"
   ],
   ":companion": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:companion</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:companion-of</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>have-companion-91</code><br></br>\n<span class=\"docindent\">:ARG1 event<br></br> \n            :ARG2 companion\n      </span></span></td>",
-    "<td class=\"umreldoc\">Animate entity that acts with the actor to initiate the action.<br></br>\n<span class=\"docexsent\">He cooked dinner with <strong>his wife</strong>. \n          <span class=\"docpopup\">(c / cook-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    :undergoer (d / dinner)\n    <strong>:companion (p2 / person\n        :refer-person 3rd\n        :refer-number singular)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</span></span>\n</td>",
+    "<h3>:companion</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-companion-91\n  :ARG1 event\n  :ARG2 companion</pre></td>",
+    "<td>Animate entity that acts with the actor to initiate the action.\nHe cooked dinner with <strong>his wife</strong>.\n<pre>(c / cook-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    :undergoer (d / dinner)\n    <strong>:companion (p2 / person\n        :refer-person 3rd\n        :refer-number singular)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
     "</tr></table>"
   ],
   ":material": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:material</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:material-of</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>have-material-91</code><br></br>\n<span class=\"docindent\">:ARG1 event<br></br> \n            :ARG2 material\n      </span></span></td>",
-    "<td class=\"umreldoc\">Entity (inanimate) that is transformed into a new entity.\n        <span class=\"docexsent\">He made a roux with <strong>flour and butter</strong>.  \n          <span class=\"docpopup\">(m / make-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    :undergoer (r / roux)\n    <strong>:material (a / and\n        :op1 (f / flour)\n        :op2 (b / butter))</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</span></span>\n</td>",
+    "<h3>:material</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-material-91\n  :ARG1 event\n  :ARG2 material</pre></td>",
+    "<td>Entity (inanimate) that is transformed into a new entity.\nHe made a roux with <strong>flour and butter</strong>.\n<pre>(m / make-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    :undergoer (r / roux)\n    <strong>:material (a / and\n        :op1 (f / flour)\n        :op2 (b / butter))</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
     "</tr></table>"
   ],
   ":source": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:source</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:source-of</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>have-source-91</code><br></br>\n<span class=\"docindent\">:ARG1 event<br></br> \n            :ARG2 source\n      </span></span></td>",
-    "<td class=\"umreldoc\">Entity from which the <span class=\"dochighlight\">:theme</span> detaches.\n        <span class=\"docexsent\">He plucked a flower from <strong>the bush</strong>.   \n          <span class=\"docpopup\">(p / pluck-01\n    :actor (p2 / person\n        :refer-person 3rd\n        :refer-number singular)\n    :theme (f / flower)\n    <strong>:source (b / bush)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</span></span>\n</td>",
+    "<h3>:source</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-source-91\n  :ARG1 event\n  :ARG2 source</pre></td>",
+    "<td><pre>Entity from which the :theme detaches.</pre>\nHe plucked a flower from <strong>the bush</strong>.\n<pre>(p / pluck-01\n    :actor (p2 / person\n        :refer-person 3rd\n        :refer-number singular)\n    :theme (f / flower)\n    <strong>:source (b / bush)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
     "</tr></table>"
   ],
   ":place": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:place</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:place-of</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>have-place-91</code><br></br>\n<span class=\"docindent\">:ARG1 event<br></br> \n            :ARG2 place\n      </span></span></td>",
-    "<td class=\"umreldoc\">Location at which the action takes place.\n        <span class=\"docexsent\">He read a book <strong>in the garden</strong>.   \n          <span class=\"docpopup\">(r / read-01\n    :actor (p2 / person\n        :refer-person 3rd\n        :refer-number singular)\n    :theme (b / book)\n    <strong>:place (g / garden)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</span></span>\n</td>",
+    "<h3>:place</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-place-91\n  :ARG1 event\n  :ARG2 place</pre></td>",
+    "<td>Location at which the action takes place.\nHe read a book <strong>in the garden</strong>.\n<pre>(r / read-01\n    :actor (p2 / person\n        :refer-person 3rd\n        :refer-number singular)\n    :theme (b / book)\n    <strong>:place (g / garden)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
     "</tr></table>"
   ],
   ":start": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:start</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:start-of</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>have-start-91</code><br></br>\n<span class=\"docindent\">:ARG1 event<br></br> \n            :ARG2 start\n      </span></span></td>",
-    "<td class=\"umreldoc\">Location at which a motion event begins.\n        <span class=\"docexsent\">She biked <strong>from her house</strong>.    \n          <span class=\"docpopup\">(b / bike-01\n    :actor (p2 / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:start (h / house\n        :possessor p2)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</span></span>\n</td>",
+    "<h3>:start</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-start-91\n  :ARG1 event\n  :ARG2 start</pre></td>",
+    "<td>Location at which a motion event begins.\nShe biked <strong>from her house</strong>.\n<pre>(b / bike-01\n    :actor (p2 / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:start (h / house\n        :possessor p2)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
     "</tr></table>"
   ],
   ":goal": [
-    "<table><tr>",
-    "<td class=\"umreldoc\"><span class=\"dochighlight\">\n<code>:goal</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:goal-of</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>have-goal-91</code><br></br>\n<span class=\"docindent\">:ARG1 event<br></br> \n            :ARG2 goal\n      </span></span></td>",
-    "<td class=\"umreldoc\">Location at which the action ends, the end point at which the theme arrives.\n        <span class=\"docexsent\">She put the books <strong>on the shelf</strong>.  \n          <span class=\"docpopup\">(p / put-01\n    :actor (p2 / person\n        :refer-person 3rd\n        :refer-number singular)\n    :theme (b / book\n        :refer-number plural)\n    <strong>:goal (s / shelf)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</span></span>\n</td>",
+    "<h3>:goal</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-goal-91\n  :ARG1 event\n  :ARG2 goal</pre></td>",
+    "<td>Location at which the action ends, the end point at which the theme arrives.\nShe put the books <strong>on the shelf</strong>.\n<pre>(p / put-01\n    :actor (p2 / person\n        :refer-person 3rd\n        :refer-number singular)\n    :theme (b / book\n        :refer-number plural)\n    <strong>:goal (s / shelf)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
     "</tr></table>"
   ],
   ":affectee": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:affectee</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:affectee-of</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>have-affectee-91</code><br></br>\n<span class=\"docindent\">:ARG1 event<br></br> \n            :ARG2 affectee\n      </span></span></td>",
-    "<td class=\"umreldoc\">Animate entity which the action has a positive or negative influence on, i.e. beneficiary or maleficiary.<br></br>\n<span class=\"docexsent\">He made a cake for<strong>the dog</strong>.\n          <span class=\"docpopup\">(m / make-01\n    :actor (p2 / person\n        :refer-person 3rd\n        :refer-number singular)\n    :theme (c / cake)\n    <strong>:affectee (d / dog)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</span></span>\n<span class=\"docexsent\">She twisted his words <strong>against him</strong>.\n          <span class=\"docpopup\">(t / twist-01\n    :actor (p2 / person\n        :refer-person 3rd\n        :refer-number singular)\n    :theme (w / word\n        :refer-number plural\n        :possessor (p / person\n            :refer-person 3rd\n            :refer-number singular)\n    <strong>:affectee p</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</span></span>\n</td>",
+    "<h3>:affectee</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-affectee-91\n  :ARG1 event\n  :ARG2 affectee</pre></td>",
+    "<td>Animate entity which the action has a positive or negative influence on, i.e. beneficiary or maleficiary.\nHe made a cake for<strong>the dog</strong>.\n<pre>(m / make-01\n    :actor (p2 / person\n        :refer-person 3rd\n        :refer-number singular)\n    :theme (c / cake)\n    <strong>:affectee (d / dog)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\nShe twisted his words <strong>against him</strong>.\n<pre>(t / twist-01\n    :actor (p2 / person\n        :refer-person 3rd\n        :refer-number singular)\n    :theme (w / word\n        :refer-number plural\n        :possessor (p / person\n            :refer-person 3rd\n            :refer-number singular)\n    <strong>:affectee p</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
     "</tr></table>"
   ],
   ":cause": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:cause</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:cause-of</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>have-cause-91</code><br></br>\n<span class=\"docindent\">:ARG1 event<br></br> \n            :ARG2 cause\n      </span></span></td>",
-    "<td class=\"umreldoc\">Inanimate entity that causes the action to happen.\n        <span class=\"docexsent\">He was late because of <strong>the fire</strong>.\n          <span class=\"docpopup\">(l / late-02\n    :theme (p2 / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:cause (f / fire-05\n        :aspect process\n        :modal-strength full-affirmative)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</span></span>\n</td>",
+    "<h3>:cause</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-cause-91\n  :ARG1 event\n  :ARG2 cause</pre></td>",
+    "<td>Inanimate entity that causes the action to happen.\nHe was late because of <strong>the fire</strong>.\n<pre>(l / late-02\n    :theme (p2 / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:cause (f / fire-05\n        :aspect process\n        :modal-strength full-affirmative)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
     "</tr></table>"
   ],
   ":manner": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:manner</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:manner-of</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>have-manner-91</code><br></br>\n<span class=\"docindent\">:ARG1 event<br></br> \n            :ARG2 manner\n      </span></span></td>",
-    "<td class=\"umreldoc\">Manner in which the action takes place.\n        <span class=\"docexsent\">She exercised by<strong>lifting weights</strong>.\n          <span class=\"docpopup\">(e / exercise-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:manner (l / lift-01\n        :actor p \n        :theme (w / weight\n            :refer-number plural)\n        :aspect performance\n        :modal-strength full-affirmative)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</span></span>\n</td>",
+    "<h3>:manner</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-manner-91\n  :ARG1 event\n  :ARG2 manner</pre></td>",
+    "<td>Manner in which the action takes place.\nShe exercised by<strong>lifting weights</strong>.\n<pre>(e / exercise-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:manner (l / lift-01\n        :actor p \n        :theme (w / weight\n            :refer-number plural)\n        :aspect performance\n        :modal-strength full-affirmative)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
     "</tr></table>"
   ],
   ":reason": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:reason</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:reason-of</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>have-reason-91</code><br></br>\n<span class=\"docindent\">:ARG1 event<br></br> \n            :ARG2 reason\n      </span></span></td>",
-    "<td class=\"umreldoc\">Motivation for the <span class=\"dochighlight\">:actor</span> to initiate the action.\n        <span class=\"docexsent\">They got married because <strong>they were in love</strong>.\n          <span class=\"docpopup\">(m / marry-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number plural)\n    <strong>:reason (l / love-01\n        :actor p \n        :aspect state\n        :modal-strength full-affirmative)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</span></span>\n</td>",
+    "<h3>:reason</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-reason-91\n  :ARG1 event\n  :ARG2 reason</pre></td>",
+    "<td><pre>Motivation for the :actor to initiate the action.</pre>\nThey got married because <strong>they were in love</strong>.\n<pre>(m / marry-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number plural)\n    <strong>:reason (l / love-01\n        :actor p \n        :aspect state\n        :modal-strength full-affirmative)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
     "</tr></table>"
   ],
   ":purpose": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:purpose</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:purpose-of</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>have-purpose-91</code><br></br>\n<span class=\"docindent\">:ARG1 event<br></br> \n            :ARG2 purpose\n      </span></span></td>",
-    "<td class=\"umreldoc\">Intended event that results from the action.\n        <span class=\"docexsent\">They dropped water in order to <strong>fight fires</strong>.\n          <span class=\"docpopup\">(d / drop-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number plural)\n    :theme (w / water)\n    <strong>:purpose (f / fight-01\n        :actor p \n        :force (f2 / fire-05\n            :refer-number plural\n            :aspect process)\n        :aspect habitual\n        :modal-strength partial-affirmative)</strong>\n    :aspect habitual\n    :modal-strength full-affirmative)</span></span>\n</td>",
+    "<h3>:purpose</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-purpose-91\n  :ARG1 event\n  :ARG2 purpose</pre></td>",
+    "<td>Intended event that results from the action.\nThey dropped water in order to <strong>fight fires</strong>.\n<pre>(d / drop-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number plural)\n    :theme (w / water)\n    <strong>:purpose (f / fight-01\n        :actor p \n        :force (f2 / fire-05\n            :refer-number plural\n            :aspect process)\n        :aspect habitual\n        :modal-strength partial-affirmative)</strong>\n    :aspect habitual\n    :modal-strength full-affirmative)</pre></td>",
     "</tr></table>"
   ],
   ":result": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:result</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:result-of</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>have-result-91</code><br></br>\n<span class=\"docindent\">:ARG1 event<br></br> \n            :ARG2 result\n      </span></span></td>",
-    "<td class=\"umreldoc\">Event or state that comes about in some way that is contingent on another event.\n        <span class=\"docexsent\">She worked her fingers <strong>raw</strong>.\n          <span class=\"docpopup\">(w / work-10\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    :undergoer (f / finger\n        :part-of p \n        :refer-number plural)\n    <strong>:result (r / raw-01\n        :theme f\n        :aspect state\n        :modal-strength full-affirmative)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</span></span>\n</td>",
+    "<h3>:result</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-result-91\n  :ARG1 event\n  :ARG2 result</pre></td>",
+    "<td>Event or state that comes about in some way that is contingent on another event.\nShe worked her fingers <strong>raw</strong>.\n<pre>(w / work-10\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    :undergoer (f / finger\n        :part-of p \n        :refer-number plural)\n    <strong>:result (r / raw-01\n        :theme f\n        :aspect state\n        :modal-strength full-affirmative)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
     "</tr></table>"
   ],
   ":temporal": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:temporal</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:temporal-of</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>have-temporal-91</code><br></br>\n<span class=\"docindent\">:ARG1 event<br></br> \n            :ARG2 temporal\n      </span></span></td>",
-    "<td class=\"umreldoc\">Element (event or time expression) that has a temporal relation with the action.\n        <span class=\"docexsent\">She left <strong>after dinner</strong>.\n          <span class=\"docpopup\">(l / leave-11\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:temporal (a / after\n        :op1 (d / dinner))</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</span></span>\n</td>",
+    "<h3>:temporal</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-temporal-91\n  :ARG1 event\n  :ARG2 temporal</pre></td>",
+    "<td>Element (event or time expression) that has a temporal relation with the action.\nShe left <strong>after dinner</strong>.\n<pre>(l / leave-11\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:temporal (a / after\n        :op1 (d / dinner))</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
     "</tr></table>"
   ],
   ":extent": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:extent</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:extent-of</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>have-extent-91</code><br></br>\n<span class=\"docindent\">:ARG1 event<br></br> \n            :ARG2 extent\n    </span></span></td>",
-    "<td class=\"umreldoc\">Measurement phrase.\n        <span class=\"docexsent\">He ran <strong>7 miles</strong>.\n          <span class=\"docpopup\">(r / run-02\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:extent (d / distance-quantity\n        :quant 7\n        :unit (m / mile))</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</span></span>\n</td>",
+    "<h3>:extent</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-extent-91\n  :ARG1 event\n  :ARG2 extent</pre></td>",
+    "<td>Measurement phrase.\nHe ran <strong>7 miles</strong>.\n<pre>(r / run-02\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:extent (d / distance-quantity\n        :quant 7\n        :unit (m / mile))</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
     "</tr></table>"
   ],
   ":other-role": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:other-role</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>:other-role-of</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>have-other-role-91</code><br></br>\n<span class=\"docindent\">:ARG1 event<br></br> \n            :ARG2 other role\n      </span></span></td>",
-    "<td class=\"umreldoc\">This role can be used when an annotator is unsure of which role is appropriate.<br></br></td>",
+    "<h3>:other-role</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-other-role-91\n  :ARG1 event\n  :ARG2 other role</pre></td>",
+    "<td>This role can be used when an annotator is unsure of which role is appropriate.</td>",
     "</tr></table>"
   ],
   "null": [
-    "<table><tr>",
+    "<h3>None</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "</tr></table>"
   ],
   ":direction": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:direction</code>\n<span class=\"docpopup\"><em>Ex:</em> Move that block <strong>the other way</strong>\n    (m / move-01 \n        :mode imperative\n        :actor (p / person\n            :refer-person 2nd\n            :refer-number singular)\n        :theme (b / block\n            :mod (t / that))\n        <strong>:direction (w / way\n                :mod-of (o / other-01))</strong>\n        :aspect performance\n        :modal-strength partial-affirmative)\n      </span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:direction-of</code>\n<span class=\"docpopup\"><em>Ex:</em>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>have-direction-91</code><br></br>\n<span class=\"docindent\">:ARG1 event<br></br> \n            :ARG2 direction\n      </span></span></td>",
-    "<td class=\"umreldoc\">Direction of motion event.\n        <span class=\"docexsent\">He drove <strong>west</strong>.\n          <span class=\"docpopup\">(d / drive\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:direction (t / trajectory\n        :direction-of (w / west-01))</strong>\n    :aspect activity\n    :modal-strength full-affirmative)</span></span>\n</td>",
+    "<h3>:direction</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-direction-91\n  :ARG1 event\n  :ARG2 direction</pre></td>",
+    "<td>Direction of motion event.\nHe drove <strong>west</strong>.\n<pre>(d / drive\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:direction (t / trajectory\n        :direction-of (w / west-01))</strong>\n    :aspect activity\n    :modal-strength full-affirmative)</pre></td>",
     "</tr></table>"
   ],
   ":path": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:path</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:path-of</code>\n<span class=\"docpopup\"><em>Ex:</em>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>have-path-91</code><br></br>\n<span class=\"docindent\">:ARG1 event/entity<br></br> \n            :ARG2 path\n      </span></span></td>",
-    "<td class=\"umreldoc\">Path of motion event.\n        <span class=\"docexsent\">I walked <strong>the track</strong> at the highschool.\n          <span class=\"docpopup\">(w / walk-01\n    :actor (p / person\n        :refer-person 1st\n        :refer-number singular)\n    <strong>:path (t / track)</strong>\n    :place (h / highschool)\n    :aspect activity\n    :modal-strength full-affirmative)</span></span>\n</td>",
+    "<h3>:path</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-path-91\n  :ARG1 event/entity\n  :ARG2 path</pre></td>",
+    "<td>Path of motion event.\nI walked <strong>the track</strong> at the highschool.\n<pre>(w / walk-01\n    :actor (p / person\n        :refer-person 1st\n        :refer-number singular)\n    <strong>:path (t / track)</strong>\n    :place (h / highschool)\n    :aspect activity\n    :modal-strength full-affirmative)</pre></td>",
     "</tr></table>"
   ],
   ":quant": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:quant</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:quant-of</code>\n<span class=\"docpopup\"><em>Ex:</em>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>have-quant-91</code><br></br>\n<span class=\"docindent\">:ARG1 entity<br></br> \n            :ARG2 quant\n      </span></span></td>",
-    "<td class=\"umreldoc\">Quantity of an entity.\n        <span class=\"docexsent\">My brother has <strong>12</strong> pets.\n          <span class=\"docpopup\">(h / have-91\n    :ARG1 (p / person\n        :ARG1-of (h2 / have-rel-role-91\n            :ARG2 (p / person\n                :refer-person 1st\n                :refer-number singular)\n            :ARG3 (b / brother)))\n    :ARG2 (p2 / pet\n        <strong>:quant 12</strong>)\n    :aspect state\n    :modal-strength full-affirmative)</span></span>\n</td>",
+    "<h3>:quant</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-quant-91\n  :ARG1 entity\n  :ARG2 quant</pre></td>",
+    "<td>Quantity of an entity.\nMy brother has <strong>12</strong> pets.\n<pre>(h / have-91\n    :ARG1 (p / person\n        :ARG1-of (h2 / have-rel-role-91\n            :ARG2 (p / person\n                :refer-person 1st\n                :refer-number singular)\n            :ARG3 (b / brother)))\n    :ARG2 (p2 / pet\n        <strong>:quant 12</strong>)\n    :aspect state\n    :modal-strength full-affirmative)</pre></td>",
     "</tr></table>"
   ],
   ":degree": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:degree</code></span><br></br><br></br>\n<span class=\"dochighlight\"><code>:degree-of</code></span><br></br><br></br>\n<span class=\"dochighlight\"><code>have-degree-91</code>\n<span class=\"docindent\">:ARG1 entity<br></br>\n          :ARG2 attribute<br></br> \n          :ARG3 degree<br></br> \n          :ARG4 compared to<br></br> \n          :ARG5 reference to superset<br></br> \n          :ARG6 threshold of sufficiency</span>\n<span class=\"docpopup\"><em>Ex:</em> The girl <strong>is taller than</strong> the boy.\n    (h / have-degree-91\n        :ARG1 (g / girl)\n        :ARG2 (t / tall-01)\n        :ARG3 (m / more)\n        :ARG4 (b / boy)\n        :aspect state\n        :modal-strength full-affirmative)\n  \n<em>Ex:</em> He runs <strong>as fast as</strong> lightning.\n    (h / have-degree-91\n        :ARG1 (r / run-02\n            :ARG1 (p / person\n                :refer-person 3rd\n                :refer-number singular\n            :aspect habitual\n            :modal-strength full-affirmative))\n        :ARG2 (f / fast)\n        :ARG3 (e / equal)\n        :ARG4 (l / lightning)\n        :aspect state\n        :modal-strength full-affirmative)\n  \n<em>Ex:</em> It is <strong>too early to</strong> reach any conclusion as to the motive and identity of the attackers .\n    (h / have-degree-91\n        :ARG2 (e / early-01)\n        :ARG3 (t / too)\n        :ARG6 (c / conclude-01\n            :ARG2 (a / and\n                :op1 (t2 / thing\n                    :ARG0-of (m / motivate-01\n                        :ARG1 (p / person\n                            :ARG0-of (a / attack-01))))\n                :op2 (p2 / person\n                    :ARG1-of (i / identity-91\n                        :ARG2 p)))\n            :aspect performance\n            :modal-strength partial-affirmative)\n        :aspect state\n        :modal-strength full-affirmative)\n  \n<em>Ex:</em> the <strong>most intelligent</strong> girl on the team\n    (g / girl\n        :ARG1-of (h / have-degree-91\n            :ARG2 (i / intelligent)\n            :ARG3 (m / most)\n            :ARG5 (g2 / girl\n                :ARG1-of (h2 / have-org-role-92\n                    :ARG2 (t / team)))))</span></span><br></br>\n<span class=\"dochighlight\"><code>have-degree-92</code>\n<span class=\"docindent\">:ARG1 state<br></br>\n          :ARG2 degree value</span>\n<span class=\"docpopup\"><em>Ex:</em> I know that he is of <strong>high</strong> intelligence.\n    (k / know-01\n        :ARG0 (p / person\n            :refer-person 1st\n            :refer-number singular)\n        :ARG1 (h / have-degree-92\n            :ARG1 (i / intelligent-01\n                :ARG1 (p / person\n                    :refer-person 3rd\n                    :refer-number singular))\n            :ARG2 intensifier\n            :aspect state\n            :modal-strength full-affirmative))\n        :aspect state\n        :modal-strength full-affirmative)</span></span>\n</td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>intensifier</code>\n</span></td>",
-    "<td class=\"umreldoc\">Modifiers that increase the degree to which a state holds.<br></br>\n<span class=\"docexsent\">The man is <strong>very</strong> tall.\n          <span class=\"docpopup\">(t / tall-01\n    :theme (m / man) \n    <strong>:degree intensifier</strong>\n    :aspect state\n    :modal-strength full-affirmative)</span></span>\n</td>",
+    "<h3>:degree</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>Modifiers that increase the degree to which a state holds.\n  The man is <strong>very</strong> tall.\n  (t / tall-01\n  :theme (m / man)\n  <strong>:degree intensifier</strong>\n  :aspect state\n  :modal-strength full-affirmative)</pre></td>",
     "</tr></table>"
   ],
   ":duration": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:duration</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:duration-of</code>\n<span class=\"docpopup\"><em>Ex:</em>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>have-duration-91</code><br></br>\n<span class=\"docindent\">:ARG1 event<br></br> \n            :ARG2 duration\n      </span></span></td>",
-    "<td class=\"umreldoc\">Duration of an event.\n        <span class=\"docexsent\">The commencement ceremony went on <strong>for 4 hours</strong>.\n          <span class=\"docpopup\">(g / go-on-15\n    :theme (c / ceremony-01\n        :purpose (c2 / commencement)\n        :aspect process\n        :modal-strength full-affirmative)\n    :duration <strong>(t / temporal-quantity\n        :quant 4 \n        :unit (h2 / hour))</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</span></span>\n</td>",
+    "<h3>:duration</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-duration-91\n  :ARG1 event\n  :ARG2 duration</pre></td>",
+    "<td>Duration of an event.\nThe commencement ceremony went on <strong>for 4 hours</strong>.\n<pre>(g / go-on-15\n    :theme (c / ceremony-01\n        :purpose (c2 / commencement)\n        :aspect process\n        :modal-strength full-affirmative)\n    :duration <strong>(t / temporal-quantity\n        :quant 4 \n        :unit (h2 / hour))</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
     "</tr></table>"
   ],
   ":frequency": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:frequency</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:frequency-of</code>\n<span class=\"docpopup\"><em>Ex:</em>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>have-frequency-91</code><br></br>\n<span class=\"docindent\">:ARG1 event<br></br> \n            :ARG2 frequency\n      </span></span></td>",
-    "<td class=\"umreldoc\">How often an event occurs.\n        <span class=\"docexsent\">My dog runs around the yard <strong>whenever it rains</strong>.\n          <span class=\"docpopup\">(r / run-02\n    :actor (d / dog\n        :possessor (p / person\n            :refer-person 1st\n            :refer-number singular))\n    :path (a / around\n        :op1 (y / yard))\n    :frequency <strong>(r2 / rate-entity-91\n        :ARG4 (r3 / rain-01\n            :aspect performance\n            :modal-strength partial-affirmative))</strong>\n    :aspect habitual\n    :modal-strength full-affirmative)</span></span>\n<span class=\"docexsent\">My cat hit my dog on the nose <strong>3 times</strong>.\n          <span class=\"docpopup\">(h / hit-01\n    :actor (c / cat\n        :possessor (p / person\n            :refer-person 1st\n            :refer-number singular))\n    :undergoer (d / dog\n        :possessor p)\n    :place (n / nose\n        :part-of d)\n    <strong>:frequency 3</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</span></span>\n</td>",
+    "<h3>:frequency</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-frequency-91\n  :ARG1 event\n  :ARG2 frequency</pre></td>",
+    "<td>How often an event occurs.\nMy dog runs around the yard <strong>whenever it rains</strong>.\n<pre>(r / run-02\n    :actor (d / dog\n        :possessor (p / person\n            :refer-person 1st\n            :refer-number singular))\n    :path (a / around\n        :op1 (y / yard))\n    :frequency <strong>(r2 / rate-entity-91\n        :ARG4 (r3 / rain-01\n            :aspect performance\n            :modal-strength partial-affirmative))</strong>\n    :aspect habitual\n    :modal-strength full-affirmative)</pre>\nMy cat hit my dog on the nose <strong>3 times</strong>.\n<pre>(h / hit-01\n    :actor (c / cat\n        :possessor (p / person\n            :refer-person 1st\n            :refer-number singular))\n    :undergoer (d / dog\n        :possessor p)\n    :place (n / nose\n        :part-of d)\n    <strong>:frequency 3</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
     "</tr></table>"
   ],
   ":mod": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:mod</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:mod-of</code>\n<span class=\"docpopup\"><em>Ex:</em>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>have-mod-91</code><br></br>\n<span class=\"docindent\">:ARG1 entity<br></br> \n            :ARG2 modifier\n      </span></span></td>",
-    "<td class=\"umreldoc\">For generic modifiers of entities and events.<br></br>\n<span class=\"docexsent\">I don't want to wear <strong>those</strong> shoes.\n          <span class=\"docpopup\">(w / want-01\n    :polarity -\n    :experiencer (p / person\n        :refer-person 1st\n        :refer-number singular)\n    :stimulus (w2 / wear-01\n        :actor p \n        :theme (s / shoe \n            :refer-number plural\n            <strong>:mod (t / that)</strong>)\n        :aspect state\n        :modal-strength partial-negative\n        :modal-predicate w)\n    :aspect state\n    :modal-strength full-negative)</span></span>The <strong>tall</strong> man reached the mayonnaise for me.\n          <span class=\"docpopup\">(r / reach-01\n    :actor (m / man\n        <strong>:mod (t / tall))</strong>\n    :theme (m2 / mayonnaise)\n    :affectee (p / person\n        :refer-person 1st\n        :refer-number singular)\n    :aspect performance\n    :modal-strength full-affirmative)</span>\n</td>",
+    "<h3>:mod</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-mod-91\n  :ARG1 entity\n  :ARG2 modifier</pre></td>",
+    "<td>For generic modifiers of entities and events.\nI don't want to wear <strong>those</strong> shoes.\n<pre>(w / want-01\n    :polarity -\n    :experiencer (p / person\n        :refer-person 1st\n        :refer-number singular)\n    :stimulus (w2 / wear-01\n        :actor p \n        :theme (s / shoe \n            :refer-number plural\n            <strong>:mod (t / that)</strong>)\n        :aspect state\n        :modal-strength partial-negative\n        :modal-predicate w)\n    :aspect state\n    :modal-strength full-negative)The <strong>tall</strong> man reached the mayonnaise for me.\n          (r / reach-01\n    :actor (m / man\n        <strong>:mod (t / tall))</strong>\n    :theme (m2 / mayonnaise)\n    :affectee (p / person\n        :refer-person 1st\n        :refer-number singular)\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
     "</tr></table>"
   ],
   ":topic": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:topic</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:topic-of</code>\n<span class=\"docpopup\"><em>Ex:</em>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>have-topic-91</code><br></br>\n<span class=\"docindent\">:ARG1 event/entity<br></br> \n            :ARG2 topic\n      </span></span></td>",
-    "<td class=\"umreldoc\">The subject matter of an event or entity.\n        <span class=\"docexsent\">The cobbler wrote a book <strong>about shoes</strong>.\n          <span class=\"docpopup\">(w / write-01\n    :actor (p / person\n        :ARG1-of (h / have-role-91\n            :ARG2 (c / cobbler)))\n    :theme (b / book\n        <strong>:topic (s / shoe\n            :refer-number plural)</strong>)\n    :aspect performance\n    :modal-strength full-affirmative)</span></span>\n</td>",
+    "<h3>:topic</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-topic-91\n  :ARG1 event/entity\n  :ARG2 topic</pre></td>",
+    "<td>The subject matter of an event or entity.\nThe cobbler wrote a book <strong>about shoes</strong>.\n<pre>(w / write-01\n    :actor (p / person\n        :ARG1-of (h / have-role-91\n            :ARG2 (c / cobbler)))\n    :theme (b / book\n        <strong>:topic (s / shoe\n            :refer-number plural)</strong>)\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
     "</tr></table>"
   ],
   ":vocative": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:vocative</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:vocative-of</code>\n<span class=\"docpopup\"><em>Ex:</em>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>have-vocative-91</code><br></br>\n<span class=\"docindent\">:ARG1 event<br></br> \n            :ARG2 person addressed\n      </span></span></td>",
-    "<td class=\"umreldoc\">Within utterances, when the addressee is called out.\n        <span class=\"docexsent\">\"Good morning, <strong>Bert</strong>.\"\n          <span class=\"docpopup\">(s / say-91\n    :ARG1 (g / good-02\n        :theme (m / morning)\n        <strong>:vocative (p / person \n            :name (n / name :op1 \"Bert\"))</strong>\n        :aspect state\n        :modal-strength full-affirmative\n        :quote s)\n    :ARG2 p)</span></span>\n</td>",
+    "<h3>:vocative</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-vocative-91\n  :ARG1 event\n  :ARG2 person addressed</pre></td>",
+    "<td>Within utterances, when the addressee is called out.\n\"Good morning, <strong>Bert</strong>.\"\n<pre>(s / say-91\n    :ARG1 (g / good-02\n        :theme (m / morning)\n        <strong>:vocative (p / person \n            :name (n / name :op1 \"Bert\"))</strong>\n        :aspect state\n        :modal-strength full-affirmative\n        :quote s)\n    :ARG2 p)</pre></td>",
     "</tr></table>"
   ],
   ":medium": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:medium</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:medium-of</code>\n<span class=\"docpopup\"><em>Ex:</em>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>have-medium-91</code><br></br>\n<span class=\"docindent\">:ARG1 event/entity<br></br> \n            :ARG2 medium\n      </span></span></td>",
-    "<td class=\"umreldoc\">The medium through which an event is carried out.\n        <span class=\"docexsent\">I called my mother <strong>on the phone</strong>.\n          <span class=\"docpopup\">(c / call-02\n    :actor (p / person\n        :refer-person 1st\n        :refer-number singular)\n    :theme (p2 / person\n        :ARG1-of (h / have-rel-role-91\n            :ARG2 (p3 / person)\n            :ARG3 (m / mother)))\n    <strong>:medium (p4 / phone)</strong>\n        :aspect performance\n        :modal-strength full-affirmative)</span></span>\n<span class=\"docexsent\">a <strong>French</strong> song\n          <span class=\"docpopup\">(s / song\n    <strong>:medium (l / language</strong>\n        :name (n / name :op1 \"French\")))</span></span>\n</td>",
+    "<h3>:medium</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-medium-91\n  :ARG1 event/entity\n  :ARG2 medium</pre></td>",
+    "<td>The medium through which an event is carried out.\nI called my mother <strong>on the phone</strong>.\n<pre>(c / call-02\n    :actor (p / person\n        :refer-person 1st\n        :refer-number singular)\n    :theme (p2 / person\n        :ARG1-of (h / have-rel-role-91\n            :ARG2 (p3 / person)\n            :ARG3 (m / mother)))\n    <strong>:medium (p4 / phone)</strong>\n        :aspect performance\n        :modal-strength full-affirmative)</pre>\na <strong>French</strong> song\n<pre>(s / song\n    <strong>:medium (l / language</strong>\n        :name (n / name :op1 \"French\")))</pre></td>",
     "</tr></table>"
   ],
   ":possessor": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:possessor</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:possessor-of</code>\n<span class=\"docpopup\"><em>Ex:</em>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>have-poss-91</code><br></br>\n<span class=\"docindent\">:ARG1 possessed entity<br></br> \n            :ARG2 possessor\n      </span></span></td>",
-    "<td class=\"umreldoc\">The entity who has possession (or temporary control) over something.\n        <span class=\"docexsent\"><strong>His</strong> shoes are on the floor.\n          <span class=\"docpopup\">(h / have-place-91\n    :ARG1 (s / shoe\n        :refer-number plural\n        <strong>:possessor (p / person\n            :refer-person 3rd\n            :refer-number singular))</strong>\n    :ARG2 (f / floor)\n    :aspect state\n    :modal-strength full-affirmative)</span></span>\n</td>",
+    "<h3>:possessor</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-poss-91\n  :ARG1 possessed entity\n  :ARG2 possessor</pre></td>",
+    "<td>The entity who has possession (or temporary control) over something.\n<strong>His</strong> shoes are on the floor.\n<pre>(h / have-place-91\n    :ARG1 (s / shoe\n        :refer-number plural\n        <strong>:possessor (p / person\n            :refer-person 3rd\n            :refer-number singular))</strong>\n    :ARG2 (f / floor)\n    :aspect state\n    :modal-strength full-affirmative)</pre></td>",
     "</tr></table>"
   ],
   ":part": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:part</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:part-of</code>\n<span class=\"docpopup\"><em>Ex:</em>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>have-part-91</code><br></br>\n<span class=\"docindent\">:ARG1 whole entity<br></br> \n            :ARG2 part\n      </span></span></td>",
-    "<td class=\"umreldoc\">A component part of a whole.\n        <span class=\"docexsent\">My <strong>nose</strong> itched.\n          <span class=\"docpopup\">(i / itch-01\n    :experiencer (n / nose\n        <strong>:part-of (p / person\n            :refer-person 1st\n            :refer-number singular))</strong>\n    :aspect state\n    :modal-strength full-affirmative)</span></span>\n<span class=\"docexsent\">The movers lay the box on its <strong>side</strong>.\n          <span class=\"docpopup\">(l / lay-01\n    :actor (p / person\n        :refer-number plural\n        :actor-of (m / move-01))\n    :theme (b / box)\n    :orientation (o / on-04\n        :theme b \n        :part (s / side\n        <strong>:part-of b)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</span></span>\n</td>",
+    "<h3>:part</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-part-91\n  :ARG1 whole entity\n  :ARG2 part</pre></td>",
+    "<td>A component part of a whole.\nMy <strong>nose</strong> itched.\n<pre>(i / itch-01\n    :experiencer (n / nose\n        <strong>:part-of (p / person\n            :refer-person 1st\n            :refer-number singular))</strong>\n    :aspect state\n    :modal-strength full-affirmative)</pre>\nThe movers lay the box on its <strong>side</strong>.\n<pre>(l / lay-01\n    :actor (p / person\n        :refer-number plural\n        :actor-of (m / move-01))\n    :theme (b / box)\n    :orientation (o / on-04\n        :theme b \n        :part (s / side\n        <strong>:part-of b)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
     "</tr></table>"
   ],
   ":group": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:group</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:group-of</code>\n<span class=\"docpopup\"><em>Ex:</em>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>have-group-91</code><br></br>\n<span class=\"docindent\">:ARG1 members<br></br> \n            :ARG2 group\n      </span></span></td>",
-    "<td class=\"umreldoc\">For set/member relationships.\n        <span class=\"docexsent\"><strong>a swarm</strong> of bees\n          <span class=\"docpopup\"><strong>(s / swarm\n    :group-of</strong> (b / bee\n        :refer-number plural))</span></span>\n</td>",
+    "<h3>:group</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-group-91\n  :ARG1 members\n  :ARG2 group</pre></td>",
+    "<td>For set/member relationships.\n<strong>a swarm</strong> of bees\n<pre><strong>(s / swarm\n    :group-of</strong> (b / bee\n        :refer-number plural))</pre></td>",
     "</tr></table>"
   ],
   ":age": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:age</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>.\n          \n      </span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:age-of</code>\n<span class=\"docpopup\"><em>Ex:</em>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>have-age-91</code><br></br>\n<span class=\"docindent\">:ARG1 entity<br></br> \n            :ARG2 age\n          <span class=\"docpopup\"><em>Ex:</em> The book I gave Martha was <strong>old</strong>.\n    <strong>(h / have-age-91\n        :ARG1</strong> (b / book\n            :theme-of (g / give-01\n                :actor (p / person\n                    :refer-person 1st\n                    :refer-number singular)\n                :recipient (p2 / person :name (n / name :op1 \"Martha\"))\n                :aspect performance\n                :modal-strength full-affirmative))\n        <strong>:ARG2 (o / old))</strong>\n</span></span></span></td>",
-    "<td class=\"umreldoc\">The age of an entity.\n        <span class=\"docexsent\">the <strong>3 year old</strong> boy\n          <span class=\"docpopup\">(b / boy\n    <strong>:age (t / temporal-quantity\n        :quant 3 \n        :unit (y / year)</strong>)</span></span>\n</td>",
+    "<h3>:age</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-age-91\n  :ARG1 entity\n  :ARG2 age\n  Ex: The book I gave Martha was <strong>old</strong>.\n  <strong>(h / have-age-91\n  :ARG1</strong> (b / book\n  :theme-of (g / give-01\n  :actor (p / person\n  :refer-person 1st\n  :refer-number singular)\n  :recipient (p2 / person :name (n / name :op1 \"Martha\"))\n  :aspect performance\n  :modal-strength full-affirmative))\n  <strong>:ARG2 (o / old))</strong></pre></td>",
+    "<td>The age of an entity.\nthe <strong>3 year old</strong> boy\n<pre>(b / boy\n    <strong>:age (t / temporal-quantity\n        :quant 3 \n        :unit (y / year)</strong>)</pre></td>",
     "</tr></table>"
   ],
   ":example": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:example</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:example-of</code>\n<span class=\"docpopup\"><em>Ex:</em>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>have-example-91</code><br></br>\n<span class=\"docindent\">:ARG1 event/entity<br></br> \n          :ARG2 example\n      </span></span></td>",
-    "<td class=\"umreldoc\">For exemplars.\n        <span class=\"docexsent\">Countries <strong>like Germany and France</strong>. \n          <span class=\"docpopup\">(c / country\n    :refer-number plural\n    <strong>:example (a / and\n        :op1 (c2 / country \n            :name (n / name :op1 \"Germany\"))\n        :op2 (c3 / country\n            :name (n2 / name :op2 \"France\"))))</strong>)</span></span>\n</td>",
+    "<h3>:example</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-example-91\n  :ARG1 event/entity\n  :ARG2 example</pre></td>",
+    "<td>For exemplars.\nCountries <strong>like Germany and France</strong>.\n<pre>(c / country\n    :refer-number plural\n    <strong>:example (a / and\n        :op1 (c2 / country \n            :name (n / name :op1 \"Germany\"))\n        :op2 (c3 / country\n            :name (n2 / name :op2 \"France\"))))</strong>)</pre></td>",
     "</tr></table>"
   ],
   ":ord": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:ord</code></span><br></br>\n<span class=\"docsmallcaps\">child concept:</span><br></br>\n<span class=\"docindent\">\n<span class=\"dochighlight\">(o / ordinal-entity)</span></span>\n<span class=\"docsmallcaps\">subroles:</span><br></br>\n<span class=\"docindent\">\n<span class=\"dochighlight\">:value</span><br></br>\n<span class=\"dochighlight\">:range</span><br></br>\n<span class=\"dochighlight\">:range-start</span><br></br>\n<span class=\"dochighlight\">:range-trajectory</span></span>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n          popup\n      </span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:ord-of</code>\n<span class=\"docpopup\"><em>Ex:</em>\n</span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>have-ord-91</code><br></br>\n<span class=\"docindent\">:ARG1 main entity<br></br> \n            :ARG2 ord<br></br> \n            :ARG3 range<br></br> \n            :ARG4 range-start<br></br>\n            :ARG5 range-trajectory\n      </span></span></td>",
-    "<td class=\"umreldoc\">Ordinal relations. This role takes the concept <span class=\"dochighlight\">ordinal-entity</span> as its value, with one mandatory subrole (<span class=\"dochighlight\">:value</span>, for the number), and three optional subroles that give further information about how the counter is thinking about the counting.<br></br>\n<span class=\"docexsent\">the <strong>last</strong> man standing \n          <span class=\"docpopup\">(m / man\n    :actor-of (s / stand-01\n        <strong>:ord (o / ordinal-entity :value \"-1\")</strong>\n        :aspect state\n        :modal-strength full-affirmative))</span></span>\n<span class=\"docexsent\">the <strong>first</strong> book <strong>in the stack</strong>\n<span class=\"docpopup\">(b / book\n    <strong>:ord (o / ordinal-entity :value \"1\")</strong>\n        :range (s / stack))</span></span>\n<span class=\"docexsent\">the <strong>3rd</strong> block <strong>from the lefthand side</strong>\n<span class=\"docpopup\">(b / block\n    <strong>:ord (o / ordinal-entity :value \"3\")</strong>\n        :range-start (s / side\n            :ARG2-of (l / left-24)))</span></span>\n<span class=\"docexsent\">the <strong>2nd</strong> chair <strong>toward the front</strong>\n<span class=\"docpopup\">(c / chair\n    <strong>:ord (o / ordinal-entity :value \"2\")</strong>\n        :range-trajectory (f / front-03))</span></span>\n</td>",
+    "<h3>:ord</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-ord-91\n  :ARG1 main entity\n  :ARG2 ord\n  :ARG3 range\n  :ARG4 range-start\n  :ARG5 range-trajectory</pre></td>",
+    "<td>Ordinal relations. This role takes the concept ordinal-entity as its value, with one mandatory subrole (:value, for the number), and three optional subroles that give further information about how the counter is thinking about the counting.\nthe <strong>last</strong> man standing\n<pre>(m / man\n    :actor-of (s / stand-01\n        <strong>:ord (o / ordinal-entity :value \"-1\")</strong>\n        :aspect state\n        :modal-strength full-affirmative))</pre>\nthe <strong>first</strong> book <strong>in the stack</strong>\n<pre>(b / book\n    <strong>:ord (o / ordinal-entity :value \"1\")</strong>\n        :range (s / stack))</pre>\nthe <strong>3rd</strong> block <strong>from the lefthand side</strong>\n<pre>(b / block\n    <strong>:ord (o / ordinal-entity :value \"3\")</strong>\n        :range-start (s / side\n            :ARG2-of (l / left-24)))</pre>\nthe <strong>2nd</strong> chair <strong>toward the front</strong>\n<pre>(c / chair\n    <strong>:ord (o / ordinal-entity :value \"2\")</strong>\n        :range-trajectory (f / front-03))</pre></td>",
     "</tr></table>"
   ],
   ":list-item": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:list-item</code>\n<span class=\"docpopup\"><em>Ex:</em> <strong></strong>\n</span>\n</span>\n</td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:list-item-of</code>\n<span class=\"docpopup\"><em>Ex:</em>\n</span>\n</span>\n</td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>have-list-item-91</code><br></br>\n<span class=\"docindent\">:ARG1 entity<br></br> \n          :ARG2 number/value\n      </span></span></td>",
-    "<td class=\"umreldoc\">For enumeration of items in lists.\n        <span class=\"docexsent\">I like two things: <strong>1.</strong> dogs, and <strong>2.</strong> coffee.\n          <span class=\"docpopup\">(l / like-01\n    :experiencer (p / person\n        :refer-person 1st\n        :refer-number singular)\n    :stimulus (t / thing\n        :quant 2\n        :ARG1-of (i / identity-91\n            :ARG2 (a / and\n                :op1 (d / dog\n                    :refer-number plural\n                    <strong>:list-item \"1\"</strong>)\n                :op1 (c / coffee\n                    <strong>:list-item \"2\"</strong>)))))</span></span>\n</td>",
+    "<h3>:list-item</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-list-item-91\n  :ARG1 entity\n  :ARG2 number/value</pre></td>",
+    "<td>For enumeration of items in lists.\nI like two things: <strong>1.</strong> dogs, and <strong>2.</strong> coffee.\n<pre>(l / like-01\n    :experiencer (p / person\n        :refer-person 1st\n        :refer-number singular)\n    :stimulus (t / thing\n        :quant 2\n        :ARG1-of (i / identity-91\n            :ARG2 (a / and\n                :op1 (d / dog\n                    :refer-number plural\n                    <strong>:list-item \"1\"</strong>)\n                :op1 (c / coffee\n                    <strong>:list-item \"2\"</strong>)))))</pre></td>",
     "</tr></table>"
   ],
   ":size": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:size</code>\n</span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:size-of</code>\n</span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>have-size-91</code>\n<span class=\"docindent\">:ARG1 entity<br></br> \n            :ARG2 size\n      </span></span></td>",
-    "<td class=\"umreldoc\">For size modifiers.<br></br>\n<span class=\"docexsent\">Build a <strong>3 by 3</strong> square.\n          <span class=\"docpopup\">(b / build-01\n    :mode imperative\n    :ARG0 (p / person\n        :refer-person 2nd\n        :refer-number singular)\n    :ARG1 (s / square\n        <strong>:size (a / and\n            :op1 (d / dimension-entity :value \"3\")\n            :op2 (d2 / dimension-entity :value \"3\")))</strong>\n    :aspect performance\n    :modal-strength partial-affirmative)</span></span>\n</td>",
+    "<h3>:size</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-size-91\n  :ARG1 entity\n  :ARG2 size</pre></td>",
+    "<td>For size modifiers.\nBuild a <strong>3 by 3</strong> square.\n<pre>(b / build-01\n    :mode imperative\n    :ARG0 (p / person\n        :refer-person 2nd\n        :refer-number singular)\n    :ARG1 (s / square\n        <strong>:size (a / and\n            :op1 (d / dimension-entity :value \"3\")\n            :op2 (d2 / dimension-entity :value \"3\")))</strong>\n    :aspect performance\n    :modal-strength partial-affirmative)</pre></td>",
     "</tr></table>"
   ],
   ":color": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:color</code>\n</span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:color-of</code>\n</span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>have-color-91</code>\n<span class=\"docindent\">:ARG1 entity<br></br> \n            :ARG2 color\n      </span></span></td>",
-    "<td class=\"umreldoc\">For colors.<br></br>\n<span class=\"docexsent\">Build a <strong>red</strong> triangle.\n          <span class=\"docpopup\">(b / build-01\n    :mode imperative\n    :ARG0 (p / person\n        :refer-person 2nd\n        :refer-number singular)\n    :ARG1 (t / triangle\n        <strong>:color (r / red)</strong>)\n    :aspect performance\n    :modal-strength partial-affirmative)</span></span>\n</td>",
+    "<h3>:color</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-color-91\n  :ARG1 entity\n  :ARG2 color</pre></td>",
+    "<td>For colors.\nBuild a <strong>red</strong> triangle.\n<pre>(b / build-01\n    :mode imperative\n    :ARG0 (p / person\n        :refer-person 2nd\n        :refer-number singular)\n    :ARG1 (t / triangle\n        <strong>:color (r / red)</strong>)\n    :aspect performance\n    :modal-strength partial-affirmative)</pre></td>",
     "</tr></table>"
   ],
   ":configuration": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:configuration</code>\n</span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:configuration-of</code>\n</span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>have-configuration-91</code>\n<span class=\"docindent\">:ARG1 components<br></br> \n            :ARG2 configuration\n      </span></span></td>",
-    "<td class=\"umreldoc\">For configurations, where individual, separable component parts are arranged in a particular way.<br></br>\n<span class=\"docexsent\">Now take the orange blocks and build a <strong>=</strong>strong>.\n          <span class=\"docpopup\">(a / and\n    :op1 (t / take-01\n        :mode imperative\n        :ARG0 (p / person\n            :refer-person 2nd\n            :refer-number singular)\n        :ARG1 (b / block\n            :refer-number plural\n            :color (o / orange))\n        :aspect performance\n        :modal-strength partial-affirmative)\n    :op2 (b2 / build-01\n        :mode imperative\n        :ARG0 p\n        :ARG1 <strong>(t / thing\n            :configuration (s / string-entity :value \"=\"))</strong>\n        :ARG2 b\n        :aspect performance\n        :modal-strength partial-affirmative))</span></span>\n</td>",
+    "<h3>:configuration</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-configuration-91\n  :ARG1 components\n  :ARG2 configuration</pre></td>",
+    "<td>For configurations, where individual, separable component parts are arranged in a particular way.\nNow take the orange blocks and build a <strong>=</strong>strong>.\n<pre>(a / and\n    :op1 (t / take-01\n        :mode imperative\n        :ARG0 (p / person\n            :refer-person 2nd\n            :refer-number singular)\n        :ARG1 (b / block\n            :refer-number plural\n            :color (o / orange))\n        :aspect performance\n        :modal-strength partial-affirmative)\n    :op2 (b2 / build-01\n        :mode imperative\n        :ARG0 p\n        :ARG1 <strong>(t / thing\n            :configuration (s / string-entity :value \"=\"))</strong>\n        :ARG2 b\n        :aspect performance\n        :modal-strength partial-affirmative))</pre></td>",
     "</tr></table>"
   ],
   ":orientation": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:orientation</code>\n</span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:orientation-of</code>\n</span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>have-orientation-91</code>\n<span class=\"docindent\">:ARG1 entity<br></br> \n            :ARG2 orientation\n      </span></span></td>",
-    "<td class=\"umreldoc\">For orientations of entities who are facing a particular way.<br></br>\n<span class=\"docexsent\">The painting was <strong>upside-down</strong>strong>.\n          <span class=\"docpopup\">(h / have-orientation-91\n    :ARG1 (t / thing\n        :ARG1-of (p / paint-01))\n    :ARG2 <strong>(u / upside-down)</strong>\n    :aspect state\n    :modal-strength full-affirmative)</span></span>\n</td>",
+    "<h3>:orientation</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-orientation-91\n  :ARG1 entity\n  :ARG2 orientation</pre></td>",
+    "<td>For orientations of entities who are facing a particular way.\nThe painting was <strong>upside-down</strong>strong>.\n<pre>(h / have-orientation-91\n    :ARG1 (t / thing\n        :ARG1-of (p / paint-01))\n    :ARG2 <strong>(u / upside-down)</strong>\n    :aspect state\n    :modal-strength full-affirmative)</pre></td>",
     "</tr></table>"
   ],
   ":anchor": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:anchor</code>\n</span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:anchor-of</code>\n</span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>have-anchor-91</code>\n<span class=\"docindent\">:ARG1 spatial relation<br></br> \n            :ARG2 anchor\n      </span></span></td>",
-    "<td class=\"umreldoc\">Marks the spatial frame of reference (usually a defined spatial framework) the speaker is referencing.<br></br>\n<span class=\"docexsent\">My laptop is <strong>on top</strong>strong> of my desk.\n          <span class=\"docpopup\">(o / on-top-03\n    :ARG1 (l / laptop\n        :possessor (p / person\n            :refer-person 1st\n            :refer-number singular))\n    :ARG2 (d / desk\n        :possessor p)\n    <strong>:anchor (c / cartesian-framework-91\n        :ARG1 (e / environment))</strong>\n    :aspect state\n    :modal-strength full-affirmative)</span></span>\n</td>",
+    "<h3>:anchor</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-anchor-91\n  :ARG1 spatial relation\n  :ARG2 anchor</pre></td>",
+    "<td>Marks the spatial frame of reference (usually a defined spatial framework) the speaker is referencing.\nMy laptop is <strong>on top</strong>strong> of my desk.\n<pre>(o / on-top-03\n    :ARG1 (l / laptop\n        :possessor (p / person\n            :refer-person 1st\n            :refer-number singular))\n    :ARG2 (d / desk\n        :possessor p)\n    <strong>:anchor (c / cartesian-framework-91\n        :ARG1 (e / environment))</strong>\n    :aspect state\n    :modal-strength full-affirmative)</pre></td>",
     "</tr></table>"
   ],
   ":axis": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:axis</code>\n</span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:axis-of</code>\n</span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>have-axis-91</code>\n<span class=\"docindent\">:ARG1 spatial relation<br></br> \n            :ARG2 axis\n      </span></span></td>",
-    "<td class=\"umreldoc\">For directed spatial relations, the ray that points in the eponymous direction. May be an abstract ray, or may be a physical structure.<br></br>\n<span class=\"docexsent\">The church is down <strong>the street<strong> from the school.\n          <span class=\"docpopup\">(d / down-05\n    :ARG1 (c / church)\n    :ARG2 (s / school)\n    <strong>:axis (s2 / street)</strong>\n    :aspect state\n    :modal-strength full-affirmative)</span></strong></strong></span><br></br>\n<span class=\"docexsent\">He drove <strong>west</strong>.\n          <span class=\"docpopup\">(d / drive\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    :direction <strong>(t / trajectory\n        :axis-of (w / west-01)</strong>)\n    :aspect activity\n    :modal-strength full-affirmative)</span></span>\n</td>",
+    "<h3>:axis</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-axis-91\n  :ARG1 spatial relation\n  :ARG2 axis</pre></td>",
+    "<td>For directed spatial relations, the ray that points in the eponymous direction. May be an abstract ray, or may be a physical structure.\nThe church is down <strong>the street<strong> from the school.\n<pre>(d / down-05\n    :ARG1 (c / church)\n    :ARG2 (s / school)\n    <strong>:axis (s2 / street)</strong>\n    :aspect state\n    :modal-strength full-affirmative)</strong></strong></pre>\nHe drove <strong>west</strong>.\n<pre>(d / drive\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    :direction <strong>(t / trajectory\n        :axis-of (w / west-01)</strong>)\n    :aspect activity\n    :modal-strength full-affirmative)</pre></td>",
     "</tr></table>"
   ],
   ":polite": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:polite</code></span><br></br><br></br>\n<span class=\"docsmallcaps\">(no inverse)</span><br></br><br></br>\n<span class=\"dochighlight\"><code>be-polite-91</code>\n<span class=\"docindent\">:ARG1 proposition<br></br> \n          :ARG2 politeness value\n      </span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>+</code>\n</span></td>",
-    "<td class=\"umreldoc\">Politeness constructions.<br></br>\n<span class=\"docexsent\"><strong>Please</strong> pass the sugar. <br></br>\n</span></td>",
+    "<h3>:polite</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>Politeness constructions.\n  <strong>Please</strong> pass the sugar.</pre></td>",
     "</tr></table>"
   ],
   "-": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>-</code>\n</span></td>",
-    "<td class=\"umreldoc\">Rudeness constructions.<br></br>\n<span class=\"docexsent\"><strong></strong> <br></br>\n</span></td>",
+    "<h3>-</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "</tr></table>"
   ],
   ":polarity": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:polarity</code></span><br></br><br></br>\n<span class=\"dochighlight\"><code>:polarity-of</code></span><br></br><br></br>\n<span class=\"dochighlight\"><code>have-polarity-91</code><br></br>\n<span class=\"docindent\">:ARG1 proposition<br></br> \n          :ARG2 polarity value\n      </span></span></td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>-</code>\n</span></td>",
-    "<td class=\"umreldoc\">Simple negation.<br></br>\n<span class=\"docexsent\">We <strong>don't</strong> have money. <br></br>\n</span></td>",
+    "<h3>:polarity</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>Simple negation.\n  We <strong>don't</strong> have money.</pre></td>",
     "</tr></table>"
   ],
   "-intense": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>-intense</code>\n</span></td>",
-    "<td class=\"umreldoc\">Double negation that adds emphasis.<br></br>\n<span class=\"docexsent\">We <strong>ain't</strong> got <strong>no</strong> money.<br></br>\n</span></td>",
+    "<h3>-intense</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "</tr></table>"
   ],
   "+": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>+</code>\n</span></td>",
-    "<td class=\"umreldoc\">Explicit affirmation.<br></br>\n<span class=\"docexsent\"><strong>Doch</strong>. 'yes it does so'<br></br>\n</span></td>",
+    "<h3>+</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "</tr></table>"
   ],
   "(t / truth-value)": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>(t / truth-value)</code>\n</span></td>",
-    "<td class=\"umreldoc\">'Whether' constructions.<br></br>\n<span class=\"docexsent\">I don't know <strong>if</strong> I have money.<br></br>\n</span></td>",
+    "<h3>(t / truth-value)</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "</tr></table>"
   ],
   "(u / umr-unknown)": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>(u / umr-unknown)</code>\n</span></td>",
-    "<td class=\"umreldoc\">Yes/no questions.<br></br>\n<span class=\"docexsent\"><strong>Do</strong> you have money?<br></br>\n</span></td>",
+    "<h3>(u / umr-unknown)</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "</tr></table>"
   ],
   ":mode": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:mode</code></span><br></br><br></br>\n<span class=\"docsmallcaps\">(no inverse)</span><br></br><br></br>\n<span class=\"docsmallcaps\">(no reification)</span><br></br><br></br>\n</td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>interrogative</code>\n</span></td>",
-    "<td class=\"umreldoc\">Questions.<br></br>\n<span class=\"docexsent\"><strong>Who</strong> at the cheese? <br></br>\n</span></td>",
+    "<h3>:mode</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>Questions.\n  <strong>Who</strong> at the cheese?</pre></td>",
     "</tr></table>"
   ],
   "imperative": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>imperative</code>\n<span class=\"docpopup\"><em>Ex:</em>\n</span></span></td>",
-    "<td class=\"umreldoc\">Commands, suggestions.<br></br>\n<span class=\"docexsent\"><strong>Move</strong> that block the other way.\n          <span class=\"docpopup\">(m / move-01 \n        <strong>:mode imperative</strong>\n        :actor (p / person\n            :refer-person 2nd\n            :refer-number singular)\n        :theme (b / block\n            :mod (t / that))\n        :direction (w / way\n                :mod-of (o / other-01))\n        :aspect performance\n        :modal-strength partial-affirmative)</span></span>\n</td>",
+    "<h3>imperative</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "</tr></table>"
   ],
   "expressive": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>expressive</code>\n</span></td>",
-    "<td class=\"umreldoc\">Expressive constructions, profanity.\n        <span class=\"docexsent\">I can't find my <strong>flippin</strong> socks.\n          <span class=\"docpopup\">(f / find-01 \n    <strong>:mode expressive</strong>\n    :polarity -\n    :actor (p / person\n        :refer-person 1st\n        :refer-number singular)\n    :theme (s / sock\n        :refer-number plural\n        :mod (f / flippin))\n    :aspect state\n    :modal-strength full-negative)</span></span>\n</td>",
+    "<h3>expressive</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "</tr></table>"
   ],
   "downtoner": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>downtoner</code>\n</span></td>",
-    "<td class=\"umreldoc\">Modifiers that reduce the degree to which a state holds.<br></br>\n<span class=\"docexsent\">The taxi is <strong>almost</strong> there. \n          <span class=\"docpopup\">(h / have-place-91\n    :ARG1 (m / man) \n    :ARG2 (t / there)\n    <strong>:degree downtoner</strong>\n    :aspect state\n    :modal-strength full-affirmative)</span></span>\n</td>",
+    "<h3>downtoner</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "</tr></table>"
   ],
   "equal": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>equal</code>\n</span></td>",
-    "<td class=\"umreldoc\">Modifiers that indicate a state holds for two entities to an equal degree.<br></br>\n<span class=\"docexsent\">The woman is <strong>highly</strong> intelligent. \n          <span class=\"docpopup\">(i / intelligent-01\n    :ARG1 (w / woman) \n    <strong>:degree (h / high)</strong>\n    :aspect state\n    :modal-strength full-affirmative)</span></span>\n</td>",
+    "<h3>equal</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "</tr></table>"
   ],
   "(some concept)": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<code>(some concept)</code>\n</td>",
-    "<td class=\"umreldoc\">For cases where you want to insert a lexical item from the sentence.\n      </td>",
+    "<h3>(some concept)</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "</tr></table>"
   ],
   ":refer-person": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:refer-person</code></span><br></br><br></br>\n<span class=\"docsmallcaps\">(no inverse)</span><br></br><br></br>\n<span class=\"docsmallcaps\">(no reification)</span><br></br><br></br>\n</td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>non-1st</code>\n</span></td>",
-    "<td class=\"umreldoc\">2nd and 3rd are clustered together</td>",
+    "<h3>:refer-person</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>2nd and 3rd are clustered together</pre></td>",
     "</tr></table>"
   ],
   "non-3rd": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>non-3rd</code>\n</span></td>",
-    "<td class=\"umreldoc\">1st and 2nd are clustered together</td>",
+    "<h3>non-3rd</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "</tr></table>"
   ],
   "1st": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>1st</code>\n</span></td>",
-    "<td class=\"umreldoc\">1st person.\n        <span class=\"docexsent\"><strong>I, me, my, we, us, etc.</strong>\n</span></td>",
+    "<h3>1st</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "</tr></table>"
   ],
   "2nd": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>2nd</code>\n</span></td>",
-    "<td class=\"umreldoc\">2nd person.<br></br>\n<span class=\"docexsent\"><strong>you, y'all, you guys, etc.</strong>\n</span></td>",
+    "<h3>2nd</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "</tr></table>"
   ],
   "3rd": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>3rd</code>\n</span></td>",
-    "<td class=\"umreldoc\">Third person.<br></br>\n<span class=\"docexsent\"><strong>he, she, it, they, one, etc.</strong>\n</span></td>",
+    "<h3>3rd</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "</tr></table>"
   ],
   "1st-inclusive": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>1st-inclusive</code>\n</span></td>",
-    "<td class=\"umreldoc\">Includes you as well as me or us.\n      </td>",
+    "<h3>1st-inclusive</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "</tr></table>"
   ],
   "1st-exclusive": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\">\n<code>1st-exclusive</code>\n</span></td>",
-    "<td class=\"umreldoc\">Includes me or us without you.<br></br>\n</td>",
+    "<h3>1st-exclusive</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "</tr></table>"
   ],
   ":refer-number": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>singular</code>\n</span></td>",
-    "<td class=\"umreldoc\">singular.<br></br>\n</td>",
-    "<td class=\"umreldoc\">singular.<br></br>\n\n</td>",
+    "<h3>:refer-number</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>singular.</pre></td>",
+    "<td><pre>singular.</pre></td>",
     "</tr></table>"
   ],
   "nonsingular": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>nonsingular</code>\n</span></td>",
-    "<td class=\"umreldoc\">Everything but singular, may refer to a group, class or type.</td>",
+    "<h3>nonsingular</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "</tr></table>"
   ],
   "paucal": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>paucal</code>\n</span></td>",
-    "<td class=\"umreldoc\">A small imprecise number (maybe 3-10).</td>",
+    "<h3>paucal</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "</tr></table>"
   ],
   "plural": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>plural</code>\n</span></td>",
-    "<td class=\"umreldoc\">More than one.\n      </td>",
+    "<h3>plural</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "</tr></table>"
   ],
   "dual": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>dual</code>\n</span></td>",
-    "<td class=\"umreldoc\">Exactly 2.</td>",
+    "<h3>dual</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "</tr></table>"
   ],
   "non-dual-paucal": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>non-dual-paucal</code>\n</span></td>",
-    "<td class=\"umreldoc\">A small imprecise number other than 2. (English annotation has not typically used the paucal tag, but 'a few' is a paucal concept.)\n        <span class=\"docexsent\">There were only <strong>a few</strong> radishes.\n      </span></td>",
+    "<h3>non-dual-paucal</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "</tr></table>"
   ],
   "greater-plural": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>greater-plural</code>\n</span></td>",
-    "<td class=\"umreldoc\">Category captures a larger number than the regular plural class.</td>",
+    "<h3>greater-plural</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "</tr></table>"
   ],
   "trial": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>trial</code>\n</span></td>",
-    "<td class=\"umreldoc\">Exactly 3.</td>",
+    "<h3>trial</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "</tr></table>"
   ],
   "non-trial-paucal": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>non-trial-paucal</code>\n</span></td>",
-    "<td class=\"umreldoc\">A small imprecise number greater than 3.</td>",
+    "<h3>non-trial-paucal</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "</tr></table>"
   ],
   ":refer-definiteness": [
-    "<table><tr>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>:refer-definiteness</code></span><br></br><br></br>\n<span class=\"docsmallcaps\">(no inverse)</span><br></br><br></br>\n<span class=\"docsmallcaps\">(no reification)</span><br></br><br></br>\n</td>",
-    "<td class=\"umreldoc\">\n<span class=\"dochighlight\"><code>class</code>\n</span></td>",
-    "<td class=\"umreldoc\">Use for generic pronouns. Other uses not explored yet.<br></br>\n<span class=\"docexsent\"><strong>One</strong> does not simply walk into Mordor. \n          <span class=\"docpopup\">(w / walk-01\n    :polarity -\n    :ARG0 <strong>(p / person\n        :refer-person 3rd\n        :refer-definiteness class)</strong>\n    :goal (p2 / place\n        :name (n / name :op1 \"Mordor\"))\n    :manner (s / simple)\n    :aspect state\n    :modal-strength full-negative)</span></span>\n<span class=\"docexsent\"><strong>You</strong> shouldn't judge a book by its cover.\n          <span class=\"docpopup\">(j / judge-01\n    :mode imperative\n    :ARG0 (p / person\n        :refer-person 2nd\n        :refer-definiteness class)\n    :ARG1 (b / book)\n    :ARG3 (c / cover\n        :part-of b)\n    :aspect state\n    :modal-strength partial-negative)</span></span>\n</td>",
+    "<h3>:refer-definiteness</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>Use for generic pronouns. Other uses not explored yet.\n  <strong>One</strong> does not simply walk into Mordor.\n  (w / walk-01\n  :polarity -\n  :ARG0 <strong>(p / person\n  :refer-person 3rd\n  :refer-definiteness class)</strong>\n  :goal (p2 / place\n  :name (n / name :op1 \"Mordor\"))\n  :manner (s / simple)\n  :aspect state\n  :modal-strength full-negative)\n  <strong>You</strong> shouldn't judge a book by its cover.\n  (j / judge-01\n  :mode imperative\n  :ARG0 (p / person\n  :refer-person 2nd\n  :refer-definiteness class)\n  :ARG1 (b / book)\n  :ARG3 (c / cover\n  :part-of b)\n  :aspect state\n  :modal-strength partial-negative)</pre></td>",
     "</tr></table>"
   ]
 }
