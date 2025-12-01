@@ -1,419 +1,291 @@
 {
   ":actor": [
-    "<h3>:actor</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:actor</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-actor-91\n  :ARG1 event\n  :ARG2 actor</pre></td>",
-    "<td>Animate entity that initiates the action.\n<strong>The doctor</strong> laughed.\n<pre>(l / laugh-01\n  :actor (d / doctor)\n  :aspect performance\n  :modal-strength full-affirmative)</pre>\n<strong>The doctor</strong> ate a salad.\n<pre>(e / eat-01\n  <strong>:actor (d / doctor)</strong>\n  :undergoer (s / salad)\n  :aspect performance\n  :modal-strength full-affirmative)</pre></td>",
+    "<td>Animate entity that initiates the action.\n<ul><li><strong>The doctor</strong> laughed.\n          <pre>(l / laugh-01\n  :actor (d / doctor)\n  :aspect performance\n  :modal-strength full-affirmative)</pre>\n<li><strong>The doctor</strong> ate a salad.\n          <pre>(e / eat-01\n  <strong>:actor (d / doctor)</strong>\n  :undergoer (s / salad)\n  :aspect performance\n  :modal-strength full-affirmative)</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":co-actor": [
-    "<h3>:co-actor</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:co-actor</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-co-actor-91\n  :ARG1 event\n  :ARG2 co-actor</pre></td>",
-    "<td><pre>Secondary parallel Actor who is acting independently of the primary :actor.</pre>\nJames battled <strong>the dragon</strong>.\n<pre>(b / battle-01\n    :actor (p / person\n        :name (n / name :op1 \"James\"))\n    <strong>:co-actor (d / dragon)</strong>\n    :aspect activity\n    :modal-strength full-affirmative)</pre></td>",
+    "<td>Secondary parallel Actor who is acting independently of the primary :actor.\n<ul><li>James battled <strong>the dragon</strong>.\n          <pre>(b / battle-01\n    :actor (p / person\n        :name (n / name :op1 \"James\"))\n    <strong>:co-actor (d / dragon)</strong>\n    :aspect activity\n    :modal-strength full-affirmative)</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":undergoer": [
-    "<h3>:undergoer</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:undergoer</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-undergoer-91\n  :ARG1 event\n  :ARG2 undergoer</pre></td>",
-    "<td>Entity (animate or inanimate) that is affected by the action.\n<strong>The papers </strong> burned.\n<pre>(b / burn-01\n    <strong>:undergoer (p / paper\n        :refer-number plural)</strong>\n    :aspect activity\n    :modal-strength full-affirmative)</pre>\nHe burned <strong>the onions</strong>.\n<pre>(b / burn-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:undergoer (o / onion\n        :refer-number plural)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
+    "<td>Entity (animate or inanimate) that is affected by the action.\n<ul><li><strong>The papers </strong> burned.\n          <pre>(b / burn-01\n    <strong>:undergoer (p / paper\n        :refer-number plural)</strong>\n    :aspect activity\n    :modal-strength full-affirmative)</pre>\n<li>He burned <strong>the onions</strong>.\n          <pre>(b / burn-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:undergoer (o / onion\n        :refer-number plural)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":theme": [
-    "<h3>:theme</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:theme</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-theme-91\n  :ARG1 event\n  :ARG2 theme</pre></td>",
-    "<td>Entity (animate, inanimate, or abstract) that moves from one entity to another entity, either spatially or metaphorically.\nShe put <strong>the books</strong> on the shelf.\n<pre>(p / put-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:theme (b / book\n        :refer-number plural)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\nShe tore <strong>a page</strong> from the book.\n(t /tear-01\n<pre>:actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:theme (p2 / page\n        :refer-number singular)</strong>\n    :source (b / book\n        :refer-number plural)\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\nHe gave me <strong>a sandwich</strong>.\n<pre>(g / give-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:theme (s / sandwich\n        :refer-number singular)</strong>\n    :recipient (p2 / person\n        :refer-person 1st\n        :refer-number singular)\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\nShe told him <strong>a story</strong>.\n<pre>(t / tell-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:theme (s / story\n        :refer-number singular)</strong>\n    :recipient (p2 / person\n        :refer-person 3rd\n        :refer-number singular)\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
+    "<td>Entity (animate, inanimate, or abstract) that moves from one entity to another entity, either spatially or metaphorically.\n<ul><li>She put <strong>the books</strong> on the shelf.\n          <pre>(p / put-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:theme (b / book\n        :refer-number plural)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\n<li>She tore <strong>a page</strong> from the book.\n          <pre>(t /tear-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:theme (p2 / page\n        :refer-number singular)</strong>\n    :source (b / book\n        :refer-number plural)\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\n<li>He gave me <strong>a sandwich</strong>.\n          <pre>(g / give-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:theme (s / sandwich\n        :refer-number singular)</strong>\n    :recipient (p2 / person\n        :refer-person 1st\n        :refer-number singular)\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\n<li>She told him <strong>a story</strong>.\n          <pre>(t / tell-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:theme (s / story\n        :refer-number singular)</strong>\n    :recipient (p2 / person\n        :refer-person 3rd\n        :refer-number singular)\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":recipient": [
-    "<h3>:recipient</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:recipient</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-recipient-91\n  :ARG1 event\n  :ARG2 recipient</pre></td>",
-    "<td>Animate entity that gains possession (or at least temporary control) of another entity.\nHe gave <strong>me</strong> a sandwich.\n<pre>(g / give-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    :theme (s / sandwich\n        :refer-number singular)\n    <strong>:recipient (p2 / person\n        :refer-person 1st\n        :refer-number singular)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\nShe told <strong>him</strong> a story.\n<pre>(t / tell-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    :theme (s / story\n        :refer-number singular)\n    <strong>:recipient (p2 / person\n        :refer-person 3rd\n        :refer-number singular)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
+    "<td>Animate entity that gains possession (or at least temporary control) of another entity.\n        <ul><li>He gave <strong>me</strong> a sandwich.\n          <pre>(g / give-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    :theme (s / sandwich\n        :refer-number singular)\n    <strong>:recipient (p2 / person\n        :refer-person 1st\n        :refer-number singular)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\n<li>She told <strong>him</strong> a story.\n          <pre>(t / tell-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    :theme (s / story\n        :refer-number singular)\n    <strong>:recipient (p2 / person\n        :refer-person 3rd\n        :refer-number singular)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":force": [
-    "<h3>:force</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:force</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-force-91\n  :ARG1 event\n  :ARG2 force</pre></td>",
-    "<td>Inanimate entity that initiates the action.\n<strong>The wind</strong> knocked down the tree.\n<pre>(k / knock-down-02\n    <strong>:force (w / wind)</strong>\n    :undergoer (t / tree)\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
+    "<td>Inanimate entity that initiates the action.\n        <ul><li><strong>The wind</strong> knocked down the tree.\n          <pre>(k / knock-down-02\n    <strong>:force (w / wind)</strong>\n    :undergoer (t / tree)\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":causer": [
-    "<h3>:causer</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:causer</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-causer-91\n  :ARG1 event\n  :ARG2 causer</pre></td>",
-    "<td>Animate entity that acts on another animate entity to initiate the action.\n<strong>The mother</strong> made her child eat the broccoli.\n<pre>(m / make-01\n    <strong>:causer (p / person\n        :ARG1-of (h / have-rel-role-91\n            :ARG2 (p2 / person)\n            :ARG3 (m / mother)\n            :ARG4 (c / child)))</strong>\n    :theme (e / eat-01\n        :actor p2\n        :undergoer (b / broccoli)\n    :aspect performance\n    :modal-strength full-affirmative))</pre></td>",
+    "<td>Animate entity that acts on another animate entity to initiate the action.\n<ul><li><strong>The mother</strong> made her child eat the broccoli.\n          <pre>(m / make-01\n    <strong>:causer (p / person\n        :ARG1-of (h / have-rel-role-91\n            :ARG2 (p2 / person)\n            :ARG3 (m / mother)\n            :ARG4 (c / child)))</strong>\n    :theme (e / eat-01\n        :actor p2\n        :undergoer (b / broccoli)\n    :aspect performance\n    :modal-strength full-affirmative))</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":experiencer": [
-    "<h3>:experiencer</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:experiencer</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-experience-91\n  :ARG1 experiencer\n  :ARG2 the experience\n  :ARG3 stimulus\n  :ARG4 the event, if separate</pre></td>",
-    "<td>Animate entity that cognitively or sensorily experiences a stimulus.\n<strong>The dog</strong> heard a sound.\n<pre>(h / hear-01\n    <strong>:experiencer (d / dog)</strong>\n    :stimulus (s / sound)\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
+    "<td>Animate entity that cognitively or sensorily experiences a stimulus.\n        <ul><li><strong>The dog</strong> heard a sound.\n          <pre>(h / hear-01\n    <strong>:experiencer (d / dog)</strong>\n    :stimulus (s / sound)\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":stimulus": [
-    "<h3>:stimulus</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
-    "<td><pre>Entity (animate or inanimate) that is experienced by an :experiencer\n  The dog heard <strong>a sound</strong>.\n  (h / hear-01\n  :experiencer (d / dog)\n  <strong>:stimulus (s / sound)</strong>\n  :aspect performance\n  :modal-strength full-affirmative)</pre></td>",
+    "<h3>:stimulus</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>Entity (animate or inanimate) that is experienced by an :experiencer\n  <ul><li>The dog heard <strong>a sound</strong>.\n  <pre>(h / hear-01\n  :experiencer (d / dog)\n  <strong>:stimulus (s / sound)</strong>\n  :aspect performance\n  :modal-strength full-affirmative)</pre></pre></td>",
     "</tr></table>"
   ],
   ":instrument": [
-    "<h3>:instrument</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:instrument</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-instrument-91\n  :ARG1 event\n  :ARG2 instrument</pre></td>",
-    "<td>Inanimate entity that is manipulated by an external Causer in order to initiate the action.\nShe hit him with <strong>a broom</strong>.\n<pre>(h / hit-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    :undergoer (p2 / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:instrument (b / broom)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
+    "<td>Inanimate entity that is manipulated by an external Causer in order to initiate the action.\n<ul><li>She hit him with <strong>a broom</strong>. \n          <pre>(h / hit-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    :undergoer (p2 / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:instrument (b / broom)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":companion": [
-    "<h3>:companion</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:companion</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-companion-91\n  :ARG1 event\n  :ARG2 companion</pre></td>",
-    "<td>Animate entity that acts with the actor to initiate the action.\nHe cooked dinner with <strong>his wife</strong>.\n<pre>(c / cook-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    :undergoer (d / dinner)\n    <strong>:companion (p2 / person\n        :refer-person 3rd\n        :refer-number singular)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
+    "<td>Animate entity that acts with the actor to initiate the action.\n<ul><li>He cooked dinner with <strong>his wife</strong>. \n          <pre>(c / cook-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    :undergoer (d / dinner)\n    <strong>:companion (p2 / person\n        :refer-person 3rd\n        :refer-number singular)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":material": [
-    "<h3>:material</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:material</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-material-91\n  :ARG1 event\n  :ARG2 material</pre></td>",
-    "<td>Entity (inanimate) that is transformed into a new entity.\nHe made a roux with <strong>flour and butter</strong>.\n<pre>(m / make-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    :undergoer (r / roux)\n    <strong>:material (a / and\n        :op1 (f / flour)\n        :op2 (b / butter))</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
+    "<td>Entity (inanimate) that is transformed into a new entity.\n        <ul><li>He made a roux with <strong>flour and butter</strong>.  \n          <pre>(m / make-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    :undergoer (r / roux)\n    <strong>:material (a / and\n        :op1 (f / flour)\n        :op2 (b / butter))</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":source": [
-    "<h3>:source</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:source</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-source-91\n  :ARG1 event\n  :ARG2 source</pre></td>",
-    "<td><pre>Entity from which the :theme detaches.</pre>\nHe plucked a flower from <strong>the bush</strong>.\n<pre>(p / pluck-01\n    :actor (p2 / person\n        :refer-person 3rd\n        :refer-number singular)\n    :theme (f / flower)\n    <strong>:source (b / bush)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
+    "<td>Entity from which the :theme detaches.\n        <ul><li>He plucked a flower from <strong>the bush</strong>.   \n          <pre>(p / pluck-01\n    :actor (p2 / person\n        :refer-person 3rd\n        :refer-number singular)\n    :theme (f / flower)\n    <strong>:source (b / bush)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":place": [
-    "<h3>:place</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:place</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-place-91\n  :ARG1 event\n  :ARG2 place</pre></td>",
-    "<td>Location at which the action takes place.\nHe read a book <strong>in the garden</strong>.\n<pre>(r / read-01\n    :actor (p2 / person\n        :refer-person 3rd\n        :refer-number singular)\n    :theme (b / book)\n    <strong>:place (g / garden)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
+    "<td>Location at which the action takes place.\n        <ul><li>He read a book <strong>in the garden</strong>.   \n          <pre>(r / read-01\n    :actor (p2 / person\n        :refer-person 3rd\n        :refer-number singular)\n    :theme (b / book)\n    <strong>:place (g / garden)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":start": [
-    "<h3>:start</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:start</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-start-91\n  :ARG1 event\n  :ARG2 start</pre></td>",
-    "<td>Location at which a motion event begins.\nShe biked <strong>from her house</strong>.\n<pre>(b / bike-01\n    :actor (p2 / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:start (h / house\n        :possessor p2)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
+    "<td>Location at which a motion event begins.\n        <ul><li>She biked <strong>from her house</strong>.    \n          <pre>(b / bike-01\n    :actor (p2 / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:start (h / house\n        :possessor p2)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":goal": [
-    "<h3>:goal</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:goal</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-goal-91\n  :ARG1 event\n  :ARG2 goal</pre></td>",
-    "<td>Location at which the action ends, the end point at which the theme arrives.\nShe put the books <strong>on the shelf</strong>.\n<pre>(p / put-01\n    :actor (p2 / person\n        :refer-person 3rd\n        :refer-number singular)\n    :theme (b / book\n        :refer-number plural)\n    <strong>:goal (s / shelf)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
+    "<td>Location at which the action ends, the end point at which the theme arrives.\n        <ul><li>She put the books <strong>on the shelf</strong>.  \n          <pre>(p / put-01\n    :actor (p2 / person\n        :refer-person 3rd\n        :refer-number singular)\n    :theme (b / book\n        :refer-number plural)\n    <strong>:goal (s / shelf)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":affectee": [
-    "<h3>:affectee</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:affectee</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-affectee-91\n  :ARG1 event\n  :ARG2 affectee</pre></td>",
-    "<td>Animate entity which the action has a positive or negative influence on, i.e. beneficiary or maleficiary.\nHe made a cake for<strong>the dog</strong>.\n<pre>(m / make-01\n    :actor (p2 / person\n        :refer-person 3rd\n        :refer-number singular)\n    :theme (c / cake)\n    <strong>:affectee (d / dog)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\nShe twisted his words <strong>against him</strong>.\n<pre>(t / twist-01\n    :actor (p2 / person\n        :refer-person 3rd\n        :refer-number singular)\n    :theme (w / word\n        :refer-number plural\n        :possessor (p / person\n            :refer-person 3rd\n            :refer-number singular)\n    <strong>:affectee p</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
+    "<td>Animate entity which the action has a positive or negative influence on, i.e. beneficiary or maleficiary.\n<ul><li>He made a cake for<strong>the dog</strong>.\n          <pre>(m / make-01\n    :actor (p2 / person\n        :refer-person 3rd\n        :refer-number singular)\n    :theme (c / cake)\n    <strong>:affectee (d / dog)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\n<li>She twisted his words <strong>against him</strong>.\n          <pre>(t / twist-01\n    :actor (p2 / person\n        :refer-person 3rd\n        :refer-number singular)\n    :theme (w / word\n        :refer-number plural\n        :possessor (p / person\n            :refer-person 3rd\n            :refer-number singular)\n    <strong>:affectee p</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":cause": [
-    "<h3>:cause</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:cause</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-cause-91\n  :ARG1 event\n  :ARG2 cause</pre></td>",
-    "<td>Inanimate entity that causes the action to happen.\nHe was late because of <strong>the fire</strong>.\n<pre>(l / late-02\n    :theme (p2 / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:cause (f / fire-05\n        :aspect process\n        :modal-strength full-affirmative)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
+    "<td>Inanimate entity that causes the action to happen.\n        <ul><li>He was late because of <strong>the fire</strong>.\n          <pre>(l / late-02\n    :theme (p2 / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:cause (f / fire-05\n        :aspect process\n        :modal-strength full-affirmative)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":manner": [
-    "<h3>:manner</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:manner</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-manner-91\n  :ARG1 event\n  :ARG2 manner</pre></td>",
-    "<td>Manner in which the action takes place.\nShe exercised by<strong>lifting weights</strong>.\n<pre>(e / exercise-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:manner (l / lift-01\n        :actor p \n        :theme (w / weight\n            :refer-number plural)\n        :aspect performance\n        :modal-strength full-affirmative)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
+    "<td>Manner in which the action takes place.\n        <ul><li>She exercised by<strong>lifting weights</strong>.\n          <pre>(e / exercise-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:manner (l / lift-01\n        :actor p \n        :theme (w / weight\n            :refer-number plural)\n        :aspect performance\n        :modal-strength full-affirmative)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":reason": [
-    "<h3>:reason</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:reason</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-reason-91\n  :ARG1 event\n  :ARG2 reason</pre></td>",
-    "<td><pre>Motivation for the :actor to initiate the action.</pre>\nThey got married because <strong>they were in love</strong>.\n<pre>(m / marry-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number plural)\n    <strong>:reason (l / love-01\n        :actor p \n        :aspect state\n        :modal-strength full-affirmative)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
+    "<td>Motivation for the :actor to initiate the action.\n        <ul><li>They got married because <strong>they were in love</strong>.\n          <pre>(m / marry-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number plural)\n    <strong>:reason (l / love-01\n        :actor p \n        :aspect state\n        :modal-strength full-affirmative)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":purpose": [
-    "<h3>:purpose</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:purpose</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-purpose-91\n  :ARG1 event\n  :ARG2 purpose</pre></td>",
-    "<td>Intended event that results from the action.\nThey dropped water in order to <strong>fight fires</strong>.\n<pre>(d / drop-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number plural)\n    :theme (w / water)\n    <strong>:purpose (f / fight-01\n        :actor p \n        :force (f2 / fire-05\n            :refer-number plural\n            :aspect process)\n        :aspect habitual\n        :modal-strength partial-affirmative)</strong>\n    :aspect habitual\n    :modal-strength full-affirmative)</pre></td>",
+    "<td>Intended event that results from the action.\n        <ul><li>They dropped water in order to <strong>fight fires</strong>.\n          <pre>(d / drop-01\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number plural)\n    :theme (w / water)\n    <strong>:purpose (f / fight-01\n        :actor p \n        :force (f2 / fire-05\n            :refer-number plural\n            :aspect process)\n        :aspect habitual\n        :modal-strength partial-affirmative)</strong>\n    :aspect habitual\n    :modal-strength full-affirmative)</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":result": [
-    "<h3>:result</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:result</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-result-91\n  :ARG1 event\n  :ARG2 result</pre></td>",
-    "<td>Event or state that comes about in some way that is contingent on another event.\nShe worked her fingers <strong>raw</strong>.\n<pre>(w / work-10\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    :undergoer (f / finger\n        :part-of p \n        :refer-number plural)\n    <strong>:result (r / raw-01\n        :theme f\n        :aspect state\n        :modal-strength full-affirmative)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
+    "<td>Event or state that comes about in some way that is contingent on another event.\n        <ul><li>She worked her fingers <strong>raw</strong>.\n          <pre>(w / work-10\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    :undergoer (f / finger\n        :part-of p \n        :refer-number plural)\n    <strong>:result (r / raw-01\n        :theme f\n        :aspect state\n        :modal-strength full-affirmative)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":temporal": [
-    "<h3>:temporal</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:temporal</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-temporal-91\n  :ARG1 event\n  :ARG2 temporal</pre></td>",
-    "<td>Element (event or time expression) that has a temporal relation with the action.\nShe left <strong>after dinner</strong>.\n<pre>(l / leave-11\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:temporal (a / after\n        :op1 (d / dinner))</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
+    "<td>Element (event or time expression) that has a temporal relation with the action.\n        <ul><li>She left <strong>after dinner</strong>.\n          <pre>(l / leave-11\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:temporal (a / after\n        :op1 (d / dinner))</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":extent": [
-    "<h3>:extent</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:extent</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-extent-91\n  :ARG1 event\n  :ARG2 extent</pre></td>",
-    "<td>Measurement phrase.\nHe ran <strong>7 miles</strong>.\n<pre>(r / run-02\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:extent (d / distance-quantity\n        :quant 7\n        :unit (m / mile))</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
+    "<td>Measurement phrase.\n        <ul><li>He ran <strong>7 miles</strong>.\n          <pre>(r / run-02\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:extent (d / distance-quantity\n        :quant 7\n        :unit (m / mile))</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":other-role": [
-    "<h3>:other-role</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:other-role</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-other-role-91\n  :ARG1 event\n  :ARG2 other role</pre></td>",
     "<td>This role can be used when an annotator is unsure of which role is appropriate.</td>",
     "</tr></table>"
   ],
   "null": [
-    "<h3>None</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>None</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "</tr></table>"
   ],
   ":direction": [
-    "<h3>:direction</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:direction</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-direction-91\n  :ARG1 event\n  :ARG2 direction</pre></td>",
-    "<td>Direction of motion event.\nHe drove <strong>west</strong>.\n<pre>(d / drive\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:direction (t / trajectory\n        :direction-of (w / west-01))</strong>\n    :aspect activity\n    :modal-strength full-affirmative)</pre></td>",
+    "<td>Direction of motion event.\n        <ul><li>He drove <strong>west</strong>.\n          <pre>(d / drive\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    <strong>:direction (t / trajectory\n        :direction-of (w / west-01))</strong>\n    :aspect activity\n    :modal-strength full-affirmative)</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":path": [
-    "<h3>:path</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:path</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-path-91\n  :ARG1 event/entity\n  :ARG2 path</pre></td>",
-    "<td>Path of motion event.\nI walked <strong>the track</strong> at the highschool.\n<pre>(w / walk-01\n    :actor (p / person\n        :refer-person 1st\n        :refer-number singular)\n    <strong>:path (t / track)</strong>\n    :place (h / highschool)\n    :aspect activity\n    :modal-strength full-affirmative)</pre></td>",
+    "<td>Path of motion event.\n        <ul><li>I walked <strong>the track</strong> at the highschool.\n          <pre>(w / walk-01\n    :actor (p / person\n        :refer-person 1st\n        :refer-number singular)\n    <strong>:path (t / track)</strong>\n    :place (h / highschool)\n    :aspect activity\n    :modal-strength full-affirmative)</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":quant": [
-    "<h3>:quant</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:quant</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-quant-91\n  :ARG1 entity\n  :ARG2 quant</pre></td>",
-    "<td>Quantity of an entity.\nMy brother has <strong>12</strong> pets.\n<pre>(h / have-91\n    :ARG1 (p / person\n        :ARG1-of (h2 / have-rel-role-91\n            :ARG2 (p / person\n                :refer-person 1st\n                :refer-number singular)\n            :ARG3 (b / brother)))\n    :ARG2 (p2 / pet\n        <strong>:quant 12</strong>)\n    :aspect state\n    :modal-strength full-affirmative)</pre></td>",
+    "<td>Quantity of an entity.\n        <ul><li>My brother has <strong>12</strong> pets.\n          <pre>(h / have-91\n    :ARG1 (p / person\n        :ARG1-of (h2 / have-rel-role-91\n            :ARG2 (p / person\n                :refer-person 1st\n                :refer-number singular)\n            :ARG3 (b / brother)))\n    :ARG2 (p2 / pet\n        <strong>:quant 12</strong>)\n    :aspect state\n    :modal-strength full-affirmative)</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":degree": [
-    "<h3>:degree</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
-    "<td><pre>Modifiers that increase the degree to which a state holds.\n  The man is <strong>very</strong> tall.\n  (t / tall-01\n  :theme (m / man)\n  <strong>:degree intensifier</strong>\n  :aspect state\n  :modal-strength full-affirmative)</pre></td>",
+    "<h3>:degree</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "</tr></table>"
   ],
   ":duration": [
-    "<h3>:duration</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:duration</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-duration-91\n  :ARG1 event\n  :ARG2 duration</pre></td>",
-    "<td>Duration of an event.\nThe commencement ceremony went on <strong>for 4 hours</strong>.\n<pre>(g / go-on-15\n    :theme (c / ceremony-01\n        :purpose (c2 / commencement)\n        :aspect process\n        :modal-strength full-affirmative)\n    :duration <strong>(t / temporal-quantity\n        :quant 4 \n        :unit (h2 / hour))</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
+    "<td>Duration of an event.\n        <ul><li>The commencement ceremony went on <strong>for 4 hours</strong>.\n          <pre>(g / go-on-15\n    :theme (c / ceremony-01\n        :purpose (c2 / commencement)\n        :aspect process\n        :modal-strength full-affirmative)\n    :duration <strong>(t / temporal-quantity\n        :quant 4 \n        :unit (h2 / hour))</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":frequency": [
-    "<h3>:frequency</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:frequency</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-frequency-91\n  :ARG1 event\n  :ARG2 frequency</pre></td>",
-    "<td>How often an event occurs.\nMy dog runs around the yard <strong>whenever it rains</strong>.\n<pre>(r / run-02\n    :actor (d / dog\n        :possessor (p / person\n            :refer-person 1st\n            :refer-number singular))\n    :path (a / around\n        :op1 (y / yard))\n    :frequency <strong>(r2 / rate-entity-91\n        :ARG4 (r3 / rain-01\n            :aspect performance\n            :modal-strength partial-affirmative))</strong>\n    :aspect habitual\n    :modal-strength full-affirmative)</pre>\nMy cat hit my dog on the nose <strong>3 times</strong>.\n<pre>(h / hit-01\n    :actor (c / cat\n        :possessor (p / person\n            :refer-person 1st\n            :refer-number singular))\n    :undergoer (d / dog\n        :possessor p)\n    :place (n / nose\n        :part-of d)\n    <strong>:frequency 3</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
+    "<td>How often an event occurs.\n        <ul><li>My dog runs around the yard <strong>whenever it rains</strong>.\n          <pre>(r / run-02\n    :actor (d / dog\n        :possessor (p / person\n            :refer-person 1st\n            :refer-number singular))\n    :path (a / around\n        :op1 (y / yard))\n    :frequency <strong>(r2 / rate-entity-91\n        :ARG4 (r3 / rain-01\n            :aspect performance\n            :modal-strength partial-affirmative))</strong>\n    :aspect habitual\n    :modal-strength full-affirmative)</pre>\n<li>My cat hit my dog on the nose <strong>3 times</strong>.\n          <pre>(h / hit-01\n    :actor (c / cat\n        :possessor (p / person\n            :refer-person 1st\n            :refer-number singular))\n    :undergoer (d / dog\n        :possessor p)\n    :place (n / nose\n        :part-of d)\n    <strong>:frequency 3</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":mod": [
-    "<h3>:mod</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:mod</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-mod-91\n  :ARG1 entity\n  :ARG2 modifier</pre></td>",
-    "<td>For generic modifiers of entities and events.\nI don't want to wear <strong>those</strong> shoes.\n<pre>(w / want-01\n    :polarity -\n    :experiencer (p / person\n        :refer-person 1st\n        :refer-number singular)\n    :stimulus (w2 / wear-01\n        :actor p \n        :theme (s / shoe \n            :refer-number plural\n            <strong>:mod (t / that)</strong>)\n        :aspect state\n        :modal-strength partial-negative\n        :modal-predicate w)\n    :aspect state\n    :modal-strength full-negative)The <strong>tall</strong> man reached the mayonnaise for me.\n          (r / reach-01\n    :actor (m / man\n        <strong>:mod (t / tall))</strong>\n    :theme (m2 / mayonnaise)\n    :affectee (p / person\n        :refer-person 1st\n        :refer-number singular)\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
+    "<td>For generic modifiers of entities and events.\n<ul><li>I don't want to wear <strong>those</strong> shoes.\n          <pre>(w / want-01\n    :polarity -\n    :experiencer (p / person\n        :refer-person 1st\n        :refer-number singular)\n    :stimulus (w2 / wear-01\n        :actor p \n        :theme (s / shoe \n            :refer-number plural\n            <strong>:mod (t / that)</strong>)\n        :aspect state\n        :modal-strength partial-negative\n        :modal-predicate w)\n    :aspect state\n    :modal-strength full-negative)</pre>The <strong>tall</strong> man reached the mayonnaise for me.\n          <pre>(r / reach-01\n    :actor (m / man\n        <strong>:mod (t / tall))</strong>\n    :theme (m2 / mayonnaise)\n    :affectee (p / person\n        :refer-person 1st\n        :refer-number singular)\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":topic": [
-    "<h3>:topic</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:topic</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-topic-91\n  :ARG1 event/entity\n  :ARG2 topic</pre></td>",
-    "<td>The subject matter of an event or entity.\nThe cobbler wrote a book <strong>about shoes</strong>.\n<pre>(w / write-01\n    :actor (p / person\n        :ARG1-of (h / have-role-91\n            :ARG2 (c / cobbler)))\n    :theme (b / book\n        <strong>:topic (s / shoe\n            :refer-number plural)</strong>)\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
+    "<td>The subject matter of an event or entity.\n        <ul><li>The cobbler wrote a book <strong>about shoes</strong>.\n          <pre>(w / write-01\n    :actor (p / person\n        :ARG1-of (h / have-role-91\n            :ARG2 (c / cobbler)))\n    :theme (b / book\n        <strong>:topic (s / shoe\n            :refer-number plural)</strong>)\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":vocative": [
-    "<h3>:vocative</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:vocative</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-vocative-91\n  :ARG1 event\n  :ARG2 person addressed</pre></td>",
-    "<td>Within utterances, when the addressee is called out.\n\"Good morning, <strong>Bert</strong>.\"\n<pre>(s / say-91\n    :ARG1 (g / good-02\n        :theme (m / morning)\n        <strong>:vocative (p / person \n            :name (n / name :op1 \"Bert\"))</strong>\n        :aspect state\n        :modal-strength full-affirmative\n        :quote s)\n    :ARG2 p)</pre></td>",
+    "<td>Within utterances, when the addressee is called out.\n        <ul><li>\"Good morning, <strong>Bert</strong>.\"\n          <pre>(s / say-91\n    :ARG1 (g / good-02\n        :theme (m / morning)\n        <strong>:vocative (p / person \n            :name (n / name :op1 \"Bert\"))</strong>\n        :aspect state\n        :modal-strength full-affirmative\n        :quote s)\n    :ARG2 p)</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":medium": [
-    "<h3>:medium</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:medium</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-medium-91\n  :ARG1 event/entity\n  :ARG2 medium</pre></td>",
-    "<td>The medium through which an event is carried out.\nI called my mother <strong>on the phone</strong>.\n<pre>(c / call-02\n    :actor (p / person\n        :refer-person 1st\n        :refer-number singular)\n    :theme (p2 / person\n        :ARG1-of (h / have-rel-role-91\n            :ARG2 (p3 / person)\n            :ARG3 (m / mother)))\n    <strong>:medium (p4 / phone)</strong>\n        :aspect performance\n        :modal-strength full-affirmative)</pre>\na <strong>French</strong> song\n<pre>(s / song\n    <strong>:medium (l / language</strong>\n        :name (n / name :op1 \"French\")))</pre></td>",
+    "<td>The medium through which an event is carried out.\n        <ul><li>I called my mother <strong>on the phone</strong>.\n          <pre>(c / call-02\n    :actor (p / person\n        :refer-person 1st\n        :refer-number singular)\n    :theme (p2 / person\n        :ARG1-of (h / have-rel-role-91\n            :ARG2 (p3 / person)\n            :ARG3 (m / mother)))\n    <strong>:medium (p4 / phone)</strong>\n        :aspect performance\n        :modal-strength full-affirmative)</pre>\n<li>a <strong>French</strong> song\n          <pre>(s / song\n    <strong>:medium (l / language</strong>\n        :name (n / name :op1 \"French\")))</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":possessor": [
-    "<h3>:possessor</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:possessor</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-poss-91\n  :ARG1 possessed entity\n  :ARG2 possessor</pre></td>",
-    "<td>The entity who has possession (or temporary control) over something.\n<strong>His</strong> shoes are on the floor.\n<pre>(h / have-place-91\n    :ARG1 (s / shoe\n        :refer-number plural\n        <strong>:possessor (p / person\n            :refer-person 3rd\n            :refer-number singular))</strong>\n    :ARG2 (f / floor)\n    :aspect state\n    :modal-strength full-affirmative)</pre></td>",
+    "<td>The entity who has possession (or temporary control) over something.\n        <ul><li><strong>His</strong> shoes are on the floor.\n          <pre>(h / have-place-91\n    :ARG1 (s / shoe\n        :refer-number plural\n        <strong>:possessor (p / person\n            :refer-person 3rd\n            :refer-number singular))</strong>\n    :ARG2 (f / floor)\n    :aspect state\n    :modal-strength full-affirmative)</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":part": [
-    "<h3>:part</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:part</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-part-91\n  :ARG1 whole entity\n  :ARG2 part</pre></td>",
-    "<td>A component part of a whole.\nMy <strong>nose</strong> itched.\n<pre>(i / itch-01\n    :experiencer (n / nose\n        <strong>:part-of (p / person\n            :refer-person 1st\n            :refer-number singular))</strong>\n    :aspect state\n    :modal-strength full-affirmative)</pre>\nThe movers lay the box on its <strong>side</strong>.\n<pre>(l / lay-01\n    :actor (p / person\n        :refer-number plural\n        :actor-of (m / move-01))\n    :theme (b / box)\n    :orientation (o / on-04\n        :theme b \n        :part (s / side\n        <strong>:part-of b)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre></td>",
+    "<td>A component part of a whole.\n        <ul><li>My <strong>nose</strong> itched.\n          <pre>(i / itch-01\n    :experiencer (n / nose\n        <strong>:part-of (p / person\n            :refer-person 1st\n            :refer-number singular))</strong>\n    :aspect state\n    :modal-strength full-affirmative)</pre>\n<li>The movers lay the box on its <strong>side</strong>.\n          <pre>(l / lay-01\n    :actor (p / person\n        :refer-number plural\n        :actor-of (m / move-01))\n    :theme (b / box)\n    :orientation (o / on-04\n        :theme b \n        :part (s / side\n        <strong>:part-of b)</strong>\n    :aspect performance\n    :modal-strength full-affirmative)</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":group": [
-    "<h3>:group</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:group</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-group-91\n  :ARG1 members\n  :ARG2 group</pre></td>",
-    "<td>For set/member relationships.\n<strong>a swarm</strong> of bees\n<pre><strong>(s / swarm\n    :group-of</strong> (b / bee\n        :refer-number plural))</pre></td>",
+    "<td>For set/member relationships.\n        <ul><li><strong>a swarm</strong> of bees\n          <pre><strong>(s / swarm\n    :group-of</strong> (b / bee\n        :refer-number plural))</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":age": [
-    "<h3>:age</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
-    "<td><pre>have-age-91\n  :ARG1 entity\n  :ARG2 age\n  Ex: The book I gave Martha was <strong>old</strong>.\n  <strong>(h / have-age-91\n  :ARG1</strong> (b / book\n  :theme-of (g / give-01\n  :actor (p / person\n  :refer-person 1st\n  :refer-number singular)\n  :recipient (p2 / person :name (n / name :op1 \"Martha\"))\n  :aspect performance\n  :modal-strength full-affirmative))\n  <strong>:ARG2 (o / old))</strong></pre></td>",
-    "<td>The age of an entity.\nthe <strong>3 year old</strong> boy\n<pre>(b / boy\n    <strong>:age (t / temporal-quantity\n        :quant 3 \n        :unit (y / year)</strong>)</pre></td>",
+    "<h3>:age</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<td><pre>have-age-91\n  :ARG1 entity\n  :ARG2 age\n  <pre>Ex: The book I gave Martha was <strong>old</strong>.\n  <strong>(h / have-age-91\n  :ARG1</strong> (b / book\n  :theme-of (g / give-01\n  :actor (p / person\n  :refer-person 1st\n  :refer-number singular)\n  :recipient (p2 / person :name (n / name :op1 \"Martha\"))\n  :aspect performance\n  :modal-strength full-affirmative))\n  <strong>:ARG2 (o / old))</strong>\n  </pre></pre></td>",
+    "<td>The age of an entity.\n        <ul><li>the <strong>3 year old</strong> boy\n          <pre>(b / boy\n    <strong>:age (t / temporal-quantity\n        :quant 3 \n        :unit (y / year)</strong>)</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":example": [
-    "<h3>:example</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:example</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-example-91\n  :ARG1 event/entity\n  :ARG2 example</pre></td>",
-    "<td>For exemplars.\nCountries <strong>like Germany and France</strong>.\n<pre>(c / country\n    :refer-number plural\n    <strong>:example (a / and\n        :op1 (c2 / country \n            :name (n / name :op1 \"Germany\"))\n        :op2 (c3 / country\n            :name (n2 / name :op2 \"France\"))))</strong>)</pre></td>",
+    "<td>For exemplars.\n        <ul><li>Countries <strong>like Germany and France</strong>. \n          <pre>(c / country\n    :refer-number plural\n    <strong>:example (a / and\n        :op1 (c2 / country \n            :name (n / name :op1 \"Germany\"))\n        :op2 (c3 / country\n            :name (n2 / name :op2 \"France\"))))</strong>)</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":ord": [
-    "<h3>:ord</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:ord</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-ord-91\n  :ARG1 main entity\n  :ARG2 ord\n  :ARG3 range\n  :ARG4 range-start\n  :ARG5 range-trajectory</pre></td>",
-    "<td>Ordinal relations. This role takes the concept ordinal-entity as its value, with one mandatory subrole (:value, for the number), and three optional subroles that give further information about how the counter is thinking about the counting.\nthe <strong>last</strong> man standing\n<pre>(m / man\n    :actor-of (s / stand-01\n        <strong>:ord (o / ordinal-entity :value \"-1\")</strong>\n        :aspect state\n        :modal-strength full-affirmative))</pre>\nthe <strong>first</strong> book <strong>in the stack</strong>\n<pre>(b / book\n    <strong>:ord (o / ordinal-entity :value \"1\")</strong>\n        :range (s / stack))</pre>\nthe <strong>3rd</strong> block <strong>from the lefthand side</strong>\n<pre>(b / block\n    <strong>:ord (o / ordinal-entity :value \"3\")</strong>\n        :range-start (s / side\n            :ARG2-of (l / left-24)))</pre>\nthe <strong>2nd</strong> chair <strong>toward the front</strong>\n<pre>(c / chair\n    <strong>:ord (o / ordinal-entity :value \"2\")</strong>\n        :range-trajectory (f / front-03))</pre></td>",
+    "<td>Ordinal relations. This role takes the concept ordinal-entity as its value, with one mandatory subrole (:value, for the number), and three optional subroles that give further information about how the counter is thinking about the counting.\n<ul><li>the <strong>last</strong> man standing \n          <pre>(m / man\n    :actor-of (s / stand-01\n        <strong>:ord (o / ordinal-entity :value \"-1\")</strong>\n        :aspect state\n        :modal-strength full-affirmative))</pre>\n<li>the <strong>first</strong> book <strong>in the stack</strong>\n<pre>(b / book\n    <strong>:ord (o / ordinal-entity :value \"1\")</strong>\n        :range (s / stack))</pre>\n<li>the <strong>3rd</strong> block <strong>from the lefthand side</strong>\n<pre>(b / block\n    <strong>:ord (o / ordinal-entity :value \"3\")</strong>\n        :range-start (s / side\n            :ARG2-of (l / left-24)))</pre>\n<li>the <strong>2nd</strong> chair <strong>toward the front</strong>\n<pre>(c / chair\n    <strong>:ord (o / ordinal-entity :value \"2\")</strong>\n        :range-trajectory (f / front-03))</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":list-item": [
-    "<h3>:list-item</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:list-item</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-list-item-91\n  :ARG1 entity\n  :ARG2 number/value</pre></td>",
-    "<td>For enumeration of items in lists.\nI like two things: <strong>1.</strong> dogs, and <strong>2.</strong> coffee.\n<pre>(l / like-01\n    :experiencer (p / person\n        :refer-person 1st\n        :refer-number singular)\n    :stimulus (t / thing\n        :quant 2\n        :ARG1-of (i / identity-91\n            :ARG2 (a / and\n                :op1 (d / dog\n                    :refer-number plural\n                    <strong>:list-item \"1\"</strong>)\n                :op1 (c / coffee\n                    <strong>:list-item \"2\"</strong>)))))</pre></td>",
+    "<td>For enumeration of items in lists.\n        <ul><li>I like two things: <strong>1.</strong> dogs, and <strong>2.</strong> coffee.\n          <pre>(l / like-01\n    :experiencer (p / person\n        :refer-person 1st\n        :refer-number singular)\n    :stimulus (t / thing\n        :quant 2\n        :ARG1-of (i / identity-91\n            :ARG2 (a / and\n                :op1 (d / dog\n                    :refer-number plural\n                    <strong>:list-item \"1\"</strong>)\n                :op1 (c / coffee\n                    <strong>:list-item \"2\"</strong>)))))</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":size": [
-    "<h3>:size</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:size</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-size-91\n  :ARG1 entity\n  :ARG2 size</pre></td>",
-    "<td>For size modifiers.\nBuild a <strong>3 by 3</strong> square.\n<pre>(b / build-01\n    :mode imperative\n    :ARG0 (p / person\n        :refer-person 2nd\n        :refer-number singular)\n    :ARG1 (s / square\n        <strong>:size (a / and\n            :op1 (d / dimension-entity :value \"3\")\n            :op2 (d2 / dimension-entity :value \"3\")))</strong>\n    :aspect performance\n    :modal-strength partial-affirmative)</pre></td>",
+    "<td>For size modifiers.\n<ul><li>Build a <strong>3 by 3</strong> square.\n          <pre>(b / build-01\n    :mode imperative\n    :ARG0 (p / person\n        :refer-person 2nd\n        :refer-number singular)\n    :ARG1 (s / square\n        <strong>:size (a / and\n            :op1 (d / dimension-entity :value \"3\")\n            :op2 (d2 / dimension-entity :value \"3\")))</strong>\n    :aspect performance\n    :modal-strength partial-affirmative)</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":color": [
-    "<h3>:color</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:color</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-color-91\n  :ARG1 entity\n  :ARG2 color</pre></td>",
-    "<td>For colors.\nBuild a <strong>red</strong> triangle.\n<pre>(b / build-01\n    :mode imperative\n    :ARG0 (p / person\n        :refer-person 2nd\n        :refer-number singular)\n    :ARG1 (t / triangle\n        <strong>:color (r / red)</strong>)\n    :aspect performance\n    :modal-strength partial-affirmative)</pre></td>",
+    "<td>For colors.\n<ul><li>Build a <strong>red</strong> triangle.\n          <pre>(b / build-01\n    :mode imperative\n    :ARG0 (p / person\n        :refer-person 2nd\n        :refer-number singular)\n    :ARG1 (t / triangle\n        <strong>:color (r / red)</strong>)\n    :aspect performance\n    :modal-strength partial-affirmative)</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":configuration": [
-    "<h3>:configuration</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:configuration</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-configuration-91\n  :ARG1 components\n  :ARG2 configuration</pre></td>",
-    "<td>For configurations, where individual, separable component parts are arranged in a particular way.\nNow take the orange blocks and build a <strong>=</strong>strong>.\n<pre>(a / and\n    :op1 (t / take-01\n        :mode imperative\n        :ARG0 (p / person\n            :refer-person 2nd\n            :refer-number singular)\n        :ARG1 (b / block\n            :refer-number plural\n            :color (o / orange))\n        :aspect performance\n        :modal-strength partial-affirmative)\n    :op2 (b2 / build-01\n        :mode imperative\n        :ARG0 p\n        :ARG1 <strong>(t / thing\n            :configuration (s / string-entity :value \"=\"))</strong>\n        :ARG2 b\n        :aspect performance\n        :modal-strength partial-affirmative))</pre></td>",
+    "<td>For configurations, where individual, separable component parts are arranged in a particular way.\n<ul><li>Now take the orange blocks and build a <strong>=</strong>strong>.\n          <pre>(a / and\n    :op1 (t / take-01\n        :mode imperative\n        :ARG0 (p / person\n            :refer-person 2nd\n            :refer-number singular)\n        :ARG1 (b / block\n            :refer-number plural\n            :color (o / orange))\n        :aspect performance\n        :modal-strength partial-affirmative)\n    :op2 (b2 / build-01\n        :mode imperative\n        :ARG0 p\n        :ARG1 <strong>(t / thing\n            :configuration (s / string-entity :value \"=\"))</strong>\n        :ARG2 b\n        :aspect performance\n        :modal-strength partial-affirmative))</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":orientation": [
-    "<h3>:orientation</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:orientation</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-orientation-91\n  :ARG1 entity\n  :ARG2 orientation</pre></td>",
-    "<td>For orientations of entities who are facing a particular way.\nThe painting was <strong>upside-down</strong>strong>.\n<pre>(h / have-orientation-91\n    :ARG1 (t / thing\n        :ARG1-of (p / paint-01))\n    :ARG2 <strong>(u / upside-down)</strong>\n    :aspect state\n    :modal-strength full-affirmative)</pre></td>",
+    "<td>For orientations of entities who are facing a particular way.\n<ul><li>The painting was <strong>upside-down</strong>strong>.\n          <pre>(h / have-orientation-91\n    :ARG1 (t / thing\n        :ARG1-of (p / paint-01))\n    :ARG2 <strong>(u / upside-down)</strong>\n    :aspect state\n    :modal-strength full-affirmative)</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":anchor": [
-    "<h3>:anchor</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:anchor</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-anchor-91\n  :ARG1 spatial relation\n  :ARG2 anchor</pre></td>",
-    "<td>Marks the spatial frame of reference (usually a defined spatial framework) the speaker is referencing.\nMy laptop is <strong>on top</strong>strong> of my desk.\n<pre>(o / on-top-03\n    :ARG1 (l / laptop\n        :possessor (p / person\n            :refer-person 1st\n            :refer-number singular))\n    :ARG2 (d / desk\n        :possessor p)\n    <strong>:anchor (c / cartesian-framework-91\n        :ARG1 (e / environment))</strong>\n    :aspect state\n    :modal-strength full-affirmative)</pre></td>",
+    "<td>Marks the spatial frame of reference (usually a defined spatial framework) the speaker is referencing.\n<ul><li>My laptop is <strong>on top</strong>strong> of my desk.\n          <pre>(o / on-top-03\n    :ARG1 (l / laptop\n        :possessor (p / person\n            :refer-person 1st\n            :refer-number singular))\n    :ARG2 (d / desk\n        :possessor p)\n    <strong>:anchor (c / cartesian-framework-91\n        :ARG1 (e / environment))</strong>\n    :aspect state\n    :modal-strength full-affirmative)</pre>\n</ul></td>",
     "</tr></table>"
   ],
   ":axis": [
-    "<h3>:axis</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
+    "<h3>:axis</h3><table>\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
     "<td><pre>have-axis-91\n  :ARG1 spatial relation\n  :ARG2 axis</pre></td>",
-    "<td>For directed spatial relations, the ray that points in the eponymous direction. May be an abstract ray, or may be a physical structure.\nThe church is down <strong>the street<strong> from the school.\n<pre>(d / down-05\n    :ARG1 (c / church)\n    :ARG2 (s / school)\n    <strong>:axis (s2 / street)</strong>\n    :aspect state\n    :modal-strength full-affirmative)</strong></strong></pre>\nHe drove <strong>west</strong>.\n<pre>(d / drive\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    :direction <strong>(t / trajectory\n        :axis-of (w / west-01)</strong>)\n    :aspect activity\n    :modal-strength full-affirmative)</pre></td>",
-    "</tr></table>"
-  ],
-  ":polite": [
-    "<h3>:polite</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
-    "<td><pre>Politeness constructions.\n  <strong>Please</strong> pass the sugar.</pre></td>",
-    "</tr></table>"
-  ],
-  "-": [
-    "<h3>-</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
-    "</tr></table>"
-  ],
-  ":polarity": [
-    "<h3>:polarity</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
-    "<td><pre>Simple negation.\n  We <strong>don't</strong> have money.</pre></td>",
-    "</tr></table>"
-  ],
-  "-intense": [
-    "<h3>-intense</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
-    "</tr></table>"
-  ],
-  "+": [
-    "<h3>+</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
-    "</tr></table>"
-  ],
-  "(t / truth-value)": [
-    "<h3>(t / truth-value)</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
-    "</tr></table>"
-  ],
-  "(u / umr-unknown)": [
-    "<h3>(u / umr-unknown)</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
-    "</tr></table>"
-  ],
-  ":mode": [
-    "<h3>:mode</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
-    "<td><pre>Questions.\n  <strong>Who</strong> at the cheese?</pre></td>",
-    "</tr></table>"
-  ],
-  "imperative": [
-    "<h3>imperative</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
-    "</tr></table>"
-  ],
-  "expressive": [
-    "<h3>expressive</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
-    "</tr></table>"
-  ],
-  "downtoner": [
-    "<h3>downtoner</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
-    "</tr></table>"
-  ],
-  "equal": [
-    "<h3>equal</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
-    "</tr></table>"
-  ],
-  "(some concept)": [
-    "<h3>(some concept)</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
-    "</tr></table>"
-  ],
-  ":refer-person": [
-    "<h3>:refer-person</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
-    "<td><pre>2nd and 3rd are clustered together</pre></td>",
-    "</tr></table>"
-  ],
-  "non-3rd": [
-    "<h3>non-3rd</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
-    "</tr></table>"
-  ],
-  "1st": [
-    "<h3>1st</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
-    "</tr></table>"
-  ],
-  "2nd": [
-    "<h3>2nd</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
-    "</tr></table>"
-  ],
-  "3rd": [
-    "<h3>3rd</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
-    "</tr></table>"
-  ],
-  "1st-inclusive": [
-    "<h3>1st-inclusive</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
-    "</tr></table>"
-  ],
-  "1st-exclusive": [
-    "<h3>1st-exclusive</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
-    "</tr></table>"
-  ],
-  ":refer-number": [
-    "<h3>:refer-number</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
-    "<td><pre>singular.</pre></td>",
-    "<td><pre>singular.</pre></td>",
-    "</tr></table>"
-  ],
-  "nonsingular": [
-    "<h3>nonsingular</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
-    "</tr></table>"
-  ],
-  "paucal": [
-    "<h3>paucal</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
-    "</tr></table>"
-  ],
-  "plural": [
-    "<h3>plural</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
-    "</tr></table>"
-  ],
-  "dual": [
-    "<h3>dual</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
-    "</tr></table>"
-  ],
-  "non-dual-paucal": [
-    "<h3>non-dual-paucal</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
-    "</tr></table>"
-  ],
-  "greater-plural": [
-    "<h3>greater-plural</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
-    "</tr></table>"
-  ],
-  "trial": [
-    "<h3>trial</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
-    "</tr></table>"
-  ],
-  "non-trial-paucal": [
-    "<h3>non-trial-paucal</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
-    "</tr></table>"
-  ],
-  ":refer-definiteness": [
-    "<h3>:refer-definiteness</h3><table border=\"1\">\n<tr><th>reification</th> <th>examples</th></tr>\n<tr>",
-    "<td><pre>Use for generic pronouns. Other uses not explored yet.\n  <strong>One</strong> does not simply walk into Mordor.\n  (w / walk-01\n  :polarity -\n  :ARG0 <strong>(p / person\n  :refer-person 3rd\n  :refer-definiteness class)</strong>\n  :goal (p2 / place\n  :name (n / name :op1 \"Mordor\"))\n  :manner (s / simple)\n  :aspect state\n  :modal-strength full-negative)\n  <strong>You</strong> shouldn't judge a book by its cover.\n  (j / judge-01\n  :mode imperative\n  :ARG0 (p / person\n  :refer-person 2nd\n  :refer-definiteness class)\n  :ARG1 (b / book)\n  :ARG3 (c / cover\n  :part-of b)\n  :aspect state\n  :modal-strength partial-negative)</pre></td>",
+    "<td>For directed spatial relations, the ray that points in the eponymous direction. May be an abstract ray, or may be a physical structure.\n<ul><li>The church is down <strong>the street<strong> from the school.\n          <pre>(d / down-05\n    :ARG1 (c / church)\n    :ARG2 (s / school)\n    <strong>:axis (s2 / street)</strong>\n    :aspect state\n    :modal-strength full-affirmative)</pre></strong></strong>\n<li>He drove <strong>west</strong>.\n          <pre>(d / drive\n    :actor (p / person\n        :refer-person 3rd\n        :refer-number singular)\n    :direction <strong>(t / trajectory\n        :axis-of (w / west-01)</strong>)\n    :aspect activity\n    :modal-strength full-affirmative)</pre>\n</ul></td>",
     "</tr></table>"
   ]
 }

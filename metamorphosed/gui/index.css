@@ -159,15 +159,19 @@ td,
 th {
   padding-right: 5px;
   padding-left: 5px;
+  vertical-align: top;
 }
 
 table {
   border-collapse: inherit;
 }
 
-
 input {
   font-family: inherit;
+}
+
+.docgraphtable {
+ border-collapse: collapse;
 }
 
 .triples,
@@ -175,7 +179,6 @@ input {
 .triplecell,
 .docgraphcell {
   border: 1px solid black;
-  border-collapse: collapse;
 }
 
 .boxhighlight {

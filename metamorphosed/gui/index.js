@@ -888,7 +888,7 @@ function formatAMR(data) {
 			function (key, values) {
 				$('#docgraph_' + currentsentnum).append('<h3>' + key);
 				const tableid = "tab_docgraph_" + currentsentnum + '_' + key;
-				$('#docgraph_' + currentsentnum).append('<table id="' + tableid + '">');
+				$('#docgraph_' + currentsentnum).append('<table class="docgraphtable" id="' + tableid + '">');
 		
 		    	for (var i = 0; i < values.length; ++i) {
 					const rowid = 'tr_dg_' + currentsentnum + '_' + key + "_" + i;
