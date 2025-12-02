@@ -253,6 +253,10 @@ input {
   width: 40%;
 }
 
+.umrdoctextr {
+  width: 60%;
+}
+
 .error {
   border-radius: 10px;
   border: solid 1px #ff7777;
@@ -877,7 +881,14 @@ td.framealiastable {
   border-collapse: collapse;
 }
 
+.relvalues {
+  word-break: keep-all;
+}
 
+/*.relreif {
+  font-family: "DejaVu Sans Mono", FreeMono, Mono;
+}
+  */
 /*
 .tablehoriz {
   display: inline-block;

@@ -202,6 +202,7 @@ function getServerInfo() {
 			if (data.umr) {
 				// activate stuff only needed when editing UMR file
 				$(".onlyumr").show();
+
 				if (readonly) {
 					// stupid, to improve!
 					$(".editing").hide();
@@ -913,6 +914,9 @@ function formatAMR(data) {
 		if (data.reldoc) {
 			$('#doc_' + currentsentnum).append('<div class="doctextr" id="reldoc_' + currentsentnum + '">');
 			$('#reldoc_' + currentsentnum).append(data.reldoc);
+		}
+		if (data.umr) {
+			$('#reldoc_' + currentsentnum).addClass("umrdoctextr");
 		}
 	}
 
