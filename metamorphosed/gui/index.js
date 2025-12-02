@@ -42,6 +42,7 @@ $(function() {
     $("#tabs").tabs();
 });
 
+
 var readonly = false;
 var sentenceloaded = false;
 var relationlist = [];
@@ -799,7 +800,8 @@ function formatAMR(data) {
 	// penman graph in an inner div
 	$("#g1resultat").append('<div class="penman" id="penman_' + currentsentnum + '">');
 	$('#penman_' + currentsentnum).append('<pre id="amr_' + currentsentnum + '">');
-	$('#amr_' + currentsentnum).append(highlight_pm(data.penman));
+	//$('#amr_' + currentsentnum).append(highlight_pm(data.penman));
+	$('#amr_' + currentsentnum).append(data.penman);
 
 	if ('#amr_' + currentsentnum in visible_divselectors && visible_divselectors['#amr_' + currentsentnum] == false) {
 		ToggleDiv('#amr_' + currentsentnum, "#togglepenman");
