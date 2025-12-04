@@ -188,6 +188,7 @@ input {
 
 .wordhighlight {
   color: red;
+  fill: red;
 }
 
 .info { 
@@ -831,6 +832,11 @@ td.framealiastable {
 }
 .ui-tabs .ui-tabs-nav .ui-tabs-anchor {
   padding: 0.3em .8em;
+}
+
+#tabs {
+    margin-right: 10px;
+    margin-left: 10px;
 }
 
 .ui-widget-header {

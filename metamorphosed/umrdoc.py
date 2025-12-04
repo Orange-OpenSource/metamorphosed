@@ -221,13 +221,14 @@ class UMRDocGraph:
 
 
 class UMRsentence(AMRsentence):
-    def __init__(self, sentencegraph, alignements, documentgraph, sentid, meta, index, words, other):
+    def __init__(self, sentencegraph, alignements, documentgraph, sentid, meta, index, words, comments, other):
         AMRsentence.__init__(self, sentencegraph)
         self.alignments = alignements
         self.docgraph = UMRDocGraph(documentgraph, sentid)
         self.wiok = True # Index: and Words: lines are both not None and have the same length
         self.index = index
         self.words = words
+        self.comments = comments
         self.varprefix = None
 
         if index is None:
@@ -291,6 +292,8 @@ class UMRsentence(AMRsentence):
         else:
             print("# meta-info", file=ofp)
         print("# ::", self.id, file=ofp)
+        for c in self.comments:
+            print("#", c, file=ofp)
         istr = []
         wstr = []
 
@@ -388,7 +391,7 @@ class UMRdoc:
             elif line.startswith("# meta-info"):
                 if sentid:
                     # save preceding sentence
-                    self.add(sentenceblock, alignments, documentblock, sentid, meta, index, words, other)
+                    self.add(sentenceblock, alignments, documentblock, sentid, meta, index, words, comments, other)
                 else:
                     if sentenceblock or documentblock or alignments or index or words or other:
                         print("* Missing '# ::sntN' line. Sentence ignored", sentid, linect, file=sys.stderr)
@@ -404,6 +407,7 @@ class UMRdoc:
                 sentenceblock = []
                 alignments = {}
                 documentblock = []
+                comments = []
                 index = None
                 words = None
                 other = {} # Morphme;s POS, Translations etc
@@ -439,6 +443,8 @@ class UMRdoc:
                     state = 2
                 elif line.startswith("# document level annotation:"):
                     state = 3
+                elif line.startswith("#######"):
+                    state = None
                 elif line.startswith("#"):
                     comments.append(line[1:])
                 elif state == 0:
@@ -457,14 +463,14 @@ class UMRdoc:
                 elif state == 3:
                     documentblock.append(line)
         if sentid:
-            self.add(sentenceblock, alignments, documentblock, sentid, meta, index, words, other)
+            self.add(sentenceblock, alignments, documentblock, sentid, meta, index, words, comments, other)
         else:
             if sentenceblock or documentblock or alignments or index or words or other:
                 print("* Missing '# ::sntN' line. Sentence ignored", sentid, linect, file=sys.stderr)
 
-    def add(self, sentenceblock, alignments, documentblock, sentid, meta, index, words, other):
+    def add(self, sentenceblock, alignments, documentblock, sentid, meta, index, words, comments, other):
         wiok = True # if index and words do not go together, we keep that what we find
-        usent = UMRsentence("\n".join(sentenceblock), alignments, "\n".join(documentblock), sentid, meta, index, words, other)
+        usent = UMRsentence("\n".join(sentenceblock), alignments, "\n".join(documentblock), sentid, meta, index, words, comments, other)
 
         self.sentences.append(usent)
         newid = usent.id # we do not want to overwrite an ID, event if it's a duplicate

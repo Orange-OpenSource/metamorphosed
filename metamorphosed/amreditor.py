@@ -489,14 +489,15 @@ class AMRProcessor:
             #for ix, token in enumerate(reversed(tokens)):
             for ix, token in enumerate(tokens, 1):
                 tid = "tok%d" % ix
-                struct.append("<%s>%s" % (tid, token))
+                struct.append('<%s>%s' % (tid, token))
             graph.node("tokens",
-                       id="words",
+                       #id="words",
                        label="|".join(struct),
                        shape="record",
                        #fontname=deffont + ":italic",
                        **kwargs
                        )
+            #print("STRUCT", struct)
 
             for token in alignments:
                 if token == 0:
@@ -554,6 +555,28 @@ class AMRProcessor:
                     self.isDisconnected = True
                 else:
                     self.isDisconnected = False
+
+            #print("AAA", self.lastsvg)
+            lastsvglines = self.lastsvg.decode("utf8").split("\n")
+            newlines = []
+            intokens = False
+            ct = 1
+            # graphviz does not allowto add ids to elements in a structure
+            # so we add them here to make clicks onto them exploitable in index.js:info(). Not perfect. But the alternative D3.js is too ugly
+            for l in lastsvglines:
+                l = l.strip()
+                if l == "<title>tokens</title>":
+                    intokens = True
+                elif l == "</g>":
+                    intokens = False
+                elif intokens:
+                    if l.startswith("<polygon "):
+                        l = l.replace('<polygon ', '<polygon id="tokenwordbox_%d" ' % ct)
+                    elif l.startswith("<text "):
+                        l = l.replace('<text ', '<text class="wordpos" id="tokenwordtext_%d" ' % ct)
+                        ct += 1
+                newlines.append(l)
+            self.lastsvg = "\n".join(newlines)
 
             return "%s" % self.lastpm, self.lastsvg, self.lastsvg_canonised
         else:

@@ -564,7 +564,8 @@ class AMR_Edit_Server:
                     "reldoc": reldoc,
                     "readonly": self.readonly,
                     "penman": pm,
-                    "svg": svg.decode("utf8") if svg else "",
+                    #"svg": svg.decode("utf8") if svg else "",
+                    "svg": svg if svg else "",
                     "svg_canon": svg_canon.decode("utf8") if svg_canon else "",
                     "filename": filename, "numsent": len(self.amrdoc.sentences),
                     "num": sentnum,
@@ -915,7 +916,7 @@ class AMR_Edit_Server:
         def invalidumr(ap, warnings, cursentence, sentnum):
             pm, svg, svg_canon = ap.show(tokenalignments=(cursentence.words, cursentence.getAlignments()))
             dico = {"penman": pm,
-                    "svg": svg.decode("utf8"),
+                    "svg": svg, #.decode("utf8"),
                     "svg_canon": svg_canon.decode("utf8"),
                     "warning": warnings,
                     "framedoc": "",
@@ -1000,6 +1001,7 @@ class AMR_Edit_Server:
                 ap = amreditor.AMRProcessor()
                 self.aps[sentnum] = ap
                 ap.readpenman(cursentence.amr)
+
             else:
                 ap = self.aps[sentnum]
                 if not ap.isparsed:
@@ -1053,7 +1055,7 @@ class AMR_Edit_Server:
                 lastchanged = cursentence.savedateorig
 
             dico = {"penman": pm,
-                    "svg": svg.decode("utf8"),
+                    "svg": svg, #.decode("utf8"),
                     "svg_canon": svg_canon.decode("utf8"),
                     "warning": warnings,
                     "framedoc": framedoc,
@@ -1126,7 +1128,7 @@ class AMR_Edit_Server:
                     # update display of first document
                     # highlight instances and relations NOT in highlightinstances and highlightrelations
                     cpm, csvg, csvg_canon = ap.show(highlightinstances=compres.instances1OK, highlightrelations=compres.rel1OK)
-                    dico["svg"] = csvg.decode("utf8")
+                    dico["svg"] = csvg #.decode("utf8")
 
                 for ix, (doc, aps) in enumerate(self.otheramrdocs):
                     ccursentence = doc.sentences[sentnum - 1]
@@ -1149,7 +1151,7 @@ class AMR_Edit_Server:
 
                     dico2 = {}
                     dico2["filename"] = doc.fn
-                    dico2["svg"] = csvg.decode("utf8")
+                    dico2["svg"] = csvg #.decode("utf8")
                     dico2["penman"] = cpm
                     dico2["comments"] = "\n".join(ap.comments),
                     others.append(dico2)

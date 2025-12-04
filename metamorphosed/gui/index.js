@@ -300,7 +300,7 @@ function alignmentinfo(event) {
 }
 
 function info(event) {
-	//console.log("III", event);
+	//console.log("III", event.target.id);
 	//console.log(" LEl", lastclickedElement);
 	//console.log(" LW ", lastclickedWordpos);
 	//console.log(" LE ", lastclickededge);
@@ -319,7 +319,16 @@ function info(event) {
 	if (readonly) {
 		return;
 	}
-	if (node.id.startsWith("node#")) {
+	if (event.target.id.startsWith("tokenword")) {
+		// clicked on tokens in UMR graph visualisation
+		if (lastclickedElement == null) {
+			lastclickedWordpos = event.target.id.split("_")[1];
+			console.log("ALINFO in info()", lastclickedWordpos, lastclickededge);
+			$(".wordpos").removeClass("wordhighlight");
+			event.target.setAttribute("class", "wordpos wordhighlight");
+		}
+	}
+	else if (node.id.startsWith("node#")) {
 		// edit node
 		modconceptvar = node.id.split("#")[1];
 		console.log("CONCEPTVAR", modconceptvar);
@@ -672,7 +681,7 @@ function formatAMR(data) {
 	}
 
 	// toggle button to hide/show comments
-	$("#resultat").append('<button class="toggleresult" id="togglecomment" >&#8210;</button>');
+	/*$("#resultat").append('<button class="toggleresult" id="togglecomment" >&#8210;</button>');
 	$("#togglecomment").click(function () {
 		ToggleDiv('#innercomment_' + currentsentnum, "#togglecomment");
 	});
@@ -683,7 +692,7 @@ function formatAMR(data) {
 	$('#innercomment_' + currentsentnum).append("<h4>comments");
 	$('#innercomment_' + currentsentnum).append('<pre id="precomment_' + currentsentnum + '">');
 	$('#precomment_' + currentsentnum).append(data.comments);
-
+    
 	if ('#innercomment_' + currentsentnum in visible_divselectors && visible_divselectors['#innercomment_' + currentsentnum] == false) {
 		ToggleDiv('#innercomment_' + currentsentnum, "#togglesentence");
 	}
@@ -695,7 +704,21 @@ function formatAMR(data) {
 		}
 		$("#modifiedcomment").val($('#precomment_' + currentsentnum).html());
 	});
+   */
 
+	$('#currentcomments').empty();
+	$('#currentcomments').append('<div id="innercomment_' + currentsentnum + '">');
+  	$('#innercomment_' + currentsentnum).append("<h4>comments");
+	$('#innercomment_' + currentsentnum).append('<pre id="precomment_' + currentsentnum + '">');
+	$('#precomment_' + currentsentnum).append(data.comments);
+
+	$("#currentcomments").click(function () {
+		if (!readonly) {
+			$(".editmode").hide();
+			$("#modcomment").show();
+		}
+		$("#modifiedcomment").val($('#precomment_' + currentsentnum).html());
+	});
 
 	if (data.umr) {
 		// UMR data contains Index: and Words: lines which should be of same length (checked by server)

@@ -89,3 +89,5 @@ Validate by clicking on `set`, cancel by clicking on the circled `X` (top right)
   * make `Words:`, `Index:` etc. editable
   * activate undo/redo for changes in Alignments and Document Level Annotation
   * UMR-relations documentation (data for `--relationsdoc` must be reformatted)
+  * add alignments by clicking word in SVG
+  
