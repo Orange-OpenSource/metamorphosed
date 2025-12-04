@@ -79,6 +79,16 @@ Validate by clicking on `set`, cancel by clicking on the circled `X` (top right)
 
 ![Add document annotation triples](doc/docgraph-edit.png)
 
+## Graph export
+
+The button `export visualised graphs` opens a menu which allows to download all or a subset of graphs in either SVG, PDF or PNG format.
+Choose format and numbers of sentences for which you want the graphic exported (default: all sentences).
+You may choose a (comma separated list) of concepts which will be highlighted in the export visualisations. If you check `add alignments` the graphs contain the alignments between tokens and instances of concepts (as in the editor).
+
+![Reified relation ](doc/umr_export_graphs.png)
+
+The images are downloaded in a .zip file which also contains a `metadata.json` metadata file which contains the sentence id and the text which correspond to the graph.
+
 ## Limitations
 
 * `Words:` and `Index:` (and `Morphemes:` etc.) lines cannot yet be modified
