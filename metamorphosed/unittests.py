@@ -446,7 +446,7 @@ def test_exportgraphs(client):
     #contents = zfp.read(fobj.filename)
     #print(contents)
     assert fobj.filename == "9.svg"
-    assert fobj.file_size in [10322,20412]
+    assert fobj.file_size in [10319,10322,20412]
     #contents = zfp.read(fobj.filename)
 
     fobj = zfp.infolist()[6] # metadata

@@ -681,6 +681,7 @@ function formatAMR(data) {
 	}
 
 	// toggle button to hide/show comments
+	// old version where comments for below tabs
 	/*$("#resultat").append('<button class="toggleresult" id="togglecomment" >&#8210;</button>');
 	$("#togglecomment").click(function () {
 		ToggleDiv('#innercomment_' + currentsentnum, "#togglecomment");
@@ -724,12 +725,16 @@ function formatAMR(data) {
 		// UMR data contains Index: and Words: lines which should be of same length (checked by server)
 		//console.log("iiiiii", data.index)
 
-		$("#resultat").append('<button class="toggleresult" id="toggleindex" >&#8210;</button>');
+		// old version where comments for below tabs
+		/*$("#resultat").append('<button class="toggleresult" id="toggleindex" >&#8210;</button>');
 		$("#toggleindex").click(function () {
 			ToggleDiv('#innerwordindex_' + currentsentnum, "#toggleindex");
 		});
 		$("#resultat").append('<div class="text" id="wordindex_' + currentsentnum + '">');
 		$('#wordindex_' + currentsentnum).append('<div id="innerwordindex_' + currentsentnum + '">');
+		*/
+		$('#currentalignments').empty();
+		$('#currentalignments').append('<div id="innerwordindex_' + currentsentnum + '">');
 		$('#innerwordindex_' + currentsentnum).append("<h4>words");
 		$('#innerwordindex_' + currentsentnum).append('<table id="tab_wordindex_' + currentsentnum + '">');
 		$('#tab_wordindex_' + currentsentnum).append('<tr id="tr_index_' + currentsentnum + '">');
@@ -743,6 +748,7 @@ function formatAMR(data) {
 				$("#tr_index_" + currentsentnum).append('<td class="wordpos" onmousedown="alignmentinfo(event);" id="wordpos_index_' + (i+1) + '">' + data.index[i]);
 			}
 		}
+
 		$("#tr_word_" + currentsentnum).append("<th>Words:");
 		if (data.words !== undefined) {
 			$("#tr_word_" + currentsentnum).append('<td class="wordpos" id="wordpos_word_0">');
@@ -775,6 +781,7 @@ function formatAMR(data) {
 		}
 
 		if (data.glosses) {
+			$('#innerwordindex_' + currentsentnum).append('<p/>');
 			$('#innerwordindex_' + currentsentnum).append('<table id="tab_glosses_' + currentsentnum + '">');
 			var ct = 0
 			$.each(data.glosses,

@@ -566,7 +566,8 @@ class AMR_Edit_Server:
                     "penman": pm,
                     #"svg": svg.decode("utf8") if svg else "",
                     "svg": svg if svg else "",
-                    "svg_canon": svg_canon.decode("utf8") if svg_canon else "",
+                    #"svg_canon": svg_canon.decode("utf8") if svg_canon else "",
+                    "svg_canon": svg_canon if svg_canon else "",
                     "filename": filename, "numsent": len(self.amrdoc.sentences),
                     "num": sentnum,
                     "text": cursentence.text,
@@ -917,7 +918,7 @@ class AMR_Edit_Server:
             pm, svg, svg_canon = ap.show(tokenalignments=(cursentence.words, cursentence.getAlignments()))
             dico = {"penman": pm,
                     "svg": svg, #.decode("utf8"),
-                    "svg_canon": svg_canon.decode("utf8"),
+                    "svg_canon": svg_canon, #.decode("utf8"),
                     "warning": warnings,
                     "framedoc": "",
                     "readonly": self.readonly,
@@ -1056,7 +1057,7 @@ class AMR_Edit_Server:
 
             dico = {"penman": pm,
                     "svg": svg, #.decode("utf8"),
-                    "svg_canon": svg_canon.decode("utf8"),
+                    "svg_canon": svg_canon, #.decode("utf8"),
                     "warning": warnings,
                     "framedoc": framedoc,
                     "reldoc": reldoc,
