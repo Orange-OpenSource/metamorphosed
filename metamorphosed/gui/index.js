@@ -1771,3 +1771,10 @@ $(document).ready(function () {
 
 
 });
+
+$(window).on('keydown', function (evt) {
+	// which keys to catch to go to next/preceding sentence?
+    //console.log("yyyy", $(window), evt.which, evt.);
+
+    //console.log("current table word", currentwordid);
+});

@@ -564,48 +564,24 @@ class AMRProcessor:
                 ct = 1
                 # graphviz does not allowto add ids to elements in a structure
                 # so we add them here to make clicks onto them exploitable in index.js:info(). Not perfect. But the alternative D3.js is too ugly
-                for l in svg:
-                    l = l.strip()
-                    if l == "<title>tokens</title>":
+                for line in svg:
+                    line = line.strip()
+                    if line == "<title>tokens</title>":
                         intokens = True
-                    elif l == "</g>":
+                    elif line == "</g>":
                         intokens = False
                     elif intokens:
-                        if l.startswith("<polygon "):
-                            l = l.replace('<polygon ', '<polygon id="tokenwordbox_%d" ' % ct)
-                        elif l.startswith("<text "):
-                            l = l.replace('<text ', '<text class="wordpos" id="tokenwordtext_%d" ' % ct)
+                        if line.startswith("<polygon "):
+                            line = line.replace('<polygon ', '<polygon id="tokenwordbox_%d" ' % ct)
+                        elif line.startswith("<text "):
+                            line = line.replace('<text ', '<text class="wordpos" id="tokenwordtext_%d" ' % ct)
                             ct += 1
-                    newlines.append(l)
+                    newlines.append(line)
                 return "\n".join(newlines)
 
             if format == "svg":
                 self.lastsvg = addtokenids(self.lastsvg.decode("utf8").split("\n"))
                 self.lastsvg_canonised = addtokenids(self.lastsvg_canonised.decode("utf8").split("\n"))
-
-            # lastsvglines = self.lastsvg.decode("utf8").split("\n")
-            # newlines = []
-            # intokens = False
-            # ct = 1
-            # # graphviz does not allowto add ids to elements in a structure
-            # # so we add them here to make clicks onto them exploitable in index.js:info(). Not perfect. But the alternative D3.js is too ugly
-            # for l in lastsvglines:
-            #     l = l.strip()
-            #     if l == "<title>tokens</title>":
-            #         intokens = True
-            #     elif l == "</g>":
-            #         intokens = False
-            #     elif intokens:
-            #         if l.startswith("<polygon "):
-            #             l = l.replace('<polygon ', '<polygon id="tokenwordbox_%d" ' % ct)
-            #         elif l.startswith("<text "):
-            #             l = l.replace('<text ', '<text class="wordpos" id="tokenwordtext_%d" ' % ct)
-            #             ct += 1
-            #     newlines.append(l)
-            # self.lastsvg = "\n".join(newlines)
-
-
-
 
             return "%s" % self.lastpm, self.lastsvg, self.lastsvg_canonised
         else:

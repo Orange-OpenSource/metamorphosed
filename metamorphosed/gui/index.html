@@ -25,8 +25,10 @@
 </head>
 
 <body>
-    <div><span><img src="img/metamorphosed+.png" width="500px"></span> <span id="umrheader" class="onlyumr"
-            style="display: none; font-size: larger;">for UMR</span></div>
+    <div style="display: table;" >
+        <img style="vertical-align: middle;" src="img/metamorphosed+.png" width="500px"/> &nbsp;
+        <span id="umrheader" class="onlyumr" style="display: none; font-size: larger; vertical-align: middle;">for UMR</span>
+    </div>
     <p />
 
     <button class="walk mybutton" id="first">|&lt; first</button>
@@ -52,13 +54,13 @@
 
     <div id="tabs">
         <ul>
-            <li class="alwayspresent"><a href="#currentsentenceinfo">Sentence info</a></li>
-            <li class="editing"><a href="#commands">edit AMR graph</a></li>
-            <li class="onlyumr editing" style="display: none"><a href="#umrcommands">edit UMR document annotation</a></li>
-            <li class="onlyumr editing"><a href="#currentalignments">Token-Concept alignments</a></li>
-            <li class="alwayspresent"><a href="#currentcomments">Comments</a></li>
-            <li><a href="#searchfunctions">Searching</a></li>
-            <li><a href="#sentencelisttab">Sentence list</a></li>
+            <li class="alwayspresent" title="show sentence, sentence ID etc."><a href="#currentsentenceinfo">Sentence info</a></li>
+            <li class="editing" title="add new instance,s relations and literals\nreification"><a href="#commands">edit AMR graph</a></li>
+            <li class="onlyumr editing" style="display: none" title="add UMR document level annotations"><a href="#umrcommands">edit UMR document annotation</a></li>
+            <li class="onlyumr editing" title="edit alignments"><a href="#currentalignments">Token-Concept alignments</a></li>
+            <li class="alwayspresent" title="edit comments"><a href="#currentcomments">Comments</a></li>
+            <li title="search for text, AMR graphs, comments and IDs"><a href="#searchfunctions">Searching</a></li>
+            <li title="list of all sentences of the current file"><a href="#sentencelisttab">Sentence list</a></li>
             <li id="helptab"><a href="#help">Help</a></li>
         </ul>
         <div id="currentsentenceinfo">
