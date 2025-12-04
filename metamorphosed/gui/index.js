@@ -8,15 +8,15 @@
  modification, are permitted provided that the following conditions are met:
 	* Redistributions of source code must retain the above copyright
 	  notice, this list of conditions and the following disclaimer.
- 
+
 	* Redistributions in binary form must reproduce the above copyright
 	  notice, this list of conditions and the following disclaimer in the
 	  documentation and/or other materials provided with the distribution.
- 
+
 	* Neither the name of Orange nor the
 	  names of its contributors may be used to endorse or promote products
 	  derived from this software without specific prior written permission.
- 
+
  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -94,9 +94,11 @@ function getServerInfo() {
 				$(".editing").hide();
 				$("#save").hide();
 				$("#mainheader").html($("#mainheader").html() + " (read-only)");
-				$("#tabs").tabs({ active: 2});
+				$("#tabs").tabs({ active: 0}); // index starts at 0 and counts also hidden tabs!
+			} else {
+				$("#tabs").tabs({ active: 1});
 			}
-			
+
 			$("#filename").empty();
 			$("#filename").append(data.filename);
 
@@ -363,7 +365,7 @@ function info(event) {
 				"umrvar": modconceptvar,
 				"newalignment": lastclickedWordpos + "-" + lastclickedWordpos,
 			}
-			
+
 			lastclickedWordpos = null;
 			lastclickednode = null;
 			runcommand(params);
@@ -410,7 +412,7 @@ function info(event) {
 		//const edgename = event.target.parentNode.id.split("#")[3];
 		const edgename = node.id.split("#")[3];
 
-		// get polygon child of current 
+		// get polygon child of current
 		var chosenrel = -1;
 		for (var i = 0; i < node.children.length; i++) {
 			if (node.children[i].tagName == "polygon") {
@@ -567,7 +569,7 @@ function click_docgraph(event, key, i, j) {
 	$("#umr_dg_modal").css("left", event.pageX + "px");
 	$("#umr_dg_modal").show()
 	$("#umr_dg_modal").draggable();
-	
+
 	$("#cancel_dgt").click(function () {
 		$("#umr_dg_modal").hide();
 	});
@@ -658,15 +660,21 @@ function formatAMR(data) {
 	}
 
 	// toggle button to hide/show the sentence id and the sentence
-	$("#resultat").append('<button class="toggleresult" id="togglesentence" >&#8210;</button>');
-	$("#togglesentence").click(function () {
-		ToggleDiv('#innertext_' + currentsentnum, "#togglesentence");
-	});
+	// old version where sentence were below tabs
+	//$("#resultat").append('<button class="toggleresult" id="togglesentence" >&#8210;</button>');
+	//$("#togglesentence").click(function () {
+	//	ToggleDiv('#innertext_' + currentsentnum, "#togglesentence");
+	//});
 
-	//console.log(data);
 	// sentence id and the sentence (in an nested div to keep the outer div always displayed
-	$("#resultat").append('<div class="text" id="text_' + currentsentnum + '">');
-	$('#text_' + currentsentnum).append('<div id="innertext_' + currentsentnum + '">');
+	//$("#resultat").append('<div class="text" id="text_' + currentsentnum + '">');
+	//$('#text_' + currentsentnum).append('<div id="innertext_' + currentsentnum + '">');
+	//if ('#innertext_' + currentsentnum in visible_divselectors && visible_divselectors['#innertext_' + currentsentnum] == false) {
+		ToggleDiv('#innertext_' + currentsentnum, "#togglesentence");
+	//}
+
+	$("#currentsentenceinfo").empty();
+    $('#currentsentenceinfo').append('<div id="innertext_' + currentsentnum + '">');
 
 	var lastchanged = "";
 	if (data.lastchanged) {
@@ -676,12 +684,10 @@ function formatAMR(data) {
 	var escapedtext = data.text; //.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 	$('#innertext_' + currentsentnum).append(escapedtext);
 
-	if ('#innertext_' + currentsentnum in visible_divselectors && visible_divselectors['#innertext_' + currentsentnum] == false) {
-		ToggleDiv('#innertext_' + currentsentnum, "#togglesentence");
-	}
+
 
 	// toggle button to hide/show comments
-	// old version where comments for below tabs
+	// old version where comments were below tabs
 	/*$("#resultat").append('<button class="toggleresult" id="togglecomment" >&#8210;</button>');
 	$("#togglecomment").click(function () {
 		ToggleDiv('#innercomment_' + currentsentnum, "#togglecomment");
@@ -693,7 +699,7 @@ function formatAMR(data) {
 	$('#innercomment_' + currentsentnum).append("<h4>comments");
 	$('#innercomment_' + currentsentnum).append('<pre id="precomment_' + currentsentnum + '">');
 	$('#precomment_' + currentsentnum).append(data.comments);
-    
+
 	if ('#innercomment_' + currentsentnum in visible_divselectors && visible_divselectors['#innercomment_' + currentsentnum] == false) {
 		ToggleDiv('#innercomment_' + currentsentnum, "#togglesentence");
 	}
@@ -725,7 +731,7 @@ function formatAMR(data) {
 		// UMR data contains Index: and Words: lines which should be of same length (checked by server)
 		//console.log("iiiiii", data.index)
 
-		// old version where comments for below tabs
+		// old version where word indexes etc were below tabs
 		/*$("#resultat").append('<button class="toggleresult" id="toggleindex" >&#8210;</button>');
 		$("#toggleindex").click(function () {
 			ToggleDiv('#innerwordindex_' + currentsentnum, "#toggleindex");
@@ -815,7 +821,7 @@ function formatAMR(data) {
 		// 	$("#gresultat").append('<div id="g3resultat">'); // alignments
 		// }
 		if (data.docgraph !== undefined) {
-			// UMR data	
+			// UMR data
 			$("#gresultat").append('<div id="g4resultat">'); // document level annotation
 		}
 	}
@@ -902,7 +908,7 @@ function formatAMR(data) {
 					ct++;
 				}
 			});
-		
+
 		//$('#alignments_' + currentsentnum).append('<button class="addbutton mybutton" id="addalignment">add alignment</button>');
 	}
 	*/
@@ -916,13 +922,13 @@ function formatAMR(data) {
 			ToggleDiv('#docgraph_' + currentsentnum, "#toggledocgraph");
 		});
 		$('#g4resultat').append('<div class="svggraph" id="docgraph_' + currentsentnum + '">');
-		
+
 		$.each(data.docgraph,
 			function (key, values) {
 				$('#docgraph_' + currentsentnum).append('<h3>' + key);
 				const tableid = "tab_docgraph_" + currentsentnum + '_' + key;
 				$('#docgraph_' + currentsentnum).append('<table class="docgraphtable" id="' + tableid + '">');
-		
+
 		    	for (var i = 0; i < values.length; ++i) {
 					const rowid = 'tr_dg_' + currentsentnum + '_' + key + "_" + i;
 					$('#' + tableid).append('<tr id="' + rowid + '">');

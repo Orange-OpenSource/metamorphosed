@@ -8,15 +8,15 @@
  modification, are permitted provided that the following conditions are met:
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
- 
+
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
- 
+
     * Neither the name of Orange nor the
       names of its contributors may be used to endorse or promote products
       derived from this software without specific prior written permission.
- 
+
  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -98,9 +98,9 @@ h4 {
   border: solid 1px #959595;
 }
 
-.mybutton { 
+.mybutton {
   font-family: "Be Vietnam Pro", Urbanist, Syne, Poppins, Lato, Ubuntu, DejaVu Sans, Arial, Helvetica, Sans;
-} 
+}
 
 /* inspired by https://designmodo.com/3d-css3-button/ */
 .mycheck {
@@ -149,7 +149,7 @@ h4 {
 
 
 
-.logo2 img { 
+.logo2 img {
    vertical-align: middle;
    padding-right: 5px;
  }
@@ -191,7 +191,7 @@ input {
   fill: red;
 }
 
-.info { 
+.info {
   font-style: italic;
 }
 
@@ -266,7 +266,7 @@ input {
   color: #aa0000;
 }
 
-.syntaxerror { 
+.syntaxerror {
   color: white;
   background-color: red;
 }
@@ -341,7 +341,7 @@ input {
 
 
 
-.reifrelations { 
+.reifrelations {
   background-color: #b5e8f7;
   border-radius: 5px;
   border: solid 1px #959595;
@@ -782,13 +782,13 @@ td.framealiastable {
   width: 100%;
  }
 
-#svgexport { 
+#svgexport {
   top: 40%;
   left: 33%;
  }
 
 
-.smatch { 
+.smatch {
   color: #0a6e31;
  }
 
@@ -866,6 +866,7 @@ td.framealiastable {
 
 .ui-tabs-tab {
   font-size: 85%;
+  border-top-right-radius: 5px;
 }
 
 #helptab {
@@ -919,7 +920,7 @@ td.framealiastable {
 }
 
 .mmmumreldoc {
-  white-space: pre-wrap; 
+  white-space: pre-wrap;
   width: auto;
   display: inline-block;
   vertical-align: top;

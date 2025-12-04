@@ -52,14 +52,21 @@
 
     <div id="tabs">
         <ul>
+            <li class="alwayspresent"><a href="#currentsentenceinfo">Sentence info</a></li>
             <li class="editing"><a href="#commands">edit AMR graph</a></li>
             <li class="onlyumr editing" style="display: none"><a href="#umrcommands">edit UMR document annotation</a></li>
             <li class="onlyumr editing"><a href="#currentalignments">Token-Concept alignments</a></li>
-            <li class="oooediting"><a href="#currentcomments">Comments</a></li>
+            <li class="alwayspresent"><a href="#currentcomments">Comments</a></li>
             <li><a href="#searchfunctions">Searching</a></li>
             <li><a href="#sentencelisttab">Sentence list</a></li>
             <li id="helptab"><a href="#help">Help</a></li>
         </ul>
+        <div id="currentsentenceinfo">
+        </div>
+
+        <div id="currentalignments">
+        </div>
+
         <div class="oooeditmode" id="commands">
             <div class="ooogrouping">
                 <h3>Add concepts/edges/names</h3>
