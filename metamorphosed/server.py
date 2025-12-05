@@ -55,7 +55,7 @@ def main():
     parser.add_argument("--pbframes", "-P", default=None, help="Propbank frameset documentation (directory with xml files)")
     parser.add_argument("--constraints", "-c", default=None, help="constraints for subjects and predicates (yaml file)")
     parser.add_argument("--readonly", "--ro", default=False, action="store_true", help='browse corpus only')
-    parser.add_argument("--reifications", "-X", default=mydir + "/data/reification-table.txt", help="table for (de)reification")
+    parser.add_argument("--reifications", "-X", default=None, help="table for (de)reification")
     parser.add_argument("--nogit", dest="git", default=True, action="store_false", help='no git add/commit, even if file is git controlled (does nevertheless overwrite existing file)')
     parser.add_argument("--override", default=False, action="store_true", help='if file is not under git control, override existing backup file')
     parser.add_argument("--edge_predictor", "-E", default=None, help="yml file which defines an Edge Predictor class (filename, Classname and parameters")
@@ -80,7 +80,11 @@ def main():
                 args.relationsdoc = mydir + "/data/umr-relations-doc.json"
             else:
                 args.relationsdoc = mydir + "/data/relations-doc.json"
-
+        if args.reifications is None:
+            if args.umr:
+                args.reifications = mydir + "/data/umr-reification-table.txt"
+            else:
+                args.reifications = mydir + "/data/reification-table.txt"
         try:
             amrfile = args.file
             compare = args.compare

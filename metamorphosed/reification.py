@@ -77,7 +77,7 @@ class Reificator:
             if not line or line[0] == "#":
                 continue
             elems = line.split("\t")
-            if len(elems) >= 4:
+            if len(elems) == 4:
                 self.REIFICATIONS.append(Reification(elems[0], elems[1], elems[2], elems[3]))
             else:
                 print('Bad format in "%s": "%s"' % (table, line), file=sys.stderr)
@@ -96,7 +96,7 @@ class Reificator:
         e = []
         for r in self.REIFICATIONS:
             e.append("%s ↔ %s" % (r.relation, r.reification))
-        return e
+        return sorted(e)
 
     def reify(self, pm, triples=None, only=None):
         if not triples:

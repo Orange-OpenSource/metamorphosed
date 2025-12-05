@@ -348,41 +348,43 @@ def test_request_example(client):
 def test_info(client):
     response = client.get("/version")
     res = json.loads(response.data)
-    #print("res", res, file=sys.stderr)
-    assert res == {'name': 'AMR Editor', 'version': '5.0.0rc3', 'apiversion': '2.0.0rc'}
+    # print("res", res, file=sys.stderr)
+    assert res == {'name': 'AMR Editor', 'version': '5.0.0rc4', 'apiversion': '2.0.0rc'}
 
     response = client.get("/info", query_string={"withdata": True})
     res = json.loads(response.data)
-    #print("res", res)
-    assert res['reifications'] == [':accompanier ↔ accompany-01',
-                                   ':age ↔ age-01',
-                                   ':cause ↔ cause-01',
-                                   ':beneficiary ↔ benefit-01',
-                                   ':concession ↔ have-concession-91',
-                                   ':condition ↔ have-condition-91',
-                                   ':degree ↔ have-degree-92',
-                                   ':destination ↔ be-destined-for-91',
-                                   ':duration ↔ last-01',
-                                   ':example ↔ exemplify-01',
-                                   ':extent ↔ have-extent-91',
-                                   ':frequency ↔ have-frequency-91',
-                                   ':instrument ↔ have-instrument-91',
-                                   ':li ↔ have-li-91',
-                                   ':location ↔ be-located-at-91',
-                                   ':manner ↔ have-manner-91',
-                                   ':mod ↔ have-mod-91',
-                                   ':ord ↔ have-ord-91',
-                                   ':part ↔ have-part-91',
-                                   ':polarity ↔ have-polarity-91',
-                                   ':poss ↔ own-01',
-                                   ':purpose ↔ have-purpose-91',
-                                   ':quant ↔ have-quant-91',
-                                   ':source ↔ be-from-91',
-                                   ':subevent ↔ have-subevent-91',
-                                   ':time ↔ be-temporally-at-91',
-                                   ':topic ↔ concern-02',
-                                   ':value ↔ have-value-91',
-                                   ':subset ↔ include-91']
+    print("res", res['reifications'])
+    assert res["reifications"] == [
+        ":accompanier ↔ accompany-01",
+        ":age ↔ age-01",
+        ":beneficiary ↔ benefit-01",
+        ":cause ↔ cause-01",
+        ":concession ↔ have-concession-91",
+        ":condition ↔ have-condition-91",
+        ":degree ↔ have-degree-92",
+        ":destination ↔ be-destined-for-91",
+        ":duration ↔ last-01",
+        ":example ↔ exemplify-01",
+        ":extent ↔ have-extent-91",
+        ":frequency ↔ have-frequency-91",
+        ":instrument ↔ have-instrument-91",
+        ":li ↔ have-li-91",
+        ":location ↔ be-located-at-91",
+        ":manner ↔ have-manner-91",
+        ":mod ↔ have-mod-91",
+        ":ord ↔ have-ord-91",
+        ":part ↔ have-part-91",
+        ":polarity ↔ have-polarity-91",
+        ":poss ↔ own-01",
+        ":purpose ↔ have-purpose-91",
+        ":quant ↔ have-quant-91",
+        ":source ↔ be-from-91",
+        ":subevent ↔ have-subevent-91",
+        ":subset ↔ include-91",
+        ":time ↔ be-temporally-at-91",
+        ":topic ↔ concern-02",
+        ":value ↔ have-value-91",
+    ]
 
 
 @pytest.mark.skipif(PROPBANK_PRESENT is False, reason="cannot find propbank-frames/frames")
