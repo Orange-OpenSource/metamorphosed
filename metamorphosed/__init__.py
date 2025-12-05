@@ -157,6 +157,10 @@ class AMR_Edit_Server:
             self.aps[sentnum] = ap
             ap.lastpm = cursentence.amr
             ap.comments = cursentence.comments[:]
+            if self.umr:
+                ap.alignments = cursentence.getcopy()
+                ap.docgraph = cursentence.docgraph.getcopy()
+
             self.initstates.append(ap.lastpm)
 
         print("all sentences initialized")
@@ -468,23 +472,34 @@ class AMR_Edit_Server:
                     ap = newap
                     ap.modified = True # set rather by ap.-functions ??
             elif adddocgraph:
+                # add a triple to UMR document level annotation
                 if dg_subj and dg_obj and dg_pred:
                     msg = cursentence.docgraph.add(adddocgraph, dg_subj, dg_pred, dg_obj, ap.vars)
+                    ap.docgraph = cursentence.docgraph.getcopy()
                     if msg is not None:
                         return invalidumr(ap, msg, cursentence, sentnum)
                 else:
                     return invalidumr(ap, ["invalid document graph triple for %s «%s, %s, %s»" % (adddocgraph, dg_subj, dg_pred, dg_obj)], cursentence, sentnum)
             elif moddocgraph and dgpos is not None:
+                # modify/delete a triple to UMR document level annotation
                 if dg_subj and dg_obj and dg_pred:
                     print("AP", ap.isparsed, ap.vars)
 
+                    #print("AAAAAAAAAAAAAZZZZZZZZZZ000", cursentence.docgraph.docgraph, file=sys.stderr)
+                    #print("dddd======================", moddocgraph, dgpos, file=sys.stderr)
                     msg = cursentence.docgraph.modify(moddocgraph, dgpos, dg_subj, dg_pred, dg_obj, ap.vars)
+                    #print("AAAAAAAAAAAAAZZZZZZZZZZ111", cursentence.docgraph.docgraph, file=sys.stderr)
+                    ap.docgraph = cursentence.docgraph.getcopy()
+                    #print("AAAAAAAAAAAAAZZZZZZZZZZZZz", ap.docgraph, file=sys.stderr)
+                    #print("AAAAAAAAAAAAAZZZZZZZZZZ333", cursentence.docgraph.docgraph, file=sys.stderr)
                     if msg is not None:
-                        print("ZZZAZAZ3")
                         return invalidumr(ap, msg, cursentence, sentnum)
                 else:
+                    # delete a triple
                     cursentence.docgraph.delete(moddocgraph, dgpos)
+                    ap.docgraph = cursentence.docgraph.getcopy()
             elif umrvar is not None: # can be an empty string if no unaligned variable exists (H)
+                # modify a UMR alignment
                 if not self.umr:
                     raise ServerException("Not in UMR mode")
 
@@ -509,6 +524,7 @@ class AMR_Edit_Server:
                             return invalidumr(ap, ["alignment end %s is beyond last word" % (ale)], cursentence, sentnum)
                         newindexes.append((als,ale))
                     cursentence.alignments[umrvar] = newindexes
+                    ap.alignments = cursentence.getcopy()
 
                 if newalignment:
                     if umrvar == "":
@@ -522,8 +538,7 @@ class AMR_Edit_Server:
                         return rtc
                 else:
                     del cursentence.alignments[umrvar]
-
-                    pass
+                    ap.alignments = cursentence.getcopy()
             else:
                 # creates an http status code 400
                 raise ServerException("No edit valid operation given")
@@ -583,6 +598,9 @@ class AMR_Edit_Server:
                 dico["alignments"] = cursentence.alignments
                 dico["alignments2"] = cursentence.getAlignments()
                 dico["docgraph"] = cursentence.docgraph.docgraph
+                #dico["alignments"] = ap.alignments #cursentence.alignments
+                #dico["alignments2"] = cursentence.getAlignments(ap.alignments)
+                #dico["docgraph"] = ap.docgraph # cursentence.docgraph.docgraph
 
                 if cursentence.index:
                     dico["index"] = cursentence.index
@@ -718,6 +736,7 @@ class AMR_Edit_Server:
                     # get latest undo
                     (sentnum, pm) = self.undos.pop()
                     #print("UNDO", sentnum, pm)
+                    # TODO in undos we do not stock all changes !!!! must stock here a COPY of all mods (AMR, alignments, docgraph, comments)
                     ap = amreditor.AMRProcessor()
                     self.aps[sentnum] = ap
                     ap.readpenman(pm)
@@ -935,6 +954,9 @@ class AMR_Edit_Server:
                 dico["alignments"] = cursentence.alignments
                 dico["alignments2"] = cursentence.getAlignments()
                 dico["docgraph"] = cursentence.docgraph.docgraph
+                #dico["alignments"] = ap.alignments #cursentence.alignments
+                #dico["alignments2"] = cursentence.getAlignments(ap.alignments)
+                #dico["docgraph"] = ap.docgraph # cursentence.docgraph.docgraph
 
                 if cursentence.index:
                     dico["index"] = cursentence.index
@@ -984,6 +1006,9 @@ class AMR_Edit_Server:
                 dico["alignments"] = cursentence.alignments
                 dico["alignments2"] = cursentence.getAlignments()
                 dico["docgraph"] = cursentence.docgraph.docgraph
+                #dico["alignments"] = ap.alignments #cursentence.alignments
+                #dico["alignments2"] = cursentence.getAlignments(ap.alignments)
+                #dico["docgraph"] = ap.docgraph # cursentence.docgraph.docgraph
 
                 if cursentence.index:
                     dico["index"] = cursentence.index
@@ -1078,6 +1103,9 @@ class AMR_Edit_Server:
                 dico["alignments"] = cursentence.alignments
                 dico["alignments2"] = cursentence.getAlignments()
                 dico["docgraph"] = cursentence.docgraph.docgraph
+                #dico["alignments"] = ap.alignments #cursentence.alignments
+                #dico["alignments2"] = cursentence.getAlignments(ap.alignments)
+                #dico["docgraph"] = ap.docgraph # cursentence.docgraph.docgraph
 
                 if cursentence.index:
                     dico["index"] = cursentence.index
@@ -1266,6 +1294,9 @@ class AMR_Edit_Server:
                 output = self.aps[i + 1].write()
                 sent.comments = self.aps[i + 1].comments[:]
                 sent.amr = output
+                #if self.umr:
+                #    sent.alignments = self.aps[i + 1].alignments
+                #    sent.docgraph.docgraph = self.aps[i + 1].docgraph
                 sent.write(ofp)
             else:
                 sent.write(ofp)

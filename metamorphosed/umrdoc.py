@@ -35,6 +35,7 @@
 
 
 # read and store an UMR file
+import copy
 import json
 import os
 import re
@@ -75,9 +76,9 @@ class UMRDocGraph:
 
         self.id = "s%ss0" % defaultsentid[3:]
 
-        self.variables = set() # all variables
-        self.resources = set() # all subjects and objects which are not a variable
-        self.relations = set()
+        variables = set() # all variables
+        resources = set() # all subjects and objects which are not a variable
+        relations = set()
         self.docgraph = {"temporal": [],
                          "modal": [],
                          "coref": []}
@@ -99,7 +100,7 @@ class UMRDocGraph:
                         state = None
                     elif indent == 2:
                         self.docgraph[state[1:]].append((tok, toklist[ix + 1], toklist[ix + 2]))
-                        self.relations.add(toklist[ix + 1])
+                        relations.add(toklist[ix + 1])
                         ix += 2
                 ix += 1
 
@@ -113,40 +114,43 @@ class UMRDocGraph:
                          ])
 
             for s, p, o in self.docgraph["coref"]:
-                self.variables.add(s)
-                self.variables.add(o)
+                variables.add(s)
+                variables.add(o)
                 # pl.add((p, "c"))
             for s, p, o in self.docgraph["modal"]:
                 # pl.add((p, "m"))
                 if s not in fixed:
-                    self.variables.add(s)
+                    variables.add(s)
                 else:
-                    self.resources.add(s)
+                    resources.add(s)
                     # sl.add((s, "m"))
                 if o not in fixed:
-                    self.variables.add(o)
+                    variables.add(o)
                 else:
-                    self.resources.add(o)
+                    resources.add(o)
                     # ol.add((o, "m"))
 
             for s, p, o in self.docgraph["temporal"]:
                 # pl.add((p, "t"))
                 if s not in fixed:
-                    self.variables.add(s)
+                    variables.add(s)
                 else:
-                    self.resources.add(s)
+                    resources.add(s)
                     # sl.add((s, "t"))
                 if o not in fixed:
-                    self.variables.add(o)
+                    variables.add(o)
                 else:
-                    self.resources.add(o)
+                    resources.add(o)
                     # ol.add((o, "t"))
 
         # print(json.dumps(self.docgraph, indent=2))
-        # print(sorted(self.variables))
+        # print(sorted(variables))
         # for s in sl: print("S\t%s\t%s" % s)
         # for p in pl: print("P\t%s\t%s" % p)
         # for o in ol: print("O\t%s\t%s" % o)
+
+    def getcopy(self):
+        return copy.deepcopy(self.docgraph)
 
     def add(self, what, s, p, o, concepts):
         msg = self.checktriple(what, s, p, o, concepts)
@@ -175,6 +179,7 @@ class UMRDocGraph:
                 if (s, p, o) != ("root", ":modal", "author"):
                     msg = ["First :modal triple must be <tt>root :modal author</tt> and not <tt>%s %s %s</tt>" % self.docgraph["modal"][0]]
                     return msg
+            #print("ATTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT", what, pos, s,p,o, file=sys.stderr)
             del self.docgraph[what][pos]
             self.docgraph[what].insert(pos, (s, p, o))
         return None
@@ -270,11 +275,16 @@ class UMRsentence(AMRsentence):
             self.varprefix = "s" + sentid.split("snt")[-1] # the sentence number is the required prefix
         self.pg = None # penman.Graph
 
-    def getAlignments(self):
+    def getcopy(self):
+        return copy.deepcopy(self.alignments)
+
+    def getAlignments(self, alignments=None):
         # outputs the alignments in a way easy to display in index.js
+        if alignments is None:
+            alignments = self.alignments
         out = {} # word pos: [umrvar, ...]
-        for umrvar in self.alignments:
-            for index in self.alignments[umrvar]:
+        for umrvar in alignments:
+            for index in alignments[umrvar]:
                 start = index[0]
                 end = index[1]
                 for pos in range(start, end + 1, 1):

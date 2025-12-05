@@ -653,7 +653,7 @@ def testumr_modify_docgraph(client_umr):
     # first modal incorrect
     response = client_umr.get("/edit", query_string={"num": 4, "prevmod": 3, "moddocgraph": "modal", "dg_subj": "s4p11", "dg_obj": "s4t", "dg_pred": ":full-affirmative", "dgpos": 0})
     res = json.loads(response.data)
-    print("res", json.dumps(res, indent=2, ensure_ascii=False), file=sys.stderr)
+    # print("res", json.dumps(res, indent=2, ensure_ascii=False), file=sys.stderr)
     assert res["warning"] == ["First :modal triple must be <tt>root :modal author</tt> and not <tt>root :modal author</tt>"]
 
 
