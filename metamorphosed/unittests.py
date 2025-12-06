@@ -349,7 +349,7 @@ def test_info(client):
     response = client.get("/version")
     res = json.loads(response.data)
     # print("res", res, file=sys.stderr)
-    assert res == {'name': 'AMR Editor', 'version': '5.0.0rc4', 'apiversion': '2.0.0rc'}
+    assert res == {'name': 'AMR Editor', 'version': '5.0.0rc5', 'apiversion': '2.0.0rc2'}
 
     response = client.get("/info", query_string={"withdata": True})
     res = json.loads(response.data)
@@ -672,6 +672,18 @@ def testumr_undo_alignments(client_umr):
     response = client_umr.get("/history", query_string={"num": 5, "prevmod": 3, "history": "redo"})
     res = json.loads(response.data)
     assert res["alignments"] == {'s5h': [[3, 3]], 's5n': [[0, 0]], 's5m': [[9, 9]], 's5n2': [[11, 11]], 's5n3': [[8, 8]], 's5b': [[7, 7]], 's5h2': [[6, 6]], 's5n4': [[0, 0]], 's5p2': [[4, 4]], 's5e': [[0, 0]]}
+
+
+def testumr_undo_docgraph(client_umr):
+    response = client_umr.get("/edit", query_string={"num": 6, "prevmod": 0, "dg_subj": "document-creation-time", "dg_obj": "", "dg_pred": ":before", "moddocgraph": "temporal", "dgpos": "1"})
+    res = json.loads(response.data)
+    #print("res", res["docgraph"], file=sys.stderr)
+    assert res["docgraph"]["temporal"] == [['document-creation-time', ':overlap', 's6s'], ['s6g', ':before', 's6d']]
+
+    response = client_umr.get("/history", query_string={"num": 6, "prevmod": 1, "history": "undo"})
+    res = json.loads(response.data)
+    #print("res", res["docgraph"], file=sys.stderr)
+    assert res["docgraph"]["temporal"] == [['document-creation-time', ':overlap', 's6s'], ['document-creation-time', ':before', 's6g'], ['s6g', ':before', 's6d']]
 
 
 # UMR file save, git add/commit

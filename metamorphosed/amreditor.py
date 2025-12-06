@@ -33,7 +33,7 @@
 # Software Name: MetAMoRphosED AMR-Editor
 # Author: Johannes Heinecke
 
-# version 5.0.0rc4 as of 5th December 2025
+# version 5.0.0rc5 as of 5th December 2025
 
 import io
 import re
@@ -49,7 +49,7 @@ import metamorphosed.amr_comparison as amr_comparison
 
 from metamorphosed.AMR_relations import orangecolors as orangecolors
 
-VERSION = "5.0.0rc4"
+VERSION = "5.0.0rc5"
 
 # terminology
 # instance  a / ...

@@ -76,7 +76,7 @@ import metamorphosed.installJQ as iJQ
 # find an example in AMR data
 # call an AMRserver for an (empty) sentence ? rather not
 
-APIVERSION = "2.0.0rc"
+APIVERSION = "2.0.0rc2"
 
 
 class AMR_Edit_Server:
@@ -374,15 +374,15 @@ class AMR_Edit_Server:
             copied = {"num": sentnum,
                       "amr": ap.lastpm,
                       "comments": cursentence.comments[:]
-                     }
+                      }
             if self.umr:
                 copied["alignments"] = cursentence.getcopy()
                 copied["docgraph"] = cursentence.docgraph.getcopy()
 
             #self.undos.append((sentnum, ap.lastpm))
             self.undos.append(copied)
-            print("AP: %s" % ap.lastpm, copied)
-            print("UNDOS: %d" % (len(self.undos)))
+            #print("AP: %s" % ap.lastpm, copied)
+            #print("UNDOS: %d" % (len(self.undos)))
             self.redos = []
             #print("REDOS: %d" % (len(self.redos)))
             #for n,pm in self.states:
@@ -744,9 +744,9 @@ class AMR_Edit_Server:
                     #print("FOR REDO", sentnum, ap.lastpm)
                     #self.redos.append((sentnum, ap.lastpm))
                     copied = {"num": sentnum,
-                        "amr": ap.lastpm,
-                        "comments": cursentence.comments[:]
-                        }
+                              "amr": ap.lastpm,
+                              "comments": cursentence.comments[:]
+                              }
                     if self.umr:
                         copied["alignments"] = cursentence.getcopy()
                         copied["docgraph"] = cursentence.docgraph.getcopy()
@@ -768,6 +768,7 @@ class AMR_Edit_Server:
                     cursentence.comments = copied["comments"]
                     if self.umr:
                         cursentence.alignments = copied["alignments"]
+                        cursentence.docgraph.docgraph = copied["docgraph"]
                     #print("AP", ap, cursentence.comments)
 
             elif history == "redo":
@@ -777,9 +778,9 @@ class AMR_Edit_Server:
                     ap.show()
                     #print("FOR UNDO", sentnum, ap.lastpm)
                     copied = {"num": sentnum,
-                            "amr": ap.lastpm,
-                            "comments": cursentence.comments[:]
-                            }
+                              "amr": ap.lastpm,
+                              "comments": cursentence.comments[:]
+                              }
                     if self.umr:
                         copied["alignments"] = cursentence.getcopy()
                         copied["docgraph"] = cursentence.docgraph.getcopy()
@@ -801,6 +802,7 @@ class AMR_Edit_Server:
                     cursentence.comments = copied["comments"]
                     if self.umr:
                         cursentence.alignments = copied["alignments"]
+                        cursentence.docgraph.docgraph = copied["docgraph"]
                     #print("AP", ap)
 
             return prepare_newpage(sentnum)

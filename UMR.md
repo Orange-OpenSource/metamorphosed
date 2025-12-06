@@ -97,4 +97,3 @@ The images are downloaded in a .zip file which also contains a `metadata.json` m
 * TODO:
   * check whether variables in document level annotations are in document (Subject) or in current sentence (Object)
   * make `Words:`, `Index:` etc. editable
-  * activate undo/redo for changes in Alignments and Document Level Annotation
