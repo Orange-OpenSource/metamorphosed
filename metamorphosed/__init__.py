@@ -606,7 +606,7 @@ class AMR_Edit_Server:
                     "umr": self.umr}
             if self.umr:
                 dico["alignments"] = cursentence.alignments
-                dico["alignments2"] = cursentence.getAlignments()
+                dico["alignments2"] = cursentence.getAlignments(cursentence.alignments)
                 dico["docgraph"] = cursentence.docgraph.docgraph
                 #dico["alignments"] = ap.alignments #cursentence.alignments
                 #dico["alignments2"] = cursentence.getAlignments(ap.alignments)
@@ -766,6 +766,8 @@ class AMR_Edit_Server:
                     ap.previous_modification = apcurrent.previous_modification
                     ap.show()
                     cursentence.comments = copied["comments"]
+                    if self.umr:
+                        cursentence.alignments = copied["alignments"]
                     #print("AP", ap, cursentence.comments)
 
             elif history == "redo":
@@ -797,6 +799,8 @@ class AMR_Edit_Server:
                     ap.previous_modification = apcurrent.previous_modification
                     ap.show()
                     cursentence.comments = copied["comments"]
+                    if self.umr:
+                        cursentence.alignments = copied["alignments"]
                     #print("AP", ap)
 
             return prepare_newpage(sentnum)
@@ -988,7 +992,7 @@ class AMR_Edit_Server:
                     "umr": self.umr}
             if self.umr:
                 dico["alignments"] = cursentence.alignments
-                dico["alignments2"] = cursentence.getAlignments()
+                dico["alignments2"] = cursentence.getAlignments(cursentence.alignments)
                 dico["docgraph"] = cursentence.docgraph.docgraph
                 #dico["alignments"] = ap.alignments #cursentence.alignments
                 #dico["alignments2"] = cursentence.getAlignments(ap.alignments)
@@ -1040,7 +1044,7 @@ class AMR_Edit_Server:
                     "umr": self.umr}
             if self.umr:
                 dico["alignments"] = cursentence.alignments
-                dico["alignments2"] = cursentence.getAlignments()
+                dico["alignments2"] = cursentence.getAlignments(cursentence.alignments)
                 dico["docgraph"] = cursentence.docgraph.docgraph
                 #dico["alignments"] = ap.alignments #cursentence.alignments
                 #dico["alignments2"] = cursentence.getAlignments(ap.alignments)
@@ -1137,7 +1141,7 @@ class AMR_Edit_Server:
                     "umr": self.umr}
             if self.umr:
                 dico["alignments"] = cursentence.alignments
-                dico["alignments2"] = cursentence.getAlignments()
+                dico["alignments2"] = cursentence.getAlignments(cursentence.alignments)
                 dico["docgraph"] = cursentence.docgraph.docgraph
                 #dico["alignments"] = ap.alignments #cursentence.alignments
                 #dico["alignments2"] = cursentence.getAlignments(ap.alignments)

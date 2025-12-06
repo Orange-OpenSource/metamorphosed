@@ -127,7 +127,7 @@ class AMRProcessor:
         self.valid = True
         self.isparsed = False
         self.modified = False
-        self.comments = []
+        #self.comments = []
         self.previous_modification = 0 # sent to client and must be still the same when client answers. If not another client was faster. In this cas we refuse the anwser of the first client who came to late
 
     def __str__(self):
@@ -478,7 +478,7 @@ class AMRProcessor:
                            # fontcolor=orangecolors.get(p.replace("-of", ""), "black"),
                            **kwargs)
 
-        if tokenalignments:
+        if tokenalignments and tokenalignments[0] and tokenalignments[1]:
             # add words of sentence and alignments
             kwargs["fillcolor"] = "#FFF0F5"
             tokens, alignments = tokenalignments

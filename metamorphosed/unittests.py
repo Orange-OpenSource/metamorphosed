@@ -657,6 +657,23 @@ def testumr_modify_docgraph(client_umr):
     assert res["warning"] == ["First :modal triple must be <tt>root :modal author</tt> and not <tt>root :modal author</tt>"]
 
 
+def testumr_undo_alignments(client_umr):
+    response = client_umr.get("/edit", query_string={"num": 5, "prevmod": 1, "umrvar": "s5p", "indexes": ""})
+    response = client_umr.get("/edit", query_string={"num": 5, "prevmod": 2, "umrvar": "s5p2", "indexes": ""})
+    res = json.loads(response.data)
+    #print("res", res, file=sys.stderr)
+    assert res["alignments"] == {'s5h': [[3, 3]], 's5n': [[0, 0]], 's5m': [[9, 9]], 's5n2': [[11, 11]], 's5n3': [[8, 8]], 's5b': [[7, 7]], 's5h2': [[6, 6]], 's5n4': [[0, 0]], 's5e': [[0, 0]]}
+
+    response = client_umr.get("/history", query_string={"num": 5, "prevmod": 3, "history": "undo"})
+    response = client_umr.get("/history", query_string={"num": 5, "prevmod": 3, "history": "undo"})
+    res = json.loads(response.data)
+    assert res["alignments"] == {'s5h': [[3, 3]], 's5p': [[1, 2]], 's5n': [[0, 0]], 's5m': [[9, 9]], 's5n2': [[11, 11]], 's5n3': [[8, 8]], 's5b': [[7, 7]], 's5h2': [[6, 6]], 's5n4': [[0, 0]], 's5p2': [[4, 4]], 's5e': [[0, 0]]}
+
+    response = client_umr.get("/history", query_string={"num": 5, "prevmod": 3, "history": "redo"})
+    res = json.loads(response.data)
+    assert res["alignments"] == {'s5h': [[3, 3]], 's5n': [[0, 0]], 's5m': [[9, 9]], 's5n2': [[11, 11]], 's5n3': [[8, 8]], 's5b': [[7, 7]], 's5h2': [[6, 6]], 's5n4': [[0, 0]], 's5p2': [[4, 4]], 's5e': [[0, 0]]}
+
+
 # UMR file save, git add/commit
 def testumr_edit_addinstance_git(client_git_umr):
     client, repo = client_git_umr
