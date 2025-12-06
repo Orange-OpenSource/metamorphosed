@@ -1191,6 +1191,28 @@ def test_delete_comment(client):
     #assert 1 == 2
 
 
+def test_edit_amr_comment_undo_redo(client):
+    response = client.get("/read", query_string={"num": 6})
+
+    response = client.get("/edit", query_string={"num": 6, "prevmod": 8, "modcomment": "new comment"})
+    #res = json.loads(response.data)
+    #print("res1", json.dumps(res, indent=2))
+    response = client.get("/edit", query_string={"num": 6, "prevmod": 9, "modcomment": "another comment\nand the old one is gone"})
+    res = json.loads(response.data)
+    #print("res2", json.dumps(res, indent=2))
+    assert res["comments"] == "another comment\nand the old one is gone"
+
+    response = client.get("/history", query_string={"num": 6, "prevmod": 10, "history": "undo"})
+    res = json.loads(response.data)
+    #print("res3", json.dumps(res, indent=2))
+    assert res["comments"] == "new comment"
+
+    response = client.get("/history", query_string={"num": 6, "prevmod": 11, "history": "redo"})
+    res = json.loads(response.data)
+    #print("res4", json.dumps(res, indent=2))
+    assert res["comments"] == "another comment\nand the old one is gone"
+
+
 def test_read_date_aftermod(client):
     #response = client.get("/read", query_string={"num": 1})
     #res = json.loads(response.data)

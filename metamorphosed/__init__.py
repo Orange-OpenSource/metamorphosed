@@ -35,6 +35,7 @@
 
 
 import collections
+import copy
 import importlib
 import io
 import json
@@ -120,7 +121,7 @@ class AMR_Edit_Server:
                         ap = amreditor.AMRProcessor()
                         aps[sentnum] = ap
                         ap.lastpm = cursentence.amr
-                        ap.comments = cursentence.comments[:]
+                        #ap.comments = cursentence.comments[:]
                 self.otheramrdocs.append((doc, aps))
             print("all compare sentences initialized")
 
@@ -156,7 +157,7 @@ class AMR_Edit_Server:
                 ap.umr_varprefix = cursentence.varprefix
             self.aps[sentnum] = ap
             ap.lastpm = cursentence.amr
-            ap.comments = cursentence.comments[:]
+            #ap.comments = cursentence.comments[:]
             if self.umr:
                 ap.alignments = cursentence.getcopy()
                 ap.docgraph = cursentence.docgraph.getcopy()
@@ -370,9 +371,18 @@ class AMR_Edit_Server:
             if ap.previous_modification > prevmod:
                 raise ServerException("The sentence has been edit by another user. Please reload sentence")
 
-            self.undos.append((sentnum, ap.lastpm))
-            #print("AP: %s" % ap.lastpm)
-            #print("UNDOS: %d" % (len(self.undos)))
+            copied = {"num": sentnum,
+                      "amr": ap.lastpm,
+                      "comments": cursentence.comments[:]
+                     }
+            if self.umr:
+                copied["alignments"] = cursentence.getcopy()
+                copied["docgraph"] = cursentence.docgraph.getcopy()
+
+            #self.undos.append((sentnum, ap.lastpm))
+            self.undos.append(copied)
+            print("AP: %s" % ap.lastpm, copied)
+            print("UNDOS: %d" % (len(self.undos)))
             self.redos = []
             #print("REDOS: %d" % (len(self.redos)))
             #for n,pm in self.states:
@@ -433,7 +443,7 @@ class AMR_Edit_Server:
                     ap.modified = True # set rather by ap.-functions ??
             elif modcomment is not None:
                 cursentence.modcomment(modcomment)
-                ap.comments = cursentence.comments[:]
+                #ap.comments = cursentence.comments[:]
             elif newtop:
                 rtc = ap.settop(newtop)
             elif reify:
@@ -586,7 +596,7 @@ class AMR_Edit_Server:
                     "filename": filename, "numsent": len(self.amrdoc.sentences),
                     "num": sentnum,
                     "text": cursentence.text,
-                    "comments": "\n".join(ap.comments),
+                    "comments": "\n".join(cursentence.comments), #"\n".join(ap.comments),
                     "sentid": cursentence.id,
                     "lastchanged": lastchanged,
                     "variables": sorted(list(set(ap.vars.keys()))),
@@ -725,44 +735,70 @@ class AMR_Edit_Server:
             if apcurrent.previous_modification > prevmod:
                 raise ServerException("The sentence has been edit by another user. Please reload sentence")
 
+            cursentence = self.amrdoc.sentences[sentnum - 1]
             if history == "undo":
                 if len(self.undos) > 0:
                     # put current on redo
                     ap = self.aps[sentnum]
                     ap.show()
                     #print("FOR REDO", sentnum, ap.lastpm)
-                    self.redos.append((sentnum, ap.lastpm))
+                    #self.redos.append((sentnum, ap.lastpm))
+                    copied = {"num": sentnum,
+                        "amr": ap.lastpm,
+                        "comments": cursentence.comments[:]
+                        }
+                    if self.umr:
+                        copied["alignments"] = cursentence.getcopy()
+                        copied["docgraph"] = cursentence.docgraph.getcopy()
+                    self.redos.append(copy.deepcopy(copied))
 
                     # get latest undo
-                    (sentnum, pm) = self.undos.pop()
-                    #print("UNDO", sentnum, pm)
+                    #(sentnum, pm) = self.undos.pop()
+                    copied = self.undos.pop()
+                    #print("UNDO got", copied)
+
                     # TODO in undos we do not stock all changes !!!! must stock here a COPY of all mods (AMR, alignments, docgraph, comments)
                     ap = amreditor.AMRProcessor()
-                    self.aps[sentnum] = ap
-                    ap.readpenman(pm)
+                    #self.aps[sentnum] = ap
+                    #ap.readpenman(pm)
+                    self.aps[copied["num"]] = ap
+                    ap.readpenman(copied["amr"])
                     ap.previous_modification = apcurrent.previous_modification
                     ap.show()
-                    print("AP", ap)
+                    cursentence.comments = copied["comments"]
+                    #print("AP", ap, cursentence.comments)
 
             elif history == "redo":
                 if len(self.redos) > 0:
                     # put current on undo
                     ap = self.aps[sentnum]
                     ap.show()
-                    print("FOR UNDO", sentnum, ap.lastpm)
-                    self.undos.append((sentnum, ap.lastpm))
+                    #print("FOR UNDO", sentnum, ap.lastpm)
+                    copied = {"num": sentnum,
+                            "amr": ap.lastpm,
+                            "comments": cursentence.comments[:]
+                            }
+                    if self.umr:
+                        copied["alignments"] = cursentence.getcopy()
+                        copied["docgraph"] = cursentence.docgraph.getcopy()
+                    #print("FOR UNDO-2", copied)
+                    self.undos.append(copied)
+                    #self.undos.append((sentnum, ap.lastpm))
 
                     # get latest undo
-                    (sentnum, pm) = self.redos.pop()
-                    print("REDO", sentnum, type(pm), pm)
+                    #(sentnum, pm) = self.redos.pop()
+                    copied = self.redos.pop()
+                    #print("REDO-2", copied)
                     ap = amreditor.AMRProcessor()
-                    self.aps[sentnum] = ap
-                    ap.readpenman(pm)
+                    #self.aps[sentnum] = ap
+                    #ap.readpenman(pm)
+                    self.aps[copied["num"]] = ap
+                    ap.readpenman(copied["amr"])
                     ap.previous_modification = apcurrent.previous_modification
                     ap.show()
-                    print("AP", ap)
+                    cursentence.comments = copied["comments"]
+                    #print("AP", ap)
 
-            #print("QQQ", sentnum, history)
             return prepare_newpage(sentnum)
 
         @app.route('/next', methods=["GET"])
@@ -945,7 +981,7 @@ class AMR_Edit_Server:
                     "numsent": len(self.amrdoc.sentences),
                     "num": sentnum,
                     "text": cursentence.text,
-                    "comments": "\n".join(ap.comments),
+                    "comments": "\n".join(cursentence.comments), #"\n".join(ap.comments),
                     "sentid": cursentence.id,
                     "undos": len(self.undos),
                     "redos": len(self.redos),
@@ -997,7 +1033,7 @@ class AMR_Edit_Server:
                     "numsent": len(self.amrdoc.sentences),
                     "num": sentnum,
                     "text": cursentence.text,
-                    "comments": "\n".join(ap.comments),
+                    "comments": "\n".join(cursentence.comments), #"\n".join(ap.comments),
                     "sentid": cursentence.id,
                     "undos": len(self.undos),
                     "redos": len(self.redos),
@@ -1091,7 +1127,7 @@ class AMR_Edit_Server:
                     "numsent": len(self.amrdoc.sentences),
                     "num": sentnum,
                     "text": sentencetext, #cursentence.text,
-                    "comments": "\n".join(ap.comments),
+                    "comments": "\n".join(cursentence.comments), #"\n".join(ap.comments),
                     "sentid": cursentence.id,
                     "lastchanged": lastchanged,
                     "variables": sorted(list(set(ap.vars.keys()))),
@@ -1182,7 +1218,7 @@ class AMR_Edit_Server:
                     dico2["filename"] = doc.fn
                     dico2["svg"] = csvg #.decode("utf8")
                     dico2["penman"] = cpm
-                    dico2["comments"] = "\n".join(ap.comments),
+                    dico2["comments"] = "\n".join(cursentence.comments) #"\n".join(ap.comments),
                     others.append(dico2)
                 dico["others"] = others
                 dico["smatch"] = "%.2f" % (compres.f1 * 100)
@@ -1292,7 +1328,7 @@ class AMR_Edit_Server:
                 ##print("SENT", i+1, self.aps[i+1].modified, sent.id, sent.text, self.aps[i+1].triples)
                 #self.aps[i + 1].write(ofp)
                 output = self.aps[i + 1].write()
-                sent.comments = self.aps[i + 1].comments[:]
+                #sent.comments = self.aps[i + 1].comments[:]
                 sent.amr = output
                 #if self.umr:
                 #    sent.alignments = self.aps[i + 1].alignments
