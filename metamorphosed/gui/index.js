@@ -1798,11 +1798,14 @@ $(document).ready(function () {
 	});
 
 
-});
-
-$(window).on('keydown', function (evt) {
-	// which keys to catch to go to next/preceding sentence?
-    //console.log("yyyy", $(window), evt.which, evt.);
-
-    //console.log("current table word", currentwordid);
+	$(".mybutton").on('keydown', function (evt) {
+		// which keys to catch to go to next/preceding sentence?
+        // console.log("yyyy",  evt.which);
+		if (evt.which == 39) {
+			$("#next").click();
+		}
+		else if (evt.which == 37) {
+			$("#preceding").click();
+		}
+	});
 });
