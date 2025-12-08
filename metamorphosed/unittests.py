@@ -1676,7 +1676,7 @@ def test_amrdoc_stats():
     assert ifp.read() == relations
 
 
-def test_amreditor():
+def test_amrprocessor():
     import io
     import metamorphosed.amreditor as amreditor
     aa = amreditor.AMRProcessor()
@@ -1690,8 +1690,31 @@ def test_amreditor():
     #print("<%s>" % s.getvalue())
     #assert s.getvalue() == "(mmmm / multigraph\n      :snt1 (c / cat)\n      :snt2 (m / mouse))\n\n"
     res = aa.write()
-    print("<%s>" % res)
+    #print("<%s>" % res)
     assert res == "(mmmm / multigraph\n      :snt1 (c / cat)\n      :snt2 (m / mouse))\n\n"
+    # TODO add more unitary tests for amreditor
+
+    aa.process("see-01")
+    aa.addedge("s", "m", ":ARG0")
+    aa.addedge("s", "c", ":ARG1")
+    aa.settop("s")
+    aa.show()
+    res = aa.write()
+    #print("<%s>" % res)
+    assert res == "(s / see-01\n   :ARG0 (m / mouse)\n   :ARG1 (c / cat))\n\n"
+
+    aa.modconcept("c", "dog")
+    aa.modedge("s", "m", "actor")
+    aa.show()
+    res = aa.write()
+    #print("<%s>" % res)
+    assert res == "(s / see-01\n   :actor (m / mouse)\n   :ARG1 (c / dog))\n\n"
+
+    aa.delinstance("c")
+    aa.show()
+    res = aa.write()
+    #print("<%s>" % res)
+    assert res == "(s / see-01\n   :actor (m / mouse))\n\n"
 
 
 def test_iaa():
