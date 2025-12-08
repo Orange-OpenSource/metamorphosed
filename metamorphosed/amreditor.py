@@ -33,7 +33,7 @@
 # Software Name: MetAMoRphosED AMR-Editor
 # Author: Johannes Heinecke
 
-# version 5.0.0rc5 as of 5th December 2025
+# version 5.0.0rc6 as of 5th December 2025
 
 import io
 import re
@@ -49,7 +49,7 @@ import metamorphosed.amr_comparison as amr_comparison
 
 from metamorphosed.AMR_relations import orangecolors as orangecolors
 
-VERSION = "5.0.0rc5"
+VERSION = "5.0.0rc6"
 
 # terminology
 # instance  a / ...
@@ -519,21 +519,22 @@ class AMRProcessor:
         #print("DOT source",graph)
         return graph.pipe()
 
-    def show(self, highlightinstances=None, highlightrelations=None, highlightconcepts=None, format="svg", tokenalignments=None):
+    def show(self, highlightinstances=None, highlightrelations=None, highlightconcepts=None, format="svg", tokenalignments=None, reverse_of=False):
         if self.inserver:
             if not self.valid:
-                return self.lastpm, None, None
+                return self.lastpm, None
 
             try:
                 pm = penman.encode(penman.Graph(self.triples, top=self.top))
                 self.lastpm = pm
                 self.readpenman(pm)
-                self.lastsvg = self.dot(highlightinstances, highlightrelations, highlightconcepts=highlightconcepts, format=format, tokenalignments=tokenalignments)
-                self.lastsvg_canonised = self.dot(highlightinstances, highlightrelations, highlightconcepts=highlightconcepts, format=format, inverse_of=True, tokenalignments=tokenalignments)
+                self.lastsvg = self.dot(highlightinstances, highlightrelations, highlightconcepts=highlightconcepts, format=format, inverse_of=reverse_of, tokenalignments=tokenalignments)
+                #self.lastsvg_canonised = self.dot(highlightinstances, highlightrelations, highlightconcepts=highlightconcepts, format=format, tokenalignments=tokenalignments)
+
                 self.isDisconnected = False
             except penman.exceptions.LayoutError:
-                self.lastsvg = self.dot(format=format)
-                self.lastsvg_canonised = self.dot(format=format, inverse_of=True)
+                self.lastsvg = self.dot(format=format, inverse_of=reverse_of)
+                #self.lastsvg_canonised = self.dot(format=format, inverse_of=True)
                 noninst = []
                 for tr in self.triples:
                     noninst.append(tr)
@@ -581,9 +582,9 @@ class AMRProcessor:
 
             if format == "svg":
                 self.lastsvg = addtokenids(self.lastsvg.decode("utf8").split("\n"))
-                self.lastsvg_canonised = addtokenids(self.lastsvg_canonised.decode("utf8").split("\n"))
+                #self.lastsvg_canonised = addtokenids(self.lastsvg_canonised.decode("utf8").split("\n"))
 
-            return "%s" % self.lastpm, self.lastsvg, self.lastsvg_canonised
+            return "%s" % self.lastpm, self.lastsvg #self.lastsvg_canonised
         else:
             try:
                 pm = penman.encode(penman.Graph(self.triples, top=self.top))

@@ -578,6 +578,8 @@ function click_docgraph(event, key, i, j) {
 function runcommand(params) {
 	params["num"] = currentsentnum;
 	params["prevmod"] = prevmod;
+	params["reverse_of"] = reverseof;
+	params["withalighments"] = graphwithaligns;
 	//URL_BASE = 'http://' + window.location.host + '/edit';
 	URL_BASE = 'edit';
 	$("#resultat").empty(); // vider le div
@@ -864,11 +866,11 @@ function formatAMR(data) {
 	$('#g2resultat').append('<div class="svggraph" id="svggraph_' + currentsentnum + '">');
 	$('#svggraph_' + currentsentnum).append('<div id="innersvggraph_' + currentsentnum + '">');
 
-	if (reverseof) {
-		$('#innersvggraph_' + currentsentnum).append(data.svg_canon.replace(/<svg /, '<svg onmousedown="info(event);" '));
-	} else {
+	//if (reverseof) {
+	//	$('#innersvggraph_' + currentsentnum).append(data.svg_canon.replace(/<svg /, '<svg onmousedown="info(event);" '));
+	//} else {
 		$('#innersvggraph_' + currentsentnum).append(data.svg.replace(/<svg /, '<svg onmousedown="info(event);" '));
-	}
+	//}
 
 	if ('#innersvggraph_' + currentsentnum in visible_divselectors && visible_divselectors['#innersvggraph_' + currentsentnum] == false) {
 		ToggleDiv('#svggraph_' + currentsentnum, "#togglesvggraph");
@@ -1042,7 +1044,10 @@ $(document).ready(function () {
 		$.ajax({
 			url: URL_BASE, // + "json", //+'/foo/fii?fuu=...',
 			type: 'GET',
-			data: { "num": $("#sentnum").val() },
+			data: { "num": $("#sentnum").val(),
+					"reverse_of": reverseof,
+					"withalighments": graphwithaligns
+			 },
 			//headers: {
 			//    'Content-type': 'text/plain',
 			//},
@@ -1098,7 +1103,10 @@ $(document).ready(function () {
 		$.ajax({
 			url: URL_BASE, // + "json", //+'/foo/fii?fuu=...',
 			type: 'GET',
-			data: { "num": $("#sentnum").val() },
+			data: { "num": $("#sentnum").val(), 
+					"reverse_of": reverseof,
+	                "withalighments": graphwithaligns
+				  },
 			//headers: {
 			//    'Content-type': 'text/plain',
 			//},
@@ -1156,6 +1164,8 @@ $(document).ready(function () {
 
 		params["num"] = currentsentnum;
 		params["prevmod"] = prevmod;
+		params["reverse_of"] = reverseof;
+	    params["withalighments"] = graphwithaligns;
 		$.ajax({
 			url: URL_BASE,
 			type: 'GET',
@@ -1206,6 +1216,8 @@ $(document).ready(function () {
 		var params = {};
 		params["direction"] = this.id;
 		params["num"] = currentsentnum;
+		params["reverse_of"] = reverseof;
+	    params["withalighments"] = graphwithaligns;
 		$.ajax({
 			url: URL_BASE,
 			type: 'GET',
@@ -1500,6 +1512,8 @@ $(document).ready(function () {
 		}
 		params["num"] = currentsentnum;
 		params["prevmod"] = prevmod;
+		params["reverse_of"] = reverseof;
+	    params["withalighments"] = graphwithaligns;
 		console.log("AJAX", sentenceloaded, params);
 		if (sentenceloaded == true) {
 			$.ajax({
@@ -1636,6 +1650,8 @@ $(document).ready(function () {
 				return;
 			}
 			params["num"] = currentsentnum;
+			params["reverse_of"] = reverseof;
+	        params["withalighments"] = graphwithaligns;
 			$.ajax({
 				url: URL_BASE,
 				type: 'GET',
@@ -1705,6 +1721,8 @@ $(document).ready(function () {
 			return;
 		}
 		params["num"] = currentsentnum;
+		params["reverse_of"] = reverseof;
+		params["withalighments"] = graphwithaligns;
 		$.ajax({
 			url: URL_BASE,
 			type: 'GET',
@@ -1756,8 +1774,9 @@ $(document).ready(function () {
 			}
 			reverseof = !reverseof;
 
-			$("#resultat").empty(); // vider le div
-			formatAMR(lastdata);
+			$("#lire").click();
+			//$("#resultat").empty(); // vider le div
+			//formatAMR(lastdata);
 		}
 		else if (this.id === "graphwithaligns") {
 			if (!graphwithaligns) {
@@ -1766,6 +1785,7 @@ $(document).ready(function () {
 				$(this).removeClass('active');
 			}
 			graphwithaligns = !graphwithaligns;
+			$("#lire").click();
 		}
 	});
 
