@@ -164,6 +164,8 @@ class Constraints:
             for i, c in classes.items():
                 print("  ", i, c)
 
+        #for k in self.S:
+        #    print ("QQQ", k, self.S[k])
         for s, p, o in triples:
             if p != ":instance":
                 if debug:

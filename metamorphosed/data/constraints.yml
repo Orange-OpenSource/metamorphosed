@@ -47,3 +47,39 @@ predicates:
      - _\d+
      - _\d\.\d+
 
+# AMR/UMR (string values must be coded as REs with an initial _)
+  :refer-number:
+     - _singular
+     - _plural
+     - _dual
+     - _trial
+     - _paucal
+     - _nonsingular
+     - _non-dual-paucal
+     - _greater-plural
+     - _non-trial-paucal
+
+  :refer-person:
+     - _1st
+     - _2nd
+     - _3rd
+     - _non-1st
+     - _non-3rd
+     - _1st-inclusive
+     - _1st-exclusive
+  :polite:
+     - _\+
+     - _-
+#  :polarity:
+#     - _-
+#     - _\+
+#     - _\-intense
+  :mode:
+     - _interrogative
+     - _imperative
+     - _expressive
+# only UMR
+#  :degree:
+#     - _intensifier
+#     - _downtoner
+#     - _equal

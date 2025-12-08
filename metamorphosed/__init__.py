@@ -292,6 +292,7 @@ class AMR_Edit_Server:
             literalid = self.checkParameter(request, 'literalid', 'string', isOptional=True, defaultValue=None)
             literaledge = self.checkParameter(request, 'literaledge', 'string', isOptional=True, defaultValue=None)
             newliteral = self.checkParameter(request, 'newliteral', 'string', isOptional=True, defaultValue=None)
+            #isattribute = self.checkParameter(request, 'isattribute', 'boolean', isOptional=True, defaultValue=False)
             delliteral = self.checkParameter(request, 'delliteral', 'string', isOptional=True, defaultValue=None)
 
             literalof = self.checkParameter(request, 'literalof', 'string', isOptional=True, defaultValue=None)
@@ -310,8 +311,6 @@ class AMR_Edit_Server:
 
             umrvar = self.checkParameter(request, 'umrvar', 'string', isOptional=True, defaultValue=None)
             indexes = self.checkParameter(request, 'indexes', 'string', isOptional=True, defaultValue=None)
-            #alignmentstart = self.checkParameter(request, 'alignmentstart', 'string', isOptional=True, defaultValue=None)
-            #alignmentend = self.checkParameter(request, 'alignmentend', 'string', isOptional=True, defaultValue=None)
             newalignment = self.checkParameter(request, 'newalignment', 'string', isOptional=True, defaultValue=None)
             adddocgraph = self.checkParameter(request, 'adddocgraph', 'string', isOptional=True, defaultValue=None)
             moddocgraph = self.checkParameter(request, 'moddocgraph', 'string', isOptional=True, defaultValue=None)
@@ -336,7 +335,7 @@ class AMR_Edit_Server:
                            "modedge_start", "modedge_end", "newedge", "modedge_newstart",
                            "delinstance",
                            "deledge_start", "deledge_end", "deledge",
-                           "literalid", "literaledge", "newliteral", "delliteral",
+                           "literalid", "literaledge", "newliteral", "delliteral", #"isattribute",
                            "literalof", "relationforliteral", "newliteral",
                            "modpenman",
                            "modcomment",
@@ -429,7 +428,7 @@ class AMR_Edit_Server:
             elif literalid and literaledge and delliteral:
                 rtc = ap.delliteral(literalid, literaledge, delliteral)
             elif literalof and relationforliteral and newliteral:
-                rtc = ap.addliteral(literalof, relationforliteral, newliteral)
+                rtc = ap.addliteral(literalof, relationforliteral, newliteral) #, isattribute)
             elif modpenman:
                 newap = amreditor.AMRProcessor()
                 newap.readpenman(modpenman)

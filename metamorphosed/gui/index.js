@@ -1309,6 +1309,14 @@ $(document).ready(function () {
 				"newliteral": $("#newliteral").val()
 			}
 		}
+		/*else if (this.id == "addattribute") {
+			params = {
+				"literalof": $("#attributeof").val(),
+				"relationforliteral": $("#relationforattribute").val(),
+				"newliteral": $("#newattribute").val(),
+				"isattribute": true
+			}
+		}*/
 		else if (this.id == "addliteral2") {
 			$(".editmode").hide();
 			//$("#commands").show();

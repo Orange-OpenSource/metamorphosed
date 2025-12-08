@@ -127,7 +127,6 @@ class AMRProcessor:
         self.valid = True
         self.isparsed = False
         self.modified = False
-        #self.comments = []
         self.previous_modification = 0 # sent to client and must be still the same when client answers. If not another client was faster. In this cas we refuse the anwser of the first client who came to late
 
     def __str__(self):
@@ -185,7 +184,6 @@ class AMRProcessor:
 
         concepts = []
         for bindings in bindinglist:
-            #print("ZZZZ", bindings)
             for _, graphvar in bindings.items():
                 gvar = graphvar.split("/")[-1]
                 concepts.append(inst2concept.get(gvar, "null"))
@@ -307,7 +305,7 @@ class AMRProcessor:
         #self.reinitvars()
 
     def newvar(self, concept):
-        #return "v%d" % len(self.vars)
+        # return "v%d" % len(self.vars)
         letter = concept[0]
 
         pref = ""
@@ -529,12 +527,9 @@ class AMRProcessor:
                 self.lastpm = pm
                 self.readpenman(pm)
                 self.lastsvg = self.dot(highlightinstances, highlightrelations, highlightconcepts=highlightconcepts, format=format, inverse_of=reverse_of, tokenalignments=tokenalignments)
-                #self.lastsvg_canonised = self.dot(highlightinstances, highlightrelations, highlightconcepts=highlightconcepts, format=format, tokenalignments=tokenalignments)
-
                 self.isDisconnected = False
             except penman.exceptions.LayoutError:
                 self.lastsvg = self.dot(format=format, inverse_of=reverse_of)
-                #self.lastsvg_canonised = self.dot(format=format, inverse_of=True)
                 noninst = []
                 for tr in self.triples:
                     noninst.append(tr)
@@ -582,7 +577,6 @@ class AMRProcessor:
 
             if format == "svg":
                 self.lastsvg = addtokenids(self.lastsvg.decode("utf8").split("\n"))
-                #self.lastsvg_canonised = addtokenids(self.lastsvg_canonised.decode("utf8").split("\n"))
 
             return "%s" % self.lastpm, self.lastsvg #self.lastsvg_canonised
         else:
@@ -714,14 +708,14 @@ class AMRProcessor:
         #self.show()
         return var
 
-#    # TODO: we can have more than once a node with the same number
-#    def addnumber(self, number):
-#        if number in self.vars:
-#            print("VAR exists", self.vars[number])
-#            return 0
-#        else:
-#            self.vars[number] = number
-#        self.show()
+    # TODO: we can have more than once a node with the same number
+    #def addnumber(self, number):
+    #    if number in self.vars:
+    #        print("VAR exists", self.vars[number])
+    #        return 0
+    #    else:
+    #        self.vars[number] = number
+    #    self.show()
 
     def modconcept(self, var, newconcept):
         if var in self.vars:
@@ -777,22 +771,53 @@ class AMRProcessor:
                 return None
         return "literal and relation <%s %s %s> do not exist" % (litid, litedge, dellit)
 
+    # TODO define in file
+    attributevalues = set(
+        [
+            "+",
+            "-",
+            "singular",
+            "plural",
+            "dual",
+            "trial",
+            "paucal",
+            "nonsingular",
+            "non-dual-paucal",
+            "greater-plural",
+            "non-trial-paucal",
+            "1st",
+            "2nd",
+            "3rd",
+            "non-1st",
+            "non-3rd",
+            "1st-inclusive",
+            "1st-exclusive",
+            "-intense",
+            "interrogative",
+            "imperative",
+            "expressive",
+            "intensifier",
+            "downtoner",
+            "equal",
+        ]
+    )
+
     def modliteral(self, litid, litedge, newlit):
         for tr in self.triples:
             #print("llll", tr, litid, litedge)
             if tr[0] == litid and tr[1] == litedge:
                 pos = self.triples.index(tr)
                 self.triples.remove(tr)
-                if not self.isNumber.match(newlit) and newlit not in "-+":
+                if not self.isNumber.match(newlit) and newlit not in AMRProcessor.attributevalues:
                     newlit = '"%s"' % newlit.replace('"', '')
                 self.triples.insert(pos, (tr[0], tr[1], newlit))
                 break
 
-    def addliteral(self, literalof, relationforliteral, newlit):
+    def addliteral(self, literalof, relationforliteral, newlit, isattribute=False):
         if literalof not in self.vars:
             return "new source instance « %s » does not exist" % literalof
         else:
-            if not self.isNumber.match(newlit) and newlit not in "-+":
+            if not self.isNumber.match(newlit) and newlit not in AMRProcessor.attributevalues:
                 newlit = '"%s"' % newlit.replace('"', '')
             self.triples.append((literalof, relationforliteral, newlit))
 

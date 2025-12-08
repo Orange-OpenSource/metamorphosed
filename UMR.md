@@ -53,7 +53,7 @@ This works as with AMR files (see [README.md](README.md))
 
 ## Edit the alignments
 
-Alignments are correspondances between instances of the sentence level graph and words of the sentence.
+Alignments are correspondances between instances of the sentence level graph and words of the sentence. The alignments are also shown in the graph visualisation, if the button `show alignments` is checked.
 There are three ways to add/modify/delete alignments:
 
 ### add alignment
