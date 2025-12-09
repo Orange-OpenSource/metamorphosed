@@ -87,7 +87,7 @@ h4 {
 
 .pnarea {
   font-family: "DejaVu Sans Mono", FreeMono, Mono;
-  width: 500px;
+  width: 80%;
   height: 180px;
 
 }
@@ -535,191 +535,6 @@ td.framealiastable {
   font-style: normal;
 }
 
-
-/*
-.ARG0, .actor {
-  background-color: #ff7900;
-}
-
-.ARG1, .patient, .affectee {
-  background-color: #9164cd;
-  color: white;
-}
-
-.ARG3, .theme {
-  background-color: #ffb4e6;
-}
-
-.ARG4 {
-  background-color: #50be87;
-}
-
-.ARG2 {
-  background-color: #4bb4e6;
-}
-
-.ARG5 {
-  background-color: #ffdc00;
-}
-
-.ARG0text {
-  color: #ff7900;
-}
-
-.ARG1text {
-  color: #9164cd;
-}
-
-.ARG3text {
-  color: #ffb4e6;
-}
-
-.ARG4text {
-  color: #50be87;
-}
-
-.ARG2text {
-  color: #4bb4e6;
-}
-
-.ARG5text {
-  color: #ffdc00;
-}
-
-
-.manner {
-  background-color: #8f8f8f;
-}
-
-.beneficiary {
-  background-color: #d9c2f0;
-}
-
-.ord {
-  background-color: #d6d6d6;
-}
-
-.snt1 {
-  background-color: #b8ebd6;
-}
-
-.snt2 {
-  background-color: #b8ebd6;
-}
-
-.snt3 {
-  background-color: #b8ebd6;
-}
-
-.snt4 {
-  background-color: #b8ebd6;
-}
-
-.instance {
-  background-color: #ffe5cc;
-}
-
-.mod {
-  background-color: #ffb400;
-}
-
-.name {
-  background-color: #492191;
-  color: white
-}
-
-.location, .place {
-  background-color: #ff8ad4;
-}
-
-.manner,.aspect {
-  background-color: #0a6e31;
-}
-
-.time {
-  background-color: #085ebd;
-  color: white
-}
-
-.month {
-  background-color: #085ebd;
-  color: white
-}
-
-.day {
-  background-color: #085ebd;
-  color: white
-}
-
-.dayperiod {
-  background-color: #085ebd;
-  color: white
-}
-
-.op1 {
-  background-color: #595959;
-  color: white
-}
-
-.op2 {
-  background-color: #595959;
-  color: white
-}
-
-.op3 {
-  background-color: #595959;
-  color: white
-}
-
-.op4 {
-  background-color: #595959;
-  color: white
-}
-
-.value {
-  background-color: #595959;
-  color: white
-}
-
-.ARG0text { color: #ff7900; }
-.actortext { color: #ff7900; }
-.ARG1text { color: #9164cd; }
-.affecteetext { color: #9164cd; }
-.ARG3text { color: #ffb4e6; }
-.themetext { color: #ffb4e6; }
-.ARG4text { color: #50be87; }
-.ARG2text { color: #4bb4e6; }
-.ARG5text { color: #ffdc00; }
-
-.mannertext { color: #8f8f8f; }
-.aspecttext { color: #8f8f8f; }
-.beneficiarytext  {  color: #d9c2f0; }
-.ordtext {  color: #d6d6d6; }
-.snt1text {  color: #b8ebd6; }
-.snt2text {  color: #b8ebd6; }
-.snt3text {  color: #b8ebd6; }
-.snt4text {  color: #b8ebd6; }
-.modtext {  color: #ffb400; }
-.nametext {  color: #492191; }
-.locationtext {  color: #ff8ad4; }
-.placetext {  color: #ff8ad4; }
-.mannertext {  color: #0a6e31; }
-.timetext {  color: #085ebd; }
-.monthtext {  color: #085ebd; }
-.daytext {  color: #085ebd; }
-.dayperiodtext {  color: #085ebd; }
-.op1text {  color: #595959; }
-.op2text {  color: #595959; }
-.op3text {  color: #595959; }
-.op4text {  color: #595959; }
-.valuetext {  color: #595959; }
-.purposetext {  color: #085ebd; }
-.directiontext {  color: #b5e8f7; }
-.quanttext {  color: #d9c2f0;}
-.unittext {  color: #fff6b6;}
-.accompaniertext {  color: #085ebd;}
-*/
-
 .literal {
  font-style: italic;
  }
@@ -777,7 +592,6 @@ td.framealiastable {
   width: 20%;
 }
 
-
 #sentencelist {
   width: 100%;
  }
@@ -786,7 +600,6 @@ td.framealiastable {
   top: 40%;
   left: 33%;
  }
-
 
 .smatch {
   color: #0a6e31;
@@ -932,4 +745,22 @@ td.framealiastable {
 
 .onlyumr {
   display: none
+}
+
+#modwordsindexes, #modcomment {
+  width: 90%
+}
+
+.indexfield {
+  width: 80%;
+  font-family: "DejaVu Sans Mono", FreeMono, Mono;
+}
+
+.wilabel {
+  width: 14em;
+  display:inline-block;
+}
+
+.widiv {
+  margin-bottom: 5px;
 }

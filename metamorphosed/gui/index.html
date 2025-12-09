@@ -56,7 +56,7 @@
             <li class="alwayspresent" title="show sentence, sentence ID etc."><a href="#currentsentenceinfo">Sentence info</a></li>
             <li class="editing" title="add new instance,s relations and literals\nreification"><a href="#commands">edit AMR graph</a></li>
             <li class="onlyumr editing" style="display: none" title="add UMR document level annotations"><a href="#umrcommands">edit UMR document annotation</a></li>
-            <li class="onlyumr editing" title="edit alignments"><a href="#currentalignments">Token-Concept alignments</a></li>
+            <li class="onlyumr editing" title="edit alignments"><a href="#currentalignments">Words/Tokens/Morphemes</a></li>
             <li class="alwayspresent" title="edit comments"><a href="#currentcomments">Comments</a></li>
             <li title="search for text, AMR graphs, comments and IDs"><a href="#searchfunctions">Searching</a></li>
             <li title="list of all sentences of the current file"><a href="#sentencelisttab">Sentence list</a></li>
@@ -439,7 +439,7 @@ Else the input is interpreted as regular expression" placeholder="regex/PENMAN" 
     </div>
 
     <p />
-    <div class="modal QQeditmode" id="svgexport">
+    <div class="modal" id="svgexport">
         <div class="grouping noborder" id="modconcept">
             <button class="cancelmodal" id="cancelsvgexport">&times;</button>
             <h2>export all AMR graphs</h2>
@@ -477,58 +477,6 @@ Else the input is interpreted as regular expression" placeholder="regex/PENMAN" 
         </div>
     </div>
 
-
-    <!--div id="helptext" class="helptext" style="display:none">
-        <h2>Help</h2>
-        <h3>Add a new instances</h3>
-        Type the concept in line (A) and click <span class="knopf">add</span>
-        <h3>Add a new relation between instances</h3>
-        Add source- and target instance and relation name in line (B) and click <span class="knopf">add</span> or
-        click on source-instance and than on the target-instance. A new <span class="code">:todo</span> relation is
-        added which must be modified in a second step
-        <h3>Make another instance top instance</h3>
-        set instance in line (C)and click <span class="knopf">set</span>
-        <h3>Add a literal (like a number) and a relation (like <span class="code">:quant</span>)</h3>
-        fill fields in line (D) and click <span class="knopf">add</span>
-        <h3>Add name to an instance</h3>
-        Add instance which will get <span class="code">:name</span> node and <span class="code">:op</span>-linked
-        strings and name in line (E) and click <span class="knopf">add</span>
-        <h3>Add a graph to existing </h3>
-        Click F) <span class="knopf">open edit window</span>,
-        enter a graph in the Add Graph window and specify in the Concept Mapping input field which variable of the
-        existing graph corresponds to which variable in the added graph
-        using the format `a/b` where `a` is the variable of the existing graph, and `b` a variable of the added graph.
-        <h3>Rename variable</h3>
-        Choose a variable G) and specify the new name
-        <h3>Modify concept</h3>
-        Click the concept in the graph, edit concept and click <span class="knopf">update</span> in the «Modify Concept»
-        window
-        <h3>Delete concept (including associated instance and all incoming and outgoing relations)</h3>
-        Click the concept in the graph and click <span class="knopf">delete</span> in the «Modify Concept» window
-        <h3>Modify relation name</h3>
-        Click the relation label, edit name and click <span class="knopf">update</span> in the «Modify Relation» window
-        <h3>Modify relation source</h3>
-        Click the relation label and then click the new source instance.
-        <h3>Delete relation</h3>
-        Click the relation label and click <span class="knopf">delete</span> in the «Modify Relation» window
-        <h3>Change source instance of relation</h3>
-        Click on the relation (in the graph) and click on the future source instance
-
-        <h2>About</h2>
-        <span class="logo2"><img src="img/metamorphosed+.png" width="16%"></span>
-        version <span id="version2"></span> (API version: <span id="apiversion"></span>)<br />
-        Author: Johannes Heinecke.
-        Copyright © 2022-2025 by Orange. This software is published under the <a target="_blank"
-            href="https://opensource.org/licenses/BSD-3-Clause">3-Clause BSD License</a>.
-
-        <h2>This instance</h2>
-        Started on <span class="code" id="hostname"></span>
-        <br><span class="code">cd</span> <span class="code" id="dir"></span>
-        <br><span class="code" id="cmdl"></span>
-    </div>
-    <p /-->
-
-
     <div class="editmode grouping" id="modpenman" style="display:none">
         <button class="canceleditmode" id="cancelpm">&times;</button>
         <h3>Modify PENMAN</h3>
@@ -538,6 +486,7 @@ Else the input is interpreted as regular expression" placeholder="regex/PENMAN" 
         <br />
     </div>
 
+
     <div class="editmode grouping" id="modcomment" style="display:none">
         <button class="canceleditmode" id="cancelcom">&times;</button>
         <h3>Modify comment</h3>
@@ -545,6 +494,21 @@ Else the input is interpreted as regular expression" placeholder="regex/PENMAN" 
         <br />
         <button class="addbutton mybutton" id="modifycomment">update</button>
         <br />
+    </div>
+
+    <div class="editmode grouping" id="modwordsindexes" style="display:none"> 
+        <button class="canceleditmode" id="cancelwords">&times;</button>
+        <h3>Modify Words/Indexes/Morphemes</h3>
+        <div class="widiv">
+        <span class="wilabel">Index:</span><input class="indexfield" placeholder="1 2 ..." title="Word indexes"
+                        type="text" id="modindexes" value="">
+        </div>
+        <div class="widiv">
+        <span class="wilabel">Words:</span><input class="indexfield" placeholder="words (tokens)... " title="Sentence tokens"
+                        type="text" id="modtokens" value="">
+        </div>
+        <div id="glosses"></div>
+        <button class="addbutton mybutton" id="modifywordsindexes">update</button>
     </div>
 
     <div id="resultat"></div>
@@ -620,19 +584,6 @@ Else the input is interpreted as regular expression" placeholder="regex/PENMAN" 
         </div>
     </div>
 
-    <!-- sentence list -->
-    <!--div class="modal editmode" id="sentmodal">
-        <div class="grouping noborder" id="sentencelistmod">
-            <button class="cancelmodal" id="cancelsentlist">&times;</button>
-            <h3>Choose sentence</h3>
-            sentence id filter: <input title="filter sentence ids" type="text" id="sidfilter" size="20" value="">
-            sentence text filter: <input title="filter sentence text" type="text" id="textfilter" size="20" value="">
-            <button class="addbutton mybutton" id="modifysentencelist">apply</button>
-            </p>
-            <select class="allsentences" name="sent1" id="sentencelist"></select>
-            <br />
-        </div>
-    </div-->
 
     <!-- add graph edit -->
     <div class="modal editmode" id="addgraphmodal">
@@ -667,7 +618,7 @@ Else the input is interpreted as regular expression" placeholder="regex/PENMAN" 
         </div>
     </div>
 
-    <!-- UMR doggraph edit -->
+    <!-- UMR docgraph edit -->
     <div class="modal editmode" id="umr_dg_modal">
         <div class="grouping noborder" id="umr_dg">
             <button class="cancelmodal" id="cancel_dgt">&times;</button>
@@ -683,7 +634,6 @@ Else the input is interpreted as regular expression" placeholder="regex/PENMAN" 
                     <!--select class="varfield validvars" id="dg_o"></select-->
                     <button class="addbutton mybutton" id="modifydocgraph">set</button>
                 </li>
-
             </ul>
         </div>
     </div>

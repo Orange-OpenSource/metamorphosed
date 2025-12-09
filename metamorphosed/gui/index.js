@@ -264,8 +264,6 @@ function getServerInfo() {
 
 
 
-
-
 //const wdq = new RegExp('.*(Q[0-9]+).*');
 
 // needed to modify nodes and edges
@@ -728,6 +726,27 @@ function formatAMR(data) {
 		}
 		$("#modifiedcomment").val($('#precomment_' + currentsentnum).html());
 	});
+
+
+    $("#ooocurrentalignments").click(function () {
+		if (!readonly) {
+			$(".editmode").hide();
+			$("#modwordsindexes").show();
+		}
+
+		$("#modindexes").val(data.index.join("\t"));
+		$("#modtokens").val(data.words.join("\t"));
+		$("#glosses").empty();
+		//$("#modifiedcomment").val($('#precomment_' + currentsentnum).html());
+		$.each(data.glosses,
+			function (what, value) {
+				var id = what.replaceAll(" ", "_").replaceAll("(", "_").replaceAll(")", "_");
+				$("#glosses").append('<div class="widiv" id="div_' + id + '">');
+				$("#div_" + id).append('<span class="wilabel">' + what + ": ");
+				$("#div_" + id).append('<input class="indexfield" type="text" id="modify_' + id + '" value="' + value.join("\t") + '">');
+			});
+	});
+
 
 	if (data.umr) {
 		// UMR data contains Index: and Words: lines which should be of same length (checked by server)
