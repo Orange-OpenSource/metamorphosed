@@ -493,9 +493,9 @@ def testumr_exportgraphs(client_umr):
     #    print(x.filename, x.file_size)
     #    #print(zfp.read(x.filename))
     #    #break
-    assert filenames == ['1.svg', '2.svg', '3.svg', '4.svg', '5.svg', '6.svg', '7.svg', 'metadata.json']
+    assert filenames == ['1.svg', '2.svg', '3.svg', '4.svg', '5.svg', '6.svg', '7.svg', '8.svg', 'metadata.json']
 
-    assert len(zfp.infolist()) == 8 # includes metadata file
+    assert len(zfp.infolist()) == 9 # includes metadata file
     fobj = zfp.infolist()[4]
     assert fobj.filename == "5.svg"
     assert fobj.file_size <= 14900 and fobj.file_size >= 14080

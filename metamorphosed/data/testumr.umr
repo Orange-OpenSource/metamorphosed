@@ -327,3 +327,41 @@ s7o2: 1-1
     :modal ((root :modal author)
             (author :neutral-affirmative s7s))
     :coref ((s2t :subset-of s7s)))
+
+################################################################################
+# meta-info :: sent_id = ud:cy_ccg_test:00007
+# :: snt8
+Index: 1      2     3      4  5       6 7  8      9  10    11 12    13 14 15   16
+Words: Cafodd Dylan Thomas ei wahardd o 'r dafarn am helpu ei hunan i  'r cwrw . 
+Morphemes: Caf  -odd    Dylan   Thomas  ei      gwahardd        o       y       tafarn  am      helpu   ei      hunan   i       y       cwrw    .
+Morphemes(English): keep        -3ST=PAST       NE      NE      3SG=DEP ban     from    DEF     pub     for     help    3SG=DEP self    to      DEF     beer.
+Translation(English): Dylan     Thomas  was     banned  from    the     pub     for     helping himself to      the     beer.
+Morpheme Category: VERB TAM     NE      NE      PRON    VERB    ADP     FRG     NOUN    ADP     VERB    PRON    ADP     DEF     NOUN
+
+# sentence level graph:
+(s8b / ban-01
+     :ARG1 (s8b2 / be-located-at-91
+                 :ARG1 s8p
+                 :ARG2 (s8p2 / pub))
+     :ARG2 (s8p / person
+                :name (s8n / name
+                           :op1 "Dylan"
+                           :op2 "Thomas"))
+     :ARG1-of (s8c / cause-01
+                   :ARG0 (s8h / help-01
+                              :ARG0 s8p
+                              :ARG1 (s8b3 / beer)
+                              :ARG2 s8p)))
+
+
+# alignment:
+s8b: 5-5
+s8p: 2-3, 4-4, 11-11
+s8h: 10-10
+s8b3: 15-15
+s8p2: 8-8
+
+
+# document level annotation:
+(s8s0 / sentence)
+

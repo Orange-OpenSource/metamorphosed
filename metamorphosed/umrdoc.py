@@ -317,8 +317,10 @@ class UMRsentence(AMRsentence):
             print("Index:", " ".join(istr), file=ofp)
             print("Words:", " ".join(wstr), file=ofp)
         else:
-            print("Index:", self.index, file=ofp)
-            print("Words:", self.words, file=ofp)
+            if self.index:
+                print("Index:", "\t".join([str(x) for x in self.index]), file=ofp)
+            if self.words:
+                print("Words:", "\t".join(self.words), file=ofp)
         for k in self.other:
             name = self.other[k][0]
             values = self.other[k][1]

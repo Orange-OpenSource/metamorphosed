@@ -719,35 +719,13 @@ function formatAMR(data) {
 	$('#innercomment_' + currentsentnum).append('<pre id="precomment_' + currentsentnum + '">');
 	$('#precomment_' + currentsentnum).append(data.comments);
 
+
 	$("#currentcomments").click(function () {
 		if (!readonly) {
 			$(".editmode").hide();
 			$("#modcomment").show();
 		}
 		$("#modifiedcomment").val($('#precomment_' + currentsentnum).html());
-	});
-
-
-    $("#currentalignments").click(function () {
-		if (!readonly) {
-			$(".editmode").hide();
-			$("#modwordsindexes").show();
-		}
-
-		$("#modindexes").val(data.index.join("\t"));
-		$("#modtokens").val(data.words.join("\t"));
-		$("#glosses").empty();
-		//$("#modifiedcomment").val($('#precomment_' + currentsentnum).html());
-		$.each(data.glosses,
-			function (what, value) {
-				//var id = what.replaceAll(" ", "_").replaceAll("(", "_").replaceAll(")", "_");
-				$("#glosses").append('<div class="widiv" id="div_' + what + '">');
-				$("#div_" + what).append('<span class="wilabel">' + value[0] + ": ");
-				//$("#div_" + id).append('<input class="indexfield" type="text" id="modifyglosses_' + id + '" value="' + value + '">');
-				$("#div_" + what).append('<input class="indexfield glosses" type="text" id="modifyglosses_' + what + '">');
-				$("#modifyglosses_" + what).val(value[1].join("\t"));
-
-			});
 	});
 
 
@@ -765,7 +743,7 @@ function formatAMR(data) {
 		*/
 		$('#currentalignments').empty();
 		$('#currentalignments').append('<div id="innerwordindex_' + currentsentnum + '">');
-		$('#innerwordindex_' + currentsentnum).append("<h4>words");
+		$('#innerwordindex_' + currentsentnum).append('<h4 id="editwordsglosses">words</h4>');
 		$('#innerwordindex_' + currentsentnum).append('<table id="tab_wordindex_' + currentsentnum + '">');
 		$('#tab_wordindex_' + currentsentnum).append('<tr id="tr_index_' + currentsentnum + '">');
 		$('#tab_wordindex_' + currentsentnum).append('<tr id="tr_word_' + currentsentnum + '">');
@@ -837,6 +815,30 @@ function formatAMR(data) {
 			ToggleDiv('#innerwordindex_' + currentsentnum, "#toggleindex");
 		}
 	}
+
+
+    $("#editwordsglosses").click(function () {
+		if (!readonly) {
+			$(".editmode").hide();
+			$("#modwordsindexes").show();
+		}
+
+		$("#modindexes").val(data.index.join("\t"));
+		$("#modtokens").val(data.words.join("\t"));
+		$("#glosses").empty();
+		//$("#modifiedcomment").val($('#precomment_' + currentsentnum).html());
+		$.each(data.glosses,
+			function (what, value) {
+				//var id = what.replaceAll(" ", "_").replaceAll("(", "_").replaceAll(")", "_");
+				$("#glosses").append('<div class="widiv" id="div_' + what + '">');
+				$("#div_" + what).append('<span class="wilabel">' + value[0] + ": ");
+				//$("#div_" + id).append('<input class="indexfield" type="text" id="modifyglosses_' + id + '" value="' + value + '">');
+				$("#div_" + what).append('<input class="indexfield glosses" type="text" id="modifyglosses_' + what + '">');
+				$("#modifyglosses_" + what).val(value[1].join("\t"));
+
+			});
+	});
+
 
 	// container for penman and svg, either on top of one another or next to each other
 	$("#resultat").append('<div id="gresultat">');
