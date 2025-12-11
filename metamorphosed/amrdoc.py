@@ -304,20 +304,27 @@ class AMRdoc:
 #        for sent in self.sentences:
 #            sent.oneline()
 
-    def validate(self, validators):
+    def validate(self, validators, addids=False):
         msgs = []
         for sent in self.sentences:
             for v in validators:
                 ee = v.validate(sent.tsv())
                 if ee:
-                    msgs += ee
+                    if addids:
+                        for m in ee:
+                            msgs.append((sent.id, m))
+                    else:
+                        msgs += ee
                 #for e in ee:
                 #    print("ZZZ", e)
             try:
                 ddd = penman.parse(sent.amr.replace("\n", "")) # penman needs \n replaced to detect quote errors
                 #print("eee",ddd)
             except Exception as e:
-                msgs.append(str(e))
+                if addids:
+                    msgs.append(sent.id, str(e))
+                else:
+                    msgs.append(str(e))
         return msgs
 
     def getsentencelist(self):

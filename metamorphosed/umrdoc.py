@@ -518,23 +518,34 @@ class UMRdoc:
                 usent.id = "%s-%d" % (usent.id, self.duplicated[usent.id])
         self.ids[newid] = usent
 
-    def validate(self, validators):
+    def validate(self, validators, addids=False):
         msgs = []
         for sent in self.sentences:
             triples = sent.tsv()
             ee = sent.validate(triples) # validate from UMRSentence
             if ee:
-                msgs += ee
+                if addids:
+                    for m in ee:
+                        msgs.append((sent.id, m))
+                else:
+                    msgs += ee
             for v in validators:
                 ee = v.validate(triples)
                 if ee:
-                    msgs += ee
+                    if addids:
+                        for m in ee:
+                            msgs.append((sent.id, m))
+                    else:
+                        msgs += ee
                 #for e in ee:
                 #    print("ZZZ", e)
             try:
                 ddd = penman.parse(sent.amr.replace("\n", "")) # penman needs \n replaced to detect quote errors
             except Exception as e:
-                msgs.append(str(e))
+                if addids:
+                    msgs.append(sent.id, str(e))
+                else:
+                    msgs.append(str(e))
         return msgs
 
     def getsentencelist(self):

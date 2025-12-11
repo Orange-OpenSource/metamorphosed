@@ -1612,6 +1612,73 @@ def test_edit_addinstance_git(client_git):
     assert "commit: metamorphosed AMR editor: 6 of " in repo.head.log()[-1].message
 
 
+def test_umrdoc():
+    import metamorphosed.umrdoc as umrdoc
+    import metamorphosed.AMR_relations as AMR_relations
+    import metamorphosed.relations_constraints as relations_constraints
+
+    validators = []
+    validators.append(AMR_relations.Relations(mydir + "/data/umr-relations.txt"))
+    validators.append(relations_constraints.Constraints(mydir + "/data/constraints.yml"))
+
+    ud = umrdoc.UMRdoc(mydir + "/data/testumr.umr")
+    msgs = ud.validate(validators)
+    assert msgs == [
+        "Bad temporal object: s3j is not a variable of Sentence level graph",
+        'relation «:wiki» has invalid object «"El_Gobernador_Knob"» of «None»',
+        "snt3: variable &lt;s2m&gt; does not start with s3",
+        "snt3: variable &lt;s2c&gt; does not start with s3",
+        "snt3: alignment &lt;s3m&gt; not in sentence level graph",
+        "snt3: alignment &lt;s3c&gt; not in sentence level graph",
+        "snt3: alignment &lt;6&gt; start position not in Index: [1, 2, 3, 4]",
+        "snt3: alignment &lt;6&gt; end position not in Index: [1, 2, 3, 4]",
+        "Index: &lt;[1, 2, 3, 4]&gt; and Words: &lt;['The', 'mouse', 'eats', 'the', 'cheese']&gt; do not correspond",
+        "Index: &lt;None&gt; and Words: &lt;['Eyewitnesses', 'said', 'only', 'a', 'few', 'houses', 'were', 'left', 'standing', 'after', 'the', 'landslide', 'hit', 'the', 'village', 'of', 'Guinsaugon', 'in', 'the', 'south', 'of', 'the', 'Philippine', 'island', 'of', 'Leyte', '.']&gt; do not correspond",
+        'relation «:wiki» has invalid object «"Saint_Bernard,_Southern_Leyte"» of «None»',
+        'relation «:wiki» has invalid object «"Leyte"» of «None»',
+        'relation «:wiki» has invalid object «"Philippines"» of «None»',
+        "relation «:quant» has invalid object «s4a» of «a-few»",
+        "First :modal triple must be <tt>root :modal author</tt> and not <tt>author :full-affirmative s5h</tt>",
+        "relation «:wiki» has invalid object «-» of «None»",
+        'relation «:wiki» has invalid object «"Moscow"» of «None»',
+        "First :modal triple must be <tt>root :modal author</tt> and not <tt>author :full-affirmative s6s</tt>",
+        "relation «:wiki» has invalid object «-» of «None»",
+        "relation «:wiki» has invalid object «-» of «None»",
+        "Index: &lt;[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]&gt; and Words: &lt;None&gt; do not correspond",
+        "Bad temporal object: s6s is not a variable of Sentence level graph",
+        "relation «:quant» has invalid object «s7a2» of «a-few»",
+        "instance «s7a» of «and» has an invalid relation «:mod»",
+    ]
+
+    msgs = ud.validate(validators, addids=True)
+    assert msgs == [
+        ("snt1", "Bad temporal object: s3j is not a variable of Sentence level graph"),
+        ("snt2", 'relation «:wiki» has invalid object «"El_Gobernador_Knob"» of «None»'),
+        ("snt3", "snt3: variable &lt;s2m&gt; does not start with s3"),
+        ("snt3", "snt3: variable &lt;s2c&gt; does not start with s3"),
+        ("snt3", "snt3: alignment &lt;s3m&gt; not in sentence level graph"),
+        ("snt3", "snt3: alignment &lt;s3c&gt; not in sentence level graph"),
+        ("snt3", "snt3: alignment &lt;6&gt; start position not in Index: [1, 2, 3, 4]"),
+        ("snt3", "snt3: alignment &lt;6&gt; end position not in Index: [1, 2, 3, 4]"),
+        ("snt3", "Index: &lt;[1, 2, 3, 4]&gt; and Words: &lt;['The', 'mouse', 'eats', 'the', 'cheese']&gt; do not correspond"),
+        ("snt4", "Index: &lt;None&gt; and Words: &lt;['Eyewitnesses', 'said', 'only', 'a', 'few', 'houses', 'were', 'left', 'standing', 'after', 'the', 'landslide', 'hit', 'the', 'village', 'of', 'Guinsaugon', 'in', 'the', 'south', 'of', 'the', 'Philippine', 'island', 'of', 'Leyte', '.']&gt; do not correspond"),
+        ("snt4", 'relation «:wiki» has invalid object «"Saint_Bernard,_Southern_Leyte"» of «None»'),
+        ("snt4", 'relation «:wiki» has invalid object «"Leyte"» of «None»'),
+        ("snt4", 'relation «:wiki» has invalid object «"Philippines"» of «None»'),
+        ("snt4", "relation «:quant» has invalid object «s4a» of «a-few»"),
+        ("snt5", "First :modal triple must be <tt>root :modal author</tt> and not <tt>author :full-affirmative s5h</tt>"),
+        ("snt5", "relation «:wiki» has invalid object «-» of «None»"),
+        ("snt5", 'relation «:wiki» has invalid object «"Moscow"» of «None»'),
+        ("snt6", "First :modal triple must be <tt>root :modal author</tt> and not <tt>author :full-affirmative s6s</tt>"),
+        ("snt6", "relation «:wiki» has invalid object «-» of «None»"),
+        ("snt6", "relation «:wiki» has invalid object «-» of «None»"),
+        ("snt7", "Index: &lt;[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]&gt; and Words: &lt;None&gt; do not correspond"),
+        ("snt7", "Bad temporal object: s6s is not a variable of Sentence level graph"),
+        ("snt7", "relation «:quant» has invalid object «s7a2» of «a-few»"),
+        ("snt7", "instance «s7a» of «and» has an invalid relation «:mod»"),
+    ]
+
+
 @pytest.mark.skipif(PROPBANK_PRESENT is False, reason="cannot find propbank-frames/frames")
 def test_amrdoc():
     #app = create_app()
@@ -1637,6 +1704,13 @@ def test_amrdoc():
                     'instance «d» of «date-entity» has an invalid relation «:time»',
                     'instance «a» of «and» has an invalid relation «:snt1»'
                     ]
+
+    msgs = ad.validate(validators, addids=True)
+    assert msgs == [('sentence 13 bad format', "invalid relation ':ARG10'"),
+                    ('sentence 13 bad format', '«want-11» is not a defined propbank roleset'),
+                    ('sentence 13 bad format', 'invalid argument «:ARG10» for concept «repair-01»'),
+                    ('sentence 16 OK', 'instance «d» of «date-entity» has an invalid relation «:time»'),
+                    ('sentence 19', 'instance «a» of «and» has an invalid relation «:snt1»')]
 
     #ads.append(ad)
     tsv = ad.tsv()
