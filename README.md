@@ -12,7 +12,7 @@ by LDC (https://catalog.ldc.upenn.edu/LDC2020T02).
 * _metAMoRphosED_ comes with an docker image (for editing and comparing only, see section [Docker](#docker)).
 * _metAMoRphosED_ can also handle Uniform Meaning Representation (UMR) files. see [UMR.md](UMR.md)
 
-Current version 4.6.3 (see [CHANGES.md](CHANGES.md))
+Current version: 5.0.0rc7 (see [CHANGES.md](CHANGES.md))
 
 ## TL;DR
 * if you're updating from version up to 4.0.0: the file `server.py` has been renamed to `metamorphosed_server.py`, also install the additional packages:

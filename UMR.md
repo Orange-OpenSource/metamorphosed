@@ -68,6 +68,14 @@ Click on the alignment in the `Alignments:` line and edit it accordingly and cli
 
 An empty input field removes all alignments for the given instance. Separate multiple alignments with a comma: `4-4, 6-6`)
 
+## edit Words/Index/Morphemes etc.
+
+Click on the `Words/Tokens/Morphemes` tab and then on the table. This will open a simple editing interface to modify the Words, Indexes, Morphemes, Glosses etc (if present in the `.umr` file)
+Hit `update` to save your modifications
+
+![Modify Words/Indexes etc](doc/modify-UMR-glosses.png)
+
+
 ## Edit the document level annotation
 
 Adding new temporal, modal or coref triples use the input fields on the top left (`I) add docgraph ....`
@@ -91,9 +99,8 @@ The images are downloaded in a .zip file which also contains a `metadata.json` m
 
 ## Limitations
 
-* `Words:` and `Index:` (and `Morphemes:` etc.) lines cannot yet be modified
+* `Words:` and `Index:` (and `Morphemes:` etc.) lines cannot yet be deleted or added (they have to be present in the `.umr` file)
 * Document level annotations constraints are not yet all enforced
 
 * TODO:
   * check whether variables in document level annotations are in document (Subject) or in current sentence (Object)
-  * make `Words:`, `Index:` etc. editable
