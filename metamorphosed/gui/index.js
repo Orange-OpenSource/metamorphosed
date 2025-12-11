@@ -577,7 +577,7 @@ function runcommand(params) {
 	params["num"] = currentsentnum;
 	params["prevmod"] = prevmod;
 	params["reverse_of"] = reverseof;
-	params["withalighments"] = graphwithaligns;
+	params["withalignments"] = graphwithaligns;
 	//URL_BASE = 'http://' + window.location.host + '/edit';
 	URL_BASE = 'edit';
 	$("#resultat").empty(); // vider le div
@@ -728,7 +728,7 @@ function formatAMR(data) {
 	});
 
 
-    $("#ooocurrentalignments").click(function () {
+    $("#currentalignments").click(function () {
 		if (!readonly) {
 			$(".editmode").hide();
 			$("#modwordsindexes").show();
@@ -740,10 +740,13 @@ function formatAMR(data) {
 		//$("#modifiedcomment").val($('#precomment_' + currentsentnum).html());
 		$.each(data.glosses,
 			function (what, value) {
-				var id = what.replaceAll(" ", "_").replaceAll("(", "_").replaceAll(")", "_");
-				$("#glosses").append('<div class="widiv" id="div_' + id + '">');
-				$("#div_" + id).append('<span class="wilabel">' + what + ": ");
-				$("#div_" + id).append('<input class="indexfield" type="text" id="modify_' + id + '" value="' + value.join("\t") + '">');
+				//var id = what.replaceAll(" ", "_").replaceAll("(", "_").replaceAll(")", "_");
+				$("#glosses").append('<div class="widiv" id="div_' + what + '">');
+				$("#div_" + what).append('<span class="wilabel">' + value[0] + ": ");
+				//$("#div_" + id).append('<input class="indexfield" type="text" id="modifyglosses_' + id + '" value="' + value + '">');
+				$("#div_" + what).append('<input class="indexfield glosses" type="text" id="modifyglosses_' + what + '">');
+				$("#modifyglosses_" + what).val(value[1].join("\t"));
+
 			});
 	});
 
@@ -810,18 +813,21 @@ function formatAMR(data) {
 		if (data.glosses) {
 			$('#innerwordindex_' + currentsentnum).append('<p/>');
 			$('#innerwordindex_' + currentsentnum).append('<table id="tab_glosses_' + currentsentnum + '">');
-			var ct = 0
+			//var ct = 0
+
 			$.each(data.glosses,
-				function (what, value) {
+				function (ct, value) {
+					var title = value[0];
+					var values = value[1];
+
 					$('#tab_glosses_' + currentsentnum).append('<tr id="tr_gloss_' + currentsentnum + '_' + ct + '">');
-					$('#tr_gloss_' + currentsentnum + '_' + ct).append('<th class="glossheader">' + what + ":");
-					//$('#tr_gloss_' + currentsentnum + '_' + ct).append('<td class="gloss">' + value);
-					if (what.startsWith("Morphem")) {
-						for (var i = 0; i < value.length; i++) {
-							$('#tr_gloss_' + currentsentnum + '_' + ct).append('<td class="gloss">' + value[i]);
+					$('#tr_gloss_' + currentsentnum + '_' + ct).append('<th class="glossheader">' + title + ":");
+					if (title.startsWith("Morphem")) {
+						for (var i = 0; i < values.length; i++) {
+							$('#tr_gloss_' + currentsentnum + '_' + ct).append('<td class="gloss">' + values[i]);
 						}
 					} else {
-						$('#tr_gloss_' + currentsentnum + '_' + ct).append('<td colspan="' + value.length + '" class="gloss">' + value.join(" "));
+						$('#tr_gloss_' + currentsentnum + '_' + ct).append('<td colspan="' + values.length + '" class="gloss">' + values.join(" "));
 					}
 					ct++;
 				});
@@ -1065,7 +1071,7 @@ $(document).ready(function () {
 			type: 'GET',
 			data: { "num": $("#sentnum").val(),
 					"reverse_of": reverseof,
-					"withalighments": graphwithaligns
+					"withalignments": graphwithaligns
 			 },
 			//headers: {
 			//    'Content-type': 'text/plain',
@@ -1124,7 +1130,7 @@ $(document).ready(function () {
 			type: 'GET',
 			data: { "num": $("#sentnum").val(), 
 					"reverse_of": reverseof,
-	                "withalighments": graphwithaligns
+	                "withalignments": graphwithaligns
 				  },
 			//headers: {
 			//    'Content-type': 'text/plain',
@@ -1184,7 +1190,7 @@ $(document).ready(function () {
 		params["num"] = currentsentnum;
 		params["prevmod"] = prevmod;
 		params["reverse_of"] = reverseof;
-	    params["withalighments"] = graphwithaligns;
+	    params["withalignments"] = graphwithaligns;
 		$.ajax({
 			url: URL_BASE,
 			type: 'GET',
@@ -1236,7 +1242,7 @@ $(document).ready(function () {
 		params["direction"] = this.id;
 		params["num"] = currentsentnum;
 		params["reverse_of"] = reverseof;
-	    params["withalighments"] = graphwithaligns;
+	    params["withalignments"] = graphwithaligns;
 		$.ajax({
 			url: URL_BASE,
 			type: 'GET',
@@ -1428,6 +1434,22 @@ $(document).ready(function () {
 			//$("#commands").show();
 			params = { "modcomment": $("#modifiedcomment").val() }
 		}
+		else if (this.id == "modifywordsindexes") {
+			$(".editmode").hide();
+			//$("#commands").show();
+
+			var modindexes = { "index": $("#modindexes").val(),
+								"words": $("#modtokens").val()
+			}
+
+			$(".glosses").each(function(i, obj) {
+				console.log("tttt", i, obj.id, $("#" + obj.id).val());
+				modindexes["gloss_" + obj.id.split("_")[1]] = $("#" + obj.id).val();
+			});
+
+			params = { "modindexes": JSON.stringify(modindexes) }
+		}
+
 		else if (this.id == "reifygraph") {
 			$(".editmode").hide();
 			//$("#commands").show();
@@ -1540,7 +1562,7 @@ $(document).ready(function () {
 		params["num"] = currentsentnum;
 		params["prevmod"] = prevmod;
 		params["reverse_of"] = reverseof;
-	    params["withalighments"] = graphwithaligns;
+	    params["withalignments"] = graphwithaligns;
 		console.log("AJAX", sentenceloaded, params);
 		if (sentenceloaded == true) {
 			$.ajax({
@@ -1678,7 +1700,7 @@ $(document).ready(function () {
 			}
 			params["num"] = currentsentnum;
 			params["reverse_of"] = reverseof;
-	        params["withalighments"] = graphwithaligns;
+	        params["withalignments"] = graphwithaligns;
 			$.ajax({
 				url: URL_BASE,
 				type: 'GET',
@@ -1749,7 +1771,7 @@ $(document).ready(function () {
 		}
 		params["num"] = currentsentnum;
 		params["reverse_of"] = reverseof;
-		params["withalighments"] = graphwithaligns;
+		params["withalignments"] = graphwithaligns;
 		$.ajax({
 			url: URL_BASE,
 			type: 'GET',

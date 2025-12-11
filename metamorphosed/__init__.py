@@ -262,7 +262,7 @@ class AMR_Edit_Server:
         def modify():
             sentnum = self.checkParameter(request, 'num', 'integer', isOptional=False)
             reverse_of = self.checkParameter(request, 'reverse_of', 'boolean', isOptional=True, defaultValue=False)
-            withalighments = self.checkParameter(request, 'withalighments', 'boolean', isOptional=True, defaultValue=False)
+            withalignments = self.checkParameter(request, 'withalignments', 'boolean', isOptional=True, defaultValue=False)
             prevmod = self.checkParameter(request, 'prevmod', 'integer', isOptional=True, defaultValue=0)
             cmd = self.checkParameter(request, 'cmd', 'string', isOptional=True, defaultValue=None)
             addconcept = self.checkParameter(request, 'addconcept', 'string', isOptional=True, defaultValue=None)
@@ -318,6 +318,7 @@ class AMR_Edit_Server:
             dg_subj = self.checkParameter(request, 'dg_subj', 'string', isOptional=True, defaultValue=None)
             dg_pred = self.checkParameter(request, 'dg_pred', 'string', isOptional=True, defaultValue=None)
             dg_obj = self.checkParameter(request, 'dg_obj', 'string', isOptional=True, defaultValue=None)
+            modindexes = self.checkParameter(request, 'modindexes', 'string', isOptional=True, defaultValue=None)
 
             if sentnum < 1 or sentnum > len(self.amrdoc.sentences):
                 # creates an http status code 400
@@ -326,7 +327,7 @@ class AMR_Edit_Server:
                 #return Response("%s\n" % json.dumps(dico),
                 #                400, mimetype="application/json")
 
-            validparams = ["num", "reverse_of", "withalighments",
+            validparams = ["num", "reverse_of", "withalignments",
                            "cmd",
                            "addconcept",
                            "addname", "nameof",
@@ -346,7 +347,8 @@ class AMR_Edit_Server:
                            "newvarname", "oldvarname",
                            "umrvar", "indexes", #"alignmentstart", "alignmentend"
                            "newalignment",
-                           "adddocgraph", "dg_subj", "dg_obj", "dg_pred", "moddocgraph", "dgpos"
+                           "adddocgraph", "dg_subj", "dg_obj", "dg_pred", "moddocgraph", "dgpos",
+                           "modindexes"
                            ]
 
             #self.findinvalidparameters(request, validparams)
@@ -483,6 +485,22 @@ class AMR_Edit_Server:
                     self.aps[sentnum] = newap
                     ap = newap
                     ap.modified = True # set rather by ap.-functions ??
+            elif modindexes:
+                if self.umr:
+                    #print("rrrrr", json.dumps(cursentence.other, indent=2))
+                    jobj = json.loads(modindexes)
+                    #print(json.dumps(jobj, indent=2))
+                    for key in jobj:
+                        #print("KKK", key, jobj[key])
+                        if key == "index":
+                            cursentence.index = jobj[key].split()
+                        elif key == "words":
+                            cursentence.words = jobj[key].split()
+                        elif key.startswith("gloss_"):
+                            val = int(key[6:])
+                            #print("VVV", val, key)
+                            cursentence.other[val] = (umrdoc.TOKLINESNUM[val], jobj[key].split())
+                    #print("RRRRR", json.dumps(cursentence.other, indent=2))
             elif adddocgraph:
                 # add a triple to UMR document level annotation
                 if dg_subj and dg_obj and dg_pred:
@@ -495,15 +513,9 @@ class AMR_Edit_Server:
             elif moddocgraph and dgpos is not None:
                 # modify/delete a triple to UMR document level annotation
                 if dg_subj and dg_obj and dg_pred:
-                    print("AP", ap.isparsed, ap.vars)
-
-                    #print("AAAAAAAAAAAAAZZZZZZZZZZ000", cursentence.docgraph.docgraph, file=sys.stderr)
-                    #print("dddd======================", moddocgraph, dgpos, file=sys.stderr)
                     msg = cursentence.docgraph.modify(moddocgraph, dgpos, dg_subj, dg_pred, dg_obj, ap.vars)
-                    #print("AAAAAAAAAAAAAZZZZZZZZZZ111", cursentence.docgraph.docgraph, file=sys.stderr)
                     ap.docgraph = cursentence.docgraph.getcopy()
-                    #print("AAAAAAAAAAAAAZZZZZZZZZZZZz", ap.docgraph, file=sys.stderr)
-                    #print("AAAAAAAAAAAAAZZZZZZZZZZ333", cursentence.docgraph.docgraph, file=sys.stderr)
+
                     if msg is not None:
                         return invalidumr(ap, msg, cursentence, sentnum)
                 else:
@@ -556,7 +568,7 @@ class AMR_Edit_Server:
                 raise ServerException("No edit valid operation given")
 
             tokenalignments = None
-            if self.umr and withalighments:
+            if self.umr and withalignments:
                 tokenalignments = (cursentence.words, cursentence.getAlignments())
             pm, svg = ap.show(tokenalignments=tokenalignments, reverse_of=reverse_of)
 
@@ -627,12 +639,12 @@ class AMR_Edit_Server:
         def search():
             sentnum = self.checkParameter(request, 'num', 'integer', isOptional=False, defaultValue=None)
             reverse_of = self.checkParameter(request, 'reverse_of', 'boolean', isOptional=True, defaultValue=False)
-            withalighments = self.checkParameter(request, 'withalighments', 'boolean', isOptional=True, defaultValue=False)
+            withalignments = self.checkParameter(request, 'withalignments', 'boolean', isOptional=True, defaultValue=False)
             what = self.checkParameter(request, 'what', 'string', isOptional=False, defaultValue=None)
             regex = self.checkParameter(request, 'regex', 'string', isOptional=False, defaultValue=None)
             compare = self.checkParameter(request, 'compare', 'string', isOptional=True, defaultValue=None)
 
-            validparams = ["num", "what", "regex", "compare", "reverse_of", "withalighments"]
+            validparams = ["num", "what", "regex", "compare", "reverse_of", "withalignments"]
             self.validParameters(request, set(validparams))
 
             okt = None
@@ -716,17 +728,17 @@ class AMR_Edit_Server:
             #print("OKA",oka)
             #print("OKT",okt)
             #print("Sentnum", sentnum)
-            return prepare_newpage(sentnum, okt, oka, compare=compare, reverse_of=reverse_of, withalighments=withalighments) #, iscompare=iscompare)
+            return prepare_newpage(sentnum, okt, oka, compare=compare, reverse_of=reverse_of, withalignments=withalignments) #, iscompare=iscompare)
 
         @app.route('/history', methods=["GET"])
         def history():
             sentnum = self.checkParameter(request, 'num', 'integer', isOptional=False, defaultValue=None)
             reverse_of = self.checkParameter(request, 'reverse_of', 'boolean', isOptional=True, defaultValue=False)
-            withalighments = self.checkParameter(request, 'withalighments', 'boolean', isOptional=True, defaultValue=False)
+            withalignments = self.checkParameter(request, 'withalignments', 'boolean', isOptional=True, defaultValue=False)
             history = self.checkParameter(request, 'history', 'string', isOptional=False, defaultValue=None)
             prevmod = self.checkParameter(request, 'prevmod', 'integer', isOptional=True, defaultValue=0)
 
-            validparams = ["num", "history", "prevmod", "reverse_of", "withalighments"]
+            validparams = ["num", "history", "prevmod", "reverse_of", "withalignments"]
             self.validParameters(request, set(validparams))
 
             #print("hUNDOS: %d" % (len(self.undos)))
@@ -811,17 +823,17 @@ class AMR_Edit_Server:
                         cursentence.docgraph.docgraph = copied["docgraph"]
                     #print("AP", ap)
 
-            return prepare_newpage(sentnum, reverse_of=reverse_of, withalighments=withalighments)
+            return prepare_newpage(sentnum, reverse_of=reverse_of, withalignments=withalignments)
 
         @app.route('/next', methods=["GET"])
         def next():
             sentnum = self.checkParameter(request, 'num', 'integer', isOptional=False, defaultValue=None)
             reverse_of = self.checkParameter(request, 'reverse_of', 'boolean', isOptional=True, defaultValue=False)
-            withalighments = self.checkParameter(request, 'withalighments', 'boolean', isOptional=True, defaultValue=False)
+            withalignments = self.checkParameter(request, 'withalignments', 'boolean', isOptional=True, defaultValue=False)
             direction = self.checkParameter(request, 'direction', 'string', isOptional=False, defaultValue=None)
             compare = self.checkParameter(request, 'compare', 'string', isOptional=True, defaultValue=None)
 
-            validparams = ["num", "direction", "compare", "reverse_of", "withalighments"]
+            validparams = ["num", "direction", "compare", "reverse_of", "withalignments"]
             self.validParameters(request, set(validparams))
 
             if direction == "preceding":
@@ -835,16 +847,16 @@ class AMR_Edit_Server:
             elif direction == "last":
                 sentnum = len(self.amrdoc.sentences)
 
-            return prepare_newpage(sentnum, compare=compare, reverse_of=reverse_of, withalighments=withalighments)
+            return prepare_newpage(sentnum, compare=compare, reverse_of=reverse_of, withalignments=withalignments)
 
         @app.route('/read', methods=["GET"])
         def read():
             sentnum = self.checkParameter(request, 'num', 'integer', isOptional=False, defaultValue=None)
             reverse_of = self.checkParameter(request, 'reverse_of', 'boolean', isOptional=True, defaultValue=False)
-            withalighments = self.checkParameter(request, 'withalighments', 'boolean', isOptional=True, defaultValue=False)
+            withalignments = self.checkParameter(request, 'withalignments', 'boolean', isOptional=True, defaultValue=False)
             compare = self.checkParameter(request, 'compare', 'string', isOptional=True, defaultValue=None)
 
-            validparams = ["num", "compare", "reverse_of", "withalighments"]
+            validparams = ["num", "compare", "reverse_of", "withalignments"]
             self.validParameters(request, set(validparams))
 
             if sentnum < 1 or sentnum > len(self.amrdoc.sentences):
@@ -852,7 +864,7 @@ class AMR_Edit_Server:
                 return Response("%s\n" % json.dumps(dico),
                                 400, mimetype="application/json")
 
-            return prepare_newpage(sentnum, compare=compare, reverse_of=reverse_of, withalighments=withalighments)
+            return prepare_newpage(sentnum, compare=compare, reverse_of=reverse_of, withalignments=withalignments)
 
         @app.route('/css/<filename>', methods=["GET"])
         def getfile(filename):
@@ -949,7 +961,7 @@ class AMR_Edit_Server:
             # only used with --compare and --preferred
             sentnum = self.checkParameter(request, 'num', 'integer', isOptional=True, defaultValue=1)
             reverse_of = self.checkParameter(request, 'reverse_of', 'boolean', isOptional=True, defaultValue=None)
-            withalighments = self.checkParameter(request, 'withalighments', 'boolean', isOptional=True, defaultValue=None)
+            withalignments = self.checkParameter(request, 'withalignments', 'boolean', isOptional=True, defaultValue=None)
             preferred = self.checkParameter(request, 'preferred', 'string', isOptional=True, defaultValue=-1)
             compare = self.checkParameter(request, 'compare', 'string', isOptional=True, defaultValue=None)
 
@@ -958,14 +970,14 @@ class AMR_Edit_Server:
                 #self.preferred[str(sentnum)] = {"sid": sent.id, "source": preferred}
                 self.preferred.set(sentnum, sent, preferred)
 
-            return prepare_newpage(sentnum, compare=compare, reverse_of=reverse_of, withalighments=withalighments)
+            return prepare_newpage(sentnum, compare=compare, reverse_of=reverse_of, withalignments=withalignments)
 
         @app.route('/save', methods=["GET"])
         def save():
             sentnum = self.checkParameter(request, 'num', 'integer', isOptional=True, defaultValue=1)
             reverse_of = self.checkParameter(request, 'reverse_of', 'boolean', isOptional=True, defaultValue=None)
-            withalighments = self.checkParameter(request, 'withalighments', 'boolean', isOptional=True, defaultValue=None)
-            validargs = set(["num"])
+            withalignments = self.checkParameter(request, 'withalignments', 'boolean', isOptional=True, defaultValue=None)
+            validargs = set(["num", "reverse_of", "withalignments"])
             self.validParameters(request, validargs)
 
             self.save()
@@ -975,7 +987,7 @@ class AMR_Edit_Server:
                 return Response("%s\n" % json.dumps(dico),
                                 400, mimetype="application/json")
 
-            return prepare_newpage(sentnum, reverse_of=reverse_of, withalighments=withalighments)
+            return prepare_newpage(sentnum, reverse_of=reverse_of, withalignments=withalignments)
 
         @app.errorhandler(ServerException)
         def handle_invalid_usage(error):
@@ -1068,7 +1080,7 @@ class AMR_Edit_Server:
 
             return Response("%s\n" % json.dumps(dico), 200, mimetype="application/json")
 
-        def prepare_newpage(sentnum, oktext=None, okamr=None, compare=None, reverse_of=False, withalighments=False):
+        def prepare_newpage(sentnum, oktext=None, okamr=None, compare=None, reverse_of=False, withalignments=False):
             # sentnum uses 1 ... length
             # self.amrdoc.sentences is a list: 0 length-1
             cursentence = self.amrdoc.sentences[sentnum - 1]
@@ -1083,7 +1095,7 @@ class AMR_Edit_Server:
                     ap.readpenman(cursentence.amr)
 
             tokenalignments = None
-            if self.umr and withalighments:
+            if self.umr and withalignments:
                 tokenalignments = (cursentence.words, cursentence.getAlignments())
             #pm, svg, svg_canon = ap.show(tokenalignments=tokenalignments, reverse_of=reverse_of)
             pm, svg = ap.show(tokenalignments=tokenalignments, reverse_of=reverse_of)

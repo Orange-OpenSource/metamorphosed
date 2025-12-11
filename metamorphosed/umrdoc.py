@@ -320,7 +320,9 @@ class UMRsentence(AMRsentence):
             print("Index:", self.index, file=ofp)
             print("Words:", self.words, file=ofp)
         for k in self.other:
-            print("%s:%s" % (k, self.other[k]), file=ofp)
+            name = self.other[k][0]
+            values = self.other[k][1]
+            print("%s: %s" % (name, "\t".join(values)), file=ofp)
         print(file=ofp)
         print("# sentence level graph:", file=ofp)
         print(self.amr, file=ofp)
@@ -363,6 +365,23 @@ class UMRsentence(AMRsentence):
 
 
 ALIGNMENT = re.compile(r"^(-?\d+)-(-?\d+)$")
+
+# needed to edit the lines starting with
+TOKENLINES = {"Morphemes" : 1,
+              "Morphemes(English)": 2,
+              "Part of Speech": 3,
+              "Words(English)": 4,
+              "Morpheme Gloss(English)": 5,
+              "Morpheme Gloss(Spanish)": 6,
+              "Morpheme Category": 7,
+              "Sentence": 8,
+              "Translation(English)": 9,
+              "Translation(Spanish)": 10
+               }
+
+TOKLINESNUM = {}
+for k, v in TOKENLINES.items():
+    TOKLINESNUM[v] = k
 
 
 class UMRdoc:
@@ -445,7 +464,8 @@ class UMRdoc:
                         or line.startswith("Translation(English):") \
                         or line.startswith("Translation(Spanish):"):
                     elems = line.split(":", 1)
-                    other[elems[0]] = elems[1].split()
+                    #other[elems[0]] = elems[1].split()
+                    other[TOKENLINES[elems[0]]] = (elems[0], elems[1].split())
 
                 elif line.startswith("# sentence level graph:"):
                     state = 1
