@@ -1443,7 +1443,7 @@ $(document).ready(function () {
 			}
 
 			$(".glosses").each(function(i, obj) {
-				console.log("tttt", i, obj.id, $("#" + obj.id).val());
+				//console.log("tttt", i, obj.id, $("#" + obj.id).val());
 				modindexes["gloss_" + obj.id.split("_")[1]] = $("#" + obj.id).val();
 			});
 
@@ -1453,7 +1453,6 @@ $(document).ready(function () {
 		else if (this.id == "reifygraph") {
 			$(".editmode").hide();
 			//$("#commands").show();
-			//console.log("TTT", $("#reifylist").val());
 			var relation_to_reify = $("#reifylist").val().split(" ")[0];
 			params = { "reify": relation_to_reify }
 		}

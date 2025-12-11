@@ -349,7 +349,7 @@ def test_info(client):
     response = client.get("/version")
     res = json.loads(response.data)
     # print("res", res, file=sys.stderr)
-    assert res == {'name': 'AMR Editor', 'version': '5.0.0rc6', 'apiversion': '2.0.0rc6'}
+    assert res == {'name': 'AMR Editor', 'version': '5.0.0rc7', 'apiversion': '2.0.0rc7'}
 
     response = client.get("/info", query_string={"withdata": True})
     res = json.loads(response.data)
@@ -684,6 +684,36 @@ def testumr_undo_docgraph(client_umr):
     res = json.loads(response.data)
     #print("res", res["docgraph"], file=sys.stderr)
     assert res["docgraph"]["temporal"] == [['document-creation-time', ':overlap', 's6s'], ['document-creation-time', ':before', 's6g'], ['s6g', ':before', 's6d']]
+
+
+def testumr_modify_glosses(client_umr):
+    response = client_umr.get(
+        "/edit",
+        query_string={
+            "num": 2,
+            "prevmod": 0,
+            "modindexes": json.dumps(
+                {
+                    "index": "1\t2\t3\t4 5",
+                    "words": "Ch’óol’į́’í\thoolyéegi\t’áhóót’įįd\tdaaní toto",
+                    "gloss_1": "Ch’óol’į́’í\th-\too-\tl-\tyée\t=gi\t’á-\th-\tóó-\tt-\t’įįd\tdaa-\tní",
+                    "gloss_4": "Gobernador.Knob\twhere\tit\tis\tcalled\tit\thappened\tthey\tsay",
+                    "gloss_5": "Gobernador.Knob\tAR\t3.YINI.IMPF\tPAS\tcall.NEU.IMPF\t=at\tTH\tAR\t3.YI.PERF\tPAS\tdo.PERF\tDISTR\tsay.NEU.IMPF",
+                    "gloss_7": "nprop\tv:AR\tv:TAMS\tv:VAL\tv\tpost\tv:PRVB\tv:AR\tv:TAMS\tv:VAL\tv\tv:DISTR\tv",
+                    "gloss_9": "OOOThey\tsay\tthat\tthis\tstory\ttook\tplace\tat\tGobernador\tKnob.",
+                }
+            ),
+        },
+    )
+
+    res = json.loads(response.data)
+    assert res["index"] == [1, 2, 3, 4, 5]
+    assert res["words"] == ['Ch’óol’į́’í', 'hoolyéegi', '’áhóót’įįd', 'daaní', 'toto']
+    assert res["glosses"]["9"] == ['Translation(English)', ['OOOThey', 'say', 'that', 'this', 'story', 'took', 'place', 'at', 'Gobernador', 'Knob.']]
+
+    response = client_umr.get("/edit", query_string={"num": 2, "prevmod": 1, "umrvar": "s2p", "newalignment": "5-5"})
+    res = json.loads(response.data)
+    assert res["alignments"] == {'s2d': [[0, 0]], 's2m': [[0, 0]], 's2n': [[0, 0]], 's2p': [[5, 5]], 's2x': [[2, 3]]}
 
 
 # UMR file save, git add/commit

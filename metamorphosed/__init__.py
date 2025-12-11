@@ -76,7 +76,7 @@ import metamorphosed.installJQ as iJQ
 # find an example in AMR data
 # call an AMRserver for an (empty) sentence ? rather not
 
-APIVERSION = "2.0.0rc6"
+APIVERSION = "2.0.0rc7"
 
 
 class AMR_Edit_Server:
@@ -356,7 +356,7 @@ class AMR_Edit_Server:
             print("COMMAND:", end=" ")
             for v in validparams:
                 if v != "num" and eval(v) is not None:
-                    print('%s: "%s"' % (v, eval(v)), end=" ")
+                    print(', "%s": "%s"' % (v, eval(v)), end=" ")
             print()
             ap = self.aps.get(int(sentnum))
 
@@ -369,7 +369,6 @@ class AMR_Edit_Server:
                 # an invalid PENMAN can only be corrected using modpenman
                 return invalidamr(ap, ap.lastpm, cursentence, sentnum)
 
-            #print("ZZZZ", self.aps, ap, sentnum)
             rtc = None
             print("AP PREVMOD:", ap.previous_modification, "CLIENT:", prevmod, "TOO LATE", ap.previous_modification > prevmod)
             if ap.previous_modification > prevmod:
@@ -487,20 +486,17 @@ class AMR_Edit_Server:
                     ap.modified = True # set rather by ap.-functions ??
             elif modindexes:
                 if self.umr:
-                    #print("rrrrr", json.dumps(cursentence.other, indent=2))
                     jobj = json.loads(modindexes)
-                    #print(json.dumps(jobj, indent=2))
                     for key in jobj:
                         #print("KKK", key, jobj[key])
                         if key == "index":
-                            cursentence.index = jobj[key].split()
+                            cursentence.index = [int(x) for x in jobj[key].split()]
                         elif key == "words":
                             cursentence.words = jobj[key].split()
                         elif key.startswith("gloss_"):
                             val = int(key[6:])
-                            #print("VVV", val, key)
                             cursentence.other[val] = (umrdoc.TOKLINESNUM[val], jobj[key].split())
-                    #print("RRRRR", json.dumps(cursentence.other, indent=2))
+
             elif adddocgraph:
                 # add a triple to UMR document level annotation
                 if dg_subj and dg_obj and dg_pred:

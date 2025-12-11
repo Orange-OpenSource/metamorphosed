@@ -33,7 +33,7 @@
 # Software Name: MetAMoRphosED AMR-Editor
 # Author: Johannes Heinecke
 
-# version 5.0.0rc6 as of 5th December 2025
+# version 5.0.0rc7 as of 5th December 2025
 
 import io
 import re
@@ -49,7 +49,7 @@ import metamorphosed.amr_comparison as amr_comparison
 
 from metamorphosed.AMR_relations import orangecolors as orangecolors
 
-VERSION = "5.0.0rc6"
+VERSION = "5.0.0rc7"
 
 # terminology
 # instance  a / ...
@@ -479,6 +479,7 @@ class AMRProcessor:
         if tokenalignments and tokenalignments[0] and tokenalignments[1]:
             # add words of sentence and alignments
             kwargs["fillcolor"] = "#FFF0F5"
+            kwargs["fontcolor"] = "#085ebd"
             tokens, alignments = tokenalignments
             # add words and alignments
             lasttid = None

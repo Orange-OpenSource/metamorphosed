@@ -367,7 +367,7 @@ class UMRsentence(AMRsentence):
 ALIGNMENT = re.compile(r"^(-?\d+)-(-?\d+)$")
 
 # needed to edit the lines starting with
-TOKENLINES = {"Morphemes" : 1,
+TOKENLINES = {"Morphemes": 1,
               "Morphemes(English)": 2,
               "Part of Speech": 3,
               "Words(English)": 4,
@@ -377,7 +377,7 @@ TOKENLINES = {"Morphemes" : 1,
               "Sentence": 8,
               "Translation(English)": 9,
               "Translation(Spanish)": 10
-               }
+              }
 
 TOKLINESNUM = {}
 for k, v in TOKENLINES.items():
