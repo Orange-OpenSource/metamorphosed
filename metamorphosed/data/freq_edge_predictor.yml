@@ -1,0 +1,7 @@
+# __localpath__ is the path where the yaml file is placed in
+
+# filename can also any relative or absolute path
+filename: __localpath__/../frequency_edge_predictor.py
+classname: Frequency_EdgePredictor
+args:
+  - __localpath__/relationsfreq.json

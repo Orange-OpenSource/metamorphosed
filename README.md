@@ -387,7 +387,7 @@ class Perfect_EdgePredictor(Basic_EdgePredictor):
     def predict(self, source_concept, target_concept):
         predicted_label = self.classifier.find(source_concept, target_concept)
         print("predicted label <<<%s>>>" % predicted_label)
-	return predicted label
+        return predicted label
 ```
 
 In order to use this class and the needed data, create a yaml file `mypredictor.yml`:
@@ -407,6 +407,8 @@ start _metamorphosed_ with the option `--edge_predictor` (or `-E`):
 ```
 ./metamorphosed_server.py --edge_predictor mypredictor.yml [other options]
 ```
+
+A simple predictor based on relation frequency is available by using `./metamorphosed_server.py --edge_predictor metamorphosed/data/freq_edge_predictor.yml`
 
 # AMR file comparison
 
