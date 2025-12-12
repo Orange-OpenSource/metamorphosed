@@ -2,7 +2,8 @@
 __pycache__
 amr-release-3.0-amrs-training-wiki.txt
 metamorphosed/gui/lib/jquery*
-*.txt.2
+.jhe*
+*.2
 tmp
 amr3-training-all.txt
 .tox

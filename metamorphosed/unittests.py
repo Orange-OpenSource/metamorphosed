@@ -131,8 +131,8 @@ def client_umr(appumr):
     return appumr.test_client()
 
 
-# start server just for one test
-# needed for tests with SmatchPP
+# start server just for two tests, but loading is fast without propbank etc
+# needed for tests with SmatchPP and edge predictor creation
 @pytest.fixture()
 def app2():
     aes = AMR_Edit_Server(4568,
@@ -144,11 +144,11 @@ def app2():
                           False, # readonly
                           None, # author
                           None, #"reification-table.txt"
+                          predictor=mydir + "/data/freq_edge_predictor.yml",
                           smatchpp=True,
                           )
     app = aes.app
     number_of_sentences = len(aes.aps)
-
     # other setup can go here
 
     yield app
@@ -349,7 +349,7 @@ def test_info(client):
     response = client.get("/version")
     res = json.loads(response.data)
     # print("res", res, file=sys.stderr)
-    assert res == {'name': 'AMR Editor', 'version': '5.0.0rc7', 'apiversion': '2.0.0rc7'}
+    assert res == {'name': 'AMR Editor', 'version': '5.0.0rc8', 'apiversion': '2.0.0rc8'}
 
     response = client.get("/info", query_string={"withdata": True})
     res = json.loads(response.data)
@@ -1159,6 +1159,43 @@ def test_search_amr_smatchpp(client2):
     response = client2.get("/search", query_string={"num": 21, "what": "findamrprec", "regex": '(z1 / dog :mod (z2 / big))'})
     res = json.loads(response.data)
     assert res["num"] == 4
+
+
+def test_edgepredictor(client2):
+    # predict edge
+    #response = client2.get("/read", query_string={"num": 20})
+    response = client2.get("/edit", query_string={"num": 20, "prevmod": 0, "start": "c",
+                                                  "label": "todo", #"ARG0",
+                                                  "end": "i"})
+    res = json.loads(response.data)
+    #print("res", res["penman"])
+    assert res["penman"] == """(m / multi-sentence
+   :snt1 (a / and
+            :op1 (g / guess-01
+                    :ARG0 (i / i)
+                    :ARG1 (o / overload-01
+                             :ARG1 (c / capacity
+                                      :mod (c2 / carry-01)
+                                      :poss (t2 / tower
+                                                :part-of (s / station
+                                                            :mod (b / base)))
+                                      :mod i)
+                             :degree (t / total)))
+            :op2 (g2 / get-through-12
+                     :polarity -
+                     :ARG0 i
+                     :degree (a2 / at-all)))
+   :snt2 (c3 / contrast-01
+             :ARG1 (p / possible-01
+                      :ARG1 (f / find-01
+                               :ARG0 (i3 / i)
+                               :ARG1 (s2 / signal))
+                      :mod (o2 / only))
+             :ARG2 (c4 / chance-02
+                       :polarity -
+                       :ARG1 (c5 / connect-01
+                                 :ARG0 i3
+                                 :ARG2 (i2 / internet)))))"""
 
 
 def test_search_comment(client):

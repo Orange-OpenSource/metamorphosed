@@ -40,13 +40,15 @@ import json
 
 from metamorphosed.edge_predictor import Basic_EdgePredictor
 
+
 class Frequency_EdgePredictor(Basic_EdgePredictor):
     def __init__(self, arglist):
         print("initialising my Frequency_EdgePredictor with %s " % arglist[0])
         with open(arglist[0]) as ifp:
-             self.edges = json.load(ifp)
+            self.edges = json.load(ifp)
 
     def predict(self, source_concept, target_concept):
+        # far from being OK. It just predicts the most frequent relation for a given concept if present in AMR3 data, else it returns the most frequent incoming relation for a concept
         as_subject = None
         as_object = None
         predicted_label = ":todo"
@@ -65,5 +67,5 @@ class Frequency_EdgePredictor(Basic_EdgePredictor):
             freq_o = as_object[0][1]
             predicted_label = as_object[0][0]
 
-        print("predicted label <<<%s>>> as_subject %s, as_object %s" % (predicted_label, as_subject, as_object))
+        print("predicted label <<<%s>>> for %s -> %s, as_subject %s, as_object %s" % (predicted_label, source_concept, target_concept, as_subject, as_object))
         return predicted_label

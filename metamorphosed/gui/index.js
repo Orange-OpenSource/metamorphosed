@@ -349,7 +349,7 @@ function info(event) {
 			lastclickededge = null;
 			runcommand(params);
 		} else if (lastclickednode != null) {
-			// we've clicked on an edge
+			// we've clicked on two nodes (in the visualization, so no edge label is known.)
 			var params = {
 				"start": lastclickednode,
 				"end": modconceptvar,
