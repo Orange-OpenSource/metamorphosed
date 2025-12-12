@@ -49,7 +49,7 @@ import metamorphosed.amr_comparison as amr_comparison
 
 from metamorphosed.AMR_relations import orangecolors as orangecolors
 
-VERSION = "5.0.0rc7"
+#VERSION = "5.0.0rc7"
 
 # terminology
 # instance  a / ...

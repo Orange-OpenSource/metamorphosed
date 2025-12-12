@@ -56,6 +56,6 @@ Homepage = "https://github.com/Orange-Opensource/metamorphosed.git"
 
 
 [tool.setuptools.dynamic]
-version = {attr = "metamorphosed.amreditor.VERSION"} 
+version = {attr = "metamorphosed.version.VERSION"}
 
 

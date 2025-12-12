@@ -65,6 +65,7 @@ from metamorphosed.exception import ServerException
 from metamorphosed.findsubgraph import SubGraphRDF
 import metamorphosed.joingraphs as joingraphs
 from metamorphosed.preferred_graph import PreferredGraphs
+import metamorphosed.version
 
 import metamorphosed.installJQ as iJQ
 
@@ -75,8 +76,6 @@ import metamorphosed.installJQ as iJQ
 
 # find an example in AMR data
 # call an AMRserver for an (empty) sentence ? rather not
-
-APIVERSION = "2.0.0rc7"
 
 
 class AMR_Edit_Server:
@@ -216,8 +215,8 @@ class AMR_Edit_Server:
         @app.route('/version', methods=["GET"])
         def version():
             dico = {"name": "AMR Editor",
-                    "version": amreditor.VERSION,
-                    "apiversion": APIVERSION}
+                    "version": metamorphosed.version.VERSION,
+                    "apiversion": metamorphosed.version.APIVERSION}
             return Response("%s\n" % json.dumps(dico), 200, mimetype="application/json")
 
         @app.route('/info', methods=["GET"])
@@ -231,8 +230,8 @@ class AMR_Edit_Server:
                     "filename": filename, "numsent": len(self.amrdoc.sentences),
                     "propbank_frames": pbframes,
                     "readonly": self.readonly,
-                    "version": amreditor.VERSION,
-                    "apiversion": APIVERSION,
+                    "version": metamorphosed.version.VERSION,
+                    "apiversion": metamorphosed.version.APIVERSION,
                     "umr": self.umr
                     }
 
@@ -408,8 +407,8 @@ class AMR_Edit_Server:
             elif start and end and label:
                 # add new edge between to nodes
                 if label == "todo":
+                    # "todo" is the default value given by index.js when clicking on to nodes
                     # print("label", label, end=" ")
-
                     label = self.edge_predictor.predict(ap.vars.get(start), ap.vars.get(end))
                     # print("->", label)
                 rtc = ap.addedge(start, end, label)
