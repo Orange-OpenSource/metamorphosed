@@ -97,6 +97,13 @@ You may choose a (comma separated list) of concepts which will be highlighted in
 
 The images are downloaded in a .zip file which also contains a `metadata.json` metadata file which contains the sentence id and the text which correspond to the graph.
 
+## Import AMR
+Files in the standard AMR format (like ARM 3.0) can be transformed into the UMR format using `AMR2UMR.py`. If alignments are present in the AMR file (suffixed version like `(s / shift-01~e.9 ...`) these alignments are import to the UMR file format. However AMR alignments with relations (`:purpose~e.27`) cannot be used in UMR. They are imported only as comments.
+
+```
+uv run AMR2UMR.py AMR.file > UMR.file
+```
+
 ## Limitations
 
 * `Words:` and `Index:` (and `Morphemes:` etc.) lines cannot yet be deleted or added (they have to be present in the `.umr` file)
