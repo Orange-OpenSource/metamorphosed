@@ -54,12 +54,13 @@ ONESPACE = re.compile("[ \n\t]+")
 class AMRsentence:
     def __init__(self, penmanstr):
         self.amr = penmanstr
-        self.text = None
-        self.id = None
+        self.text = None # ::snt
+        self.id = None # ::id
         self.idrest = None
         self.savedateorig = ""
         self.date = None
         self.savedaterest = ""
+        self.tokens = None # ::tok
         self.comments = []
 
     def modcomment(self, comments):
@@ -85,6 +86,9 @@ class AMRsentence:
                 print("# ::save-date %s" % (self.date), file=ofp)
         elif self.savedateorig:
             print("# ::save-date %s" % self.savedateorig, file=ofp)
+        if self.tokens:
+            print("# ::tok", " ".join(self.tokens))
+
         for c in self.comments:
             print("#", c, file=ofp)
         if not onlyheader:
@@ -208,6 +212,7 @@ class AMRdoc:
         sentid = None
         idrest = None # after the id in the ::id line
         text = None
+        tokens = None
         savedateorig = None
         date = None
         savedaterest = ""
@@ -223,6 +228,7 @@ class AMRdoc:
                     asent.id = sentid
                     asent.idrest = idrest
                     asent.text = text
+                    asent.tokens = tokens
                     asent.savedateorig = savedateorig
                     asent.date = date
                     asent.savedaterest = savedaterest
@@ -230,6 +236,7 @@ class AMRdoc:
                     sentid = None
                     idrest = None
                     text = None
+                    tokens = None
                     savedateorig = None
                     date = None
                     savedaterest = ""
@@ -264,6 +271,8 @@ class AMRdoc:
                     sentid = line[13:]
             elif line.startswith("# ::snt "):
                 text = line[8:]
+            elif line.startswith("# ::tok "):
+                tokens = line[8:].split()
             elif line.startswith("# ::save-date "):
                 # parse save-date line to avoid deleting other information
                 mo = savedateRE.match(line)
@@ -281,6 +290,7 @@ class AMRdoc:
             asent = AMRsentence("\n".join(amrblock))
             asent.id = sentid
             asent.text = text
+            asent.tokens = tokens
             asent.comments = comments
             self.sentences.append(asent)
             self.ids[sentid] = asent
