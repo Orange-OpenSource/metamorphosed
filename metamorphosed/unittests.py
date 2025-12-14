@@ -403,9 +403,9 @@ def test_exportgraphs(client):
     assert len(zfp.infolist()) == 26 # includes metadata file
     fobj = zfp.infolist()[0]
     assert fobj.filename == "1.svg"
-    assert fobj.file_size <= 11086 and fobj.file_size >= 11080
+    assert fobj.file_size <= 11086 and fobj.file_size >= 10080
     contents = zfp.read(fobj.filename)
-    assert b'<svg width="418pt" height="392pt"' in contents
+    assert b'<svg width="422pt" height="392pt"' in contents
 
     # get PDF files
     response = client.get("/graphs/exportfile.zip", query_string={"format": "pdf"})
@@ -534,7 +534,7 @@ def testumr_read(client_umr):
         "snt3: alignment &lt;s3c&gt; not in sentence level graph",
         "snt3: alignment &lt;6&gt; start position not in Index: [1, 2, 3, 4]",
         "snt3: alignment &lt;6&gt; end position not in Index: [1, 2, 3, 4]",
-        "Index: &lt;[1, 2, 3, 4]&gt; and Words: &lt;['The', 'mouse', 'eats', 'the', 'cheese']&gt; do not correspond"
+        "Index: &lt;[1, 2, 3, 4]&gt; and Words: &lt;['The', 'mouse', 'eats', 'the', 'cheese', '.']&gt; do not correspond"
     ]
 
     #response = client_umr.get("/save", query_string={"num": 2})
@@ -777,10 +777,9 @@ def testumr_edit2(client_git_umr2):
     #print("res", res)
     newfile = cat(datadir + "/testumr-minimal.umr.2")
     reference = cat(mydir + "/data/testumr-minimal-expected.umr")
-
-    #print(newfile)
-    #print(reference)
     assert newfile == reference
+
+    #assert cmp(datadir + "/testumr-minimal.umr.2", mydir + "/data/testumr-minimal-expected.umr")
 
 
 def test_read_date(client):
@@ -959,7 +958,7 @@ def test_edit_delinstance(client):
     response = client.get("/edit", query_string={"num": 1, "delinstance": "p"})
     res = json.loads(response.data)
     #print("res", json.dumps(res, indent=2))
-    assert res["penman"] == "(m / multi-sentence\n   :snt1 (b / bear-02\n            :location (c / city\n                         :name (n2 / name\n                                   :op1 \"London\")\n                         :wiki \"Q84\"))\n   :snt2 (l / live-01\n            :location c\n            :mod (s / still)))\n\n(n / name\n   :op1 \"Naomie\"\n   :op2 \"Harris\")"
+    assert res["penman"] == "(m / multi-sentence\n   :snt1 (b / bear-02\n            :location (c / city\n                         :name (n2 / name\n                                   :op1 \"London\")\n                         :wiki \"Q84\"))\n   :snt2 (l / live-01\n            :location c\n            :mod (s / still)))\n\n(n / name\n   :op1 \"Naomie\")"
 
 
 def test_edit_settop(client):
@@ -1099,7 +1098,7 @@ def test_search_amr(client):
     #print("res", res)
     assert res["num"] == 12
 
-    response = client.get("/search", query_string={"num": 12, "what": "findamrprec", "regex": "Harris"})
+    response = client.get("/search", query_string={"num": 12, "what": "findamrprec", "regex": "Naomie"})
     res = json.loads(response.data)
     #print("res", res)
     assert res["num"] == 1
@@ -1669,7 +1668,7 @@ def test_umrdoc():
         "snt3: alignment &lt;s3c&gt; not in sentence level graph",
         "snt3: alignment &lt;6&gt; start position not in Index: [1, 2, 3, 4]",
         "snt3: alignment &lt;6&gt; end position not in Index: [1, 2, 3, 4]",
-        "Index: &lt;[1, 2, 3, 4]&gt; and Words: &lt;['The', 'mouse', 'eats', 'the', 'cheese']&gt; do not correspond",
+        "Index: &lt;[1, 2, 3, 4]&gt; and Words: &lt;['The', 'mouse', 'eats', 'the', 'cheese', '.']&gt; do not correspond",
         "Index: &lt;None&gt; and Words: &lt;['Eyewitnesses', 'said', 'only', 'a', 'few', 'houses', 'were', 'left', 'standing', 'after', 'the', 'landslide', 'hit', 'the', 'village', 'of', 'Guinsaugon', 'in', 'the', 'south', 'of', 'the', 'Philippine', 'island', 'of', 'Leyte', '.']&gt; do not correspond",
         'relation «:wiki» has invalid object «"Saint_Bernard,_Southern_Leyte"» of «None»',
         'relation «:wiki» has invalid object «"Leyte"» of «None»',
@@ -1697,7 +1696,7 @@ def test_umrdoc():
         ("snt3", "snt3: alignment &lt;s3c&gt; not in sentence level graph"),
         ("snt3", "snt3: alignment &lt;6&gt; start position not in Index: [1, 2, 3, 4]"),
         ("snt3", "snt3: alignment &lt;6&gt; end position not in Index: [1, 2, 3, 4]"),
-        ("snt3", "Index: &lt;[1, 2, 3, 4]&gt; and Words: &lt;['The', 'mouse', 'eats', 'the', 'cheese']&gt; do not correspond"),
+        ("snt3", "Index: &lt;[1, 2, 3, 4]&gt; and Words: &lt;['The', 'mouse', 'eats', 'the', 'cheese', '.']&gt; do not correspond"),
         ("snt4", "Index: &lt;None&gt; and Words: &lt;['Eyewitnesses', 'said', 'only', 'a', 'few', 'houses', 'were', 'left', 'standing', 'after', 'the', 'landslide', 'hit', 'the', 'village', 'of', 'Guinsaugon', 'in', 'the', 'south', 'of', 'the', 'Philippine', 'island', 'of', 'Leyte', '.']&gt; do not correspond"),
         ("snt4", 'relation «:wiki» has invalid object «"Saint_Bernard,_Southern_Leyte"» of «None»'),
         ("snt4", 'relation «:wiki» has invalid object «"Leyte"» of «None»'),
@@ -1862,7 +1861,7 @@ def test_iaa():
     import io
     import metamorphosed.inter_annotator as inter_annotator
     reportfile = tempfile.TemporaryDirectory()
-    print("AAAA", reportfile.name, dir(reportfile))
+    #print("AAAA", reportfile.name, dir(reportfile))
     iaa = inter_annotator.IAA([mydir + "/data/comptest_annot1.txt", mydir + "/data/comptest_annot3.txt", mydir + "/data/comptest_annot4.txt"], debug=True)
     s1 = io.StringIO()
     iaa.eval(micro=True, runs=1, ofp=s1, report=os.path.join(reportfile.name, "report1.txt"), sortcolumn=5)
@@ -1990,3 +1989,26 @@ errors []
 """
     #print("QQQ<%s>" % s2.getvalue())
     assert result == s2.getvalue()
+
+
+def test_umr2amr():
+    import UMR2AMR
+    datadir = tempfile.TemporaryDirectory()
+    print("temporary test directory", datadir)
+    #shutil.copyfile(mydir + "/data/testumr.umr", datadir.name + "/testumr.umr")
+    a2u = UMR2AMR.UMR2AMR(mydir + "/data/testumr.umr", datadir.name + "/testumr-2amr.txt", gen=False)
+    ref = cat(mydir + "/data/testumr-2amr.txt")
+    res = cat(datadir.name + "/testumr-2amr.txt")
+    #cp("u2res.txt", src=datadir.name + "/testumr-2amr.txt")
+    assert ref == res
+
+
+def test_amr2amr():
+    import AMR2UMR
+    datadir = tempfile.TemporaryDirectory()
+    print("temporary test directory", datadir)
+    a2u = AMR2UMR.AMR2UMR(mydir + "/data/alignments.amr.txt", datadir.name + "/alignments.amr-2umr.umr", gen=False)
+    ref = cat(mydir + "/data/alignments.amr-2umr.umr")
+    res = cat(datadir.name + "/alignments.amr-2umr.umr")
+    #cp("a2u-res.txt", src=datadir.name + "/alignments.amr-2umr.umr")
+    assert ref == res

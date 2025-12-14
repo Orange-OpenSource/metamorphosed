@@ -97,12 +97,23 @@ You may choose a (comma separated list) of concepts which will be highlighted in
 
 The images are downloaded in a .zip file which also contains a `metadata.json` metadata file which contains the sentence id and the text which correspond to the graph.
 
-## Import AMR
-Files in the standard AMR format (like ARM 3.0) can be transformed into the UMR format using `AMR2UMR.py`. If alignments are present in the AMR file (suffixed version like `(s / shift-01~e.9 ...`) these alignments are import to the UMR file format. However AMR alignments with relations (`:purpose~e.27`) cannot be used in UMR. They are imported only as comments.
+## Import/Export AMR files
+Files in the standard AMR format (like ARM 3.0) can be transformed into the UMR format using `AMR2UMR.py`. If alignments are present in the AMR file (suffixed version like `(s / shift-01~e.9 ...`) these alignments are import to the UMR file format. However AMR alignments with relations (`:purpose~e.27`) cannot be used in UMR, neither alignments with literals (` :name (n / name :op1 "London"~e.5)))`). They are imported only as comments.
+```
+uv run AMR2UMR.py AMR-input-file UMR-output-file
+```
+To export UMR to the AMR format use:
 
 ```
-uv run AMR2UMR.py AMR.file > UMR.file
+uv run UMR2AMR.py -i UMR-input-file -o AMR-output-file
 ```
+Both scripts alos accept the options
+* `--first N` ignore sentences before number N
+* `--last N` ignore sentences after number N
+* `--filterid RegEx` transform only sentences which id matches the RegEx
+
+All UMR information which can not be formatted in AMR ar lost (document level annotations, Morphemes etc., alignments with index 0).
+Both transformation do not change the AMR graph (i.e. AMR/UMR specific relations (`:actor`)/concepts (`see-01`) are not modified)
 
 ## Limitations
 

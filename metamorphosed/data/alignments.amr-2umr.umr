@@ -1,0 +1,100 @@
+################################################################################
+# meta-info :: sent_id = sentence-1
+# :: snt1
+# ::pos 1  2        3    4 5    6  7    8   9       10 11   12 13        14       15 16      17          18 19    20 21 22   23 24      25     26      27 28        29 30   31
+# ::alignments 1-1.3.1 1-1.3.1.r 2-1.3.2 4-1.1.1.2.1 6-1.1 6-1.2 8-1 12-1.2.2.1 13-1.2.2 15-1.4 16-1.4.1 18-1.4.1.1 20-1.4.1.1.1.r 21-1.4.1.1.1 23-1.4.1.1.1.2 24-1.4.1.1.1.2.1.2.1 25-1.4.1.1.1.2.1.2.2 26-1.4.1.1.1.2.3.r 27-1.4.1.1.1.2.3.1.2.1 28-1.4.1.1.1.2.3.1.r 29-1.4.1.1.1.2.3
+Index: 1	2	3	4	5	6	7	8	9	10	11	12	13	14	15	16	17	18	19	20	21	22	23	24	25	26	27	28	29	30	31
+Words: In	December	2013	,	Rose	's	role	was	shifted	to	that	of	executive	chairman	,	renewing	speculation	he	might	be	in	line	to	replace	Warren	Buffett	at	Berkshire	's	helm	.
+Sentence: In December 2013, Rose's role was shifted to that of executive chairman, renewing speculation he might be in line to replace Warren Buffett at Berkshire's helm.
+# sentence level graph:
+(s1s / shift-01
+    :ARG1 (s1h / have-org-role-91
+        :ARG0 (s1p2 / person
+            :name (s1n / name
+                :op1 "Rose")))
+    :ARG2 (s1h2 / have-org-role-91
+        :ARG0 s1p2
+        :ARG2 (s1c / chairman
+            :mod (s1e / executive)))
+    :time (s1d / date-entity
+        :month 12
+        :year 2013)
+    :ARG0-of (s1r / renew-01
+        :ARG1 (s1s2 / speculate-01
+            :ARG1 (s1p / possible-01
+                :ARG1 (s1l / line-up-02
+                    :ARG1 s1p2
+                    :purpose (s1r2 / replace-01
+                        :ARG1 (s1p3 / person
+                            :wiki "Warren_Buffett"
+                            :name (s1n2 / name
+                                :op1 "Warren"
+                                :op2 "Buffett"))
+                        :ARG2 s1p2
+                        :purpose (s1h3 / helm
+                            :mod (s1c2 / company
+                                :wiki "Berkshire_Hathaway"
+                                :name (s1n3 / name
+                                    :op1 "Berkshire")))))))))
+
+
+# alignment:
+s1s: 9-9
+s1h: 6-6
+s1n: 5-5
+s1h2: 6-6
+s1c: 14-14
+s1e: 13-13
+#s1d-12: 1-1
+s1d: 1-1, 2-2
+s1r: 16-16
+s1s2: 17-17
+s1p: 19-19
+#s1p-s1l: 20-20
+s1l: 22-22
+s1r2: 24-24
+s1n2: 25-25, 26-26
+#s1r2-s1h3: 27-27
+s1h3: 30-30
+#s1h3-s1c2: 29-29
+s1n3: 28-28
+
+
+# document level annotation:
+
+
+################################################################################
+# meta-info :: sent_id = sentence-2
+# :: snt2
+Index: 1	2	3	4	5	6	7	8	9	10	11	12	13	14	15	16
+Words: Cafodd	Dylan	Thomas	ei	wahardd	o	'r	dafarn	am	helpu	ei	hunan	i	'r	cwrw	.
+Sentence: Cafodd Dylan Thomas ei wahardd o'r dafarn am helpu ei hunan i'r cwrw.
+# sentence level graph:
+(s2b / ban-01
+    :ARG1 (s2b2 / be-located-at-91
+        :ARG1 (s2p / person
+            :name (s2n / name
+                :op1 "Dylan"
+                :op2 "Thomas"))
+        :ARG2 (s2p2 / pub))
+    :ARG2 s2p
+    :ARG1-of (s2c / cause-01
+        :ARG0 (s2h / help-01
+            :ARG0 s2p
+            :ARG1 (s2b3 / beer)
+            :ARG2 s2p)))
+
+
+# alignment:
+s2b: 5-5
+#s2b-s2b2: 6-6
+s2n: 2-2, 3-3
+s2c: 9-9
+s2h: 10-10
+#s2h-s2b3: 13-13
+s2b3: 15-15
+
+
+# document level annotation:
+
+

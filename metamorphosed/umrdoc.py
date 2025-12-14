@@ -264,7 +264,8 @@ class UMRsentence(AMRsentence):
 
         self.other = other # other information like glosses and translations
         self.meta = meta
-        self.text = other.get("Sentence")
+        if 8 in self.other:
+            self.text = " ".join(other.get(8)[1]) # TODO use TOKENLINE
         if not self.text and self.words:
             if self.wiok:
                 self.text = " ".join(self.words)

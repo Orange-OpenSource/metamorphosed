@@ -101,7 +101,8 @@ s2x: 2-3
 # meta-info :: sent_id =  bad-index--bad-alignment
 # :: snt3
 Index:               	1	2	3	4
-Words:               	The mouse eats the cheese
+Words:               	The mouse eats the cheese .
+Sentence: The mouse eats the cheese.
 
 # sentence level graph:
 (s3e / eat-01
@@ -195,6 +196,7 @@ s4o: 3-3
 # :: snt5
 Index: 1      2      3  4      5  6      7     8    9        10 11    12 13
 Words: Marsha Lipman is Editor of Moscow based news magazine '  Itogi '  . 
+Sentence: Marsha Lipman is Editor of Moscow based news magazine 'Itogi'.
 
 # sentence level graph:
 (s5h / have-org-role-92
@@ -337,6 +339,7 @@ Morphemes: Caf  -odd    Dylan   Thomas  ei      gwahardd        o       y       
 Morphemes(English): keep        -3ST=PAST       NE      NE      3SG=DEP ban     from    DEF     pub     for     help    3SG=DEP self    to      DEF     beer.
 Translation(English): Dylan     Thomas  was     banned  from    the     pub     for     helping himself to      the     beer.
 Morpheme Category: VERB TAM     NE      NE      PRON    VERB    ADP     FRG     NOUN    ADP     VERB    PRON    ADP     DEF     NOUN
+Sentence: Cafodd Dylan Thomas ei wahardd o'r dafarn am helpu ei hunan i'r cwrw.
 
 # sentence level graph:
 (s8b / ban-01

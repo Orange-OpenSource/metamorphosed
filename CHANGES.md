@@ -2,6 +2,7 @@
 
 ## Version 5.0.0
 * Uniform Meaning Representation support
+* scripts to transform files in AMR file format into UMR file format
 * GUI layout improved
 * minor bugs corrected
 * new tests
