@@ -616,7 +616,7 @@ def testumr_modify_docgraph(client_umr):
     response = client_umr.get("/edit", query_string={"num": 4, "prevmod": 1, "adddocgraph": "modal", "dg_subj": "s3d", "dg_obj": "s4t", "dg_pred": ":after"})
     res = json.loads(response.data)
     # print("res", json.dumps(res, indent=2, ensure_ascii=False), file=sys.stderr)
-    assert res["warning"] == ["Bad modal predicate: :after must be one of [':full-affirmative', ':full-negative', ':modal', ':neutral-affirmative', ':neutral-negative', ':partial-affirmative', ':partial-negative', ':unspecified']"]
+    assert res["warning"] == ["Bad modal predicate: <tt>:after</tt>. It must be one of <tt>:full-affirmative :full-negative :modal :neutral-affirmative :neutral-negative :partial-affirmative :partial-negative :unspecified</tt>"]
 
     # modify
     response = client_umr.get("/edit", query_string={"num": 4, "prevmod": 2, "moddocgraph": "modal", "dg_subj": "s4p", "dg_obj": "s4n3", "dg_pred": ":full-affirmative", "dgpos": 4})
@@ -643,12 +643,12 @@ def testumr_modify_docgraph(client_umr):
     res = json.loads(response.data)
     #print("res", json.dumps(res, indent=2, ensure_ascii=False), file=sys.stderr)
     #assert res["warning"] == ["Bad coref object: s4dDD a variable matching <tt>^s\\d+[a-z]\\d*$</tt>"]
-    assert res["warning"] == ["Bad coref object: s4dDD a variable matching <tt>^s\\d+[a-z]\\d*$</tt>", 'Bad coref object: s4dDD is not a variable of Sentence level graph']
+    assert res["warning"] == ["Bad coref object: <tt>s4dDD</tt>. It must be a variable matching <tt>^s\\d+[a-z]\\d*$</tt>", 'Bad coref object: s4dDD is not a variable of Sentence level graph']
 
     response = client_umr.get("/edit", query_string={"num": 4, "prevmod": 3, "adddocgraph": "temporal", "dg_subj": "s3d", "dg_obj": "s4a", "dg_pred": ":subset-of"})
     res = json.loads(response.data)
     # print("res", json.dumps(res, indent=2, ensure_ascii=False), file=sys.stderr)
-    assert res["warning"] == ["Bad temporal predicate: :subset-of must be one of [':after', ':before', ':contained', ':contains', ':depends-on', ':overlap']"]
+    assert res["warning"] == ["Bad temporal predicate: <tt>:subset-of</tt>. It must be one of <tt>:after :before :contained :contains :depends-on :overlap</tt>"]
 
     # first modal incorrect
     response = client_umr.get("/edit", query_string={"num": 4, "prevmod": 3, "moddocgraph": "modal", "dg_subj": "s4p11", "dg_obj": "s4t", "dg_pred": ":full-affirmative", "dgpos": 0})

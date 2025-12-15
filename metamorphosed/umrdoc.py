@@ -190,16 +190,16 @@ class UMRDocGraph:
         msg = []
         if what == "coref":
             if not VARNAME.match(s):
-                msg.append("Bad %s subject: %s must be a variable matching <tt>%s</tt>" % (what, s, VARNAME.pattern))
+                msg.append("Bad %s subject: <tt>%s</tt>.it must be a variable matching <tt>%s</tt>" % (what, s, VARNAME.pattern))
             if not VARNAME.match(o):
-                msg.append("Bad %s object: %s a variable matching <tt>%s</tt>" % (what, o, VARNAME.pattern))
+                msg.append("Bad %s object: <tt>%s</tt>. It must be a variable matching <tt>%s</tt>" % (what, o, VARNAME.pattern))
         else:
             if not VARNAME.match(s) and s not in UMRDocGraph.valid_dg_rels[what].get("subjects", []):
-                msg.append("Bad %s subject: %s must be a variable matching <tt>%s</tt> or one of %s" % (what, s, VARNAME.pattern, UMRDocGraph.valid_dg_rels[what].get("subjects")))
+                msg.append("Bad %s subject: <tt>%s</tt>. It must be a variable matching <tt>%s</tt> or one of %s" % (what, s, VARNAME.pattern, UMRDocGraph.valid_dg_rels[what].get("subjects")))
             if not VARNAME.match(o) and o not in UMRDocGraph.valid_dg_rels[what].get("objects", []):
-                msg.append("Bad %s object: %s must be a variable matching <tt>%s</tt> or one of %s" % (what, o, VARNAME.pattern, UMRDocGraph.valid_dg_rels[what].get("objects")))
+                msg.append("Bad %s object: <tt>%s</tt>. It must be a variable matching <tt>%s</tt> or one of %s" % (what, o, VARNAME.pattern, UMRDocGraph.valid_dg_rels[what].get("objects")))
         if p not in UMRDocGraph.valid_dg_rels[what].get("predicates", []):
-            msg.append("Bad %s predicate: %s must be one of %s" % (what, p, UMRDocGraph.valid_dg_rels[what].get("predicates")))
+            msg.append("Bad %s predicate: <tt>%s</tt>. It must be one of <tt>%s</tt>" % (what, p, " ".join(UMRDocGraph.valid_dg_rels[what].get("predicates"))))
         if concepts:
             if o not in concepts and o not in UMRDocGraph.valid_dg_rels[what].get("objects", []):
                 msg.append("Bad %s object: %s is not a variable of Sentence level graph" % (what, o))
