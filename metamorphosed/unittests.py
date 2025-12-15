@@ -349,7 +349,7 @@ def test_info(client):
     response = client.get("/version")
     res = json.loads(response.data)
     # print("res", res, file=sys.stderr)
-    assert res == {'name': 'AMR Editor', 'version': '5.0.0rc8', 'apiversion': '2.0.0rc8'}
+    assert res == {'name': 'AMR Editor', 'version': '5.0.0rc9', 'apiversion': '2.0.0rc9'}
 
     response = client.get("/info", query_string={"withdata": True})
     res = json.loads(response.data)
@@ -513,7 +513,7 @@ def testumr_exportgraphs(client_umr):
     assert fobj.filename == "5.svg"
     contents = zfp.read(fobj.filename)
     #cp(dest="tmp/6.svg", contents=contents)
-    assert b'<svg width="889pt" height="565pt"' in contents
+    assert b'<svg width="896pt" height="589pt"' in contents
 
 
 def testumr_read(client_umr):

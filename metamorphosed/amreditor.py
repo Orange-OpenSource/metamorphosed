@@ -508,7 +508,9 @@ class AMRProcessor:
                 for varname in alignments[token]:
                     kwargs["style"] = "dashed"
                     kwargs["fontcolor"] = "black"
-                    graph.edge(tid, varname, label="%s - %s" % (tokens[token - 1], varname),
+                    graph.edge(tid, varname,
+                               #label="%s - %s" % (tokens[token - 1], varname),
+                               label="%s →\n %s/%s" % (tokens[token - 1], varname, self.vars.get(varname, "")),
                                id="tokenedge#%s#%s" % (tid,varname),
                                color="#888888",
                                #style="dashed",
