@@ -99,11 +99,12 @@ function getServerInfo() {
 				$("#tabs").tabs({ active: 1});
 			}
 
-			$("#filename").empty();
-			$("#filename").append(data.filename);
+			//$("#filename").empty();
+			$("#filename").text(data.filename);
 
-			$("#numsent").empty();
-			$("#numsent").append(data.numsent);
+			//$("#numsent").empty();
+			$("#numsent").text(data.numsent);
+
 			$("#sentnumlist").attr("placeholder", "1-" + data.numsent);
 			$("#version").empty();
 			$("#version").append(data.version);
@@ -640,6 +641,8 @@ function formatAMR(data) {
 		$("#save").hide();
 	}
 
+	$('#currentnum').text(data.num);
+
 	// set valid variables to <select> tags
 	$('.validvars').empty();
 
@@ -678,13 +681,22 @@ function formatAMR(data) {
 
 	var lastchanged = "";
 	if (data.lastchanged) {
-		lastchanged = " (" + data.lastchanged + ")";
+		//lastchanged = " (" + data.lastchanged + ")";
 	}
 	$('#innertext_' + currentsentnum).append("<h4>" + data.sentid + lastchanged);
 	var escapedtext = data.text; //.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-	$('#innertext_' + currentsentnum).append(escapedtext);
+	$('#innertext_' + currentsentnum).append('<div><span class="sentencetext">' + escapedtext);
+	if (data.lastchanged) {
+		$('#innertext_' + currentsentnum).append('<p/><div><span class="labeltext">Last changed:</span> <span class="infotext">' + data.lastchanged)
+	}
 
-
+	if (data.metainfo) {
+		// umr
+		$.each(data.metainfo,
+			function (key, value) {
+				$('#innertext_' + currentsentnum).append('<div><span class="labeltext">' + key + ':</span> <span class="infotext">' +value);
+			});
+	}
 
 	// toggle button to hide/show comments
 	// old version where comments were below tabs
@@ -743,7 +755,7 @@ function formatAMR(data) {
 		*/
 		$('#currentalignments').empty();
 		$('#currentalignments').append('<div id="innerwordindex_' + currentsentnum + '">');
-		$('#innerwordindex_' + currentsentnum).append('<h4 id="editwordsglosses">words</h4>');
+		$('#innerwordindex_' + currentsentnum).append('<h4 id="editwordsglosses">words <button class="addbutton mybutton" id="editwordsglosses">modify</button></h4>');
 		$('#innerwordindex_' + currentsentnum).append('<table id="tab_wordindex_' + currentsentnum + '">');
 		$('#tab_wordindex_' + currentsentnum).append('<tr id="tr_index_' + currentsentnum + '">');
 		$('#tab_wordindex_' + currentsentnum).append('<tr id="tr_word_' + currentsentnum + '">');
@@ -1094,11 +1106,13 @@ $(document).ready(function () {
 				//console.log("SUCCESS ", data);
 				formatAMR(data);
 
-				$("#filename").empty();
-				$("#filename").append(data.filename);
+				//$("#filename").empty();
+				//$("#filename").append(data.filename);
+				$("#filename").text(data.filename);
 
-				$("#numsent").empty();
-				$("#numsent").append(data.numsent);
+				//$("#numsent").empty();
+				//$("#numsent").append(data.numsent);
+				$("#numsent").text(data.numsent);
 				currentsentnum = data.num;
 
 			},
@@ -1153,11 +1167,13 @@ $(document).ready(function () {
 				//console.log("SUCCESS ", data);
 				formatAMR(data);
 
-				$("#filename").empty();
-				$("#filename").append(data.filename);
+				//$("#filename").empty();
+				//$("#filename").append(data.filename);
+				$("#filename").text(data.filename);
 
-				$("#numsent").empty();
-				$("#numsent").append(data.numsent);
+				//$("#numsent").empty();
+				//$("#numsent").append(data.numsent);
+				$("#numsent").text(data.numsent);
 				currentsentnum = data.num;
 
 			},

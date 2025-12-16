@@ -27,7 +27,11 @@
 <body>
     <div style="display: table;" >
         <img style="vertical-align: middle;" src="img/metamorphosed+.png" width="500px"/> &nbsp;
-        <span id="umrheader" class="onlyumr" style="display: none; font-size: larger; vertical-align: middle;">for UMR</span>
+        <span id="umrheader" class="onlyumr" style="display: none; font-size: larger; vertical-align: middle;">for UMR</span> 
+        <span id="fileinfo">
+            <div id="filename"></div>
+            <div><span id="currentnum"></span>/<span id="numsent"></span></div>
+        </span>
     </div>
     <p />
 
@@ -46,10 +50,9 @@
     <!--&nbsp;&nbsp;<button class="mybutton" id="choosesentence">sentence list</button-->
     <!--&nbsp;&nbsp;<button class="mybutton" id="togglehelp">toggle help</button-->
     &nbsp;&nbsp;<button class="mybutton" id="saveallSVG">export visualised graphs</button>
-    <p />
-    <button class="save mybutton" id="save">&#x1F4BE; save file</button> filename: <span id="filename"></span> (<span
-        id="numsent"></span> sentences)
-    <p />
+    <!--p /-->
+    <button class="save mybutton" id="save">&#x1F4BE; save file</button> <!-- filename: <span id="ddfilename"></span> (<span id="ddnumsent"></span> sentences)
+    <p /-->
 
     <div id="tabs">
         <ul>
@@ -498,7 +501,7 @@ Else the input is interpreted as regular expression" placeholder="regex/PENMAN" 
 
     <div class="editmode grouping" id="modwordsindexes" style="display:none"> 
         <button class="canceleditmode" id="cancelwords">&times;</button>
-        <h3>Modify Words/Indexes/Morphemes</h3>
+        <h3>Modify Words/Indices/Morphemes</h3>
         <div class="widiv">
         <span class="wilabel">Index:</span><input class="indexfield" placeholder="1 2 ..." title="Word indexes"
                         type="text" id="modindexes" value="">
