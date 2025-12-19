@@ -845,6 +845,51 @@ class AMR_Edit_Server:
 
             return prepare_newpage(sentnum, compare=compare, reverse_of=reverse_of, withalignments=withalignments)
 
+        @app.route('/js', methods=["GET"])
+        def js():
+            sentnum = self.checkParameter(request, 'num', 'integer', isOptional=False, defaultValue=None)
+            if sentnum < 1 or sentnum > len(self.amrdoc.sentences):
+                dico = {"error": "invalid sentence number: must be between 1 and %d" % len(self.amrdoc.sentences)}
+                return Response("%s\n" % json.dumps(dico),
+                                400, mimetype="application/json")
+            cursentence = self.amrdoc.sentences[sentnum - 1]
+            if sentnum not in self.aps:
+                ap = amreditor.AMRProcessor()
+                self.aps[sentnum] = ap
+                ap.readpenman(cursentence.amr)
+
+            else:
+                ap = self.aps[sentnum]
+                if not ap.isparsed:
+                    ap.readpenman(cursentence.amr)
+
+            nodes = []
+            links = []
+            vars = set()
+            ct = 0
+            for s, p, o in ap.triples:
+                if p == ":instance":
+                    ct += 1
+                    vars.add(s)
+                    nodes.append({"id": s, "name": "%s / %s" % (s,o), "typ": "inst"})
+            for s, p, o in ap.triples:
+                if p != ":instance":
+                    if p.endswith("-of") and not p.startswith(":consist"):
+                        tmp = o
+                        o = s
+                        s = tmp
+                        p = p[:-3]
+                    if o in vars:
+                        links.append({"source": s, "target": o, "label": p[1:]})
+                    else:
+                        nodes.append({"id": ct, "name": '%s' % o, "typ": "lit"})
+                        links.append({"source": s, "target": ct, "label": p[1:]})
+                        ct += 1
+            dico = { "graph": {"nodes": nodes, "links": links},
+                     "sentence": cursentence.text}
+            #print("DICO", sentnum, dico)
+            return Response("%s\n" % json.dumps(dico), 200, mimetype="application/json")
+
         @app.route('/read', methods=["GET"])
         def read():
             sentnum = self.checkParameter(request, 'num', 'integer', isOptional=False, defaultValue=None)
@@ -868,16 +913,20 @@ class AMR_Edit_Server:
             lines = []
             for typ, col in amreditor.orangecolors.items():
                 typ = typ[1:] #.replace("-", "")
-                lines.append(".%s { background-color: %s; " % (typ, col))
+                #lines.append(".%s { background-color: %s; " % (typ, col))
+                lines.append(".%s { background-color: %s; fill: %s; stroke: %s;" % (typ, col, col, col))
+                
                 light = (int(col[1:3], 16) + int(col[3:5], 16) + int(col[5:], 16)) / 3
                 if light < 0x80:
                     lines.append("color: white;")
-                lines.append("}")
-                lines.append(".%stext { color: %s; " % (typ, col))
+                lines.append("}\n")
+                #lines.append(".%stext { color: %s; " % (typ, col))
+                lines.append(".%stext { color: %s; fill: %s;" % (typ, col, col))
                 if light > 0xb0:
                     lines.append("background-color: #111111")
-                lines.append("}")
-            return Response("\n".join(lines), 200, mimetype="text/css")
+                lines.append("}\n")
+            print("CSS"," ".join(lines))
+            return Response(" ".join(lines), 200, mimetype="text/css")
 
         @app.route('/graphs/<filename>', methods=["GET"])
         def downloadgraphs(filename: str):

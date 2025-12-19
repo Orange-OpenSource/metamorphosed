@@ -342,13 +342,11 @@ input {
   vertical-align: baseline;
 }
 
-
-
 .reifrelations {
   background-color: #b5e8f7;
   border-radius: 5px;
   border: solid 1px #959595;
- }
+}
 
 .conceptfield {
   width: 12em;
@@ -360,7 +358,6 @@ input {
   background-color: #ffe5cc;
 }
 
-
 .textfield,
 .amrfield {
   width: 180px;
@@ -368,7 +365,6 @@ input {
   border-radius: 5px;
   border: solid 1px #959595;
   padding-left: 3px;
-
 }
 
 .varfield, .validvars, .unalignedvars {
@@ -404,7 +400,6 @@ input {
 .noborder {
   border: 0px;
 }
-
 
 .editmode {
   /*border: 1px solid #d6d6d6;
@@ -514,8 +509,6 @@ td.framealiastable {
   border-collapse: collapse;
 }
 
-
-
 .framemorpho {
   font-style: italic;
 }
@@ -539,15 +532,15 @@ td.framealiastable {
 }
 
 .literal {
- font-style: italic;
- }
+  font-style: italic;
+}
+
 .conceptslash {
   font-weight: bold;
 }
 
 .modal {
   display: none;
-
   /* height: 400px; */
   /* margin: 0 auto; */
   position: absolute;
