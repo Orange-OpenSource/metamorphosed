@@ -878,8 +878,8 @@ function formatAMR(data) {
 	// penman graph in an inner div
 	$("#g1resultat").append('<div class="penman" id="penman_' + currentsentnum + '">');
 	$('#penman_' + currentsentnum).append('<pre id="amr_' + currentsentnum + '">');
-	//$('#amr_' + currentsentnum).append(highlight_pm(data.penman));
-	$('#amr_' + currentsentnum).append(data.penman);
+	$('#amr_' + currentsentnum).append(highlight_pm(data.penman));
+	//$('#amr_' + currentsentnum).append(data.penman);
 
 	if ('#amr_' + currentsentnum in visible_divselectors && visible_divselectors['#amr_' + currentsentnum] == false) {
 		ToggleDiv('#amr_' + currentsentnum, "#togglepenman");
@@ -890,7 +890,8 @@ function formatAMR(data) {
 			$(".editmode").hide();
 			$("#modpenman").show();
 		}
-		$("#modifiedpenman").val($('#amr_' + currentsentnum).html());
+		//$("#modifiedpenman").val("EEEE" + $('#amr_' + currentsentnum).html());
+		$("#modifiedpenman").val(data.penman);
 	});
 
 

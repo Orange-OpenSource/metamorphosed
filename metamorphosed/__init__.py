@@ -848,7 +848,12 @@ class AMR_Edit_Server:
         @app.route('/js', methods=["GET"])
         def js():
             sentnum = self.checkParameter(request, 'num', 'integer', isOptional=False, defaultValue=None)
-            if sentnum < 1 or sentnum > len(self.amrdoc.sentences):
+            direction = self.checkParameter(request, 'direction', 'string', isOptional=True, defaultValue=None)
+            if direction == "last":
+                sentnum = len(self.amrdoc.sentences)
+            elif direction == "first":
+                sentnum = 1
+            elif sentnum < 1 or sentnum > len(self.amrdoc.sentences):
                 dico = {"error": "invalid sentence number: must be between 1 and %d" % len(self.amrdoc.sentences)}
                 return Response("%s\n" % json.dumps(dico),
                                 400, mimetype="application/json")
@@ -867,11 +872,16 @@ class AMR_Edit_Server:
             links = []
             vars = set()
             ct = 0
+            top = False
             for s, p, o in ap.triples:
                 if p == ":instance":
                     ct += 1
                     vars.add(s)
                     nodes.append({"id": s, "name": "%s / %s" % (s,o), "typ": "inst"})
+                    if not top:
+                        nodes.append({"id": "top", "name": "TOP", "typ": "topnode"})
+                        links.append({"source": "top", "target": s, "label": "top"})
+                        top = True
             for s, p, o in ap.triples:
                 if p != ":instance":
                     if p.endswith("-of") and not p.startswith(":consist"):
@@ -885,8 +895,12 @@ class AMR_Edit_Server:
                         nodes.append({"id": ct, "name": '%s' % o, "typ": "lit"})
                         links.append({"source": s, "target": ct, "label": p[1:]})
                         ct += 1
-            dico = { "graph": {"nodes": nodes, "links": links},
-                     "sentence": cursentence.text}
+            pm, svg = ap.show() #tokenalignments=tokenalignments, reverse_of=reverse_of)
+            dico = {"graph": {"nodes": nodes, "links": links},
+                    "sentence": cursentence.text,
+                    "penman": pm,
+                    "num": sentnum
+                    }
             #print("DICO", sentnum, dico)
             return Response("%s\n" % json.dumps(dico), 200, mimetype="application/json")
 
@@ -910,22 +924,40 @@ class AMR_Edit_Server:
         @app.route('/css/<filename>', methods=["GET"])
         def getfile(filename):
             # get CSS file which defines colours of relations (same colors as amreditor.py uses to create graph)
+            print("FF", filename)
             lines = []
-            for typ, col in amreditor.orangecolors.items():
-                typ = typ[1:] #.replace("-", "")
-                #lines.append(".%s { background-color: %s; " % (typ, col))
-                lines.append(".%s { background-color: %s; fill: %s; stroke: %s;" % (typ, col, col, col))
-                
-                light = (int(col[1:3], 16) + int(col[3:5], 16) + int(col[5:], 16)) / 3
-                if light < 0x80:
-                    lines.append("color: white;")
-                lines.append("}\n")
-                #lines.append(".%stext { color: %s; " % (typ, col))
-                lines.append(".%stext { color: %s; fill: %s;" % (typ, col, col))
-                if light > 0xb0:
-                    lines.append("background-color: #111111")
-                lines.append("}\n")
-            print("CSS"," ".join(lines))
+            if filename == "relations.css":
+                # editor
+                for typ, col in amreditor.orangecolors.items():
+                    typ = typ[1:] #.replace("-", "")
+                    # edge style
+                    lines.append(".%s { background-color: %s;" % (typ, col))
+
+                    light = (int(col[1:3], 16) + int(col[3:5], 16) + int(col[5:], 16)) / 3
+                    if light < 0x80:
+                        lines.append("color: white;")
+                    lines.append("}\n")
+
+                    # edge label style
+                    lines.append(".%stext { color: %s; " % (typ, col))
+
+                    if light > 0xa0:
+                        lines.append("background-color: #111111")
+                    lines.append("}\n")
+            else:
+                # D3 animation
+                for typ, col in amreditor.orangecolors.items():
+                    typ = typ[1:] #.replace("-", "")
+                    # edge style
+                    lines.append(".%sd3 { fill: %s; stroke: %s;" % (typ, col, col))
+
+                    #light = (int(col[1:3], 16) + int(col[3:5], 16) + int(col[5:], 16)) / 3
+                    lines.append("}\n")
+
+                    # edge label style
+                    lines.append(".%stextd3 { fill: %s;" % (typ, col))
+                    lines.append("}\n")
+            #print("CSS"," ".join(lines))
             return Response(" ".join(lines), 200, mimetype="text/css")
 
         @app.route('/graphs/<filename>', methods=["GET"])

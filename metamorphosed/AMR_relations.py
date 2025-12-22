@@ -41,6 +41,7 @@
 import random
 import metamorphosed.colorlist as colorlist
 
+# predifined colors, the rest is taken randomly from a predefined lists of colors in colorlist.py
 orangecolors = {
     ":ARG0": "#ff7900",
     ":actor": "#ff7900",
@@ -83,6 +84,7 @@ orangecolors = {
 
 class Relations:
     def __init__(self, relfn, isconceptlist=False):
+        random.seed(22) # need this to have stable colors (inf not, unittest will fail, since colors change every time ...)
         self.isconceptlist = isconceptlist
         self.relations = set() # :ARG0, :mod, ...
 
@@ -99,7 +101,6 @@ class Relations:
                     orangecolors[line] = self.getnewcolor()
 
     def getnewcolor(self):
-        random.seed(22) # need this to have stable colors (inf not, unittest will fail, since colors change every time ...)
         return random.choice(list(colorlist.colorlist.values()))
 
     def validate(self, triples):

@@ -49,7 +49,6 @@ import metamorphosed.amr_comparison as amr_comparison
 
 from metamorphosed.AMR_relations import orangecolors as orangecolors
 
-#VERSION = "5.0.0rc7"
 
 # terminology
 # instance  a / ...
@@ -108,6 +107,8 @@ colorlist = [
     ]
 
 ONESPACE = re.compile("[ \n\t]+")
+
+PENMAN_INDENT = 3 # default: -1
 
 
 class AMRProcessor:
@@ -526,7 +527,7 @@ class AMRProcessor:
                 return self.lastpm, None
 
             try:
-                pm = penman.encode(penman.Graph(self.triples, top=self.top))
+                pm = penman.encode(penman.Graph(self.triples, top=self.top), indent=PENMAN_INDENT)
                 self.lastpm = pm
                 self.readpenman(pm)
                 self.lastsvg = self.dot(highlightinstances, highlightrelations, highlightconcepts=highlightconcepts, format=format, inverse_of=reverse_of, tokenalignments=tokenalignments)
@@ -545,7 +546,7 @@ class AMRProcessor:
                     for tr in self.triples:
                         if tr[0] in sg or (tr[2] in sg and tr[1] != ":instance"):
                             triples.append(tr)
-                    pm = penman.encode(penman.Graph(triples))
+                    pm = penman.encode(penman.Graph(triples), indent=PENMAN_INDENT)
                     pms.append(pm)
                     # print("DISCONNECTED", pm)
 
@@ -584,7 +585,7 @@ class AMRProcessor:
             return "%s" % self.lastpm, self.lastsvg #self.lastsvg_canonised
         else:
             try:
-                pm = penman.encode(penman.Graph(self.triples, top=self.top))
+                pm = penman.encode(penman.Graph(self.triples, top=self.top), indent=PENMAN_INDENT)
                 print(pm)
                 for i, t in enumerate(self.triples):
                     print("%d" % (i + 1), t)

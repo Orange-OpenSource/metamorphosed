@@ -349,7 +349,7 @@ def test_info(client):
     response = client.get("/version")
     res = json.loads(response.data)
     # print("res", res, file=sys.stderr)
-    assert res == {'name': 'AMR Editor', 'version': '5.0.0rc9', 'apiversion': '2.0.0rc9'}
+    assert res == {'name': 'AMR Editor', 'version': '5.0.0rc10', 'apiversion': '2.0.0rc10'}
 
     response = client.get("/info", query_string={"withdata": True})
     res = json.loads(response.data)
@@ -471,8 +471,8 @@ def test_exportgraphs(client):
 def test_read(client):
     response = client.get("/read", query_string={"num": 9})
     res = json.loads(response.data)
-    #print("res", res, file=sys.stderr)
-    assert res["penman"] == '(h / have-org-role-91\n   :ARG0 (p / person\n            :name (n / name\n                     :op4 "Barack"\n                     :op2 "Hussein"\n                     :op3 "Obama"))\n   :ARG1 (c / country\n            :name (n2 / name\n                      :op2 "United"\n                      :op2 "States"))\n   :ARG2 (p2 / president\n             :ord (o / ordinal-entity\n                     :value 44)))'
+    print("res", res["penman"], file=sys.stderr)
+    assert res["penman"] == '(h / have-org-role-91\n   :ARG0 (p / person\n      :name (n / name\n         :op4 "Barack"\n         :op2 "Hussein"\n         :op3 "Obama"))\n   :ARG1 (c / country\n      :name (n2 / name\n         :op2 "United"\n         :op2 "States"))\n   :ARG2 (p2 / president\n      :ord (o / ordinal-entity\n         :value 44)))'
     assert '<h2>have-org-role</h2>\n<h3>have-org-role.91:' in res["framedoc"]
     assert res['filename'].endswith('metamorphosed/data/testamr.txt')
     assert res['warning'] == ['more than one relation label « :op2 » start at instance « n2 »', 'incoherent :opNN numbering for instance « n »: 4, 2, 3', 'incoherent :opNN numbering for instance « n2 »: 2, 2']
@@ -513,7 +513,7 @@ def testumr_exportgraphs(client_umr):
     assert fobj.filename == "5.svg"
     contents = zfp.read(fobj.filename)
     #cp(dest="tmp/6.svg", contents=contents)
-    assert b'<svg width="896pt" height="589pt"' in contents
+    assert b'<svg width="897pt" height="589pt"' in contents
 
 
 def testumr_read(client_umr):
@@ -806,7 +806,7 @@ def test_edit_first(client):
     response = client.get("/next", query_string={"num": 8, "direction": "first"})
     res = json.loads(response.data)
     #print("res", json.dumps(res, indent=2))
-    assert "(m / multi-sentence\n   :snt1 (b / bear-02\n            :ARG1 (p / person\n" in res["penman"]
+    assert "(m / multi-sentence\n   :snt1 (b / bear-02\n      :ARG1 (p / person\n" in res["penman"]
 
 
 def test_edit_last(client):
@@ -814,7 +814,7 @@ def test_edit_last(client):
     response = client.get("/next", query_string={"num": 8, "direction": "last"})
     res = json.loads(response.data)
     #print("res", json.dumps(res, indent=2))
-    assert "(h / have-org-role-91\n   :ARG0 (p / person\n            :name (n / name\n                     :op1 \"Joe\"\n" in res["penman"]
+    assert "(h / have-org-role-91\n   :ARG0 (p / person\n      :name (n / name\n         :op1 \"Joe\"\n" in res["penman"]
     assert res["num"] == 26
 
 
@@ -877,7 +877,7 @@ def test_edit_addedge_with_concepts(client):
     res = json.loads(response.data)
     #print("res", json.dumps(res, indent=2))
     assert res["warning"] is None
-    assert res["penman"] == "(g / go-02\n   :ARG0 (m / man)\n   :ARG4 (w / work-01\n            :ARG0 m))"
+    assert res["penman"] == "(g / go-02\n   :ARG0 (m / man)\n   :ARG4 (w / work-01\n      :ARG0 m))"
     #assert 1 == 2
 
 
@@ -888,7 +888,7 @@ def test_edit_modconcept(client):
     res = json.loads(response.data)
     #print("res", json.dumps(res, indent=2))
     assert res["warning"] == ['«bark-02» is not a defined propbank roleset']
-    assert res["penman"] == "(b / bark-02\n   :ARG0 (d / dog\n            :mod (l / little))\n   :ARG2 (d2 / dog\n             :mod (b2 / big)))"
+    assert res["penman"] == "(b / bark-02\n   :ARG0 (d / dog\n      :mod (l / little))\n   :ARG2 (d2 / dog\n      :mod (b2 / big)))"
     #assert 1 == 2
 
 
@@ -897,7 +897,7 @@ def test_edit_addname(client):
     response = client.get("/edit", query_string={"num": 4, "prevmod": 1, "addname": "Little Dog", "nameof": "d"})
     res = json.loads(response.data)
     print("res", json.dumps(res["penman"], indent=2))
-    assert res["penman"] == "(b / bark-02\n   :ARG0 (d / dog\n            :mod (l / little)\n            :name (n / name\n                     :op1 \"Little\"\n                     :op2 \"Dog\"))\n   :ARG2 (d2 / dog\n             :mod (b2 / big)))"
+    assert res["penman"] == '(b / bark-02\n   :ARG0 (d / dog\n      :mod (l / little)\n      :name (n / name\n         :op1 "Little"\n         :op2 "Dog"))\n   :ARG2 (d2 / dog\n      :mod (b2 / big)))'
 
 
 def test_edit_modconcept_wrong_concept(client):
@@ -942,7 +942,7 @@ def test_edit_deledge(client):
     response = client.get("/edit", query_string={"num": 7, "deledge_start": "b", "deledge_end": "a", "deledge": ":ARG1"})
     res = json.loads(response.data)
     #print("res", json.dumps(res, indent=2))
-    assert res["penman"] == "(a / apple\n   :quant 100)\n\n(b / buy-01\n   :ARG0 (c / child\n            :quant 100\n            :poss s)\n   :ARG4 (s / school\n            :quant 100)\n   :ARG3 (m / monetary-quantity\n            :quant 100\n            :unit (e / euro)))"
+    assert res["penman"] == "(a / apple\n   :quant 100)\n\n(b / buy-01\n   :ARG0 (c / child\n      :quant 100\n      :poss s)\n   :ARG4 (s / school\n      :quant 100)\n   :ARG3 (m / monetary-quantity\n      :quant 100\n      :unit (e / euro)))"
 
 
 def test_edit_deledge2(client):
@@ -950,7 +950,7 @@ def test_edit_deledge2(client):
     response = client.get("/edit", query_string={"num": 20, "deledge_start": "m", "deledge_end": "a", "deledge": ":snt1"})
     res = json.loads(response.data)
     #print("res", json.dumps(res, indent=2))
-    assert res["penman"] == "(a / and\n   :op1 (g / guess-01\n           :ARG0 (i / i)\n           :ARG1 (o / overload-01\n                    :ARG1 (c / capacity\n                             :mod (c2 / carry-01)\n                             :poss (t2 / tower\n                                       :part-of (s / station\n                                                   :mod (b / base))))\n                    :degree (t / total)))\n   :op2 (g2 / get-through-12\n            :polarity -\n            :ARG0 i\n            :degree (a2 / at-all)))\n\n(m / multi-sentence\n   :snt2 (c3 / contrast-01\n             :ARG1 (p / possible-01\n                      :ARG1 (f / find-01\n                               :ARG0 (i3 / i)\n                               :ARG1 (s2 / signal))\n                      :mod (o2 / only))\n             :ARG2 (c4 / chance-02\n                       :polarity -\n                       :ARG1 (c5 / connect-01\n                                 :ARG0 i3\n                                 :ARG2 (i2 / internet)))))"
+    assert res["penman"] == "(a / and\n   :op1 (g / guess-01\n      :ARG0 (i / i)\n      :ARG1 (o / overload-01\n         :ARG1 (c / capacity\n            :mod (c2 / carry-01)\n            :poss (t2 / tower\n               :part-of (s / station\n                  :mod (b / base))))\n         :degree (t / total)))\n   :op2 (g2 / get-through-12\n      :polarity -\n      :ARG0 i\n      :degree (a2 / at-all)))\n\n(m / multi-sentence\n   :snt2 (c3 / contrast-01\n      :ARG1 (p / possible-01\n         :ARG1 (f / find-01\n            :ARG0 (i3 / i)\n            :ARG1 (s2 / signal))\n         :mod (o2 / only))\n      :ARG2 (c4 / chance-02\n         :polarity -\n         :ARG1 (c5 / connect-01\n            :ARG0 i3\n            :ARG2 (i2 / internet)))))"
 
 
 def test_edit_delinstance(client):
@@ -958,7 +958,7 @@ def test_edit_delinstance(client):
     response = client.get("/edit", query_string={"num": 1, "delinstance": "p"})
     res = json.loads(response.data)
     #print("res", json.dumps(res, indent=2))
-    assert res["penman"] == "(m / multi-sentence\n   :snt1 (b / bear-02\n            :location (c / city\n                         :name (n2 / name\n                                   :op1 \"London\")\n                         :wiki \"Q84\"))\n   :snt2 (l / live-01\n            :location c\n            :mod (s / still)))\n\n(n / name\n   :op1 \"Naomie\")"
+    assert res["penman"] == '(m / multi-sentence\n   :snt1 (b / bear-02\n      :location (c / city\n         :name (n2 / name\n            :op1 "London")\n         :wiki "Q84"))\n   :snt2 (l / live-01\n      :location c\n      :mod (s / still)))\n\n(n / name\n   :op1 "Naomie")'
 
 
 def test_edit_settop(client):
@@ -971,7 +971,7 @@ def test_edit_settop(client):
     response = client.get("/edit", query_string={"num": 10, "prevmod": 1, "newtop": "p"})
     res = json.loads(response.data)
     #print("res", json.dumps(res, indent=2))
-    assert res["penman"] == "(p / person\n   :ARG0-of (t / teach-01\n               :ARG1 (h / history)))"
+    assert res["penman"] == "(p / person\n   :ARG0-of (t / teach-01\n      :ARG1 (h / history)))"
 
 
 def test_edit_settop2(client):
@@ -979,7 +979,7 @@ def test_edit_settop2(client):
     response = client.get("/edit", query_string={"num": 10, "prevmod": 2, "newtop": "xx"})
     res = json.loads(response.data)
     #print("res", json.dumps(res, indent=2))
-    assert res["penman"] == "(p / person\n   :ARG0-of (t / teach-01\n               :ARG1 (h / history)))"
+    assert res["penman"] == "(p / person\n   :ARG0-of (t / teach-01\n      :ARG1 (h / history)))"
     assert res["warning"] == ["invalid instance variable xx"]
 
 
@@ -988,7 +988,7 @@ def test_edit_move_relation_start(client):
     response = client.get("/edit", query_string={"num": 5, "prevmod": 1, "modedge_start": "c2", "modedge_end": "n2", "modedge_newstart": "h", "newedge": "not_used"})
     res = json.loads(response.data)
     #print("res", json.dumps(res, indent=2))
-    assert res["penman"] == '(h / have-org-role-91\n   :ARG0 (c / city\n            :name (n / name\n                     :op1 "Cardiff")\n            :wiki "Q10690")\n   :ARG1 (c2 / country\n             :wiki "Q25")\n   :ARG2 (c3 / capital)\n   :not_used (n2 / name\n                 :op1 "Wales"))'
+    assert res["penman"] == '(h / have-org-role-91\n   :ARG0 (c / city\n      :name (n / name\n         :op1 "Cardiff")\n      :wiki "Q10690")\n   :ARG1 (c2 / country\n      :wiki "Q25")\n   :ARG2 (c3 / capital)\n   :not_used (n2 / name\n      :op1 "Wales"))'
 
 
 def test_edit_move_relation_wrong_start(client):
@@ -1004,11 +1004,8 @@ def test_edit_delliteral(client):
     response = client.get("/edit", query_string={"num": 21, "prevmod": 1, "delliteral": "Q183", "literalid": "c2", "literaledge": ":wiki"})
     res = json.loads(response.data)
     #print("res", res)
-    assert res["penman"] == '(h / have-org-role-91\n   :ARG0 (c / city\n            :name (n / name\n                     :op1 "Berlin")\n            :wiki "Q64")\n   :ARG1 (c2 / country\n             :name (n2 / name\n                       :op1 "Germany"))\n   :ARG2 (c3 / capital))'
-
-#    '(h / have-org-role-91\n   :ARG0 (c / city\n            :name (n / name\n                     :op1 "Cardiff"))\n   :ARG1 (c2 / country\n             :name (n2 / name\n                       :op1 "Wales")\n             :wiki "Q25")\n   :ARG2 (c3 / capital))'
-
-# depends on success of preceding test
+    assert res["penman"] == '(h / have-org-role-91\n   :ARG0 (c / city\n      :name (n / name\n         :op1 "Berlin")\n      :wiki "Q64")\n   :ARG1 (c2 / country\n      :name (n2 / name\n         :op1 "Germany"))\n   :ARG2 (c3 / capital))'
+    # depends on success of preceding test
 
 
 def test_edit_modliteral(client):
@@ -1016,9 +1013,8 @@ def test_edit_modliteral(client):
     response = client.get("/edit", query_string={"num": 21, "prevmod": 1, "literalid": "c", "literaledge": ":wiki", "newliteral": "Q64AA"})
     res = json.loads(response.data)
     #print("res", json.dumps(res, indent=2))
-    assert res["penman"] == '(h / have-org-role-91\n   :ARG0 (c / city\n            :name (n / name\n                     :op1 "Berlin")\n            :wiki "Q64AA")\n   :ARG1 (c2 / country\n             :name (n2 / name\n                       :op1 "Germany"))\n   :ARG2 (c3 / capital))'
-
-    #'(h / have-org-role-91\n   :ARG0 (c / city\n            :name (n / name\n                     :op1 "Cardiff")\n            :wiki "Q10690")\n   :ARG1 (c2 / country\n             :name (n2 / name\n                       :op1 "Wales")\n             :wiki "Q2AA")\n   :ARG2 (c3 / capital))'
+    # depends on earlier test
+    assert res["penman"] == '(h / have-org-role-91\n   :ARG0 (c / city\n      :name (n / name\n         :op1 "Berlin")\n      :wiki "Q64AA")\n   :ARG1 (c2 / country\n      :name (n2 / name\n         :op1 "Germany"))\n   :ARG2 (c3 / capital))'
 
 
 def test_edit_addliteral(client):
@@ -1026,14 +1022,13 @@ def test_edit_addliteral(client):
     response = client.get("/edit", query_string={"num": 14, "prevmod": 1, "literalof": "b", "relationforliteral": "quant", "newliteral": 5})
     res = json.loads(response.data)
     #print("res", json.dumps(res, indent=2))
-    assert res["penman"] == "(bbb / want-01\n     :polarity -\n     :ARG0 (m / man\n              :ARG0-of (r / repair-01\n                          :ARG1 (b / bike\n                                   :quant 5)))\n     :ARG1 (p / pay-01\n              :ARG2 m))"
-
+    assert res["penman"] == '(bbb / want-01\n   :polarity -\n   :ARG0 (m / man\n      :ARG0-of (r / repair-01\n         :ARG1 (b / bike\n            :quant 5)))\n   :ARG1 (p / pay-01\n      :ARG2 m))'
     #"(k / kill-01\n   :ARG0 (c / cat\n            :quant 5)\n   :ARG1 (m / mouse))"
 
     response = client.get("/edit", query_string={"num": 2, "prevmod": 1, "literalof": "m", "relationforliteral": "tag", "newliteral": "My Mouse"})
     res = json.loads(response.data)
     #print("res", json.dumps(res, indent=2))
-    assert res["penman"] == "(k / kill-01\n   :ARG0 (c / cat)\n   :ARG2 (m / mouse\n            :tag \"My Mouse\"))"
+    assert res["penman"] == "(k / kill-01\n   :ARG0 (c / cat)\n   :ARG2 (m / mouse\n      :tag \"My Mouse\"))"
 
 
 def test_read_nointeger(client):
@@ -1170,31 +1165,31 @@ def test_edgepredictor(client2):
     #print("res", res["penman"])
     assert res["penman"] == """(m / multi-sentence
    :snt1 (a / and
-            :op1 (g / guess-01
-                    :ARG0 (i / i)
-                    :ARG1 (o / overload-01
-                             :ARG1 (c / capacity
-                                      :mod (c2 / carry-01)
-                                      :poss (t2 / tower
-                                                :part-of (s / station
-                                                            :mod (b / base)))
-                                      :mod i)
-                             :degree (t / total)))
-            :op2 (g2 / get-through-12
-                     :polarity -
-                     :ARG0 i
-                     :degree (a2 / at-all)))
+      :op1 (g / guess-01
+         :ARG0 (i / i)
+         :ARG1 (o / overload-01
+            :ARG1 (c / capacity
+               :mod (c2 / carry-01)
+               :poss (t2 / tower
+                  :part-of (s / station
+                     :mod (b / base)))
+               :mod i)
+            :degree (t / total)))
+      :op2 (g2 / get-through-12
+         :polarity -
+         :ARG0 i
+         :degree (a2 / at-all)))
    :snt2 (c3 / contrast-01
-             :ARG1 (p / possible-01
-                      :ARG1 (f / find-01
-                               :ARG0 (i3 / i)
-                               :ARG1 (s2 / signal))
-                      :mod (o2 / only))
-             :ARG2 (c4 / chance-02
-                       :polarity -
-                       :ARG1 (c5 / connect-01
-                                 :ARG0 i3
-                                 :ARG2 (i2 / internet)))))"""
+      :ARG1 (p / possible-01
+         :ARG1 (f / find-01
+            :ARG0 (i3 / i)
+            :ARG1 (s2 / signal))
+         :mod (o2 / only))
+      :ARG2 (c4 / chance-02
+         :polarity -
+         :ARG1 (c5 / connect-01
+            :ARG0 i3
+            :ARG2 (i2 / internet)))))"""
 
 
 def test_search_comment(client):
@@ -1329,7 +1324,7 @@ def test_edit_deledge_notexist(client):
     response = client.get("/edit", query_string={"num": 11, "prevmod": 1, "deledge_start": "k", "deledge_end": "p", "deledge": ":ARG1111"})
     res = json.loads(response.data)
     #print("res", json.dumps(res, indent=2))
-    assert res["penman"] == '(k / murder-01\n   :ARG0 (a / amr-unknown)\n   :ARG1 (p / person\n            :name (n / name\n                     :op1 "JFK")\n            :wiki "Q9696"))'
+    assert res["penman"] == '(k / murder-01\n   :ARG0 (a / amr-unknown)\n   :ARG1 (p / person\n      :name (n / name\n         :op1 "JFK")\n      :wiki "Q9696"))'
 
 
 def test_bad_api_usage(client):
@@ -1413,7 +1408,7 @@ def test_joingraph(client):
                                                  "mappings": 'n2/n p/c'})
     res = json.loads(response.data)
     #print("res", res["penman"])
-    assert res["penman"] == "(a / advance-01\n   :ARG1 (a2 / army\n             :mod (c / country\n                     :name (n / name\n                              :op1 \"Macedonia\")))\n   :extent (f / far\n              :ARG2-of (h / have-degree-91\n                          :ARG1 a2\n                          :ARG3 (e / equal)\n                          :ARG4 (p / pass\n                                   :name (n2 / name\n                                             :op1 \"Thermopylae\")\n                                   :ARG0-of (d / divide-02\n                                               :ARG1 (c2 / country\n                                                         :name (n3 / name\n                                                                   :op1 \"Greece\"))\n                                               :ARG2 (p2 / part\n                                                         :quant 2))))))"
+    assert res["penman"] == '(a / advance-01\n   :ARG1 (a2 / army\n      :mod (c / country\n         :name (n / name\n            :op1 "Macedonia")))\n   :extent (f / far\n      :ARG2-of (h / have-degree-91\n         :ARG1 a2\n         :ARG3 (e / equal)\n         :ARG4 (p / pass\n            :name (n2 / name\n               :op1 "Thermopylae")\n            :ARG0-of (d / divide-02\n               :ARG1 (c2 / country\n                  :name (n3 / name\n                     :op1 "Greece"))\n               :ARG2 (p2 / part\n                  :quant 2))))))'
 
 
 def test_joingraph_bad(client):
@@ -1464,7 +1459,7 @@ def test_reify(client):
     response = client.get("/edit", query_string={"num": 3, "reify": ":location <>  be-located-at-91"})
     res = json.loads(response.data)
     #print("res", json.dumps(res["penman"], indent=2))
-    assert res["penman"] == '(k / kill-01\n   :ARG0 (c / cat)\n   :ARG1 (m / mouse)\n   :ARG1-of (zzz0 / be-located-at-91\n                  :ARG2 (k2 / kitchen))\n   :time (d / date-entity\n            :dayperiod (n / night)))'
+    assert res["penman"] == '(k / kill-01\n   :ARG0 (c / cat)\n   :ARG1 (m / mouse)\n   :ARG1-of (zzz0 / be-located-at-91\n      :ARG2 (k2 / kitchen))\n   :time (d / date-entity\n      :dayperiod (n / night)))'
 
 
 def test_dereify(client):
@@ -1472,7 +1467,7 @@ def test_dereify(client):
     response = client.get("/edit", query_string={"num": 3, "prevmod": 1, "dereify": ":location <>  be-located-at-91"})
     res = json.loads(response.data)
     #print("res2", json.dumps(res["penman"], indent=2))
-    assert res["penman"] == '(k / kill-01\n   :ARG0 (c / cat)\n   :ARG1 (m / mouse)\n   :location (k2 / kitchen)\n   :time (d / date-entity\n            :dayperiod (n / night)))'
+    assert res["penman"] == '(k / kill-01\n   :ARG0 (c / cat)\n   :ARG1 (m / mouse)\n   :location (k2 / kitchen)\n   :time (d / date-entity\n      :dayperiod (n / night)))'
 
 
 def test_renamevar(client):
@@ -1480,7 +1475,7 @@ def test_renamevar(client):
     response = client.get("/edit", query_string={"num": 25, "oldvarname": "a", "newvarname": "aaa"})
     res = json.loads(response.data)
     #print("res2", json.dumps(res["penman"], indent=2))
-    assert res["penman"] == '(e / eat-01\n   :ARG0 (h / person\n            :name (n / name\n                     :op1 "e"))\n   :ARG1 (aaa / apple\n              :quant 2)\n   :time (d / date-entity\n            :day 2\n            :month 2\n            :year 2022))'
+    assert res["penman"] == '(e / eat-01\n   :ARG0 (h / person\n      :name (n / name\n         :op1 "e"))\n   :ARG1 (aaa / apple\n      :quant 2)\n   :time (d / date-entity\n      :day 2\n      :month 2\n      :year 2022))'
 
 
 def test_renamevar_exsting_or_bad_var(client):
@@ -1510,7 +1505,7 @@ def test_reify_dereify_additional_edge(client):
     res = json.loads(response.data)
     print("res", json.dumps(res, indent=2))
 
-    assert res["penman"] == '(k / kill-01\n   :ARG0 (c / cat)\n   :ARG1 (m / mouse)\n   :ARG1-of (zzz0 / be-located-at-91\n                  :ARG2 (k2 / kitchen)\n                  :manner (f / fast))\n   :time (d / date-entity\n            :dayperiod (n / night)))'
+    assert res["penman"] == '(k / kill-01\n   :ARG0 (c / cat)\n   :ARG1 (m / mouse)\n   :ARG1-of (zzz0 / be-located-at-91\n      :ARG2 (k2 / kitchen)\n      :manner (f / fast))\n   :time (d / date-entity\n      :dayperiod (n / night)))'
     assert res["warning"] == ["information loss: cannot attache edge \u00ab zzz0 :manner f \u00bb after dereification. Please modify graph.",
                               ]
 

@@ -40,7 +40,7 @@ body {
 
   text-align: justify;
   font-family: Urbanist, "Be Vietnam Pro", Syne, Poppins, Lato, Ubuntu, DejaVu Sans, Arial, Helvetica, Sans;
-  font-size: 105%;
+  /* font-size: 105%; */
 }
 
 tt {
@@ -743,7 +743,7 @@ td.framealiastable {
   display: none
 }
 
-#modwordsindexes, #modcomment {
+#modwordsindexes, #modcomment, #modpenman {
   width: 90%
 }
 
