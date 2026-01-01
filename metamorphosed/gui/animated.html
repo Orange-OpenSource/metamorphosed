@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMR animated</title>
+    <link rel="stylesheet" type="text/css" href="/index.css" />
+    <link rel="stylesheet" type="text/css" href="/animated.css" />
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="/css/d3relations.css" />
+    <link rel="stylesheet" type="text/css" href="/css/relations.css" />
+</head>
+
+<body>
+    <button class="walk mybutton" id="first">|&lt; first</button>
+    <button class="walk mybutton" id="preceding">&lt;&lt; preceding</button>
+    <button class="walk mybutton" id="lire">load sentence</button>
+    <input type="text" id="sentnum" pattern="[1-9][0-9]*" size="4" value="{{ nummer }}">
+    <button class="walk mybutton" id="next">next &gt;&gt;</button>
+    <button class="walk mybutton" id="last">last &gt|</button>
+    <button class="mybutton" style="margin-left: 2em;" onclick="javascript:history.back()">Back to editing</button>
+      <p/>
+    <span id="cursentence"></span>
+    <p/>
+    <div id="output">
+      <div>
+         <pre id="pmgraph"></pre>
+      </div>
+      <div>
+        <svg></svg>
+      </div>
+    </div>
+    <script src="/graphdata.js" type="text/javascript"></script>
+    <script src="/lib/jquery-3.6.0.min.js" type="text/javascript"></script>
+    <script src="/animation.js" type="text/javascript"></script>
+</body>
+</html>
+

@@ -1314,6 +1314,15 @@ $(document).ready(function () {
 		}
 	});
 
+	// goto animation
+	$(".d3anim").click(function () {
+		console.log("ANIM");
+		window.open("/animation/" + $("#sentnum").val(), "_self");
+		//$( "#anim" ).load("/animation", function() {
+		//	alert( "Load was performed." );
+		//});
+	});
+
 	/* modify the AMR graph by clicking on buttons of the addbutton-class */
 	$(".addbutton").click(function () {
 		//URL_BASE = 'http://' + window.location.host + '/edit';
@@ -1636,52 +1645,6 @@ $(document).ready(function () {
 	$("#clearsearch").click(function () {
 		$(".searchfield").val("");
 	});
-
-
-	// $(".QQexportbutton").click(function () {
-	// 	URL_BASE = 'graphs';
-	// 	console.log("AZAZA", $("#pdfgraph").is(":checked"), $('input:radio[name=graphformat]:checked').val());
-	// 	params = { "format": $('input:radio[name=graphformat]:checked').val() };
-	// 	$.ajax({
-	// 		url: URL_BASE,
-	// 		type: 'GET',
-	// 		//data: {"cmd": command},
-	// 		data: params,
-	// 		//headers: {
-	// 		//    'Content-type': 'text/plain',
-	// 		//},
-	// 		statusCode: {
-	// 			204: function () {
-	// 				alert('No input text');
-	// 			},
-	// 			//400: function () {
-	// 			//                    alert('Bad query');
-	// 			//		},
-	// 			//		500: function () {
-	// 			//		    alert("Error on '" + URL_BASE + "' " + data);
-	// 			//		}
-	// 		},
-
-	// 		success: function (data) {
-	// 			//console.log("SUCCESS ", data);
-	// 			//$("#sentnum").val(data.num);
-	// 			//currentsentnum = data.num;
-
-	// 			//formatAMR(data);
-	// 		},
-	// 		error: function (data) {
-	// 			// do something else
-	// 			console.log("ERREUR ", data);
-	// 			$("#resultat").append('<div class="error" id="error">');
-	// 			//$('#error').append(data.responseJSON.error);
-	// 			if (data.responseJSON == undefined) {
-	// 				$('#error').append("serveur not responding");
-	// 			} else {
-	// 				$('#error').append(data.responseJSON.error);
-	// 			}
-	// 		}
-	// 	});
-	// });
 
 
 	$(".searchfield").keyup(function (event) {

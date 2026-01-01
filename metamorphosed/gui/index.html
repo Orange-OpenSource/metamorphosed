@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="./lib/jquery.modal-0.9.2.min.css" />
     <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@500&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" type="text/css" href="lib/jquery-ui-1.13.2/jquery-ui.min.css" />
     <link rel="stylesheet" type="text/css" href="./index.css" />
     <link rel="stylesheet" type="text/css" href="css/relations.css" />
@@ -33,6 +34,7 @@
             <div><span id="currentnum"></span>/<span id="numsent"></span></div>
         </span>
     </div>
+    <button class="mybutton d3anim" id=anim" style="float: right; margin-right: 10px; font-family: serif">😀</button>
     <p />
 
     <button class="walk mybutton" id="first">|&lt; first</button>
@@ -63,6 +65,7 @@
             <li class="alwayspresent" title="edit comments"><a href="#currentcomments">Comments</a></li>
             <li title="search for text, AMR graphs, comments and IDs"><a href="#searchfunctions">Searching</a></li>
             <li title="list of all sentences of the current file"><a href="#sentencelisttab">Sentence list</a></li>
+            <!--li title="anumates AMR graph"><a href="#animation">AA</a></li-->
             <li id="helptab"><a href="#help">Help</a></li>
         </ul>
         <div id="currentsentenceinfo">
@@ -312,6 +315,10 @@ Else the input is interpreted as regular expression" placeholder="regex/PENMAN" 
             <button class="addbutton mybutton" id="modifysentencelist">apply</button>
             </p>
             <select class="allsentences" name="sent1" id="sentencelist"></select>
+        </div>
+
+        <div id="animation">
+
         </div>
 
         <div id="help">

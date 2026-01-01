@@ -97,7 +97,7 @@ class Relations:
                 if not line or line[0] == "#":
                     continue
                 self.relations.add(line)
-                if not line.endswith("QQ-of") and line not in orangecolors:
+                if not line.endswith("-of") and line not in orangecolors:
                     orangecolors[line] = self.getnewcolor()
 
     def getnewcolor(self):

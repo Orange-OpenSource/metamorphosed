@@ -212,6 +212,12 @@ class AMR_Edit_Server:
             else:
                 return render_template('index.html', toolname="AMR Editor")
 
+        @app.route('/animation/<num>', methods=["GET"])
+        def d3animation(num):
+            #num = self.checkParameter(request, 'num', 'int', isOptional=True, defaultValue=22)
+            print("num", num)
+            return render_template('animated.html', nummer=num)
+
         @app.route('/version', methods=["GET"])
         def version():
             dico = {"name": "AMR Editor",
