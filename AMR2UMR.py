@@ -76,7 +76,7 @@ class AMR2UMR:
                 print("Index:", "\t".join([str(x + 1) for x in range(len(sent.text.split()))]), file=ofp)
                 print("Words:", "\t".join(sent.text.split()), file=ofp)
             print("Sentence:", sent.text, file=ofp)
-            amr, alignments = self.umrise(ct, sent.amr)
+            amr, alignments, ralignments, lalignments = self.umrise(ct, sent.amr)
 
             print("# sentence level graph:", file=ofp)
             print(amr, file=ofp)
@@ -84,10 +84,18 @@ class AMR2UMR:
 
             print("# alignment:", file=ofp)
             for k, vv in alignments.items():
-                if "-" in k:
-                    # RoleAlignments not available in UMR
-                    print("#", end="", file=ofp)
+                #if "-" in k:
+                #    # RoleAlignments not available in UMR
+                #    print("#RA ", end="", file=ofp)
                 print("%s: " % k, end="", file=ofp)
+                print(", ".join(["%d-%d" % (x[0], x[1]) for x in vv]), file=ofp)
+            for k, vv in ralignments.items():
+                # RoleAlignments not available in UMR
+                print("#RA %s: " % k, end="", file=ofp)
+                print(", ".join(["%d-%d" % (x[0], x[1]) for x in vv]), file=ofp)
+            for k, vv in lalignments.items():
+                # Literal Alignments not available in UMR
+                print("#LA %s: " % "#".join(k), end="", file=ofp)
                 print(", ".join(["%d-%d" % (x[0], x[1]) for x in vv]), file=ofp)
             print("\n", file=ofp)
 
@@ -111,29 +119,38 @@ class AMR2UMR:
             newtriples.append((s, p, o))
 
         alignments = {} # var: [(from, to), ...]
-
+        ralignments = {} # varfrom-varto: [(from, to), ...]
+        lalignments = {} # literal: [(from, to), ...]
         for tr,eds in pg.epidata.items():
             s2 = newvars.get(tr[0], tr[0])
             o2 = newvars.get(tr[2], tr[2])
-            #print(tr)
             for ed in eds:
                 if isinstance(ed, penman.surface.AlignmentMarker):
                     #print("  ", ed, ed.mode, ed.indices)
                     if ed.mode == 1: # RoleAlignment
                         edge = s2 + "-" + o2
-                        for ix in ed.indices:
-                            if edge not in alignments:
-                                alignments[edge] = [(ix, ix)]
+                        for ix1 in ed.indices:
+                            ix = ix1 + 1
+                            if edge not in ralignments:
+                                ralignments[edge] = [(ix, ix)]
                             else:
-                                alignments[edge].append((ix, ix))
+                                ralignments[edge].append((ix, ix))
                     else: # Alignment:
-                        for ix in ed.indices:
-                            if s2 not in alignments:
-                                alignments[s2] = [(ix, ix)]
+                        for ix1 in ed.indices:
+                            ix = ix1 + 1
+                            if tr[1] == ":instance":
+                                if s2 not in alignments:
+                                    alignments[s2] = [(ix, ix)]
+                                else:
+                                    alignments[s2].append((ix, ix))
                             else:
-                                alignments[s2].append((ix, ix))
+                                key = (s2, tr[1][1:], o2)
+                                if key not in lalignments:
+                                    lalignments[key] = [(ix, ix)]
+                                else:
+                                    lalignments[key].append((ix, ix))
 
-        return penman.encode(penman.Graph(newtriples), indent=4), alignments
+        return penman.encode(penman.Graph(newtriples), indent=4), alignments, ralignments, lalignments
 
 
 if __name__ == "__main__":

@@ -103,6 +103,7 @@
 :level
 :li
 :long
+:location
 :manner
 :manner-of
 :material

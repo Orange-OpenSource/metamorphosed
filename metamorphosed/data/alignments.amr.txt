@@ -1,44 +1,44 @@
 # ::id sentence-1
 # ::snt In December 2013, Rose's role was shifted to that of executive chairman, renewing speculation he might be in line to replace Warren Buffett at Berkshire's helm.
-# ::pos 1  2        3    4 5    6  7    8   9       10 11   12 13        14       15 16      17          18 19    20 21 22   23 24      25     26      27 28        29 30   31
+# ::pos 0  1        2    3 4    5  6    7   8       9  10   11 12        13       14 15      16          17 18    19 20 21   22 23      24     25      26 27        28 29   30 
 # ::tok In December 2013 , Rose 's role was shifted to that of executive chairman , renewing speculation he might be in line to replace Warren Buffett at Berkshire 's helm .
 # ::alignments 1-1.3.1 1-1.3.1.r 2-1.3.2 4-1.1.1.2.1 6-1.1 6-1.2 8-1 12-1.2.2.1 13-1.2.2 15-1.4 16-1.4.1 18-1.4.1.1 20-1.4.1.1.1.r 21-1.4.1.1.1 23-1.4.1.1.1.2 24-1.4.1.1.1.2.1.2.1 25-1.4.1.1.1.2.1.2.2 26-1.4.1.1.1.2.3.r 27-1.4.1.1.1.2.3.1.2.1 28-1.4.1.1.1.2.3.1.r 29-1.4.1.1.1.2.3
-(s / shift-01~e.9
-      :ARG1 (h / have-org-role-91~e.6 
+(s / shift-01~e.8
+      :ARG1 (h / have-org-role-91~e.5
             :ARG0 (p2 / person
-                  :name (n / name :op1 "Rose"~e.5))) 
-      :ARG2 (h2 / have-org-role-91~e.6
+                  :name (n / name :op1 "Rose"~e.4,17)))
+      :ARG2 (h2 / have-org-role-91~e.5
             :ARG0 p2 
-            :ARG2 (c / chairman~e.14
-                  :mod (e / executive~e.13))) 
+            :ARG2 (c / chairman~e.13
+                  :mod (e / executive~e.12)))
       :time (d / date-entity :month~e.1 12~e.1 :year 2013~e.2) 
-      :ARG0-of (r / renew-01~e.16
-            :ARG1 (s2 / speculate-01~e.17
-                  :ARG1 (p / possible-01~e.19
-                        :ARG1~e.20 (l / line-up-02~e.22
+      :ARG0-of (r / renew-01~e.15
+            :ARG1 (s2 / speculate-01~e.16
+                  :ARG1 (p / possible-01~e.18
+                        :ARG1~e.19 (l / line-up-02~e.21
                               :ARG1 p2 
-                              :purpose (r2 / replace-01~e.24
+                              :purpose (r2 / replace-01~e.23
                                     :ARG1 (p3 / person :wiki "Warren_Buffett" 
-                                          :name (n2 / name :op1 "Warren"~e.25 :op2 "Buffett"~e.26)) 
+                                          :name (n2 / name :op1 "Warren"~e.24 :op2 "Buffett"~e.25)) 
                                     :ARG2 p2 
-                                    :purpose~e.27 (h3 / helm~e.30
-                                          :mod~e.29 (c2 / company :wiki "Berkshire_Hathaway" 
-                                                :name (n3 / name :op1 "Berkshire"~e.28)))))))))
+                                    :purpose~e.26 (h3 / helm~e.29
+                                          :mod~e.28 (c2 / company :wiki "Berkshire_Hathaway"
+                                                :name (n3 / name :op1 "Berkshire"~e.27)))))))))
 
 # ::id sentence-2
 # ::snt Cafodd Dylan Thomas ei wahardd o'r dafarn am helpu ei hunan i'r cwrw.
 # ::tok Cafodd Dylan Thomas ei wahardd o 'r dafarn am helpu ei hunan i 'r cwrw .
-(b / ban-01~e.5
-     :ARG1~e.6 (b2 / be-located-at-91
+(b / ban-01~e.4
+     :ARG1~e.5 (b2 / be-located-at-91
                  :ARG1 p
-                 :ARG2 (p2 / pub))
+                 :ARG2 (p2 / pub~e.7))
      :ARG2 (p / person
                 :name (n / name
-                           :op1 "Dylan"~e.2
-                           :op2 "Thomas"~e.3))
-     :ARG1-of (c / cause-01~e.9
-                   :ARG0 (h / help-01~e.10
+                           :op1 "Dylan"~e.1
+                           :op2 "Thomas"~e.2))
+     :ARG1-of (c / cause-01~e.8
+                   :ARG0 (h / help-01~e.9
                               :ARG0 p
-                              :ARG1~e.13 (b3 / beer~e.15)
+                              :ARG1~e.12 (b3 / beer~e.14)
                               :ARG2 p)))
 
