@@ -2,14 +2,14 @@
 # ::snt Ałk’idą́ą́’ díí nahasdzáán nihił dah si’ánígíí bikáa’gi ’ádahóót’įįd ha’níigo baa dahane’
 # ::tok Ałk’idą́ą́’ díí nahasdzáán nihił dah si’ánígíí bikáa’gi ’ádahóót’įįd ha’níigo baa dahane’
 (e / exist-91
-    :ARG1 (d / dahane’~e.11
+    :ARG1 (d / dahane’~e.10
         :topic (h / ha’níigo
-            :theme (á / ’ádahóót’įįd~e.8
-                :place (b / bikáa’gi-~e.7
-                    :part (n / nahasdzáán~e.3
-                        :mod (d2 / díí~e.2)
-                        :place-of (s / si’ánígíí~e.6
-                            :mod (d3 / dah-~e.5)
+            :theme (á / ’ádahóót’įįd~e.7
+                :place (b / bikáa’gi-~e.6
+                    :part (n / nahasdzáán~e.2
+                        :mod (d2 / díí~e.1)
+                        :place-of (s / si’ánígíí~e.5
+                            :mod (d3 / dah-~e.4)
                             :companion (p / person
                                 :refer-person 1st
                                 :refer-number plural)
@@ -27,7 +27,7 @@
     :actor (p / person
         :refer-person 3rd
         :refer-number plural)
-    :theme (á / ’áhóót’įįd~e.2
+    :theme (á / ’áhóót’įįd~e.1,2
         :place (m / mountain
             :name (n / name
                 :op1 "Ch’óol’į́’í")
@@ -39,7 +39,7 @@
 # ::id bad-index--bad-alignment
 # ::snt The mouse eats the cheese.
 # ::tok The mouse eats the cheese .
-(e / eat-01~e.3
+(e / eat-01~e.2
     :actor (m / mouse)
     :theme (c / cheese)
     :aspect habitual)
@@ -47,34 +47,34 @@
 # ::id u_tree-cs-s4-root
 # ::snt Eyewitnesses said only a few houses were left standing after the landslide hit the village of Guinsaugon in the south of the Philippine island of Leyte .
 # ::tok Eyewitnesses said only a few houses were left standing after the landslide hit the village of Guinsaugon in the south of the Philippine island of Leyte .
-(s / say-01~e.2
-    :ARG0 (p / person~e.1
+(s / say-01~e.1
+    :ARG0 (p / person~e.0
         :ARG0-of (w / witness-01
             :ARG1 l2))
-    :ARG1 (l / leave-14~e.8
-        :ARG0 (h / hit-01~e.13
-            :ARG0 (l2 / landslide-01~e.12
+    :ARG1 (l / leave-14~e.7
+        :ARG0 (h / hit-01~e.12
+            :ARG0 (l2 / landslide-01~e.11
                 :ARG1 (t / thing)
                 :aspect process)
-            :ARG1 (v / village~e.15
-                :mod (h2 / human-settlement~e.20
+            :ARG1 (v / village~e.14
+                :mod (h2 / human-settlement~e.19
                     :wiki "Saint_Bernard,_Southern_Leyte"
                     :name (n / name
                         :op1 "Guinsaugon"))
                 :place (s2 / south
-                    :part-of (i / island~e.24
+                    :part-of (i / island~e.23
                         :wiki "Leyte"
-                        :name (n2 / name~e.26
+                        :name (n2 / name~e.25
                             :op1 "Leyte")
-                        :place (c / country~e.23
+                        :place (c / country~e.22
                             :wiki "Philippines"
                             :name (n3 / name
                                 :op1 "Philippine")))))
             :aspect performance)
-        :ARG1 (s3 / stand-01~e.9
-            :ARG1 (h3 / house~e.6
-                :quant (a / a-few~e.4
-                    :mod (o / only~e.3)))
+        :ARG1 (s3 / stand-01~e.8
+            :ARG1 (h3 / house~e.5
+                :quant (a / a-few~e.3,4
+                    :mod (o / only~e.2)))
             :aspect state)
         :aspect state
         :quote s)
@@ -83,23 +83,23 @@
 # ::id u_tree-cs-s5-root
 # ::snt Marsha Lipman is Editor of Moscow based news magazine 'Itogi'.
 # ::tok Marsha Lipman is Editor of Moscow based news magazine ' Itogi ' .
-(h / have-org-role-92~e.3
-    :ARG1 (p / person~e.1
+(h / have-org-role-92~e.2
+    :ARG1 (p / person~e.0,1
         :name (n / name
             :op1 "Marsha"
             :op2 "Lipman"))
-    :ARG2 (m / magazine~e.9
+    :ARG2 (m / magazine~e.8
         :wiki -
-        :name (n2 / name~e.11
+        :name (n2 / name~e.10
             :op1 "Itogi")
-        :mod (n3 / news~e.8)
-        :ARG1-of (b / base-01~e.7
-            :place (h2 / human-settlement~e.6
+        :mod (n3 / news~e.7)
+        :ARG1-of (b / base-01~e.6
+            :place (h2 / human-settlement~e.5
                 :wiki "Moscow"
                 :name (n4 / name
                     :op1 "Moscow"))
             :aspect state)
-        :ARG3 (p2 / person~e.4
+        :ARG3 (p2 / person~e.3
             :ARG0-of (e / edit-01)))
     :aspect state)
 
@@ -108,22 +108,22 @@
 # ::tok Marsha , did the Presidential Pardons Commission give any reason for their decision ?
 (s / say-01
     :ARG0 (p / person)
-    :ARG1 (g / give-01~e.8
-        :ARG0 (g2 / government-organization~e.5
+    :ARG1 (g / give-01~e.7
+        :ARG0 (g2 / government-organization~e.4,6
             :wiki -
             :name (n / name
                 :op1 "Presidential"
                 :op2 "Pardons"
                 :op3 "Commission"))
-        :ARG1 (r / reason~e.10
-            :reason-of (d / decide-01~e.13
+        :ARG1 (r / reason~e.9
+            :reason-of (d / decide-01~e.12
                 :ARG0 g2
                 :topic (t / thing)
                 :aspect performance)
-            :mod (a / any~e.9))
+            :mod (a / any~e.8))
         :mode interrogative
         :polarity (u / umr-unknown)
-        :vocative (p2 / person~e.1
+        :vocative (p2 / person~e.0
             :wiki -
             :name (n2 / name
                 :op1 "Marsha"))
@@ -132,32 +132,32 @@
     :ARG2 p2)
 
 # ::id u_tree-cs-s7-root
-(s / see-01~e.15
-    :ARG1 (a / and~e.8
-        :op1 (r / roofing~e.7
-            :material (t / tin~e.6)
-            :unit (s2 / sheet~e.4)
-            :quant (a2 / a-few~e.2))
-        :op2 (t2 / tree~e.12
-            :mod (c / coconut~e.11)
-            :mod (o / occasional~e.10))
-        :mod (o2 / only~e.1))
+(s / see-01~e.14
+    :ARG1 (a / and~e.7
+        :op1 (r / roofing~e.6
+            :material (t / tin~e.5)
+            :unit (s2 / sheet~e.3)
+            :quant (a2 / a-few~e.1,2))
+        :op2 (t2 / tree~e.11
+            :mod (c / coconut~e.10)
+            :mod (o / occasional~e.9))
+        :mod (o2 / only~e.0))
     :aspect state)
 
 # ::id ud:cy_ccg_test:00007
 # ::snt Cafodd Dylan Thomas ei wahardd o'r dafarn am helpu ei hunan i'r cwrw.
 # ::tok Cafodd Dylan Thomas ei wahardd o 'r dafarn am helpu ei hunan i 'r cwrw .
-(b / ban-01~e.5
+(b / ban-01~e.4
     :ARG1 (b2 / be-located-at-91
         :ARG1 p2
-        :ARG2 (p / pub~e.8))
-    :ARG2 (p2 / person~e.2~e.4~e.11
+        :ARG2~e.5 (p / pub~e.7))
+    :ARG2 (p2 / person~e.1,2,3,10
         :name (n / name
-            :op1 "Dylan"
-            :op2 "Thomas"))
+            :op1 "Dylan"~e.1
+            :op2 "Thomas"~e.2))
     :ARG1-of (c / cause-01
-        :ARG0 (h / help-01~e.10
+        :ARG0 (h / help-01~e.9
             :ARG0 p2
-            :ARG1 (b3 / beer~e.15)
+            :ARG1 (b3 / beer~e.14)
             :ARG2 p2)))
 

@@ -473,10 +473,15 @@ class AMRProcessor:
                                #URL=branch[0],
                                **kwargs)
 
-                if tokenalignments and False: # TODO, not yet
+                if tokenalignments and tokenalignments[2] is True:
+                    # only true if we have RoleAlignments (thirs element in tuple tokenalignments) (without RAs, we do not need to use nodes for relation labels)
                     del kwargs["style"]
                     # edge label is a node (to be pointed to in role alignments
-                    edgeid = "edgenode#%s#%s#%s" % (s,o,p[1:])
+                    if p.endswith("-of"):
+                        edgeid = "edgenode#%s#%s#%s" % (o,s,p[1:-3])
+                    else:
+                        edgeid = "edgenode#%s#%s#%s" % (s,o,p[1:])
+
                     graph.node(edgeid,
                                label=p,
                                # id="relation %s %s %s" % (s,p,o),
@@ -517,7 +522,7 @@ class AMRProcessor:
             # add words of sentence and alignments
             kwargs["fillcolor"] = "#FFF0F5"
             kwargs["fontcolor"] = "#085ebd"
-            tokens, alignments = tokenalignments
+            tokens, alignments, has_role_alignments = tokenalignments
             # add words and alignments
             lasttid = None
             struct = []
@@ -544,24 +549,32 @@ class AMRProcessor:
                 for varname in alignments[token]:
                     kwargs["style"] = "dashed"
                     kwargs["fontcolor"] = "black"
-                    if "#" in varname:
+
+                    if varname.endswith("#RA"):
+                        # role alignment
+                        oid = "edgenode#%s" % (varname[:-3].replace("-of", ""))
+                        label = "%s → :%s" % (tokens[token - 1], varname.split("#")[2])
+                        color = "#aa44aa"
+                    elif varname.endswith("#LA"): #  "#" in varname:
                         # literal
-                        oid = varname.replace("#", "_").replace('"', "DQUOTE")
-                        label = "%s → %s" % (tokens[token - 1], varname.split("#")[-1])
+                        oid = varname[:-3].replace("#", "_").replace('"', "DQUOTE")
+                        label = "%s → %s" % (tokens[token - 1], varname.split("#")[-2])
+                        color = "#4444ff"
                     else:
                         # instance
                         oid = varname
                         label = "%s →\n %s/%s" % (tokens[token - 1], varname, self.vars.get(varname, ""))
+                        color = "#888888"
                     graph.edge(tid, oid,
                                #label="%s - %s" % (tokens[token - 1], varname),
                                label=label, #"%s →\n %s/%s" % (tokens[token - 1], varname, self.vars.get(varname, "")),
                                id="tokenedge#%s#%s" % (tid,varname),
-                               color="#888888",
+                               color=color,
                                #style="dashed",
                                fontsize="12.0",
                                #fontcolor=orangecolors.get(p.replace("-of", ""), "black"),
                                **kwargs)
-        #print("DOT source",graph)
+        # print("DOT source",graph)
         return graph.pipe()
 
     def show(self, highlightinstances=None, highlightrelations=None, highlightconcepts=None, format="svg", tokenalignments=None, reverse_of=False):

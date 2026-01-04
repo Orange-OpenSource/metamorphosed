@@ -282,10 +282,10 @@ class UMRsentence(AMRsentence):
         return copy.deepcopy(self.alignments)
 
     def getAlignments(self, alignments=None):
-        # outputs the alignments in a way easy to display in index.js
+        # outputs the alignments in a way easier to display in index.js
         if alignments is None:
-            alignments = self.alignments
-            alignments = {**self.alignments, **self.lalignments}
+            # alignments = self.alignments
+            alignments = {**self.alignments, **self.lalignments, **self.ralignments}
         out = {} # word pos: [umrvar, ...]
         for umrvar in alignments:
             for index in alignments[umrvar]:
@@ -496,16 +496,24 @@ class UMRdoc:
                         elems = line[4:].strip().split(":")
                         if len(elems) != 2:
                             print("* bad relation alignment", sentid, linect, line, file=sys.stderr)
+                        else:
+                            key = elems[0] + "#RA"
+                            ralignments[key] = []
+                            for e in elems[1].strip().split(","):
+                                mo = ALIGNMENT.match(e.strip())
+                                #print(line, mo)
+                                ralignments[key].append((int(mo.group(1)), int(mo.group(2))))
                     elif line.startswith("#LA "):
                         elems = line[4:].strip().split(":")
                         if len(elems) != 2:
                             print("* bad literal alignment", sentid, linect, line, file=sys.stderr)
                         else:
-                            lalignments[elems[0]] = []
+                            key = elems[0] + "#LA"
+                            lalignments[key] = []
                             for e in elems[1].strip().split(","):
                                 mo = ALIGNMENT.match(e.strip())
                                 #print(line, mo)
-                                lalignments[elems[0]].append((int(mo.group(1)), int(mo.group(2))))
+                                lalignments[key].append((int(mo.group(1)), int(mo.group(2))))
 
                     else:
                         elems = line.strip().split(":")

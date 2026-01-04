@@ -570,7 +570,7 @@ class AMR_Edit_Server:
 
             tokenalignments = None
             if self.umr and withalignments:
-                tokenalignments = (cursentence.words, cursentence.getAlignments())
+                tokenalignments = (cursentence.words, cursentence.getAlignments(), len(cursentence.ralignments) > 0)
             pm, svg = ap.show(tokenalignments=tokenalignments, reverse_of=reverse_of)
 
             framedoc = None
@@ -1027,8 +1027,7 @@ class AMR_Edit_Server:
                     sent = self.amrdoc.sentences[ix - 1]
                     tokenalignments = None
                     if self.umr and withalignments:
-                        tokenalignments = (sent.words, sent
-                                           .getAlignments())
+                        tokenalignments = (sent.words, sent.getAlignments(), len(sent.ralignments) > 0)
                     pm, svg = ap.show(format=dataformat, highlightconcepts=highlight_concepts, tokenalignments=tokenalignments)
                     if svg:
                         zip_file.writestr("%d.%s" % (ix, dataformat), svg)
@@ -1084,7 +1083,7 @@ class AMR_Edit_Server:
         #    response.status_code = 404
         #    return response
         def invalidumr(ap, warnings, cursentence, sentnum):
-            pm, svg = ap.show(tokenalignments=(cursentence.words, cursentence.getAlignments()))
+            pm, svg = ap.show(tokenalignments=(cursentence.words, cursentence.getAlignments(), len(cursentence.ralignments) > 0))
             dico = {"penman": pm,
                     "svg": svg, #.decode("utf8"),
                     #"svg_canon": svg_canon, #.decode("utf8"),
@@ -1181,7 +1180,7 @@ class AMR_Edit_Server:
 
             tokenalignments = None
             if self.umr and withalignments:
-                tokenalignments = (cursentence.words, cursentence.getAlignments())
+                tokenalignments = (cursentence.words, cursentence.getAlignments(), len(cursentence.ralignments) > 0)
             #pm, svg, svg_canon = ap.show(tokenalignments=tokenalignments, reverse_of=reverse_of)
             pm, svg = ap.show(tokenalignments=tokenalignments, reverse_of=reverse_of)
             if not ap.valid:

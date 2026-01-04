@@ -76,14 +76,45 @@ class UMR2AMR:
 
             #newtriples = []
             pg = penman.decode(sent.amr)
+
+            alignment_indices = {} # triple: [index]
+            ralignment_indices = {} # triple: [index]
             for tr in pg.instances():
                 if tr[0] in sent.alignments:
-                    for al in sent.alignments[tr[0]]:
+                    for al in sorted(sent.alignments[tr[0]]):
                         if al[0] > 0:
-                            pg.epidata[(tr[0], tr[1], tr[2])].append(penman.surface.Alignment((al[0],), "e."))
+                            #pg.epidata[(tr[0], tr[1], tr[2])].append(penman.surface.Alignment((al[0],), "e."))
+                            if (tr[0], tr[1], tr[2]) not in alignment_indices:
+                                alignment_indices[(tr[0], tr[1], tr[2])] = set()
+                            alignment_indices[(tr[0], tr[1], tr[2])].add(al[0] - 1)
+                            if al[1] != al[0]:
+                                alignment_indices[(tr[0], tr[1], tr[2])].add(al[1] - 1)
+            for tr in pg.edges():
+                key = "%s#%s#%s#RA" % (tr[0], tr[2], tr[1][1:])
+                if key in sent.ralignments:
+                    for al in sent.ralignments[key]:
+                        if al[0] > 0:
+                            #pg.epidata[(tr[0], tr[1], tr[2])].append(penman.surface.RoleAlignment((al[0],), "e."))
+                            if (tr[0], tr[1], tr[2]) not in ralignment_indices:
+                                ralignment_indices[(tr[0], tr[1], tr[2])] = set()
+                            ralignment_indices[(tr[0], tr[1], tr[2])].add(al[0] - 1)
+
+            for tr in pg.attributes():
+                key = "%s#%s#%s#LA" % (tr[0], tr[1][1:], tr[2])
+                if key in sent.lalignments:
+                    for al in sent.lalignments[key]:
+                        if al[0] > 0:
+                            #pg.epidata[(tr[0], tr[1], tr[2])].append(penman.surface.Alignment((al[0],), "e."))
+                            if (tr[0], tr[1], tr[2]) not in alignment_indices:
+                                alignment_indices[(tr[0], tr[1], tr[2])] = set()
+                            alignment_indices[(tr[0], tr[1], tr[2])].add(al[0] - 1)
+            for k, v in alignment_indices.items():
+                pg.epidata[k].append(penman.surface.Alignment(sorted(v), "e."))
+            for k, v in ralignment_indices.items():
+                pg.epidata[k].append(penman.surface.RoleAlignment(sorted(v), "e."))
 
             pt = penman.configure(pg)
-            pt.reset_variables(fmt="{prefix}{j}")
+            pt.reset_variables(fmt="{prefix}{j}") # TODO keeps accents on variable idconcepts starts with an accented letter
             print(penman.format(pt, indent=4), file=ofp)
             print(file=ofp)
 

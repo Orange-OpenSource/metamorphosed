@@ -2,7 +2,7 @@
 
 # This library is under the 3-Clause BSD License
 #
-# Copyright (c) 2025, Orange
+# Copyright (c) 2025-2026, Orange
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -100,6 +100,7 @@ class AMR2UMR:
             print("\n", file=ofp)
 
             print("# document level annotation:", file=ofp)
+            print("(s%ds0 / sentence)" % ct, file=ofp)
             print("\n", file=ofp)
 
     def umrise(self, nr, pm):
@@ -128,7 +129,7 @@ class AMR2UMR:
                 if isinstance(ed, penman.surface.AlignmentMarker):
                     #print("  ", ed, ed.mode, ed.indices)
                     if ed.mode == 1: # RoleAlignment
-                        edge = s2 + "-" + o2
+                        edge = s2 + "#" + o2 + "#" + tr[1][1:]
                         for ix1 in ed.indices:
                             ix = ix1 + 1
                             if edge not in ralignments:

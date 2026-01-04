@@ -1994,7 +1994,7 @@ def test_umr2amr():
     a2u = UMR2AMR.UMR2AMR(mydir + "/data/testumr.umr", datadir.name + "/testumr-2amr.txt", gen=False)
     ref = cat(mydir + "/data/testumr-2amr.txt")
     res = cat(datadir.name + "/testumr-2amr.txt")
-    #cp("u2res.txt", src=datadir.name + "/testumr-2amr.txt")
+    # cp("u2res.txt", src=datadir.name + "/testumr-2amr.txt")
     assert ref == res
 
 
@@ -2005,5 +2005,5 @@ def test_amr2umr():
     a2u = AMR2UMR.AMR2UMR(mydir + "/data/alignments.amr.txt", datadir.name + "/alignments.amr-2umr.umr", gen=False)
     ref = cat(mydir + "/data/alignments.amr-2umr.umr")
     res = cat(datadir.name + "/alignments.amr-2umr.umr")
-    #cp("a2u-res.txt", src=datadir.name + "/alignments.amr-2umr.umr")
+    # cp("a2u-res.txt", src=datadir.name + "/alignments.amr-2umr.umr")
     assert ref == res

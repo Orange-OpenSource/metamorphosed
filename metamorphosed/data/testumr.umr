@@ -363,7 +363,9 @@ s8p: 2-3, 4-4, 11-11
 s8h: 10-10
 s8b3: 15-15
 s8p2: 8-8
-
+#RA s8b2#s8p2#ARG2: 6-6
+#LA s8n#op1#"Dylan": 2-2
+#LA s8n#op2#"Thomas": 3-3
 
 # document level annotation:
 (s8s0 / sentence)
