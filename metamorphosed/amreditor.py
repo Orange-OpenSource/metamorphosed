@@ -2,7 +2,7 @@
 
 # This library is under the 3-Clause BSD License
 #
-# Copyright (c) 2022-2025,  Orange
+# Copyright (c) 2022-2026,  Orange
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 # Software Name: MetAMoRphosED AMR-Editor
 # Author: Johannes Heinecke
 
-# version 5.0.0rc7 as of 5th December 2025
+# version 5.0.0rc11 as of 4th January 2026
 
 import io
 import re
@@ -138,11 +138,11 @@ class AMRProcessor:
         if not self.valid or not self.isparsed:
             print(self.lastpm, file=ofp)
         elif self.isDisconnected:
-            #print("# TODO\n", file=ofp)
-            #print(self.lastpm.replace("\n\n", "\n"), file=ofp)
+            # print("# TODO\n", file=ofp)
+            # print(self.lastpm.replace("\n\n", "\n"), file=ofp)
             # get tops of all partial penmans and create a pseudo head
-            #print("LAST",self.lastpm.split("\n\n"))
-            #print("TRS", self.triples)
+            # print("LAST",self.lastpm.split("\n\n"))
+            # print("TRS", self.triples)
             pms = self.lastpm.split("\n\n")
             # find top for all
             tops = []
@@ -198,24 +198,24 @@ class AMRProcessor:
             res = amr_comparison.compare(self.lastpm, subgraph, runs=1, use_smatchpp=smatchpp, align=True)
             psg = penman.decode(subgraph)
             subgraph_variables = psg.variables()
-            #print("====", self.lastpm)
-            #print(res.instances1OK)
-            #print(res.instances2OK)
-            #print(res.rel1OK)
-            #print(res.rel2OK)
-            #print(psg.edges())
-            #print(psg.attributes())
+            # print("====", self.lastpm)
+            # print(res.instances1OK)
+            # print(res.instances2OK)
+            # print(res.rel1OK)
+            # print(res.rel2OK)
+            # print(psg.edges())
+            # print(psg.attributes())
 
             if subgraph_variables == res.instances2OK:
                 # all variables of the subgraph are matched
                 # now check whether literals also match: all edges and attributes of subgraph musst be in
                 for s, p, o in psg.edges():
                     if (s, p, o) not in res.rel2OK:
-                        #print("edge", s,p,o, "missing")
+                        # print("edge", s,p,o, "missing")
                         return []
                 for s, p, o in psg.attributes():
                     if (s, p, o) not in res.rel2OK:
-                        #print("attr", s,p,o, "missing")
+                        # print("attr", s,p,o, "missing")
                         return []
 
                 # find first concept of subgraph in graph (for highlighting)
@@ -245,6 +245,12 @@ class AMRProcessor:
                 # if the graph turns out to be disconnected we must be sure
                 # that each variable is only used in a single graph
                 tree = penman.parse(amr)
+                #print("T1", tree)
+                #pg = penman.interpret(tree)
+                #print("ED", pg.epidata)
+                #pg.epidata = {}
+                #tree2 = penman.configure(pg)
+                #print("T2", tree2)
                 self.top = None
 
                 for branch in tree.nodes():
@@ -276,7 +282,7 @@ class AMRProcessor:
 
                         if o in usedvariables:
                             o = "%s_new%d" % (o, i)
-                        # print("TR", s,p,o)
+
                         if p == ":instance":
                             # duplicated "v :instance concept" create errors in penman.encode(triples)
                             if s in defined_instances:
@@ -301,9 +307,9 @@ class AMRProcessor:
                                 "offset": "?",
                                 "message": e,
                                 "text": e}
-        #print(self.varletters)
-        #print(self.vars)
-        #self.reinitvars()
+        # print(self.varletters)
+        # print(self.vars)
+        # self.reinitvars()
 
     def newvar(self, concept):
         # return "v%d" % len(self.vars)
@@ -354,9 +360,9 @@ class AMRProcessor:
         # update variables in triples
         newtriples = []
         for s, p, o in self.triples:
-            #if s in self.oldvars:
+            # if s in self.oldvars:
             #    s = oldnew.get(s)
-            #if o in self.oldvars:
+            # if o in self.oldvars:
             #    o = oldnew.get(o)
             s = oldnew.get(s, s)
             o = oldnew.get(o, o)
@@ -373,9 +379,9 @@ class AMRProcessor:
 
     def dot(self, highlightinstances=None, highlightrelations=None, highlightconcepts=None, format="svg", inverse_of=False, tokenalignments=None):
         # highlight instances and relations NOT in highlightinstances and highlightrelations
-        #global orangecolors
+        # global orangecolors
         if highlightconcepts:
-            #orangecolors = {highlightconcepts: "#ff7900"}
+            # orangecolors = {highlightconcepts: "#ff7900"}
             localorangecolors = {}
             for ix, c in enumerate(highlightconcepts):
                 localorangecolors[c] = colorlist[ix % len(colorlist)]
@@ -453,7 +459,8 @@ class AMRProcessor:
 
                 if o not in self.vars:
                     oo = o.replace('"', 'DQUOTE').replace(':', 'COLON').replace('\\', 'BSLASH')
-                    onodeid = "%s_%s_%s" % (s, ct_literal, oo)
+                    #onodeid = "%s_%s_%s" % (s, ct_literal, oo)
+                    onodeid = "%s_%s_%s" % (s, p[1:], oo) # use triple as ID, not counter
                     ct_literal += 1
                     kwargs["fillcolor"] = localorangecolors.get("EN", "#dddddd")
                     kwargs["style"] = "filled"
@@ -465,17 +472,46 @@ class AMRProcessor:
                                #fillcolor=orangecolors.get("EN"),
                                #URL=branch[0],
                                **kwargs)
-                #print("ZZZZ", s,p,o)
 
-                # color of arrow head
-                kwargs["fillcolor"] = localorangecolors.get(p.replace("-of", ""), "black")
-                kwargs["fontcolor"] = localorangecolors.get(p.replace("-of", ""), "black")
-                col = localorangecolors.get(p.replace("-of", ""), "black")
-                graph.edge(s, onodeid, label=pp,
-                           id="edge#%s#%s#%s" % (s, o, p),
-                           color=col,
-                           # fontcolor=orangecolors.get(p.replace("-of", ""), "black"),
-                           **kwargs)
+                if tokenalignments and False: # TODO, not yet
+                    del kwargs["style"]
+                    # edge label is a node (to be pointed to in role alignments
+                    edgeid = "edgenode#%s#%s#%s" % (s,o,p[1:])
+                    graph.node(edgeid,
+                               label=p,
+                               # id="relation %s %s %s" % (s,p,o),
+                               # style="filled",
+                               shape="none",
+                               height="0.1",  # inches
+                               # fixedsize="true",
+                               fontcolor=orangecolors.get(p.replace("-of", ""), "black"),
+                               **kwargs,
+                               )
+                    graph.edge(s, edgeid, #label=p,
+                               id="edgeA#%s#%s#%s" % (s,o,p),
+                               color=orangecolors.get(p.replace("-of", ""), "black"),
+                               dir="none",
+                               fontcolor=orangecolors.get(p.replace("-of", ""), "black"),
+                               #**self.kwargs
+                               )
+                    graph.edge(edgeid, onodeid, #label=p,
+                               id="edge#%s#%s#%s" % (s,o,p),
+                               color=orangecolors.get(p.replace("-of", ""), "black"),
+                               #fontcolor=orangecolors.get(p.replace("-of", ""), "black"),
+                               #**self.kwargs
+                               )
+
+                else:
+                    # simple edge with a label between two nodes
+                    # color of arrow head
+                    kwargs["fillcolor"] = localorangecolors.get(p.replace("-of", ""), "black")
+                    kwargs["fontcolor"] = localorangecolors.get(p.replace("-of", ""), "black")
+                    col = localorangecolors.get(p.replace("-of", ""), "black")
+                    graph.edge(s, onodeid, label=pp,
+                               id="edge#%s#%s#%s" % (s, o, p),
+                               color=col,
+                               # fontcolor=orangecolors.get(p.replace("-of", ""), "black"),
+                               **kwargs)
 
         if tokenalignments and tokenalignments[0] and tokenalignments[1]:
             # add words of sentence and alignments
@@ -486,7 +522,7 @@ class AMRProcessor:
             lasttid = None
             struct = []
             # add alignments in dot graph
-            #for ix, token in enumerate(reversed(tokens)):
+            # for ix, token in enumerate(reversed(tokens)):
             for ix, token in enumerate(tokens, 1):
                 tid = "tok%d" % ix
                 struct.append('<%s>%s' % (tid, token))
@@ -497,8 +533,7 @@ class AMRProcessor:
                        #fontname=deffont + ":italic",
                        **kwargs
                        )
-            #print("STRUCT", struct)
-
+            # print("STRUCT", struct)
             for token in alignments:
                 if token == 0:
                     continue
@@ -509,9 +544,17 @@ class AMRProcessor:
                 for varname in alignments[token]:
                     kwargs["style"] = "dashed"
                     kwargs["fontcolor"] = "black"
-                    graph.edge(tid, varname,
+                    if "#" in varname:
+                        # literal
+                        oid = varname.replace("#", "_").replace('"', "DQUOTE")
+                        label = "%s → %s" % (tokens[token - 1], varname.split("#")[-1])
+                    else:
+                        # instance
+                        oid = varname
+                        label = "%s →\n %s/%s" % (tokens[token - 1], varname, self.vars.get(varname, ""))
+                    graph.edge(tid, oid,
                                #label="%s - %s" % (tokens[token - 1], varname),
-                               label="%s →\n %s/%s" % (tokens[token - 1], varname, self.vars.get(varname, "")),
+                               label=label, #"%s →\n %s/%s" % (tokens[token - 1], varname, self.vars.get(varname, "")),
                                id="tokenedge#%s#%s" % (tid,varname),
                                color="#888888",
                                #style="dashed",
@@ -556,7 +599,7 @@ class AMRProcessor:
                 else:
                     self.isDisconnected = False
 
-            #print("AAA", self.lastsvg)
+            # print("AAA", self.lastsvg)
 
             def addtokenids(svg):
                 newlines = []
@@ -653,7 +696,7 @@ class AMRProcessor:
                     self.triples.insert(0, (tr[2], tr[1][:-3], tr[0]))
         else:
             return "invalid instance variable %s" % topvar
-        #self.show()
+        # self.show()
 
     def reify(self, reify):
         reificator = getInstance()
@@ -709,11 +752,11 @@ class AMRProcessor:
         else:
             self.vars[var] = concept
             self.triples.append((var, ":instance", concept))
-        #self.show()
+        # self.show()
         return var
 
     # TODO: we can have more than once a node with the same number
-    #def addnumber(self, number):
+    # def addnumber(self, number):
     #    if number in self.vars:
     #        print("VAR exists", self.vars[number])
     #        return 0
@@ -734,7 +777,7 @@ class AMRProcessor:
     def modedge(self, modedge_start, modedge_end, newedge):
         # change label of edge
         for tr in self.triples:
-            #print("MOD-EDGE", tr, modedge_start, modedge_end, newedge)
+            # print("MOD-EDGE", tr, modedge_start, modedge_end, newedge)
             if tr[0] == modedge_start and tr[2] == modedge_end:
                 pos = self.triples.index(tr)
                 self.triples.remove(tr)
@@ -752,7 +795,7 @@ class AMRProcessor:
             return "new source instance « %s » does not exist" % newstart
 
         for tr in self.triples:
-            #print("MOVE-EDGE", tr, modedge_start, modedge_end, newedge, newstart)
+            # print("MOVE-EDGE", tr, modedge_start, modedge_end, newedge, newstart)
             if tr[0] == modedge_start and tr[2] == modedge_end:
                 pos = self.triples.index(tr)
                 self.triples.remove(tr)
@@ -760,7 +803,7 @@ class AMRProcessor:
                 break
             if tr[2] == modedge_start and tr[0] == modedge_end:
                 # can create confusion.
-                #if tr[1].endswith("-of"):
+                # if tr[1].endswith("-of"):
                 #    return 'deactivate  « reverse "-of" » to modify the head this relation'
                 pos = self.triples.index(tr)
                 self.triples.remove(tr)
@@ -808,7 +851,7 @@ class AMRProcessor:
 
     def modliteral(self, litid, litedge, newlit):
         for tr in self.triples:
-            #print("llll", tr, litid, litedge)
+            # print("llll", tr, litid, litedge)
             if tr[0] == litid and tr[1] == litedge:
                 pos = self.triples.index(tr)
                 self.triples.remove(tr)
@@ -853,11 +896,11 @@ class AMRProcessor:
             end = self.addconcept(end[1:])
 
         if start not in self.vars:
-            #print("Missing startvar « %s »" % (start))
+            # print("Missing startvar « %s »" % (start))
             return "Cannot add relation: start instance « %s » not defined" % (start)
 
         if not self.isNumber.match(end) and end[0] != '"' and end not in "-+" and end not in self.vars:
-            #print("Missing endvar « %s »" % (end))
+            # print("Missing endvar « %s »" % (end))
             return "Cannot add relation: end instance « %s » not defined" % (start)
         else:
 
@@ -865,13 +908,13 @@ class AMRProcessor:
                 label = ":" + label
 
             self.triples.append((start, label, end))
-        #self.show()
+        # self.show()
         return None
 
     def deledge(self, start, end, label):
         todelete = []
         for ix, tr in enumerate(self.triples):
-            #print("tttt", ix,tr, start, label, end)
+            # print("tttt", ix,tr, start, label, end)
             if tr[0] == start and tr[2] == end or end.startswith("stringnode"):
                 if tr[1] == label:
                     todelete.append(tr)
@@ -880,7 +923,7 @@ class AMRProcessor:
         for tr in todelete:
             self.triples.remove(tr)
 
-        #self.show()
+        # self.show()
 
     def delinstance(self, var):
         if var in self.vars:
@@ -893,7 +936,7 @@ class AMRProcessor:
                 self.triples.remove(tr)
             if self.top == var:
                 self.top = None
-        #self.show()
+        # self.show()
 
     def process(self, line):
         # concept

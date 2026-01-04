@@ -33,5 +33,5 @@
 # Software Name: MetAMoRphosED AMR-Editor
 # Author: Johannes Heinecke
 
-VERSION = "5.0.0rc10"
-APIVERSION = "2.0.0rc10"
+VERSION = "5.0.0rc11"
+APIVERSION = "2.0.0rc11"

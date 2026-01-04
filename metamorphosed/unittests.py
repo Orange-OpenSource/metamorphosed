@@ -349,7 +349,7 @@ def test_info(client):
     response = client.get("/version")
     res = json.loads(response.data)
     # print("res", res, file=sys.stderr)
-    assert res == {'name': 'AMR Editor', 'version': '5.0.0rc10', 'apiversion': '2.0.0rc10'}
+    assert res == {'name': 'AMR Editor', 'version': '5.0.0rc11', 'apiversion': '2.0.0rc11'}
 
     response = client.get("/info", query_string={"withdata": True})
     res = json.loads(response.data)
@@ -448,7 +448,7 @@ def test_exportgraphs(client):
     #contents = zfp.read(fobj.filename)
     #print(contents)
     assert fobj.filename == "9.svg"
-    assert fobj.file_size in [10319,10322,20412]
+    assert fobj.file_size in [10319,10322,10375]
     #contents = zfp.read(fobj.filename)
 
     fobj = zfp.infolist()[6] # metadata
@@ -1998,7 +1998,7 @@ def test_umr2amr():
     assert ref == res
 
 
-def test_amr2amr():
+def test_amr2umr():
     import AMR2UMR
     datadir = tempfile.TemporaryDirectory()
     print("temporary test directory", datadir)

@@ -226,9 +226,11 @@ class UMRDocGraph:
 
 
 class UMRsentence(AMRsentence):
-    def __init__(self, sentencegraph, alignements, documentgraph, sentid, meta, index, words, comments, other):
+    def __init__(self, sentencegraph, alignements, ralignments, lalignments, documentgraph, sentid, meta, index, words, comments, other):
         AMRsentence.__init__(self, sentencegraph)
-        self.alignments = alignements
+        self.alignments = alignements # instances
+        self.ralignments = ralignments # relations (used "#RA " lines)
+        self.lalignments = lalignments # literals (used "#LA " lines)
         self.docgraph = UMRDocGraph(documentgraph, sentid)
         self.wiok = True # Index: and Words: lines are both not None and have the same length
         self.index = index
@@ -283,6 +285,7 @@ class UMRsentence(AMRsentence):
         # outputs the alignments in a way easy to display in index.js
         if alignments is None:
             alignments = self.alignments
+            alignments = {**self.alignments, **self.lalignments}
         out = {} # word pos: [umrvar, ...]
         for umrvar in alignments:
             for index in alignments[umrvar]:
@@ -415,6 +418,8 @@ class UMRdoc:
         sentenceblock = []
         documentblock = []
         alignments = {} # var: [(from, to), ...]
+        ralignments = {} # startvar-endvar: [(from, to), ...]
+        lalignments = {} # var#rel#literal: [(from, to), ...]
         state = 0 # 1: after "# sentence level graph", 2: after "# alignment", 3: after "# document level"
         for linect, line in enumerate(ifp, 1):
             line = line.rstrip()
@@ -423,7 +428,7 @@ class UMRdoc:
             elif line.startswith("# meta-info"):
                 if sentid:
                     # save preceding sentence
-                    self.add(sentenceblock, alignments, documentblock, sentid, meta, index, words, comments, other)
+                    self.add(sentenceblock, alignments, ralignments, lalignments, documentblock, sentid, meta, index, words, comments, other)
                 else:
                     if sentenceblock or documentblock or alignments or index or words or other:
                         print("* Missing '# ::sntN' line. Sentence ignored", sentid, linect, file=sys.stderr)
@@ -438,6 +443,8 @@ class UMRdoc:
                 sentid = None
                 sentenceblock = []
                 alignments = {}
+                ralignments = {}
+                lalignments = {}
                 documentblock = []
                 comments = []
                 index = None
@@ -478,32 +485,51 @@ class UMRdoc:
                     state = 3
                 elif line.startswith("#######"):
                     state = None
-                elif line.startswith("#"):
+                elif line.startswith("#") and not line.startswith("#RA") and not line.startswith("#LA"):
                     comments.append(line[1:])
                 elif state == 0:
                     print("* unexpected line", sentid, linect, line, file=sys.stderr)
                 elif state == 1:
                     sentenceblock.append(line)
                 elif state == 2:
-                    elems = line.strip().split(":")
-                    if len(elems) != 2:
-                        print("* bad alignment", sentid, linect, line, file=sys.stderr)
-                    alignments[elems[0]] = []
-                    for e in elems[1].strip().split(","):
-                        mo = ALIGNMENT.match(e.strip())
-                        #print(line, mo)
-                        alignments[elems[0]].append((int(mo.group(1)), int(mo.group(2))))
+                    if line.startswith("#RA "):
+                        elems = line[4:].strip().split(":")
+                        if len(elems) != 2:
+                            print("* bad relation alignment", sentid, linect, line, file=sys.stderr)
+                    elif line.startswith("#LA "):
+                        elems = line[4:].strip().split(":")
+                        if len(elems) != 2:
+                            print("* bad literal alignment", sentid, linect, line, file=sys.stderr)
+                        else:
+                            lalignments[elems[0]] = []
+                            for e in elems[1].strip().split(","):
+                                mo = ALIGNMENT.match(e.strip())
+                                #print(line, mo)
+                                lalignments[elems[0]].append((int(mo.group(1)), int(mo.group(2))))
+
+                    else:
+                        elems = line.strip().split(":")
+                        if len(elems) != 2:
+                            print("* bad alignment", sentid, linect, line, file=sys.stderr)
+                        else:
+                            alignments[elems[0]] = []
+                            for e in elems[1].strip().split(","):
+                                mo = ALIGNMENT.match(e.strip())
+                                #print(line, mo)
+                                alignments[elems[0]].append((int(mo.group(1)), int(mo.group(2))))
                 elif state == 3:
                     documentblock.append(line)
         if sentid:
-            self.add(sentenceblock, alignments, documentblock, sentid, meta, index, words, comments, other)
+            self.add(sentenceblock, alignments, ralignments, lalignments, documentblock, sentid, meta, index, words, comments, other)
         else:
             if sentenceblock or documentblock or alignments or index or words or other:
                 print("* Missing '# ::sntN' line. Sentence ignored", sentid, linect, file=sys.stderr)
 
-    def add(self, sentenceblock, alignments, documentblock, sentid, meta, index, words, comments, other):
+    def add(self, sentenceblock, alignments, ralignments, lalignments, documentblock, sentid, meta, index, words, comments, other):
         wiok = True # if index and words do not go together, we keep that what we find
-        usent = UMRsentence("\n".join(sentenceblock), alignments, "\n".join(documentblock), sentid, meta, index, words, comments, other)
+        usent = UMRsentence("\n".join(sentenceblock), alignments,
+                            ralignments, lalignments,
+                            "\n".join(documentblock), sentid, meta, index, words, comments, other)
 
         self.sentences.append(usent)
         newid = usent.id # we do not want to overwrite an ID, event if it's a duplicate
@@ -516,7 +542,6 @@ class UMRdoc:
                 print("*** duplicate sentence id <%s> renamed to <%s-%d>" % (usent.id, usent.id, self.duplicated[usent.id]), file=sys.stderr)
                 #print("     ", asent.comments, file=sys.stderr)
             newid = "%s-%d" % (usent.id, self.duplicated[usent.id])
-
             if self.rename_duplicate_ids:
                 usent.id = "%s-%d" % (usent.id, self.duplicated[usent.id])
         self.ids[newid] = usent
