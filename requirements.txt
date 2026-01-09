@@ -1,5 +1,5 @@
 pytest==7.4.0
-werkzeug==3.1.4
+werkzeug==3.1.5
 Flask==3.0.2
 Flask-Cors==6.0.0
 graphviz==0.20.1
