@@ -42,7 +42,7 @@ import metamorphosed.umrdoc as umrdoc
 
 
 class UMR2AMR:
-    def __init__(self, infile, outfile, first=0, last=0, filterid=None, gen=True):
+    def __init__(self, infile, outfile, first=0, last=0, filterid=None, doalignments=True, gen=True):
         udoc = umrdoc.UMRdoc(infile)
 
         ofp = open(outfile, "w")
@@ -53,6 +53,10 @@ class UMR2AMR:
             if ct < first:
                 continue
             if last != 0 and ct > last:
+                continue
+
+            if len(sent.amr.split("\n")) == 1 and "umr-empty" in sent.amr:
+                print("Ignore empty sentence", sent.id, file=sys.stderr)
                 continue
 
             if "sent_id" in sent.meta:
@@ -77,41 +81,42 @@ class UMR2AMR:
             #newtriples = []
             pg = penman.decode(sent.amr)
 
-            alignment_indices = {} # triple: [index]
-            ralignment_indices = {} # triple: [index]
-            for tr in pg.instances():
-                if tr[0] in sent.alignments:
-                    for al in sorted(sent.alignments[tr[0]]):
-                        if al[0] > 0:
-                            #pg.epidata[(tr[0], tr[1], tr[2])].append(penman.surface.Alignment((al[0],), "e."))
-                            if (tr[0], tr[1], tr[2]) not in alignment_indices:
-                                alignment_indices[(tr[0], tr[1], tr[2])] = set()
-                            alignment_indices[(tr[0], tr[1], tr[2])].add(al[0] - 1)
-                            if al[1] != al[0]:
-                                alignment_indices[(tr[0], tr[1], tr[2])].add(al[1] - 1)
-            for tr in pg.edges():
-                key = "%s#%s#%s#RA" % (tr[0], tr[2], tr[1][1:])
-                if key in sent.ralignments:
-                    for al in sent.ralignments[key]:
-                        if al[0] > 0:
-                            #pg.epidata[(tr[0], tr[1], tr[2])].append(penman.surface.RoleAlignment((al[0],), "e."))
-                            if (tr[0], tr[1], tr[2]) not in ralignment_indices:
-                                ralignment_indices[(tr[0], tr[1], tr[2])] = set()
-                            ralignment_indices[(tr[0], tr[1], tr[2])].add(al[0] - 1)
+            if doalignments:
+                alignment_indices = {} # triple: [index]
+                ralignment_indices = {} # triple: [index]
+                for tr in pg.instances():
+                    if tr[0] in sent.alignments:
+                        for al in sorted(sent.alignments[tr[0]]):
+                            if al[0] > 0:
+                                #pg.epidata[(tr[0], tr[1], tr[2])].append(penman.surface.Alignment((al[0],), "e."))
+                                if (tr[0], tr[1], tr[2]) not in alignment_indices:
+                                    alignment_indices[(tr[0], tr[1], tr[2])] = set()
+                                alignment_indices[(tr[0], tr[1], tr[2])].add(al[0] - 1)
+                                if al[1] != al[0]:
+                                    alignment_indices[(tr[0], tr[1], tr[2])].add(al[1] - 1)
+                for tr in pg.edges():
+                    key = "%s#%s#%s#RA" % (tr[0], tr[2], tr[1][1:])
+                    if key in sent.ralignments:
+                        for al in sent.ralignments[key]:
+                            if al[0] > 0:
+                                #pg.epidata[(tr[0], tr[1], tr[2])].append(penman.surface.RoleAlignment((al[0],), "e."))
+                                if (tr[0], tr[1], tr[2]) not in ralignment_indices:
+                                    ralignment_indices[(tr[0], tr[1], tr[2])] = set()
+                                ralignment_indices[(tr[0], tr[1], tr[2])].add(al[0] - 1)
 
-            for tr in pg.attributes():
-                key = "%s#%s#%s#LA" % (tr[0], tr[1][1:], tr[2])
-                if key in sent.lalignments:
-                    for al in sent.lalignments[key]:
-                        if al[0] > 0:
-                            #pg.epidata[(tr[0], tr[1], tr[2])].append(penman.surface.Alignment((al[0],), "e."))
-                            if (tr[0], tr[1], tr[2]) not in alignment_indices:
-                                alignment_indices[(tr[0], tr[1], tr[2])] = set()
-                            alignment_indices[(tr[0], tr[1], tr[2])].add(al[0] - 1)
-            for k, v in alignment_indices.items():
-                pg.epidata[k].append(penman.surface.Alignment(sorted(v), "e."))
-            for k, v in ralignment_indices.items():
-                pg.epidata[k].append(penman.surface.RoleAlignment(sorted(v), "e."))
+                for tr in pg.attributes():
+                    key = "%s#%s#%s#LA" % (tr[0], tr[1][1:], tr[2])
+                    if key in sent.lalignments:
+                        for al in sent.lalignments[key]:
+                            if al[0] > 0:
+                                #pg.epidata[(tr[0], tr[1], tr[2])].append(penman.surface.Alignment((al[0],), "e."))
+                                if (tr[0], tr[1], tr[2]) not in alignment_indices:
+                                    alignment_indices[(tr[0], tr[1], tr[2])] = set()
+                                alignment_indices[(tr[0], tr[1], tr[2])].add(al[0] - 1)
+                for k, v in alignment_indices.items():
+                    pg.epidata[k].append(penman.surface.Alignment(sorted(v), "e."))
+                for k, v in ralignment_indices.items():
+                    pg.epidata[k].append(penman.surface.RoleAlignment(sorted(v), "e."))
 
             pt = penman.configure(pg)
             pt.reset_variables(fmt="{prefix}{j}") # TODO keeps accents on variable idconcepts starts with an accented letter
@@ -129,9 +134,10 @@ if __name__ == "__main__":
     parser.add_argument("--first", "-f", default=0, type=int, help="start at sentence number <first>")
     parser.add_argument("--last", "-l", default=0, type=int, help="stop after sentence number <last>")
     parser.add_argument("--filterid", "-F", help="ignore sentences which sentence id does not mutch given regex")
+    parser.add_argument("--noalignments", action='store_false', default=True, help='do not output UMR aligments')
 
     if len(sys.argv) < 2:
         parser.print_help()
     else:
         args = parser.parse_args()
-        a2u = UMR2AMR(args.infile, args.outfile, args.first, args.last, args.filterid)
+        a2u = UMR2AMR(args.infile, args.outfile, args.first, args.last, args.filterid, doalignments=args.noalignments)
