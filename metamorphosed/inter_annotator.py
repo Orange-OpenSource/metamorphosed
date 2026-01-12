@@ -52,6 +52,8 @@
 import json
 import sys
 
+# import matplotlib.pyplot as plt
+
 import metamorphosed.amrdoc as amrdoc
 import metamorphosed.amr_comparison as amr_comparison
 
@@ -262,13 +264,14 @@ class IAA:
                 print("averages for %d sentences (smatch): %s" % (len(results), [float("%.2f" % (100 * x)) for x in results]), file=ofp)
                 print("                          (diffs): %s" % ([float("%.2f" % (x)) for x in diffresults]), file=ofp)
             print("annotator pair inter-annotator agreement Smatch F1: %.2f differences: %.4f" % (100 * mean, dmean), file=ofp)
-            print("\nglobal\tSmatch F1: %.2f\t differences: %.4f" % (100 * mean, dmean), file=rfp)
+            if rfp:
+                print("\nglobal\tSmatch F1: %.2f\t differences: %.4f" % (100 * mean, dmean), file=rfp)
+                rfp.close()
 
-            rfp.close()
-            rfp = open(report + ".preferred.json", "w")
+                rfp = open(report + ".preferred.json", "w")
 
-            print(json.dumps(preferred, indent=2), file=rfp)
-            rfp.close()
+                print(json.dumps(preferred, indent=2), file=rfp)
+                rfp.close()
 
 
 def main():
