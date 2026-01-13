@@ -59,6 +59,11 @@ class UMR2AMR:
                 print("Ignore empty sentence", sent.id, file=sys.stderr)
                 continue
 
+            try:
+                pg = penman.decode(sent.amr)
+            except Exception as e:
+                print("ERROR: Invalid penman format in %s: %s" % (sent.id, e), file=sys.stderr)
+
             if "sent_id" in sent.meta:
                 if filterid:
                     if not filterid.match(sent.meta["sent_id"]):
@@ -79,7 +84,7 @@ class UMR2AMR:
                 print("ERROR: No sentence in " + sent.id, file=sys.stderr)
 
             #newtriples = []
-            pg = penman.decode(sent.amr)
+            # pg = penman.decode(sent.amr)
 
             if doalignments:
                 alignment_indices = {} # triple: [index]
