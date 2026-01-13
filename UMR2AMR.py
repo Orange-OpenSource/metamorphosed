@@ -124,7 +124,9 @@ class UMR2AMR:
                     pg.epidata[k].append(penman.surface.RoleAlignment(sorted(v), "e."))
 
             pt = penman.configure(pg)
-            pt.reset_variables(fmt="{prefix}{j}") # TODO keeps accents on variable idconcepts starts with an accented letter
+            # {prefix} does not work with data from UMR since there are "concepts" with diacritics and digits in first pos
+            # pt.reset_variables(fmt="{prefix}{j}") # TODO keeps accents on variable idconcepts starts with an accented letter
+            pt.reset_variables(fmt="v{j}") # TODO keeps accents on variable idconcepts starts with an accented letter
             print(penman.format(pt, indent=4), file=ofp)
             print(file=ofp)
 

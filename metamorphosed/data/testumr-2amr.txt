@@ -1,163 +1,163 @@
 # ::id snt1
 # ::snt Ałk’idą́ą́’ díí nahasdzáán nihił dah si’ánígíí bikáa’gi ’ádahóót’įįd ha’níigo baa dahane’
 # ::tok Ałk’idą́ą́’ díí nahasdzáán nihił dah si’ánígíí bikáa’gi ’ádahóót’įįd ha’níigo baa dahane’
-(e / exist-91
-    :ARG1 (d / dahane’~e.10
-        :topic (h / ha’níigo
-            :theme (á / ’ádahóót’įįd~e.7
-                :place (b / bikáa’gi-~e.6
-                    :part (n / nahasdzáán~e.2
-                        :mod (d2 / díí~e.1)
-                        :place-of (s / si’ánígíí~e.5
-                            :mod (d3 / dah-~e.4)
-                            :companion (p / person
+(v / exist-91
+    :ARG1 (v2 / dahane’~e.10
+        :topic (v3 / ha’níigo
+            :theme (v4 / ’ádahóót’įįd~e.7
+                :place (v5 / bikáa’gi-~e.6
+                    :part (v6 / nahasdzáán~e.2
+                        :mod (v7 / díí~e.1)
+                        :place-of (v8 / si’ánígíí~e.5
+                            :mod (v9 / dah-~e.4)
+                            :companion (v10 / person
                                 :refer-person 1st
                                 :refer-number plural)
                             :aspect state)))
-                :time (a / ałk’idą́ą́’)
+                :time (v11 / ałk’idą́ą́’)
                 :aspect performance
-                :quote h))
+                :quote v3))
         :refer-number plural)
     :aspect state)
 
 # ::id snt2
 # ::snt Ch’óol’į́’í hoolyéegi ’áhóót’įįd daaní
 # ::tok Ch’óol’į́’í hoolyéegi ’áhóót’įįd daaní
-(d / daaní
-    :actor (p / person
+(v / daaní
+    :actor (v2 / person
         :refer-person 3rd
         :refer-number plural)
-    :theme (á / ’áhóót’įįd~e.1,2
-        :place (m / mountain
-            :name (n / name
+    :theme (v3 / ’áhóót’įįd~e.1,2
+        :place (v4 / mountain
+            :name (v5 / name
                 :op1 "Ch’óol’į́’í")
             :wiki "El_Gobernador_Knob")
         :aspect performance
-        :quote d)
+        :quote v)
     :aspect habitual)
 
 # ::id bad-index--bad-alignment
 # ::snt The mouse eats the cheese.
 # ::tok The mouse eats the cheese .
-(e / eat-01~e.2
-    :actor (m / mouse)
-    :theme (c / cheese)
+(v / eat-01~e.2
+    :actor (v2 / mouse)
+    :theme (v3 / cheese)
     :aspect habitual)
 
 # ::id u_tree-cs-s4-root
 # ::snt Eyewitnesses said only a few houses were left standing after the landslide hit the village of Guinsaugon in the south of the Philippine island of Leyte .
 # ::tok Eyewitnesses said only a few houses were left standing after the landslide hit the village of Guinsaugon in the south of the Philippine island of Leyte .
-(s / say-01~e.1
-    :ARG0 (p / person~e.0
-        :ARG0-of (w / witness-01
-            :ARG1 l2))
-    :ARG1 (l / leave-14~e.7
-        :ARG0 (h / hit-01~e.12
-            :ARG0 (l2 / landslide-01~e.11
-                :ARG1 (t / thing)
+(v / say-01~e.1
+    :ARG0 (v2 / person~e.0
+        :ARG0-of (v3 / witness-01
+            :ARG1 v6))
+    :ARG1 (v4 / leave-14~e.7
+        :ARG0 (v5 / hit-01~e.12
+            :ARG0 (v6 / landslide-01~e.11
+                :ARG1 (v7 / thing)
                 :aspect process)
-            :ARG1 (v / village~e.14
-                :mod (h2 / human-settlement~e.19
+            :ARG1 (v8 / village~e.14
+                :mod (v9 / human-settlement~e.19
                     :wiki "Saint_Bernard,_Southern_Leyte"
-                    :name (n / name
+                    :name (v10 / name
                         :op1 "Guinsaugon"))
-                :place (s2 / south
-                    :part-of (i / island~e.23
+                :place (v11 / south
+                    :part-of (v12 / island~e.23
                         :wiki "Leyte"
-                        :name (n2 / name~e.25
+                        :name (v13 / name~e.25
                             :op1 "Leyte")
-                        :place (c / country~e.22
+                        :place (v14 / country~e.22
                             :wiki "Philippines"
-                            :name (n3 / name
+                            :name (v15 / name
                                 :op1 "Philippine")))))
             :aspect performance)
-        :ARG1 (s3 / stand-01~e.8
-            :ARG1 (h3 / house~e.5
-                :quant (a / a-few~e.3,4
-                    :mod (o / only~e.2)))
+        :ARG1 (v16 / stand-01~e.8
+            :ARG1 (v17 / house~e.5
+                :quant (v18 / a-few~e.3,4
+                    :mod (v19 / only~e.2)))
             :aspect state)
         :aspect state
-        :quote s)
+        :quote v)
     :aspect performance)
 
 # ::id u_tree-cs-s5-root
 # ::snt Marsha Lipman is Editor of Moscow based news magazine 'Itogi'.
 # ::tok Marsha Lipman is Editor of Moscow based news magazine ' Itogi ' .
-(h / have-org-role-92~e.2
-    :ARG1 (p / person~e.0,1
-        :name (n / name
+(v / have-org-role-92~e.2
+    :ARG1 (v2 / person~e.0,1
+        :name (v3 / name
             :op1 "Marsha"
             :op2 "Lipman"))
-    :ARG2 (m / magazine~e.8
+    :ARG2 (v4 / magazine~e.8
         :wiki -
-        :name (n2 / name~e.10
+        :name (v5 / name~e.10
             :op1 "Itogi")
-        :mod (n3 / news~e.7)
-        :ARG1-of (b / base-01~e.6
-            :place (h2 / human-settlement~e.5
+        :mod (v6 / news~e.7)
+        :ARG1-of (v7 / base-01~e.6
+            :place (v8 / human-settlement~e.5
                 :wiki "Moscow"
-                :name (n4 / name
+                :name (v9 / name
                     :op1 "Moscow"))
             :aspect state)
-        :ARG3 (p2 / person~e.3
-            :ARG0-of (e / edit-01)))
+        :ARG3 (v10 / person~e.3
+            :ARG0-of (v11 / edit-01)))
     :aspect state)
 
 # ::id u_tree-cs-s6-root
 # ::snt Marsha , did the Presidential Pardons Commission give any reason for their decision ?
 # ::tok Marsha , did the Presidential Pardons Commission give any reason for their decision ?
-(s / say-01
-    :ARG0 (p / person)
-    :ARG1 (g / give-01~e.7
-        :ARG0 (g2 / government-organization~e.4,6
+(v / say-01
+    :ARG0 (v2 / person)
+    :ARG1 (v3 / give-01~e.7
+        :ARG0 (v4 / government-organization~e.4,6
             :wiki -
-            :name (n / name
+            :name (v5 / name
                 :op1 "Presidential"
                 :op2 "Pardons"
                 :op3 "Commission"))
-        :ARG1 (r / reason~e.9
-            :reason-of (d / decide-01~e.12
-                :ARG0 g2
-                :topic (t / thing)
+        :ARG1 (v6 / reason~e.9
+            :reason-of (v7 / decide-01~e.12
+                :ARG0 v4
+                :topic (v8 / thing)
                 :aspect performance)
-            :mod (a / any~e.8))
+            :mod (v9 / any~e.8))
         :mode interrogative
-        :polarity (u / umr-unknown)
-        :vocative (p2 / person~e.0
+        :polarity (v10 / umr-unknown)
+        :vocative (v11 / person~e.0
             :wiki -
-            :name (n2 / name
+            :name (v12 / name
                 :op1 "Marsha"))
         :aspect performance
-        :quote s)
-    :ARG2 p2)
+        :quote v)
+    :ARG2 v11)
 
 # ::id u_tree-cs-s7-root
-(s / see-01~e.14
-    :ARG1 (a / and~e.7
-        :op1 (r / roofing~e.6
-            :material (t / tin~e.5)
-            :unit (s2 / sheet~e.3)
-            :quant (a2 / a-few~e.1,2))
-        :op2 (t2 / tree~e.11
-            :mod (c / coconut~e.10)
-            :mod (o / occasional~e.9))
-        :mod (o2 / only~e.0))
+(v / see-01~e.14
+    :ARG1 (v2 / and~e.7
+        :op1 (v3 / roofing~e.6
+            :material (v4 / tin~e.5)
+            :unit (v5 / sheet~e.3)
+            :quant (v6 / a-few~e.1,2))
+        :op2 (v7 / tree~e.11
+            :mod (v8 / coconut~e.10)
+            :mod (v9 / occasional~e.9))
+        :mod (v10 / only~e.0))
     :aspect state)
 
 # ::id ud:cy_ccg_test:00007
 # ::snt Cafodd Dylan Thomas ei wahardd o'r dafarn am helpu ei hunan i'r cwrw.
 # ::tok Cafodd Dylan Thomas ei wahardd o 'r dafarn am helpu ei hunan i 'r cwrw .
-(b / ban-01~e.4
-    :ARG1 (b2 / be-located-at-91
-        :ARG1 p2
-        :ARG2~e.5 (p / pub~e.7))
-    :ARG2 (p2 / person~e.1,2,3,10
-        :name (n / name
+(v / ban-01~e.4
+    :ARG1 (v2 / be-located-at-91
+        :ARG1 v4
+        :ARG2~e.5 (v3 / pub~e.7))
+    :ARG2 (v4 / person~e.1,2,3,10
+        :name (v5 / name
             :op1 "Dylan"~e.1
             :op2 "Thomas"~e.2))
-    :ARG1-of (c / cause-01
-        :ARG0 (h / help-01~e.9
-            :ARG0 p2
-            :ARG1 (b3 / beer~e.14)
-            :ARG2 p2)))
+    :ARG1-of (v6 / cause-01
+        :ARG0 (v7 / help-01~e.9
+            :ARG0 v4
+            :ARG1 (v8 / beer~e.14)
+            :ARG2 v4)))
 
