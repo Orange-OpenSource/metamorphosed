@@ -87,7 +87,7 @@ class AMRsentence:
         elif self.savedateorig:
             print("# ::save-date %s" % self.savedateorig, file=ofp)
         if self.tokens:
-            print("# ::tok", " ".join(self.tokens))
+            print("# ::tok", " ".join(self.tokens), file=ofp)
 
         for c in self.comments:
             print("#", c, file=ofp)
