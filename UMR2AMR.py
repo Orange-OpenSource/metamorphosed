@@ -40,9 +40,13 @@ import penman
 
 import metamorphosed.umrdoc as umrdoc
 
+# undo silencing of umrdoc
+# import logging
+# logging.getLogger('penman').setLevel(logging.INFO)
+
 
 class UMR2AMR:
-    def __init__(self, infile, outfile, first=0, last=0, filterid=None, doalignments=True, gen=True):
+    def __init__(self, infile, outfile, first=0, last=0, filterid=None, doalignments=True, prefix=None, gen=True):
         udoc = umrdoc.UMRdoc(infile)
 
         ofp = open(outfile, "w")
@@ -61,19 +65,36 @@ class UMR2AMR:
 
             try:
                 pg = penman.decode(sent.amr)
+                # we need this since penman does not stop at warnings:
+                # things like
+                #  (t / 12
+                #       :00
+                #        :name (n / name
+                #                :op1 "Noon")))
+                # output a "missing target" in the logger, but adds a triple with a None object
+                for s, p, o in pg.triples:
+                    if o is None:
+                        raise Exception("bad triple <%s %s %s>" % (s, p, o))
             except Exception as e:
                 print("ERROR: Invalid penman format in %s: %s" % (sent.id, e), file=sys.stderr)
+                continue
 
             if "sent_id" in sent.meta:
                 if filterid:
                     if not filterid.match(sent.meta["sent_id"]):
                         continue
-                print("# ::id", sent.meta["sent_id"], file=ofp)
+                if prefix:
+                    print("# ::id", prefix + sent.meta["sent_id"], file=ofp)
+                else:
+                    print("# ::id", sent.meta["sent_id"], file=ofp)
             else:
                 if filterid:
                     if not filterid.match(sent.id):
                         continue
-                print("# ::id", sent.id, file=ofp)
+                if prefix:
+                    print("# ::id", prefix + sent.id, file=ofp)
+                else:
+                    print("# ::id", sent.id, file=ofp)
             if sent.text:
                 print("# ::snt", sent.text, file=ofp)
             elif sent.words:
@@ -142,9 +163,10 @@ if __name__ == "__main__":
     parser.add_argument("--last", "-l", default=0, type=int, help="stop after sentence number <last>")
     parser.add_argument("--filterid", "-F", help="ignore sentences which sentence id does not mutch given regex")
     parser.add_argument("--noalignments", action='store_false', default=True, help='do not output UMR aligments')
+    parser.add_argument("--id_prefix", help="prefix sentence ids with given string")
 
     if len(sys.argv) < 2:
         parser.print_help()
     else:
         args = parser.parse_args()
-        a2u = UMR2AMR(args.infile, args.outfile, args.first, args.last, args.filterid, doalignments=args.noalignments)
+        a2u = UMR2AMR(args.infile, args.outfile, args.first, args.last, args.filterid, doalignments=args.noalignments, prefix=args.id_prefix)
