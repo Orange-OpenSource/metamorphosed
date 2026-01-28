@@ -1990,7 +1990,7 @@ def test_umr2amr():
     import UMR2AMR
     datadir = tempfile.TemporaryDirectory()
     print("temporary test directory", datadir)
-    #shutil.copyfile(mydir + "/data/testumr.umr", datadir.name + "/testumr.umr")
+    # shutil.copyfile(mydir + "/data/testumr.umr", datadir.name + "/testumr.umr")
     a2u = UMR2AMR.UMR2AMR(mydir + "/data/testumr.umr", datadir.name + "/testumr-2amr.txt", gen=False)
     ref = cat(mydir + "/data/testumr-2amr.txt")
     res = cat(datadir.name + "/testumr-2amr.txt")

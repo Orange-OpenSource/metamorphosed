@@ -73,7 +73,6 @@ class UMRDocGraph:
         #    print(tok)
         toklist = list(lexer)
         # print(dg, toklist)
-
         self.id = "s%ss0" % defaultsentid[3:]
 
         variables = set() # all variables
@@ -275,6 +274,7 @@ class UMRsentence(AMRsentence):
             #    self.text = self.words.strip()
         if sentid:
             self.id = sentid
+            self.num = sentid[3:]
             self.varprefix = "s" + sentid.split("snt")[-1] # the sentence number is the required prefix
         self.pg = None # penman.Graph
 
