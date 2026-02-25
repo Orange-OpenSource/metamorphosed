@@ -31,7 +31,7 @@ dependencies = [
     "PyYAML==6.0.1",
     "requests==2.32.4",
     "smatchpp==1.7.0",
-    "werkzeug==3.1.5",
+    "werkzeug==3.1.6",
     "rdflib (==7.1.4)",
     "tox>=4.26.0",
     "oxrdflib>=0.4.0",
