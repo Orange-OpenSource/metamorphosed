@@ -1852,7 +1852,7 @@ def test_amrprocessor():
     assert res == "(s / see-01\n   :actor (m / mouse))\n\n"
 
 
-def test_iaa():
+def test_iaa_std():
     import io
     import metamorphosed.inter_annotator as inter_annotator
     reportfile = tempfile.TemporaryDirectory()
@@ -1894,7 +1894,7 @@ sentence     3: annotator pairs smatch: [62.5, 50.0, 75.0]
                 annotator pairs diffs.: [3, 4, 2]
 averages for 4 sentences (smatch): [67.4, 71.46, 34.07, 62.5]
                           (diffs): [5.0, 4.0, 5.67, 3.0]
-annotator pair inter-annotator agreement Smatch F1: 58.86 differences: 4.4167
+annotator pair inter-annotator agreement Smatch F1: 58.86, mean differences: 4.4167, median differences: 4.5000
 """
     assert gold2 == s2.getvalue()
 
@@ -1953,7 +1953,7 @@ sentence     3: annotator pairs smatch: [62.5, 50.0, 75.0]
                 annotator pairs diffs.: [3, 4, 2]
 averages for 4 sentences (smatch): [67.4, 71.46, 34.07, 62.5]
                           (diffs): [5.0, 4.0, 5.67, 3.0]
-annotator pair inter-annotator agreement Smatch F1: 58.86 differences: 4.4167
+annotator pair inter-annotator agreement Smatch F1: 58.86, mean differences: 4.4167, median differences: 4.5000
 """
     assert gold2 == s2.getvalue()
 
