@@ -50,6 +50,7 @@
 # option: using number of differences between two graphs instead of smatch
 
 import json
+import statistics
 import sys
 
 # import matplotlib.pyplot as plt
@@ -260,10 +261,11 @@ class IAA:
                     print("\t".join(s), file=rfp)
             mean = sum(results) / len(results)
             dmean = sum(diffresults) / len(diffresults)
+            dmedian = statistics.median(diffresults)
             if self.debug:
                 print("averages for %d sentences (smatch): %s" % (len(results), [float("%.2f" % (100 * x)) for x in results]), file=ofp)
                 print("                          (diffs): %s" % ([float("%.2f" % (x)) for x in diffresults]), file=ofp)
-            print("annotator pair inter-annotator agreement Smatch F1: %.2f differences: %.4f" % (100 * mean, dmean), file=ofp)
+            print("annotator pair inter-annotator agreement Smatch F1: %.2f, mean differences: %.4f, median differences: %.4f" % (100 * mean, dmean, dmedian), file=ofp)
             if rfp:
                 print("\nglobal\tSmatch F1: %.2f\t differences: %.4f" % (100 * mean, dmean), file=rfp)
                 rfp.close()
