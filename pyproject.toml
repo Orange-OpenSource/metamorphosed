@@ -32,7 +32,7 @@ dependencies = [
     "requests==2.32.4",
     "smatchpp==1.7.0",
     "werkzeug==3.1.6",
-    "rdflib (==7.1.4)",
+    "rdflib==7.6.0",
     "tox>=4.26.0",
     "oxrdflib>=0.4.0",
     "selenium>=4.33.0",
