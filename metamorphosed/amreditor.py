@@ -33,7 +33,7 @@
 # Software Name: MetAMoRphosED AMR-Editor
 # Author: Johannes Heinecke
 
-# version 5.0.0rc11 as of 4th January 2026
+# version 5.0.0 as of 4th January 2026
 
 import io
 import re
