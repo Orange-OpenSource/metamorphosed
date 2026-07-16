@@ -283,11 +283,13 @@ class PropBankFrames:
             #    errors.append("invalid relation '%s'" % (p))
 
         for s, p, o in triples:
+            #print(s,p,o)
             if p != ":instance" and instances[s] in self.roleset_args:
                 if p.startswith(":ARG"):
                     if p.endswith("-of"):
                         if o not in instances:
                             errors.append("invalid argument «%s» for relation «%s»" % (o, p))
+                            continue
                         else:
                             concept = instances[o]
                             p = p[:-3]
