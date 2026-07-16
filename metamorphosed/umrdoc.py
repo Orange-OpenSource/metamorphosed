@@ -226,7 +226,7 @@ class UMRDocGraph:
 
 class UMRsentence(AMRsentence):
     def __init__(self, sentencegraph, alignements, ralignments, lalignments, documentgraph, sentid, meta, index, words, comments, other):
-        AMRsentence.__init__(self, sentencegraph)
+        AMRsentence.__init__(self, sentencegraph.replace("#", "HASH"))
         self.alignments = alignements # instances
         self.ralignments = ralignments # relations (used "#RA " lines)
         self.lalignments = lalignments # literals (used "#LA " lines)
@@ -375,14 +375,21 @@ ALIGNMENT = re.compile(r"^(-?\d+)-(-?\d+)$")
 # needed to edit the lines starting with
 TOKENLINES = {"Morphemes": 1,
               "Morphemes(English)": 2,
+              "Morphemes (en)": 22,
               "Part of Speech": 3,
               "Words(English)": 4,
+              "Words (en)": 24,
               "Morpheme Gloss(English)": 5,
+              "Morpheme Gloss (en)": 25,
               "Morpheme Gloss(Spanish)": 6,
+              "Morpheme Gloss (es)": 6,
               "Morpheme Category": 7,
               "Sentence": 8,
               "Translation(English)": 9,
-              "Translation(Spanish)": 10
+              "Translation (en)": 19,
+              "Translation(Spanish)": 10,
+              "Sentence Gloss (en)": 11,
+              "Word Gloss (en)": 12
               }
 
 TOKLINESNUM = {}
@@ -425,7 +432,7 @@ class UMRdoc:
             line = line.rstrip()
             if not line:
                 continue
-            elif line.startswith("# meta-info"):
+            elif line.startswith("# meta-info") or line.startswith("# sent_id"):
                 if sentid:
                     # save preceding sentence
                     self.add(sentenceblock, alignments, ralignments, lalignments, documentblock, sentid, meta, index, words, comments, other)
@@ -465,14 +472,21 @@ class UMRdoc:
                     words = line.split(":", 1)[1]
                 elif line.startswith("Morphemes:") \
                         or line.startswith("Morphemes(English):") \
+                        or line.startswith("Morphemes (en):") \
                         or line.startswith("Part of Speech:") \
                         or line.startswith("Words(English):") \
+                        or line.startswith("Words (en):") \
+                        or line.startswith("Word Gloss (en):") \
                         or line.startswith("Morpheme Gloss(English):") \
+                        or line.startswith("Morpheme Gloss (en):") \
                         or line.startswith("Morpheme Gloss(Spanish):") \
+                        or line.startswith("Morpheme Gloss (es):") \
                         or line.startswith("Morpheme Category:") \
                         or line.startswith("Sentence:") \
                         or line.startswith("Translation(English):") \
-                        or line.startswith("Translation(Spanish):"):
+                        or line.startswith("Translation (en):") \
+                        or line.startswith("Translation(Spanish):") \
+                        or line.startswith("Sentence Gloss (en):"):
                     elems = line.split(":", 1)
                     #other[elems[0]] = elems[1].split()
                     other[TOKENLINES[elems[0]]] = (elems[0], elems[1].split())

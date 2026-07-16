@@ -982,4 +982,4 @@ if __name__ == "__main__":
 
     aa = AMRProcessor(inserver=False)
     aa.readpenman("(c / contrast-01   :ARG1 (p / possible-01      :polarity -   :ARG1 (t / think-01  :ARG0 (i / i))))")
-    aa.show()
+    print(aa.show())

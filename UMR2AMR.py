@@ -126,6 +126,7 @@ class UMR2AMR:
                 if sent.docgraph:
                     if "temp" in adddoclevel and "temporal" in sent.docgraph.docgraph:
                         for s, p, o in sent.docgraph.docgraph["temporal"]:
+                            #print("ttt", s,p,o)
                             if not self.is_from_here(s, sent.num):
                                 #print("# S NOT HERE temp", sent.id, s,p,o, file=ofp)
                                 continue
@@ -139,24 +140,29 @@ class UMR2AMR:
                                         newvars[s] = "vv%d" % (len(newvars) + 1)
                                         newtriples.append((newvars[s], ":instance", s))
                                     newtriples.append((newvars[s], p, o))
+                                    #print("AAA", newtriples[-1])
                                 else:
                                     newtriples.append((s, p, o))
+                                    #print("aaa", newtriples[-1])
                     if "modal" in adddoclevel and "modal" in sent.docgraph.docgraph:
                         # does not always work, without variables of preceding sentences, the graph becomes disconnected
                         # e.g. sanapana_umr-0001.umr:snt68
                         for s, p, o in sent.docgraph.docgraph["modal"]:
                             #print("mmmm", s,p,o, file=ofp)
-                            if s in ["author", "have-condition", "null-conceiver", "purpose", "root"]:
+                            if s in ["author", "author3", "author2", "have-condition", "null-conceiver", "purpose", "root", "have-condition-91", "have-purpose-91", "have-concession-91", "have-concessive-condition-91"]:
                                 if s not in newvars:
                                     newvars[s] = "vv%d" % (len(newvars) + 1)
                                     newtriples.append((newvars[s], ":instance", s))
                                 #newtriples.append((newvars[s], p, o))
+
+                                if s == "root":
+                                    newtriples.append((pg.top, ":root", newvars[s]))
                                 s = newvars[s]
                             elif not self.is_from_here(s, sent.num):
                                 print("# S NOT HERE temp", sent.id, s,p,o, file=ofp)
                                 continue
 
-                            if o in ["author", "have-condition", "null-conceiver", "purpose"]:
+                            if o in ["author", "have-condition", "null-conceiver", "purpose", "have-condition-91", "have-purpose-91"]:
                                 if o not in newvars:
                                     newvars[o] = "vv%d" % (len(newvars) + 1)
                                     newtriples.append((newvars[o], ":instance", o))
@@ -221,9 +227,11 @@ class UMR2AMR:
             pt = penman.configure(pg)
             # {prefix} does not work with data from UMR since there are "concepts" with diacritics and digits in first pos
             # pt.reset_variables(fmt="{prefix}{j}") # TODO keeps accents on variable idconcepts starts with an accented letter
+
             pt.reset_variables(fmt="v{j}") # TODO keeps accents on variable idconcepts starts with an accented letter
+
             print(penman.format(pt, indent=4), file=ofp)
-            #print(penman.encode(pg, indent=4), file=ofp)
+            ##print(penman.encode(pg, indent=4), file=ofp)
             print(file=ofp)
 
     def is_from_here(self, var, sentnum):
@@ -247,7 +255,7 @@ if __name__ == "__main__":
     parser.add_argument("--filterid", "-F", help="ignore sentences which sentence id does not mutch given regex")
     parser.add_argument("--noalignments", action='store_false', default=True, help='do not output UMR aligments')
     #parser.add_argument("--adddoclevel", action='store_true', default=False, help='add document level annotation to graph (except references to other graphs)')
-    parser.add_argument("--adddoclevel", nargs="*", default=None, help='current values: temp. document level annotation to graph (except references to other graphs)')
+    parser.add_argument("--adddoclevel", nargs="*", default=None, help='current values: temp. modal. document level annotation to graph (except references to other graphs)')
     parser.add_argument("--id_prefix", help="prefix sentence ids with given string")
 
     if len(sys.argv) < 2:

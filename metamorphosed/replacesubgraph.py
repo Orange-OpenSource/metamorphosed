@@ -8,7 +8,10 @@ import metamorphosed.findsubgraph as findsubgraph
 import graph as AMRgraph
 
 
-def replace(graph, subgraph, replgraph, gid=None, debug=False):
+def replace(graph, subgraph, replgraph, gid=None,
+            varprefix=None, # needed in UMR files where all variables start with sNN, NN being the number of the sentence in a document
+            varcounter=0, # needed in UMR files to avoid duplicate variables
+            debug=False):
     sg = findsubgraph.SubGraphRDF(subgraph)
     bindings = sg.cmp(graph)
 
@@ -64,6 +67,7 @@ where {
 """
         existing_vars = sg.parsedgraph.variables()
         new_vars = {} # v-insert: newvar  # to avoid duplicates
+        new_vars_penmanname = set() # just the created variable names, without URL
         #print("QQQ", "\n  ".join(sg.sparqllines))
 
         parsedrepl = penman.decode(replgraph)
@@ -78,7 +82,11 @@ where {
                 if s[:-1] in new_vars:
                     s = new_vars[s[:-1]]
                 else:
-                    nw = "<http://metamorphosed/var/xx%d>" % len(new_vars)
+                    if varprefix:
+                        new_vars_penmanname.add(f"{varprefix}{len(new_vars) + varcounter + 1}")
+                        nw = "<http://metamorphosed/var/%s%d>" % (varprefix, len(new_vars) + varcounter + 1)
+                    else:
+                        nw = "<http://metamorphosed/var/xx%d>" % len(new_vars)
                     new_vars[s[:-1]] = nw
                     s = nw
             else:
@@ -96,7 +104,11 @@ where {
                 if o[:-1] in new_vars:
                     o = new_vars[o[:-1]]
                 else:
-                    nw = "<http://metamorphosed/var/xx%d>" % len(new_vars)
+                    if varprefix:
+                        new_vars_penmanname.add(f"{varprefix}{len(new_vars) + varcounter + 1}")
+                        nw = "<http://metamorphosed/var/%s%d>" % (varprefix, len(new_vars) + varcounter + 1)
+                    else:
+                        nw = "<http://metamorphosed/var/xx%d>" % len(new_vars)
                     new_vars[o[:-1]] = nw
                     o = nw
             elif o in parsedrepl.variables():
@@ -147,9 +159,10 @@ where {
         newtriples = sorted(newtriples, key=lambda x: order.get(x, 1000))
         #print("nnnnn", newtriples)
 
+        #print("zzzzzzzzzzzzzzzzzz", new_vars)
         try:
             npm = penman.encode(penman.Graph(newtriples, top=sg.parsedgraph.top))
-            return npm
+            return npm #, new_vars_penmanname
         except Exception as e:
             # disconnected graph?
             sgs = AMRgraph.findsubgraphs(newtriples)
@@ -167,7 +180,7 @@ where {
                 pms.append(pm)
         #print(npm)
 
-    return None
+    return None #, None
 
 
 if __name__ == "__main__":
@@ -183,6 +196,7 @@ if __name__ == "__main__":
     sg3 = """(t2 / tie-01
             :ARG1 (k2 / knot)
             :location (l2 / *))"""
+    # use "+" as last character of a variable which does not yet exist in the graph
     rg3 = """(t2 / marry-01
             :location (l2 / *))"""
     npm = replace(g3, sg3, rg3)
