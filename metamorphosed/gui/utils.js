@@ -1,7 +1,7 @@
 /*
  This library is under the 3-Clause BSD License
 
- Copyright (c) 2022-2025,  Orange
+ Copyright (c) 2022-2026,  Orange
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -95,8 +95,8 @@ function highlight_pm(amr) {
     return output;
 }
 
-
-function updateExportFormat() {
+/*
+function ooooupdateExportFormat() {
 	// check also here to improve download mechanism: https://codepen.io/chrisdpratt/pen/RKxJNo
 	//$("#exporthref")[0].href="/graphs/amrgraphs.zip?format=" + obj.value;
 	$("#exporthref")[0].href = "/graphs/amrgraphs.zip?format=" + $('input:radio[name=graphformat]:checked').val()
@@ -109,6 +109,27 @@ function updateExportFormat() {
 		$("#exporthref")[0].href += "&concepts=" + conceptlist;
 	}
 }
+*/
+
+function updateExportFormat() {
+	// check also here to improve download mechanism: https://codepen.io/chrisdpratt/pen/RKxJNo
+	var exportLink = document.getElementById('exporthref');
+
+	if (exportLink) {
+		var url = new URL(exportLink.href, document.baseURI + "/graphs/amrgraphs.zip"); //document.baseURI);
+		url.searchParams.set("format", $('input:radio[name=graphformat]:checked').val());
+		url.searchParams.set("sentences", $("#sentnumlist").val().trim());
+		url.searchParams.set("withalignments", $('input[name=alsoalign]').is(':checked'));
+
+		var conceptlist = $("#conceptlist").val().trim();
+		if (conceptlist) {
+			url.searchParams.set('concepts', conceptlist);
+		}
+		exportLink.href = url.href;
+	}
+}
+
+
 
 function ShowSentences() {
 	if ($("#sentmodal").is(":visible")) {
