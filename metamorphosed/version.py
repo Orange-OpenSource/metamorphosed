@@ -2,7 +2,7 @@
 
 # This library is under the 3-Clause BSD License
 #
-# Copyright (c) 2022-2025,  Orange
+# Copyright (c) 2022-2026,  Orange
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -33,5 +33,5 @@
 # Software Name: MetAMoRphosED AMR-Editor
 # Author: Johannes Heinecke
 
-VERSION = "5.0.0rc11"
-APIVERSION = "2.0.0rc11"
+VERSION = "5.0.1"
+APIVERSION = "2.0.0"
