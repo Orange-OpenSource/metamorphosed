@@ -677,7 +677,8 @@ function formatAMR(data) {
 	//}
 
 	$("#currentsentenceinfo").empty();
-    $('#currentsentenceinfo').append('<div id="innertext_' + currentsentnum + '">');
+    //$('#currentsentenceinfo').append('<div id="innertext_' + currentsentnum + '">');
+	$('#currentsentenceinfo').append($('<div>', { id: 'innertext_' + currentsentnum }));
 
 	var lastchanged = "";
 	if (data.lastchanged) {
@@ -715,22 +716,22 @@ function formatAMR(data) {
 	if ('#innercomment_' + currentsentnum in visible_divselectors && visible_divselectors['#innercomment_' + currentsentnum] == false) {
 		ToggleDiv('#innercomment_' + currentsentnum, "#togglesentence");
 	}
-
 	$("#comment_" + currentsentnum).click(function () {
 		if (!readonly) {
 			$(".editmode").hide();
 			$("#modcomment").show();
 		}
 		$("#modifiedcomment").val($('#precomment_' + currentsentnum).html());
-	});
-   */
+	});  */
 
 	$('#currentcomments').empty();
-	$('#currentcomments').append('<div id="innercomment_' + currentsentnum + '">');
-  	$('#innercomment_' + currentsentnum).append("<h4>comments");
-	$('#innercomment_' + currentsentnum).append('<pre id="precomment_' + currentsentnum + '">');
-	$('#precomment_' + currentsentnum).append(data.comments);
+	//$('#currentcomments').append('<div id="innercomment_' + currentsentnum + '">');
+	$('#currentcomments').append($('<div>', { id: 'innercomment_' + currentsentnum  }));
 
+  	$('#innercomment_' + currentsentnum).append("<h4>comments");
+	//$('#innercomment_' + currentsentnum).append('<pre id="precomment_' + currentsentnum + '">');
+	$('#innercomment_' + currentsentnum).append($('<pre>', { id: 'precomment_' + currentsentnum }));
+	$('#precomment_' + currentsentnum).append(data.comments);
 
 	$("#currentcomments").click(function () {
 		if (!readonly) {
@@ -739,7 +740,6 @@ function formatAMR(data) {
 		}
 		$("#modifiedcomment").val($('#precomment_' + currentsentnum).html());
 	});
-
 
 	if (data.umr) {
 		// UMR data contains Index: and Words: lines which should be of same length (checked by server)
@@ -757,9 +757,12 @@ function formatAMR(data) {
 		$('#currentalignments').append('<div id="innerwordindex_' + currentsentnum + '">');
 		$('#innerwordindex_' + currentsentnum).append('<h4 id="editwordsglosses">words <button class="addbutton mybutton" id="editwordsglosses">modify</button></h4>');
 		$('#innerwordindex_' + currentsentnum).append('<table id="tab_wordindex_' + currentsentnum + '">');
-		$('#tab_wordindex_' + currentsentnum).append('<tr id="tr_index_' + currentsentnum + '">');
-		$('#tab_wordindex_' + currentsentnum).append('<tr id="tr_word_' + currentsentnum + '">');
-		$('#tab_wordindex_' + currentsentnum).append('<tr id="tr_alignments_' + currentsentnum + '" style="vertical-align: baseline;">');
+		//$('#tab_wordindex_' + currentsentnum).append('<tr id="tr_index_' + currentsentnum + '">');
+		$('#tab_wordindex_' + currentsentnum).append($('<tr>', { id:"tr_index_" + currentsentnum }));
+		//$('#tab_wordindex_' + currentsentnum).append('<tr id="tr_word_' + currentsentnum + '">');
+		$('#tab_wordindex_' + currentsentnum).append($('<tr>', {id:"tr_word_" + currentsentnum}));
+		//$('#tab_wordindex_' + currentsentnum).append('<tr id="tr_alignments_' + currentsentnum + '" style="vertical-align: baseline;">');
+		$('#tab_wordindex_' + currentsentnum).append($('<tr>', { id: "tr_alignments_" + currentsentnum, style: "vertical-align: baseline;"}));
 
 		$("#tr_index_" + currentsentnum).append("<th>Index:");
 		if (data.index !== undefined) {
@@ -802,7 +805,8 @@ function formatAMR(data) {
 
 		if (data.glosses) {
 			$('#innerwordindex_' + currentsentnum).append('<p/>');
-			$('#innerwordindex_' + currentsentnum).append('<table id="tab_glosses_' + currentsentnum + '">');
+			//$('#innerwordindex_' + currentsentnum).append('<table id="tab_glosses_' + currentsentnum + '">');
+			$('#innerwordindex_' + currentsentnum).append($('<table>', {id: "tab_glosses_" + currentsentnum }));
 			//var ct = 0
 
 			$.each(data.glosses,
@@ -810,7 +814,8 @@ function formatAMR(data) {
 					var title = value[0];
 					var values = value[1];
 
-					$('#tab_glosses_' + currentsentnum).append('<tr id="tr_gloss_' + currentsentnum + '_' + ct + '">');
+					//$('#tab_glosses_' + currentsentnum).append('<tr id="tr_gloss_' + currentsentnum + '_' + ct + '">');
+					$('#tab_glosses_' + currentsentnum).append($('<tr>', { id: "tr_gloss_" + currentsentnum + '_' + ct}));
 					$('#tr_gloss_' + currentsentnum + '_' + ct).append('<th class="glossheader">' + title + ":");
 					if (title.startsWith("Morphem")) {
 						for (var i = 0; i < values.length; i++) {
@@ -876,8 +881,10 @@ function formatAMR(data) {
 
 
 	// penman graph in an inner div
-	$("#g1resultat").append('<div class="penman" id="penman_' + currentsentnum + '">');
-	$('#penman_' + currentsentnum).append('<pre id="amr_' + currentsentnum + '">');
+	//$("#g1resultat").append('<div class="penman" id="penman_' + currentsentnum + '">');
+	$("#g1resultat").append($('<div>', { class: "penman", id: "penman_" + currentsentnum }));
+	//$('#penman_' + currentsentnum).append('<pre id="amr_' + currentsentnum + '">');
+	$('#penman_' + currentsentnum).append($('<pre>', { id: "amr_" + currentsentnum  }));
 	$('#amr_' + currentsentnum).append(highlight_pm(data.penman));
 	//$('#amr_' + currentsentnum).append(data.penman);
 
@@ -903,8 +910,10 @@ function formatAMR(data) {
 	});
 
 	// svg graph in an inner div
-	$('#g2resultat').append('<div class="svggraph" id="svggraph_' + currentsentnum + '">');
-	$('#svggraph_' + currentsentnum).append('<div id="innersvggraph_' + currentsentnum + '">');
+	//$('#g2resultat').append('<div class="svggraph" id="svggraph_' + currentsentnum + '">');
+	$('#g2resultat').append($('<div>', { class: "svggraph", id: "svggraph_" + currentsentnum }));
+	//$('#svggraph_' + currentsentnum).append('<div id="innersvggraph_' + currentsentnum + '">');
+	$('#svggraph_' + currentsentnum).append($('<div>', { id: "innersvggraph_" + currentsentnum }));
 
 	//if (reverseof) {
 	//	$('#innersvggraph_' + currentsentnum).append(data.svg_canon.replace(/<svg /, '<svg onmousedown="info(event);" '));
@@ -916,7 +925,24 @@ function formatAMR(data) {
 		ToggleDiv('#svggraph_' + currentsentnum, "#togglesvggraph");
 	}
 
-	$('#svggraph_' + currentsentnum).append('<a id="semgraph_' + currentsentnum + '" download="graph.svg" type="image/svg+xml"><button class="mybutton">download image</button></a>');
+	//$('#svggraph_' + currentsentnum).append('<a id="semgraph_' + currentsentnum + '" download="graph.svg" type="image/svg+xml"><button class="mybutton">download image</button></a>');
+	//$('#svggraph_' + currentsentnum).append($('<a>', { id: "semgraph_" + currentsentnum, download: "graph.svg", type: "image/svg+xml"}))
+	///     .append($("<button>", {type: "button", class: "mybutton", text: "qqdownload image"}));
+	var $link = $('<a>', {
+    	id: 'semgraph_' + currentsentnum,
+    	download: 'graph.svg',
+    	type: 'image/svg+xml'
+	});
+
+	$('<button>', {
+    	type: 'button',
+    	class: 'mybutton',
+    	text: 'ssdownload image'
+	}).appendTo($link);
+
+	$('#svggraph_' + currentsentnum).append($link);
+
+
 	downloadSVG('innersvggraph_' + currentsentnum, 'semgraph_' + currentsentnum, currentsentnum);
 
 	/* UMR alignments */
@@ -963,17 +989,20 @@ function formatAMR(data) {
 			//console.log("RRR", this.id);
 			ToggleDiv('#docgraph_' + currentsentnum, "#toggledocgraph");
 		});
-		$('#g4resultat').append('<div class="svggraph" id="docgraph_' + currentsentnum + '">');
+		//$('#g4resultat').append('<div class="svggraph" id="docgraph_' + currentsentnum + '">');
+		$('#g4resultat').append($('<div>', { class: "svggraph", id:"docgraph_" + currentsentnum }));
 
 		$.each(data.docgraph,
 			function (key, values) {
 				$('#docgraph_' + currentsentnum).append('<h3>' + key);
 				const tableid = "tab_docgraph_" + currentsentnum + '_' + key;
-				$('#docgraph_' + currentsentnum).append('<table class="docgraphtable" id="' + tableid + '">');
+				//$('#docgraph_' + currentsentnum).append('<table class="docgraphtable" id="' + tableid + '">');
+				$('#docgraph_' + currentsentnum).append($('<table>', {class: "docgraphtable", id: tableid}));
 
 		    	for (var i = 0; i < values.length; ++i) {
 					const rowid = 'tr_dg_' + currentsentnum + '_' + key + "_" + i;
-					$('#' + tableid).append('<tr id="' + rowid + '">');
+					//$('#' + tableid).append('<tr id="' + rowid + '">');
+					$('#' + tableid).append($('<tr>', {id: rowid }));
 					for (var j = 0; j < values[i].length; ++j) {
 				    	$('#' + rowid).append('<td class="docgraphcell" id="dg_' + key + "_" + i + "_" + j +'" onmousedown="click_docgraph(event);">' + values[i][j]);
 					}
@@ -984,13 +1013,17 @@ function formatAMR(data) {
 
 	// propbank and AMR/UMR relation documentation
 	if (data.framedoc || data.reldoc) {
-		$("#resultat").append('<div class="documentation" id="doc_' + currentsentnum + '">');
+		//$("#resultat").append('<div class="documentation" id="doc_' + currentsentnum + '">');
+		$("#resultat").append($("<div>", { class: "documentation", id:"doc_" + currentsentnum}));
 		if (data.framedoc) {
-			$('#doc_' + currentsentnum).append('<div class="doctext" id="framedoc_' + currentsentnum + '">');
+			//$('#doc_' + currentsentnum).append('<div class="doctext" id="framedoc_' + currentsentnum + '">');
+			$('#doc_' + currentsentnum).append($("<div>", { class: "doctext", id:"framedoc_" + currentsentnum }));
 			$('#framedoc_' + currentsentnum).append(data.framedoc);
 		}
 		if (data.reldoc) {
-			$('#doc_' + currentsentnum).append('<div class="doctextr" id="reldoc_' + currentsentnum + '">');
+			//$('#doc_' + currentsentnum).append('<div class="doctextr" id="reldoc_' + currentsentnum + '">');
+			$('#doc_' + currentsentnum).append($('<div>', { class: "doctextr", id: "reldoc_" + currentsentnum }));
+
 			$('#reldoc_' + currentsentnum).append(data.reldoc);
 		}
 		if (data.umr) {
