@@ -234,12 +234,12 @@ function ToggleDiv(selector, togglebutton) {
 	if ($(selector).is(":visible")) {
 		$(selector).hide();
 		$(togglebutton).empty();
-		$(togglebutton).append("+");
+		$(togglebutton).text("+");
 		visible_divselectors[selector] = false;
 	} else {
 		$(selector).show();
 		$(togglebutton).empty();
-		$(togglebutton).append("&#8210;");
+		$(togglebutton).text("\u2013");
 		//"&ndash;");
 		visible_divselectors[selector] = true;
 	}

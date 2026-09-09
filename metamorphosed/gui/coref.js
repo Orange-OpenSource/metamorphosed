@@ -139,12 +139,12 @@ function ToggleDiv(selector, togglebutton) {
 	if ($(selector).is(":visible")) {
 		$(selector).hide();
 		$(togglebutton).empty();
-		$(togglebutton).append("+");
+		$(togglebutton).text("+");
 		visible_divselectors[selector] = false;
 	} else {
 		$(selector).show();
 		$(togglebutton).empty();
-		$(togglebutton).append("&#8210;");
+		$(togglebutton).text("\u2013");
 		//"&ndash;");
 		visible_divselectors[selector] = true;
 	}
@@ -385,10 +385,13 @@ function formatAMR(data) {
 	});
 
 	// comments (in an nested div to keep the outer div always displayed
-	$("#resultat").append('<div class="text" id="comment_' + currentsentnum + '">');
-	$('#comment_' + currentsentnum).append('<div id="innercomment_' + currentsentnum + '">');
+	//$("#resultat").append('<div class="text" id="comment_' + currentsentnum + '">');
+	$("#resultat").append($('<div>', { class: "text", id: "comment_" + currentsentnum }));
+	//$('#comment_' + currentsentnum).append('<div id="innercomment_' + currentsentnum + '">');
+	$('#comment_' + currentsentnum).append($('<div>', { id: "innercomment_" + currentsentnum }));
 	$('#innercomment_' + currentsentnum).append("<h4>comments");
-	$('#innercomment_' + currentsentnum).append('<pre id="precomment_' + currentsentnum + '">');
+	//$('#innercomment_' + currentsentnum).append('<pre id="precomment_' + currentsentnum + '">');
+	$('#innercomment_' + currentsentnum).append($('<pre>', { id: "precomment_" + currentsentnum }));
 	$('#precomment_' + currentsentnum).append(data.comment);
 
 	if ('#innercomment_' + currentsentnum in visible_divselectors && visible_divselectors['#innercomment_' + currentsentnum] == false) {
@@ -447,8 +450,10 @@ function formatAMR(data) {
 	if (false) {
 	    // combined graph
 	    // svg graph in an inner div
-	    $('#gresultat').append('<div class="svggraph" id="svggraph_' + currentsentnum + '">');
-	    $('#svggraph_' + currentsentnum).append('<div id="innersvggraph_' + currentsentnum + '">');
+	    //$('#gresultat').append('<div class="svggraph" id="svggraph_' + currentsentnum + '">');
+		$('#gresultat').append($('<div>', { class: "svggraph", id: "svggraph_" + currentsentnum }));
+	    //$('#svggraph_' + currentsentnum).append('<div id="innersvggraph_' + currentsentnum + '">');
+		$('#svggraph_' + currentsentnum).append($('<div>', { id: "innersvggraph_" + currentsentnum }));
 	    $('#innersvggraph_' + currentsentnum).append(data.svg.replace(/<svg /, '<svg onmousedown="info(event);" '));
 	} else {
 	    var sgroup = data.showfrom;
