@@ -1,7 +1,7 @@
 /*
  This library is under the 3-Clause BSD License
 
- Copyright (c) 2022-2025,  Orange
+ Copyright (c) 2022-2026,  Orange
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -325,9 +325,11 @@ function formatOne(number, svg, penman, fn) {
 	});
 
 	// svg graph in an inner div
-	$('#svg_resultat_' + number).append('<div class="svggraph" id="svggraph_' + number + '_' + currentsentnum + '">');
+	//$('#svg_resultat_' + number).append('<div class="svggraph" id="svggraph_' + number + '_' + currentsentnum + '">');
+	$('#svg_resultat_' + number).append($('<div>', { class: "svggraph", id: "svggraph_" + number + '_' + currentsentnum }));
 	$('#svggraph_' + number + '_' + currentsentnum).append('<span class="info">' + fn + '</span>');
-	$('#svggraph_' + number + '_' + currentsentnum).append('<div id="innersvggraph_' + number + '_' + currentsentnum + '">');
+	//$('#svggraph_' + number + '_' + currentsentnum).append('<div id="innersvggraph_' + number + '_' + currentsentnum + '">');
+	$('#svggraph_' + number + '_' + currentsentnum).append($('<div>', { id: "innersvggraph_" + number + '_' + currentsentnum }));
 
 	$('#innersvggraph_' + number + '_' + currentsentnum).append(svg.replace(/<svg /, '<svg onmousedown="info(event);" '));
 
@@ -335,7 +337,20 @@ function formatOne(number, svg, penman, fn) {
 		ToggleDiv('#innersvggraph_' + number + '_' + currentsentnum, "#togglesvggraph" + number);
 	}
 
-	$('#svggraph_' + number + '_' + currentsentnum).append('<a id="semgraph_' + number + '_' + currentsentnum + '" download="graph.svg" type="image/svg+xml"><button class="mybutton">download image</button></a>');
+	//$('#svggraph_' + number + '_' + currentsentnum).append('<a id="semgraph_' + number + '_' + currentsentnum + '" download="graph.svg" type="image/svg+xml"><button class="mybutton">download image</button></a>');
+	var $linkA = $('<a>', {
+    	id: 'semgraph_' + number + '_' + currentsentnum,
+    	download: 'graph.svg',
+    	type: 'image/svg+xml'
+	});
+
+	$('<button>', {
+    	type: 'button',
+    	class: 'mybutton',
+    	text: 'download image'
+	}).appendTo($linkA);
+	$('#svggraph_' + number + '_' + currentsentnum).append($linkA);
+	
 	downloadSVG('innersvggraph_' + number + '_' + currentsentnum, 'semgraph_' + number + '_' + currentsentnum, "graph_" + number + "_" + currentsentnum + ".svg");
 
 	// toggle button to hide/show the penman graph
@@ -346,8 +361,10 @@ function formatOne(number, svg, penman, fn) {
 	});
 
 	// penman graph in an inner div
-	$("#penman_ultat_" + number).append('<div class="penman" id="penman_' + number + '_' + currentsentnum + '">');
-	$('#penman_' + number + '_' + currentsentnum).append('<pre id="amr_' + number + '_' + currentsentnum + '">');
+	//$("#penman_ultat_" + number).append('<div class="penman" id="penman_' + number + '_' + currentsentnum + '">');
+	$("#penman_ultat_" + number).append($('<div>', { class:"penman", id: "penman_" + number + '_' + currentsentnum }));
+	//$('#penman_' + number + '_' + currentsentnum).append('<pre id="amr_' + number + '_' + currentsentnum + '">');
+	$('#penman_' + number + '_' + currentsentnum).append($('<pre>', { id: "amr_" + number + '_' + currentsentnum }));
 	$('#amr_' + number + '_' + currentsentnum).append(penman);
 
 	if ('#amr_' + number + '_' + currentsentnum in visible_divselectors && visible_divselectors['#amr_' + currentsentnum] == false) {
@@ -389,8 +406,10 @@ function formatAMR(data) {
 
 	//console.log(data);
 	// sentence id and the sentence (in an nested div to keep the outer div always displayed
-	$("#resultat").append('<div class="text" id="text_' + currentsentnum + '">');
-	$('#text_' + currentsentnum).append('<div id="innertext_' + currentsentnum + '">');
+	//$("#resultat").append('<div class="text" id="text_' + currentsentnum + '">');
+	$("#resultat").append($('<div>', { class: "text", id: "text_" + currentsentnum }));
+	//$('#text_' + currentsentnum).append('<div id="innertext_' + currentsentnum + '">');
+	$('#text_' + currentsentnum).append($('<div>', { id: "innertext_" + currentsentnum }));
 
 	var lastchanged = "";
 	if (data.lastchanged) {
@@ -450,7 +469,8 @@ function formatAMR(data) {
 
 	$('#showcomments').empty();
 	$('#showcomments').append("<h4>comments 1");
-	$('#showcomments').append('<pre id="precomment_A' + currentsentnum + '">');
+	//$('#showcomments').append('<pre id="precomment_A' + currentsentnum + '">');
+	$('#showcomments').append($('<pre>', { id: "precomment_A" + currentsentnum }));
 	$('#precomment_A' + currentsentnum).append(data.comments);
 
 
@@ -461,12 +481,14 @@ function formatAMR(data) {
 		//console.log(data.others[i]);
 		formatOne("B" + i, data.others[i].svg, data.others[i].penman, data.others[i].filename);
 		$('#showcomments').append("<h4>comments " + (2 + i));
-		$('#showcomments').append('<pre id="precomment_B' + i + '_' + currentsentnum + '">');
+		//$('#showcomments').append('<pre id="precomment_B' + i + '_' + currentsentnum + '">');
+		$('#showcomments').append($('<pre>', { id: "precomment_B" + i + '_' + currentsentnum }));
 		$('#precomment_B' + i + '_' + currentsentnum).append(data.others[i].comments);
 	}
 
 	if (data.framedoc) {
-		$("#resultat").append('<div class="text" id="framedoc_' + currentsentnum + '">');
+		//$("#resultat").append('<div class="text" id="framedoc_' + currentsentnum + '">');
+		$("#resultat").append($('<div>', { class:"text", id:"framedoc_" + currentsentnum }));
 		$('#framedoc_' + currentsentnum).append(data.framedoc);
 	}
 }

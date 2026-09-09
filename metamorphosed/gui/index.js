@@ -1,7 +1,7 @@
 /*
  This library is under the 3-Clause BSD License
 
- Copyright (c) 2022-2025,  Orange
+ Copyright (c) 2022-2026,  Orange
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -754,9 +754,11 @@ function formatAMR(data) {
 		$('#wordindex_' + currentsentnum).append('<div id="innerwordindex_' + currentsentnum + '">');
 		*/
 		$('#currentalignments').empty();
-		$('#currentalignments').append('<div id="innerwordindex_' + currentsentnum + '">');
+		//$('#currentalignments').append('<div id="innerwordindex_' + currentsentnum + '">');
+		$('#currentalignments').append($('<div>', { id: "innerwordindex_" + currentsentnum }));
 		$('#innerwordindex_' + currentsentnum).append('<h4 id="editwordsglosses">words <button class="addbutton mybutton" id="editwordsglosses">modify</button></h4>');
-		$('#innerwordindex_' + currentsentnum).append('<table id="tab_wordindex_' + currentsentnum + '">');
+		//$('#innerwordindex_' + currentsentnum).append('<table id="tab_wordindex_' + currentsentnum + '">');
+		$('#innerwordindex_' + currentsentnum).append($('<table>', { id: "tab_wordindex_" + currentsentnum }));
 		//$('#tab_wordindex_' + currentsentnum).append('<tr id="tr_index_' + currentsentnum + '">');
 		$('#tab_wordindex_' + currentsentnum).append($('<tr>', { id:"tr_index_" + currentsentnum }));
 		//$('#tab_wordindex_' + currentsentnum).append('<tr id="tr_word_' + currentsentnum + '">');
