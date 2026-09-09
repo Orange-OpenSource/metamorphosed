@@ -136,13 +136,15 @@ var visible_divselectors = {};
 
 
 function ToggleDiv(selector, togglebutton) {
-	if ($(selector).is(":visible")) {
-		$(selector).hide();
+	// we don net get and ID, but the name without "#" and retrieve it like this (to avoid a "DOM text reinterpreted as HTML" warning)
+	var sel = $(document.getElementById(selector));
+	if (sel.is(":visible")) {
+		sel.hide();
 		$(togglebutton).empty();
 		$(togglebutton).text("+");
 		visible_divselectors[selector] = false;
 	} else {
-		$(selector).show();
+		sel.show();
 		$(togglebutton).empty();
 		$(togglebutton).text("\u2013");
 		//"&ndash;");
@@ -381,7 +383,7 @@ function formatAMR(data) {
 	// toggle button to hide/show comments
 	$("#resultat").append('<button class="toggleresult" id="togglecomment" >&#8210;</button>');
 	$("#togglecomment").click(function () {
-		ToggleDiv('#innercomment_' + currentsentnum, "#togglecomment");
+		ToggleDiv('innercomment_' + currentsentnum, "#togglecomment");
 	});
 
 	// comments (in an nested div to keep the outer div always displayed
@@ -395,7 +397,7 @@ function formatAMR(data) {
 	$('#precomment_' + currentsentnum).append(data.comment);
 
 	if ('#innercomment_' + currentsentnum in visible_divselectors && visible_divselectors['#innercomment_' + currentsentnum] == false) {
-		ToggleDiv('#innercomment_' + currentsentnum, "#togglesentence");
+		ToggleDiv('innercomment_' + currentsentnum, "#togglesentence");
 	}
 
 
@@ -417,7 +419,7 @@ function formatAMR(data) {
 	//$("#g1resultat").append('<button class="toggleresult" id="togglepenman" >&#8210;</button>');
 	//$("#togglepenman").click(function () {
 	//	//console.log("RRR", currentsentnum, this.id);
-	//	ToggleDiv('#amr_' + currentsentnum, "#togglepenman");
+	//	ToggleDiv('amr_' + currentsentnum, "#togglepenman");
 	//});
 
 
@@ -428,7 +430,7 @@ function formatAMR(data) {
 	$('#amr_' + currentsentnum).append(data.penman);
 
 	if ('#amr_' + currentsentnum in visible_divselectors && visible_divselectors['#amr_' + currentsentnum] == false) {
-		ToggleDiv('#amr_' + currentsentnum, "#togglepenman");
+		ToggleDiv('amr_' + currentsentnum, "#togglepenman");
 	}
 
 	$("#penman_" + currentsentnum).click(function () {
@@ -444,7 +446,7 @@ function formatAMR(data) {
 	//$("#g2resultat").append('<button class="toggleresult" id="togglesvggraph" >&#8210;</button>');
 	//$("#togglesvggraph").click(function () {
 	//	//console.log("RRR", this.id);
-	//	ToggleDiv('#innersvggraph_' + currentsentnum, "#togglesvggraph");
+	//	ToggleDiv('innersvggraph_' + currentsentnum, "#togglesvggraph");
 	//});
 
 	if (false) {
@@ -508,7 +510,7 @@ function formatAMR(data) {
 	}
 
 	//if ('#innersvggraph_' + currentsentnum in visible_divselectors && visible_divselectors['#innersvggraph_' + currentsentnum] == false) {
-	//	ToggleDiv('#innersvggraph_' + currentsentnum, "#togglesvggraph");
+	//	ToggleDiv('innersvggraph_' + currentsentnum, "#togglesvggraph");
 	//}
 
 	/*
@@ -544,7 +546,7 @@ $(document).ready(function () {
 	/*
 	// toggle the box with the search functions
 	$("#togglesearch").click(function () {
-		ToggleDiv('#searchfunctions', "#togglesearch");
+		ToggleDiv('searchfunctions', "#togglesearch");
 	});
 	*/
 

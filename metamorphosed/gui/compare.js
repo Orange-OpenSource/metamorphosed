@@ -231,13 +231,15 @@ function getpreferred(obj) {
 
 
 function ToggleDiv(selector, togglebutton) {
-	if ($(selector).is(":visible")) {
-		$(selector).hide();
+	// we don net get and ID, but the name without "#" and retrieve it like this (to avoid a "DOM text reinterpreted as HTML" warning)
+	var sel = $(document.getElementById(selector));
+	if (sel.is(":visible")) {
+		sel.hide();
 		$(togglebutton).empty();
 		$(togglebutton).text("+");
 		visible_divselectors[selector] = false;
 	} else {
-		$(selector).show();
+		sel.show();
 		$(togglebutton).empty();
 		$(togglebutton).text("\u2013");
 		//"&ndash;");
@@ -321,7 +323,7 @@ function formatOne(number, svg, penman, fn) {
 	$("#svg_resultat_" + number).append('<button class="toggleresult" id="togglesvggraph_' + number + '" >&#8210;</button>');
 	$("#togglesvggraph_" + number).click(function () {
 		//console.log("RRR", this.id);
-		ToggleDiv('#innersvggraph_' + number + '_' + currentsentnum, "#togglesvggraph_" + number);
+		ToggleDiv('innersvggraph_' + number + '_' + currentsentnum, "#togglesvggraph_" + number);
 	});
 
 	// svg graph in an inner div
@@ -334,7 +336,7 @@ function formatOne(number, svg, penman, fn) {
 	$('#innersvggraph_' + number + '_' + currentsentnum).append(svg.replace(/<svg /, '<svg onmousedown="info(event);" '));
 
 	if ('#innersvggraph_' + number + '_' + currentsentnum in visible_divselectors && visible_divselectors['#innersvggraph_' + number + '_' + currentsentnum] == false) {
-		ToggleDiv('#innersvggraph_' + number + '_' + currentsentnum, "#togglesvggraph" + number);
+		ToggleDiv('innersvggraph_' + number + '_' + currentsentnum, "#togglesvggraph" + number);
 	}
 
 	//$('#svggraph_' + number + '_' + currentsentnum).append('<a id="semgraph_' + number + '_' + currentsentnum + '" download="graph.svg" type="image/svg+xml"><button class="mybutton">download image</button></a>');
@@ -357,7 +359,7 @@ function formatOne(number, svg, penman, fn) {
 	$("#penman_ultat_" + number).append('<button class="toggleresult" id="togglepenman_' + number + '" >&#8210;</button>');
 	$("#togglepenman_" + number).click(function () {
 		//console.log("RRR", currentsentnum, this.id);
-		ToggleDiv('#amr_' + number + '_' + currentsentnum, "#togglepenman_" + number);
+		ToggleDiv('amr_' + number + '_' + currentsentnum, "#togglepenman_" + number);
 	});
 
 	// penman graph in an inner div
@@ -368,7 +370,7 @@ function formatOne(number, svg, penman, fn) {
 	$('#amr_' + number + '_' + currentsentnum).append(penman);
 
 	if ('#amr_' + number + '_' + currentsentnum in visible_divselectors && visible_divselectors['#amr_' + currentsentnum] == false) {
-		ToggleDiv('#amr_' + number + '_' + currentsentnum, "#togglepenman");
+		ToggleDiv('amr_' + number + '_' + currentsentnum, "#togglepenman");
 	}
 }
 
@@ -401,7 +403,7 @@ function formatAMR(data) {
 	// toggle button to hide/show the sentence id and the sentence
 	$("#resultat").append('<button class="toggleresult" id="togglesentence" >&#8210;</button>');
 	$("#togglesentence").click(function () {
-		ToggleDiv('#innertext_' + currentsentnum, "#togglesentence");
+		ToggleDiv('innertext_' + currentsentnum, "#togglesentence");
 	});
 
 	//console.log(data);
@@ -464,7 +466,7 @@ function formatAMR(data) {
 	}
 
 	if ('#innertext_' + currentsentnum in visible_divselectors && visible_divselectors['#innertext_' + currentsentnum] == false) {
-		ToggleDiv('#innertext_' + currentsentnum, "#togglesentence");
+		ToggleDiv('innertext_' + currentsentnum, "#togglesentence");
 	}
 
 	$('#showcomments').empty();
