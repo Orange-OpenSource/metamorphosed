@@ -288,6 +288,7 @@ class PropBankFrames:
                     if p.endswith("-of"):
                         if o not in instances:
                             errors.append("invalid argument «%s» for relation «%s»" % (o, p))
+                            continue
                         else:
                             concept = instances[o]
                             p = p[:-3]

@@ -1,5 +1,8 @@
 # Changes
 
+## Version 5.0.1
+* changes to avoid DOM text "reinterpreted as HTML" warnings
+
 ## Version 5.0.0
 * Uniform Meaning Representation support
 * scripts to transform files in AMR file format into UMR file format
